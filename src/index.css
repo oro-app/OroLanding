@@ -57,6 +57,30 @@ html, body {
   will-change: transform;
 }
 
+/* Scroll reveal sections */
+.section-reveal {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0) scale(0.985);
+  transform-origin: center top;
+  will-change: transform, opacity;
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Rotated text for the left navbar */
 .nav-rotated {
   display: flex;

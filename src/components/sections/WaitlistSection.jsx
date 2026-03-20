@@ -1,39 +1,23 @@
 import { useState, useEffect, useRef } from 'react'
+import useScrollReveal from '../../lib/useScrollReveal'
 import WaitlistModal from './WaitlistModal'
 import './WaitlistSection.css'
 
 export default function WaitlistSection() {
   const [open, setOpen] = useState(false)
-  const [visible, setVisible] = useState(false)
   const ref = useRef(null)
-  
+  const visible = useScrollReveal(ref, { threshold: 0.25 })
+
   useEffect(() => {
     // Auto-open modal if returning from OAuth
     if (window.location.hash.includes('access_token')) {
       setOpen(true);
     }
   }, []);
-  
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-        }
-      },
-      { threshold: 0.25 }
-    )
-    
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-    
-    return () => observer.disconnect()
-  }, [])
 
   return (
-    <section className="waitlist">
-      <div ref={ref} className={`waitlist-inner${visible ? ' visible' : ''}`}>
+    <section ref={ref} className="waitlist">
+      <div className={`waitlist-inner${visible ? ' visible' : ''}`}>
         <h2 className="waitlist-title" aria-label="Get early access.">
           <span className="waitlist-line waitlist-line-main">Get early</span>
           <span className="waitlist-line waitlist-line-accent">access.</span>

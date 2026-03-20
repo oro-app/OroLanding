@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useCallback } from 'react'
+import useScrollReveal from '../../lib/useScrollReveal'
 import './AppMockups.css'
 
 const screens = [
@@ -39,17 +40,11 @@ const screenContent = {
 
 export default function AppMockups() {
   const [active, setActive] = useState(0)
-  const [visible, setVisible] = useState(false)
   const [dragX, setDragX] = useState(0)
   const [dragging, setDragging] = useState(false)
   const startX = useRef(0)
   const ref = useRef(null)
-  
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => e.isIntersecting && setVisible(true), { threshold: 0.15 })
-    ref.current && obs.observe(ref.current)
-    return () => obs.disconnect()
-  }, [])
+  const visible = useScrollReveal(ref, { threshold: 0.18 })
   
   const go = useCallback((i) => {
     setActive(i < 0 ? screens.length - 1 : i >= screens.length ? 0 : i)
@@ -472,20 +467,18 @@ function ShopScreen({ goToScreen }) {
   const [maxPrice, setMaxPrice] = useState(300)
   const [showFilter, setShowFilter] = useState(false)
   const [activeCat, setActiveCat] = useState(0)
-  
   const items = [
     { img: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&q=80', name: 'Tailored Wool Coat', brand: 'COS', price: '$350', sale: '$245' },
     { img: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500&q=80', name: 'Relaxed Cashmere', brand: 'ARKET', price: '$189', sale: null },
     { img: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&q=80', name: 'Pleated Trousers', brand: 'ZARA', price: '$79', sale: '$59' },
-    { img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&q=80', name: 'Leather Tote', brand: 'MANGO', price: '$129', sale: null },
   ]
-  
+
   return (
     <div className="screen shop">
-      <div className="shop-top">
+      <div className="shop-header">
         <h1 className="shop-title">Shop</h1>
         <button className="shop-filter" onClick={() => setShowFilter(!showFilter)}>
-          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 6h12M5 10h8M7 14h4"/></svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 5h10M5 9h6M7 13h2"/></svg>
         </button>
       </div>
       
