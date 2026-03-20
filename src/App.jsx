@@ -11,8 +11,8 @@ function App() {
       <AppMockups />
       <WaitlistSection />
 
-      <footer className="border-t border-white/10 bg-black px-6 py-5 text-center text-xs uppercase tracking-[0.16em] text-white/70 sm:text-sm">
-        oro 2026
+      <footer className="border-t border-white/10 bg-black px-6 py-8 text-center text-[0.65rem] uppercase tracking-[0.2em] text-white/50">
+        © 2026 Oro. All rights reserved.
       </footer>
     </div>
   )
