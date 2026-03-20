@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --purple: #576092;
+  --gold: #ff9a00;
+}
+
 /* Basic resets */
 * { box-sizing: border-box; }
 

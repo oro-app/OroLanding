@@ -1,6 +1,6 @@
 .about {
-  background: white;
-  color: black;
+  background: #FAFAF9;
+  color: var(--gold);
   overflow: hidden;
 }
 
