@@ -1,7 +1,7 @@
 .about {
   min-height: 100vh;
-  background: #FAFAF9;
-  color: var(--purple);
+  background: var(--purple);
+  color: var(--gold);
   overflow: hidden;
   display: flex;
   align-items: stretch;
@@ -50,7 +50,7 @@
   font-family: "Arial Black", "Avenir Next Condensed", "Impact", sans-serif;
   font-size: clamp(2.6rem, 8.8vw, 7rem);
   font-weight: 900;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.025em;
   text-transform: uppercase;
 }
 
@@ -127,7 +127,7 @@
 
   .about-line-main {
     font-size: clamp(2.1rem, 11vw, 3.4rem);
-    letter-spacing: 0.02em;
+    letter-spacing: -0.025em;
   }
 
   .about-line-accent {

@@ -10,6 +10,10 @@ function App() {
       <AboutSection />
       <AppMockups />
       <WaitlistSection />
+
+      <footer className="border-t border-white/10 bg-black px-6 py-5 text-center text-xs uppercase tracking-[0.16em] text-white/70 sm:text-sm">
+        oro 2026
+      </footer>
     </div>
   )
 }
