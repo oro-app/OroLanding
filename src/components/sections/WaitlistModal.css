@@ -1,8 +1,9 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 
   display: flex;
   align-items: center;
@@ -13,39 +14,40 @@
 
 .modal {
   background: white;
-  padding: 2rem;
+  padding: 2.5rem;
   width: 100%;
   max-width: 380px;
-
-  border-radius: 20px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+  border-radius: 0;
 }
 
 .modal h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 300;
   margin-bottom: 0.5rem;
-  color: black;
+  color: #141414;
+  letter-spacing: -0.01em;
 }
 
 .modal-subtitle {
-  font-size: 0.9rem;
-  color: #6b7280;
+  font-size: 0.82rem;
+  color: #8a8a86;
   margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
 }
 
 .success-text {
-  font-size: 0.95rem;
-  color: #6b7280;
+  font-size: 0.9rem;
+  color: #8a8a86;
   margin-top: 0.5rem;
 }
 
 .success-icon {
   width: 48px;
   height: 48px;
-  background: #000;
+  background: #141414;
   color: #fff;
-  border-radius: 50%;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,18 +59,20 @@
   margin-top: 1.5rem;
   width: 100%;
   padding: 0.875rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  background: #000;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: #141414;
   color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 0;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
 
 .close-btn:hover {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .oauth-buttons {
@@ -84,9 +88,9 @@
   gap: 0.75rem;
   width: 100%;
   padding: 0.875rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -102,38 +106,26 @@
 
 .google-btn {
   background: white;
-  color: #1f1f1f;
-  border: 1px solid #e5e7eb;
+  color: #141414;
+  border: 1px solid #e8e5e0;
 }
 
 .google-btn:hover:not(:disabled) {
-  background: #f9fafb;
-  border-color: #d1d5db;
-}
-
-.microsoft-btn {
-  background: white;
-  color: #1f1f1f;
-  border: 1px solid #e5e7eb;
-}
-
-.microsoft-btn:hover:not(:disabled) {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  border-color: #141414;
 }
 
 .loading-text {
   text-align: center;
-  font-size: 0.85rem;
-  color: #6b7280;
+  font-size: 0.82rem;
+  color: #8a8a86;
   margin-top: 1rem;
 }
 
 .loading-spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid #e5e7eb;
-  border-top-color: #111;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #e8e5e0;
+  border-top-color: #141414;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin: 1rem auto;
@@ -145,12 +137,11 @@
 
 .error {
   margin-top: 0.75rem;
-  font-size: 0.85rem;
-  color: #dc2626;
+  font-size: 0.82rem;
+  color: #c41e3a;
   text-align: center;
 }
 
-/* Legacy form styles (kept for compatibility) */
 .modal form {
   display: flex;
   gap: 0.75rem;
@@ -159,27 +150,27 @@
 .modal input {
   flex: 1;
   padding: 0.75rem 0.9rem;
-  font-size: 0.95rem;
-  color: black;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  color: #141414;
+  border-radius: 0;
+  border: 1px solid #e8e5e0;
   outline: none;
 }
 
 .modal input:focus {
-  border-color: #111;
+  border-color: #141414;
 }
 
 .modal button[type="submit"] {
   padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  background: black;
+  font-size: 0.85rem;
+  background: #141414;
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 0;
   cursor: pointer;
 }
 
 .modal button[type="submit"]:hover {
-  opacity: 0.9;
+  opacity: 0.85;
 }
