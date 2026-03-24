@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 
 export default function IntroSection() {
   const [loaded, setLoaded] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
-  const sectionRef = useRef(null)
+  const bgRef = useRef(null)
+  const contentRef = useRef(null)
+  const scrollIndicatorRef = useRef(null)
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setLoaded(true))
@@ -11,44 +12,48 @@ export default function IntroSection() {
   }, [])
 
   useEffect(() => {
-    let ticking = false
-    const onScroll = () => {
-      if (ticking) return
-      ticking = true
-      requestAnimationFrame(() => {
-        setScrollY(window.scrollY)
-        ticking = false
-      })
+    const bg = bgRef.current
+    const content = contentRef.current
+    const indicator = scrollIndicatorRef.current
+
+    const update = () => {
+      const y = window.scrollY
+      bg.style.transform = `translate3d(0, ${y * 0.4}px, 0) scale(1.15)`
+      content.style.transform = `translate3d(0, ${y * -0.15}px, 0)`
+      indicator.style.opacity = String(Math.max(0.4 - y * 0.004, 0))
     }
+
+    const onScroll = () => requestAnimationFrame(update)
+
     window.addEventListener('scroll', onScroll, { passive: true })
+    update()
+
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
     <section 
       id="intro" 
-      ref={sectionRef}
       className="relative w-screen h-screen overflow-hidden"
       style={{ background: 'var(--bg-dark)' }}
     >
-      {/* Parallax background — moves at 40% scroll speed */}
       <div 
+        ref={bgRef}
         className="absolute inset-0 will-change-transform"
         style={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=1920&q=80)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: 'brightness(0.3) saturate(0.7)',
-          transform: `translateY(${scrollY * 0.4}px) scale(1.15)`,
+          transform: 'translate3d(0, 0, 0) scale(1.15)',
         }}
       />
       
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
 
-      {/* Content — moves opposite at 15% for float effect */}
       <div 
+        ref={contentRef}
         className="relative h-full flex flex-col items-center justify-center text-center px-8 will-change-transform"
-        style={{ transform: `translateY(${scrollY * -0.15}px)` }}
       >
         <img 
           src="/static/oro-logo.png" 
@@ -76,13 +81,13 @@ export default function IntroSection() {
         </p>
       </div>
 
-      {/* Scroll indicator */}
       <div 
+        ref={scrollIndicatorRef}
         className="absolute bottom-10 left-1/2 flex flex-col items-center gap-3"
         style={{
-          opacity: loaded ? Math.max(0.4 - scrollY * 0.004, 0) : 0,
-          transform: `translateX(-50%) ${loaded ? 'translateY(0)' : 'translateY(15px)'}`,
-          transition: loaded ? 'none' : 'opacity 1.2s ease-out 0.8s, transform 1.2s ease-out 0.8s',
+          opacity: loaded ? 0.4 : 0,
+          transform: 'translateX(-50%)',
+          transition: loaded ? 'none' : 'opacity 1.2s ease-out 0.8s',
         }}
       >
         <span 

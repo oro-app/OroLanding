@@ -8,7 +8,7 @@ export default function WaitlistSection() {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   const visible = useScrollReveal(ref, { threshold: 0.25 })
-  const { ref: paraRef, offset } = useParallax(0.1)
+  const paraRef = useParallax(0.1)
 
   useEffect(() => {
     if (window.location.hash.includes('access_token')) {
@@ -22,7 +22,6 @@ export default function WaitlistSection() {
       <div 
         ref={paraRef}
         className={`waitlist-inner${visible ? ' visible' : ''}`}
-        style={{ transform: `translateY(${offset}px)` }}
       >
         <h2 className="waitlist-title" aria-label="Get early access.">
           <span className="waitlist-line waitlist-line-main">Get early</span>
