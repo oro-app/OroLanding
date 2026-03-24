@@ -13,24 +13,23 @@ function App() {
 
       <footer 
         className="relative px-6 py-16 text-center"
-        style={{ background: 'var(--bg-dark)' }}
+        style={{ background: 'var(--purple-deep)' }}
       >
         <div 
           className="absolute inset-x-0 top-0 h-px mx-auto"
           style={{
             maxWidth: '500px',
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(212,168,83,0.15), transparent)',
           }}
         />
         <p 
-          className="text-white/25 mb-1"
-          style={{ fontSize: '0.6rem', letterSpacing: '0.3em', textTransform: 'uppercase' }}
+          className="mb-1"
+          style={{ fontSize: '0.6rem', letterSpacing: '0.3em', textTransform: 'uppercase', color: 'rgba(212,168,83,0.35)' }}
         >
           © 2026 Oro
         </p>
         <p 
-          className="text-white/12"
-          style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}
+          style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,168,83,0.18)' }}
         >
           Built for personal style
         </p>
