@@ -56,7 +56,7 @@ export default function IntroSection() {
               transition: 'opacity 1s ease-out 0.2s, transform 1s ease-out 0.2s',
             }}
           >
-            Oro creates outfits from <span className="hero-headline-accent">your style</span> with your clothes.
+            Creates outfits from <span className="hero-headline-accent">your style</span> with your clothes.
           </h1>
 
           <p
