@@ -6,6 +6,33 @@
   align-items: center;
   background: #FFF2D7;
   overflow: hidden;
+  animation: heroReveal 1.2s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: scale(1.03);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.hero-section::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: #FFF2D7;
+  pointer-events: none;
+  z-index: 99;
+  animation: curtainLift 0.9s cubic-bezier(0.22,1,0.36,1) 0.05s both;
+}
+
+@keyframes curtainLift {
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 
 .hero-glow {
@@ -21,16 +48,15 @@
 .hero-nav {
   position: relative;
   width: 100%;
-  padding: 1.4rem 2rem;
+  padding: 0.6rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .hero-nav-logo {
-  height: 36px;
+  height: 64px;
   object-fit: contain;
-  filter: brightness(0) saturate(100%);
 }
 
 .hero-nav-cta {
@@ -50,6 +76,30 @@
   background: var(--purple-soft);
 }
 
+.hero-nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.hero-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: #3A2646;
+  opacity: 0.45;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.hero-nav-icon:hover {
+  opacity: 1;
+  background: rgba(58, 38, 70, 0.08);
+}
+
 /* ── Content ── */
 .hero-content {
   position: relative;
@@ -59,7 +109,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 3rem 2rem 5rem;
+  padding: 7rem 2rem 5rem;
   max-width: 820px;
   margin: 0 auto;
 }
@@ -75,7 +125,7 @@
 }
 
 .hero-headline-accent {
-  color: var(--purple);
+  color: #EEBA2B;
   font-style: italic;
   font-family: 'DM Serif Display', Georgia, serif;
 }
@@ -100,21 +150,30 @@
 }
 
 .hero-waitlist-btn {
-  padding: 0.85rem 2.2rem;
+  padding: 1.05rem 3rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #fff;
-  background: var(--purple-deep);
+  color: #EEBA2B;
+  background: #3A2646;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  box-shadow: 0 4px 20px rgba(58, 38, 70, 0.35);
+  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
 }
 
 .hero-waitlist-btn:hover {
-  background: var(--purple);
+  background: #4a3260;
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 10px 36px rgba(58, 38, 70, 0.5), 0 2px 10px rgba(238, 186, 43, 0.2);
+}
+
+.hero-waitlist-btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(58, 38, 70, 0.3);
 }
 
 /* ── Scroll indicator ── */
@@ -157,7 +216,7 @@
   }
 
   .hero-nav-logo {
-    height: 28px;
+    height: 48px;
   }
 
   .hero-nav-cta {
