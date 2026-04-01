@@ -20,6 +20,9 @@ export default function AboutSection() {
           <span className="about-line about-line-accent">your style.</span>
         </h2>
         <p className="about-tagline">And makes it happen.</p>
+        <p className="about-desc">
+          You set the exact vibe you want to achieve, and Oro builds that aesthetic using the clothes you already own, while suggesting the perfect new pieces to fill in the gaps.
+        </p>
       </div>
     </section>
   )

@@ -1,0 +1,183 @@
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #faf9f7;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(212, 168, 83, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(61, 54, 96, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ── Nav ── */
+.hero-nav {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.6rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero-nav-logo {
+  height: 36px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%);
+}
+
+.hero-nav-cta {
+  padding: 0.6rem 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--purple);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.hero-nav-cta:hover {
+  background: var(--purple-soft);
+}
+
+/* ── Content ── */
+.hero-content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 2rem 5rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.hero-headline {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.hero-headline-accent {
+  color: var(--purple);
+  font-style: italic;
+  font-family: 'DM Serif Display', Georgia, serif;
+}
+
+.hero-subtitle {
+  margin: 1.5rem 0 0;
+  max-width: 560px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--stone);
+  letter-spacing: 0.005em;
+}
+
+/* ── Waitlist Row ── */
+.hero-waitlist-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 2.2rem;
+}
+
+.hero-waitlist-btn {
+  padding: 0.85rem 2.2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--purple-deep);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.hero-waitlist-btn:hover {
+  background: var(--purple);
+}
+
+/* ── Scroll indicator ── */
+.hero-scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hero-scroll-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--stone);
+  font-weight: 400;
+}
+
+.hero-scroll-line {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(to bottom, var(--stone), transparent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.65; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .hero-nav {
+    padding: 1.2rem 1.2rem;
+  }
+
+  .hero-nav-logo {
+    height: 28px;
+  }
+
+  .hero-nav-cta {
+    font-size: 0.7rem;
+    padding: 0.5rem 1.1rem;
+  }
+
+  .hero-content {
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .hero-subtitle {
+    max-width: 90%;
+  }
+
+  .hero-waitlist-btn {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+}
