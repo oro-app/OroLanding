@@ -67,7 +67,7 @@ export default function IntroSection() {
               transition: 'opacity 1s ease-out 0.45s, transform 1s ease-out 0.45s',
             }}
           >
-            Set the vibe you want. Oro builds that aesthetic using the clothes you already own, while suggesting the perfect new pieces to fill in the gaps.
+            Style is subjective. Getting dressed shouldn't be hard. Using your own clothes and your own taste, we make it easy.
           </p>
 
           {/* Inline waitlist */}
