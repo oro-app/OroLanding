@@ -111,38 +111,13 @@ export default function IntroSection() {
 
         {/* Footer */}
         <footer className="hero-footer">
-          <div className="hero-footer-left">
-            <span className="hero-footer-copy">&copy; 2026 Oro Digital Inc. All rights reserved.</span>
-            <span className="hero-footer-sep">·</span>
+          <span className="hero-footer-copy">&copy; 2026 Oro Digital Inc. All rights reserved.</span>
+          <div className="hero-footer-links">
             <a href="/terms" className="hero-footer-link" target="_blank" rel="noopener noreferrer">Terms of Service</a>
             <span className="hero-footer-sep">·</span>
             <a href="/privacy" className="hero-footer-link" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
             <span className="hero-footer-sep">·</span>
             <a href="/cookies" className="hero-footer-link" target="_blank" rel="noopener noreferrer">Cookie Policy</a>
-          </div>
-          <div className="hero-footer-socials">
-            <a href="mailto:admin@buildingoro.ca" className="hero-nav-icon" aria-label="Email">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M2 7l10 7 10-7"/>
-              </svg>
-            </a>
-            <a href="https://www.instagram.com/oro.wardrobe/" target="_blank" rel="noopener noreferrer" className="hero-nav-icon" aria-label="Instagram">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5"/>
-                <circle cx="12" cy="12" r="4.5"/>
-                <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
-              </svg>
-            </a>
-            <a href="https://www.linkedin.com/company/buildingoro/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="hero-nav-icon" aria-label="LinkedIn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="3"/>
-                <path d="M7 10v7"/>
-                <path d="M7 7v.01"/>
-                <path d="M11 17v-4c0-1.1.9-2 2-2s2 .9 2 2v4"/>
-                <path d="M11 10v7"/>
-              </svg>
-            </a>
           </div>
         </footer>
       </section>
