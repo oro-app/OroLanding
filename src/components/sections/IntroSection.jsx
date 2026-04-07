@@ -89,7 +89,7 @@ export default function IntroSection() {
               transition: 'opacity 1s cubic-bezier(0.22,1,0.36,1) 0.6s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 0.6s',
             }}
           >
-            Style is subjective. Getting dressed shouldn't be hard. Using your own clothes and your own taste, we make it easy.
+            Style is subjective. Looking good shouldn't be hard. Using your own clothes and your own taste, we make it easy.
           </p>
 
           {/* Inline waitlist */}
