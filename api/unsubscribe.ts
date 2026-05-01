@@ -5,7 +5,7 @@
 //   GET  https://buildingoro.ca/api/unsubscribe?token=bad             → 400 HTML error page
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
-import { verifyUnsubscribeToken } from './_lib/unsubscribe-token';
+import { verifyUnsubscribeToken } from './_lib/unsubscribe-token.js';
 
 const SHARED_STYLES = `
   body { font-family: Georgia, 'Times New Roman', serif; max-width: 480px; margin: 80px auto; padding: 24px; color: #1a1a1a; line-height: 1.6; }
