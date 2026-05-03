@@ -110,17 +110,6 @@ export default function IntroSection() {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="hero-footer">
-          <span className="hero-footer-copy">&copy; 2026 Oro Digital Inc. All rights reserved.</span>
-          <div className="hero-footer-links">
-            <a href="/terms" className="hero-footer-link" target="_blank" rel="noopener noreferrer">Terms of Service</a>
-            <span className="hero-footer-sep">·</span>
-            <a href="/privacy" className="hero-footer-link" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-            <span className="hero-footer-sep">·</span>
-            <a href="/cookies" className="hero-footer-link" target="_blank" rel="noopener noreferrer">Cookie Policy</a>
-          </div>
-        </footer>
       </section>
 
       {open && <WaitlistModal onClose={() => setOpen(false)} />}

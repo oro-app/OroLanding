@@ -1,0 +1,55 @@
+.site-footer {
+  width: 100%;
+  padding: 1rem 2rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  background: rgba(58, 38, 70, 0.05);
+  border-top: 1px solid rgba(58, 38, 70, 0.1);
+}
+
+.site-footer-links {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.site-footer-copy,
+.site-footer-link {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 0.7rem;
+  color: #3A2646;
+  opacity: 0.38;
+  letter-spacing: 0;
+}
+
+.site-footer-link {
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.site-footer-link:hover {
+  opacity: 0.7;
+}
+
+.site-footer-sep {
+  font-size: 0.7rem;
+  color: #3A2646;
+  opacity: 0.2;
+  user-select: none;
+}
+
+.newsletter-page .site-footer {
+  background: rgba(58, 38, 70, 0.04);
+}
+
+@media (max-width: 700px) {
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.2rem 1.25rem;
+  }
+}

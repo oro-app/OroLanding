@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import mdx from '@mdx-js/rollup'
 
 // Backend URL
 const backendUrl = process.env.VITE_BACKEND_URL || 'https://oro-kmuj.onrender.com';
@@ -21,7 +22,11 @@ const legalPagePlugin = {
 }
 
 export default defineConfig({
-  plugins: [react(), legalPagePlugin],
+  plugins: [
+    mdx(),
+    react(),
+    legalPagePlugin,
+  ],
   build: {
     outDir: 'dist',
     emptyOutDir: true,
