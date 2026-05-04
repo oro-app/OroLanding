@@ -4,24 +4,6 @@
   color: var(--ink);
 }
 
-.newsletter-page-nav {
-  width: min(100% - 2rem, 1040px);
-  margin: 0 auto;
-  padding: 0.7rem 0;
-}
-
-.newsletter-page-nav a {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-.newsletter-page-nav img {
-  height: 64px;
-  width: auto;
-  object-fit: contain;
-}
-
 .newsletter-article,
 .newsletter-not-found {
   width: min(100% - 2rem, 820px);
@@ -170,10 +152,6 @@
 }
 
 @media (max-width: 700px) {
-  .newsletter-page-nav img {
-    height: 48px;
-  }
-
   .newsletter-article-header {
     text-align: left;
   }

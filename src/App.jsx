@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import IntroSection from './components/sections/IntroSection'
 import NewsletterPage from './components/sections/NewsletterPage'
 import NewsletterSection from './components/sections/NewsletterSection'
+import SiteHeader from './components/sections/SiteHeader'
 import SiteFooter from './components/sections/SiteFooter'
 import CookieConsent from './components/sections/CookieConsent'
 import { hasAnalyticsConsent, initAnalytics } from './lib/analytics'
@@ -29,6 +30,7 @@ function App() {
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: 'var(--cream)' }}>
+      <SiteHeader />
       {route.type === 'newsletter' ? (
         <NewsletterPage slug={route.slug} />
       ) : (

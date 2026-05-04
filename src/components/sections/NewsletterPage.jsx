@@ -18,7 +18,6 @@ export default function NewsletterPage({ slug }) {
   if (!newsletter) {
     return (
       <main className="newsletter-page">
-        <NewsletterNav />
         <section className="newsletter-not-found">
           <p className="newsletter-page-eyebrow">Newsletter</p>
           <h1>We could not find that note.</h1>
@@ -33,8 +32,6 @@ export default function NewsletterPage({ slug }) {
 
   return (
     <main className="newsletter-page">
-      <NewsletterNav />
-
       <article className="newsletter-article">
         <header className="newsletter-article-header">
           <a href="/#newsletter" className="newsletter-back-link">Back to newsletters</a>
@@ -56,15 +53,5 @@ export default function NewsletterPage({ slug }) {
 
       <SiteFooter />
     </main>
-  )
-}
-
-function NewsletterNav() {
-  return (
-    <nav className="newsletter-page-nav" aria-label="Newsletter">
-      <a href="/" aria-label="Oro home">
-        <img src="/static/oro-logo.png" alt="Oro" />
-      </a>
-    </nav>
   )
 }

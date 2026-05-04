@@ -1,5 +1,6 @@
 .site-footer {
   width: 100%;
+  min-height: var(--site-footer-height);
   padding: 1rem 2rem 1.25rem;
   display: flex;
   align-items: center;
