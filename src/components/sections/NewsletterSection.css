@@ -187,12 +187,15 @@
   }
 
   .newsletter-header {
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
+    text-align: center;
   }
 
   .newsletter-title {
+    margin: 0 auto;
     font-size: clamp(2.15rem, 11vw, 2.55rem);
     max-width: 12ch;
     text-align: center;
@@ -209,7 +212,7 @@
   .newsletter-controls-mobile {
     display: flex;
     justify-content: center;
-    margin-top: 0.65rem;
+    margin-top: 0.7rem;
   }
 
   .newsletter-icon-button {
@@ -268,7 +271,7 @@
   }
 
   .newsletter-header {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.9rem;
   }
 
   .newsletter-title {

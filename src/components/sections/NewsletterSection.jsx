@@ -149,12 +149,6 @@ export default function NewsletterSection() {
         </div>
 
         {pageCount > 1 && (
-          <div className="newsletter-controls newsletter-controls-mobile" aria-label="Newsletter carousel controls">
-            {controls}
-          </div>
-        )}
-
-        {pageCount > 1 && (
           <div className="newsletter-dots" aria-hidden="true">
             {Array.from({ length: pageCount }, (_, index) => (
               <span
@@ -162,6 +156,12 @@ export default function NewsletterSection() {
                 key={index}
               />
             ))}
+          </div>
+        )}
+
+        {pageCount > 1 && (
+          <div className="newsletter-controls newsletter-controls-mobile" aria-label="Newsletter carousel controls">
+            {controls}
           </div>
         )}
       </div>
