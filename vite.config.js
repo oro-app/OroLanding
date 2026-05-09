@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import mdx from '@mdx-js/rollup'
@@ -27,6 +28,11 @@ export default defineConfig({
     react(),
     legalPagePlugin,
   ],
+  resolve: {
+    alias: {
+      '@newsletter-images': fileURLToPath(new URL('./src/assets/newsletters', import.meta.url)),
+    },
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,
