@@ -121,7 +121,7 @@ export default function NewsletterSection() {
       <div className="newsletter-shell">
         <div className="newsletter-header">
           <div>
-            <h2 className="newsletter-title">Small notes on getting dressed well</h2>
+            <h2 className="newsletter-title">From the Closet</h2>
           </div>
 
           {pageCount > 1 && (
@@ -138,9 +138,12 @@ export default function NewsletterSection() {
                 <img className="newsletter-card-image" src={newsletter.image} alt="" loading="lazy" />
               </div>
               <div className="newsletter-card-body">
-                <time className="newsletter-card-date" dateTime={newsletter.date}>
-                  {newsletter.dateLabel}
-                </time>
+                <div className="newsletter-card-meta">
+                  <span>{newsletter.tag}</span>
+                  <time dateTime={newsletter.date}>
+                    {newsletter.dateLabel}
+                  </time>
+                </div>
                 <h3>{newsletter.title}</h3>
                 <p>{newsletter.summary}</p>
               </div>

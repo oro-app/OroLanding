@@ -1,12 +1,19 @@
 .hero-section {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--site-header-height));
+  min-height: calc(100svh - var(--site-header-height));
   display: flex;
   flex-direction: column;
   align-items: center;
   background: #FFF2D7;
   overflow: hidden;
   animation: heroReveal 1.2s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@supports (height: 100dvh) {
+  .hero-section {
+    min-height: calc(100dvh - var(--site-header-height));
+  }
 }
 
 @keyframes heroReveal {

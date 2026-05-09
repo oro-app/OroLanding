@@ -40,6 +40,7 @@ export const newsletters = Object.entries(newsletterModules)
       slug,
       href: `/newsletter/${slug}`,
       title: module.meta?.title || titleFromSlug(slug),
+      tag: module.meta?.tag || 'Oro Insiders',
       date: module.meta?.date || '',
       dateLabel: formatNewsletterDate(module.meta?.date),
       image: module.meta?.image || '/static/oro-4.png',

@@ -15,7 +15,7 @@
   --gold: #d4a853;
   --gold-light: #e8c878;
   --gold-muted: rgba(212, 168, 83, 0.55);
-  --site-header-height: 57px;
+  --site-header-height: calc(48px + 0.8rem + 1px);
   --site-footer-height: 56px;
 }
 
@@ -92,7 +92,7 @@ body {
 
 @media (max-width: 700px) {
   :root {
-    --site-header-height: 50px;
+    --site-header-height: calc(40px + 0.9rem + 1px);
     --site-footer-height: 94px;
   }
 }

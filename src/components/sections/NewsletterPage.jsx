@@ -21,7 +21,6 @@ export default function NewsletterPage({ slug }) {
         <section className="newsletter-not-found">
           <p className="newsletter-page-eyebrow">Newsletter</p>
           <h1>We could not find that note.</h1>
-          <a href="/#newsletter" className="newsletter-back-button">Back to newsletters</a>
         </section>
         <SiteFooter />
       </main>
@@ -34,17 +33,18 @@ export default function NewsletterPage({ slug }) {
     <main className="newsletter-page">
       <article className="newsletter-article">
         <header className="newsletter-article-header">
-          <a href="/#newsletter" className="newsletter-back-link">Back to newsletters</a>
-          <time className="newsletter-page-date" dateTime={newsletter.date}>
-            {newsletter.dateLabel}
-          </time>
+          <div className="newsletter-article-meta">
+            <span className="newsletter-page-tag">{newsletter.tag}</span>
+            <time className="newsletter-page-date" dateTime={newsletter.date}>
+              {newsletter.dateLabel}
+            </time>
+          </div>
           <h1>{newsletter.title}</h1>
+          {newsletter.image && (
+            <img className="newsletter-article-image" src={newsletter.image} alt="" />
+          )}
           {newsletter.summary && <p>{newsletter.summary}</p>}
         </header>
-
-        {newsletter.image && (
-          <img className="newsletter-article-image" src={newsletter.image} alt="" />
-        )}
 
         <div className="newsletter-mdx">
           <Article />

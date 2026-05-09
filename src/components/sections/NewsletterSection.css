@@ -25,6 +25,7 @@
 
 .newsletter-title {
   margin: 0;
+  margin-bottom: 0.75rem;
   font-family: 'Cormorant Garamond', Georgia, serif;
   max-width: 760px;
   font-size: clamp(2.6rem, 5vw, 4.45rem);
@@ -127,7 +128,10 @@
   padding: 1rem;
 }
 
-.newsletter-card-date {
+.newsletter-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
   margin-bottom: 0.75rem;
   font-size: 0.7rem;
   color: rgba(255, 242, 215, 0.52);
@@ -190,14 +194,14 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    margin-bottom: 1.2rem;
     text-align: center;
   }
 
   .newsletter-title {
     margin: 0 auto;
+    margin-bottom: 1.5rem;
     font-size: clamp(2.15rem, 11vw, 2.55rem);
-    max-width: 12ch;
+    max-width: 80vw;
     text-align: center;
   }
 
@@ -245,7 +249,7 @@
     padding: 0.9rem;
   }
 
-  .newsletter-card-date {
+  .newsletter-card-meta {
     margin-bottom: 0.6rem;
     font-size: 0.64rem;
   }
@@ -261,7 +265,7 @@
 
   .newsletter-dots {
     justify-content: center;
-    margin-top: 0.65rem;
+    margin-top: 2rem;
   }
 }
 
@@ -275,7 +279,7 @@
   }
 
   .newsletter-title {
-    font-size: clamp(1.9rem, 9.5vw, 2.25rem);
+    font-size: clamp(2rem, 9.5vw, 2.25rem);
   }
 
   .newsletter-card {
@@ -297,7 +301,7 @@
   }
 
   .newsletter-title {
-    max-width: 11ch;
+    max-width: 80vw;
   }
 
   .newsletter-card {

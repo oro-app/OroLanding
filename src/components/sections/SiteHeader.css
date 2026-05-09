@@ -1,5 +1,6 @@
 .site-header {
   width: 100%;
+  height: var(--site-header-height);
   min-height: var(--site-header-height);
   padding: 0.4rem 2rem;
   display: flex;
