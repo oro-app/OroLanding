@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import IntroSection from './components/sections/IntroSection'
-import NewsletterPage from './components/sections/NewsletterPage'
-import NewsletterSection from './components/sections/NewsletterSection'
-import SiteHeader from './components/sections/SiteHeader'
-import SiteFooter from './components/sections/SiteFooter'
-import CookieConsent from './components/sections/CookieConsent'
+import IntroSection from './components/home/IntroSection'
+import NewsletterSection from './components/home/NewsletterSection'
+import NewsletterPage from './components/newsletter/NewsletterPage'
+import SiteHeader from './components/layout/SiteHeader'
+import SiteFooter from './components/layout/SiteFooter'
+import CookieConsent from './components/overlays/CookieConsent'
 import { hasAnalyticsConsent, initAnalytics } from './lib/analytics'
 
 function getRoute() {

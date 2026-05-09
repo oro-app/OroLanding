@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import WaitlistModal from './WaitlistModal'
+import WaitlistModal from '../overlays/WaitlistModal'
 import { trackEvent } from '../../lib/analytics'
 import './IntroSection.css'
 
