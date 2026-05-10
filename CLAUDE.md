@@ -18,11 +18,13 @@ This is a single-page React 18 + Vite + TailwindCSS landing site for **buildingo
 
 ### Frontend (src/)
 
-- `App.jsx` — root; conditionally inits Google Analytics based on cookie consent stored in `localStorage` (`oro_cookie_consent`)
-- `src/components/sections/IntroSection.jsx` — the entire page: nav, hero headline, waitlist CTA button, footer links. Opens `WaitlistModal` when the CTA is clicked or when `window.location.hash` contains `access_token` (Supabase magic-link redirect)
-- `src/components/sections/WaitlistModal.jsx` — email waitlist signup; POSTs to `api/waitlist` (returns 409 if already registered)
-- `src/components/sections/CookieConsent.jsx` — GDPR banner; calls `setAnalyticsConsent()` from `src/lib/analytics.js`
-- `src/lib/analytics.js` — thin wrapper around `window.gtag`; consent-gated; reads `VITE_GA_MEASUREMENT_ID`
+- `App.jsx` — root router; chooses between the home view and `/newsletter/:slug`. Conditionally inits Google Analytics based on cookie consent stored in `localStorage` (`oro_cookie_consent`).
+- `src/components/layout/` — chrome rendered on every route: `SiteHeader.jsx`, `SiteFooter.jsx`.
+- `src/components/overlays/` — global floating UI: `CookieConsent.jsx` (GDPR banner; calls `setAnalyticsConsent()` from `src/lib/analytics.js`) and `WaitlistModal.jsx` (email signup; POSTs to `api/waitlist`, returns 409 if already registered).
+- `src/components/home/` — sections only used on `/`: `IntroSection.jsx` (nav, hero headline, waitlist CTA — opens `WaitlistModal` when clicked or when `window.location.hash` contains `access_token` from a Supabase magic-link redirect) and `NewsletterSection.jsx` (carousel of newsletter cards).
+- `src/components/newsletter/` — only used on `/newsletter/:slug`: `NewsletterPage.jsx` (article view — hero, MDX body, end-of-article CTA) and `NewsletterRecommendations.jsx` (sticky sidebar with the 3 most recent other newsletters).
+- `src/content/newsletters/*.mdx` — newsletter source. Each file's filename is its slug (URL becomes `/newsletter/<filename>`); the `export const meta = {…}` block supplies title, tag, date, image, and summary, all rendered by `NewsletterPage`. `src/lib/newsletters.js` globs them with `import.meta.glob` and sorts by date descending.
+- `src/lib/analytics.js` — thin wrapper around `window.gtag`; consent-gated; reads `VITE_GA_MEASUREMENT_ID`.
 
 Each component has a co-located `.css` file for layout/animation styles that can't be done easily with Tailwind.
 

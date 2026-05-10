@@ -1,0 +1,187 @@
+.newsletter-recs {
+  position: sticky;
+  top: calc(var(--site-header-height) + 1.5rem);
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.4rem 1.25rem 1.25rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(58, 38, 70, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.newsletter-recs-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(58, 38, 70, 0.1);
+}
+
+.newsletter-recs-eyebrow {
+  color: #8a6a21;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.newsletter-recs-title {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--purple-deep);
+}
+
+.newsletter-recs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.newsletter-recs-card {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  gap: 0.8rem;
+  align-items: stretch;
+  padding: 0.55rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.newsletter-recs-card:hover {
+  background: rgba(58, 38, 70, 0.06);
+}
+
+.newsletter-recs-image-wrap {
+  width: 78px;
+  height: 78px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(58, 38, 70, 0.08);
+  border: 1px solid rgba(58, 38, 70, 0.08);
+}
+
+.newsletter-recs-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.newsletter-recs-card:hover .newsletter-recs-image {
+  transform: scale(1.06);
+}
+
+.newsletter-recs-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.newsletter-recs-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  color: #8a6a21;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.newsletter-recs-meta-dot {
+  opacity: 0.6;
+}
+
+.newsletter-recs-card-title {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--purple-deep);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.newsletter-recs-card:hover .newsletter-recs-card-title {
+  color: #8a6a21;
+}
+
+.newsletter-recs-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  padding: 0.55rem 0.25rem;
+  color: var(--purple-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.newsletter-recs-all svg {
+  transition: transform 0.25s ease;
+}
+
+.newsletter-recs-all:hover {
+  color: #8a6a21;
+}
+
+.newsletter-recs-all:hover svg {
+  transform: translateX(3px);
+}
+
+@media (max-width: 960px) {
+  .newsletter-recs {
+    position: static;
+    top: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .newsletter-recs {
+    padding: 1.15rem 1rem 1rem;
+    border-radius: 10px;
+  }
+
+  .newsletter-recs-title {
+    font-size: 1.4rem;
+  }
+
+  .newsletter-recs-card {
+    grid-template-columns: 68px 1fr;
+    gap: 0.7rem;
+    padding: 0.45rem;
+  }
+
+  .newsletter-recs-image-wrap {
+    width: 68px;
+    height: 68px;
+  }
+
+  .newsletter-recs-card-title {
+    font-size: 1.02rem;
+  }
+}
