@@ -33,7 +33,7 @@
 
 html, body {
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', sans-serif;
 }
 

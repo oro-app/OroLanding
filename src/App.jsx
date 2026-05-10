@@ -31,7 +31,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: 'var(--cream)' }}>
+    <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--cream)' }}>
       <SiteHeader />
       <main id="main">
         {route.type === 'newsletter' ? (
