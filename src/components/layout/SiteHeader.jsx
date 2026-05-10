@@ -4,7 +4,7 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <a href="/" className="site-header-logo-link" aria-label="Oro home">
-        <img src="/static/oro-logo.png" alt="Oro" className="site-header-logo" />
+        <img src="/static/oro-logo.png" alt="Oro" className="site-header-logo" width="48" height="48" fetchpriority="high" decoding="async" />
       </a>
 
       <nav className="site-header-icons" aria-label="Oro links">

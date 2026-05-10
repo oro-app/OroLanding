@@ -21,8 +21,8 @@
 .site-footer-link {
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   font-size: 0.7rem;
-  color: #3A2646;
-  opacity: 0.38;
+  /* Solid muted purple instead of opacity 0.7 over cream — satisfies WCAG AA (>4.5:1). */
+  color: #4a3556;
   letter-spacing: 0;
 }
 
@@ -32,13 +32,12 @@
 }
 
 .site-footer-link:hover {
-  opacity: 0.7;
+  color: #3A2646;
 }
 
 .site-footer-sep {
   font-size: 0.7rem;
-  color: #3A2646;
-  opacity: 0.2;
+  color: #6b5876;
   user-select: none;
 }
 
