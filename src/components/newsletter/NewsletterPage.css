@@ -313,12 +313,15 @@
   padding: 0.7rem 1.5rem;
   color: #fff2d7;
   background: var(--purple-deep);
+  border: 0;
   border-radius: 999px;
+  font-family: inherit;
   font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-decoration: none;
   text-transform: uppercase;
+  cursor: pointer;
   transition: background 0.25s ease, transform 0.25s ease;
 }
 

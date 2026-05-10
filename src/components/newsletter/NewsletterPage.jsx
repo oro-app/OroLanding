@@ -1,11 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { getNewsletterBySlug } from '../../lib/newsletters'
 import NewsletterRecommendations from './NewsletterRecommendations'
 import SiteFooter from '../layout/SiteFooter'
+import WaitlistModal from '../overlays/WaitlistModal'
+import { trackEvent } from '../../lib/analytics'
 import './NewsletterPage.css'
 
 export default function NewsletterPage({ slug }) {
   const newsletter = getNewsletterBySlug(slug)
+  const [waitlistOpen, setWaitlistOpen] = useState(false)
 
   useEffect(() => {
     const previousTitle = document.title
@@ -86,14 +89,23 @@ export default function NewsletterPage({ slug }) {
             <p className="newsletter-article-cta-text">
               Notes like this land in your inbox a few times a month — no noise.
             </p>
-            <a className="newsletter-article-cta-button" href="/#newsletter">
+            <button
+              type="button"
+              className="newsletter-article-cta-button"
+              onClick={() => {
+                trackEvent('cta_click', { location: 'newsletter_article', slug: newsletter.slug })
+                setWaitlistOpen(true)
+              }}
+            >
               Join the waitlist
-            </a>
+            </button>
           </div>
         </article>
       </div>
 
       <SiteFooter />
+
+      {waitlistOpen && <WaitlistModal onClose={() => setWaitlistOpen(false)} />}
     </main>
   )
 }
