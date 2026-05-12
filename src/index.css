@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --bg: #f6f4f1;
+  --bg: #FFF9ED;
   --bg-dark: #0a0a0a;
   --ink: #141414;
   --stone: #8a8a86;
   --sand: #e8e5e0;
-  --cream: #f6f4f1;
+  --cream: #FFF9ED;
   --purple: #3A2646;
   --purple-deep: #3A2646;
   --purple-soft: #4a3560;
