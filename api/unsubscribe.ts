@@ -99,10 +99,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const token = typeof req.query.token === 'string' ? req.query.token : '';
-  const secret = process.env.UNSUBSCRIBE_SECRET ?? '';
-  if (!secret) return res.status(500).send('Server misconfigured.');
+  const secrets = [
+    process.env.UNSUBSCRIBE_SECRET ?? '',
+    process.env.UNSUBSCRIBE_SECRET_OLD ?? '',
+  ].filter(Boolean);
+  if (secrets.length === 0) return res.status(500).send('Server misconfigured.');
 
-  const verified = verifyUnsubscribeToken(token, secret);
+  const verified = verifyUnsubscribeToken(token, secrets);
   if (!verified) {
     if (req.method === 'POST') return res.status(400).json({ ok: false, error: 'Invalid token' });
     return html(res, 400, ERROR_HTML);
