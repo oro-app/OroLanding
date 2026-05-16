@@ -30,6 +30,16 @@ function App() {
     if (hasAnalyticsConsent()) initAnalytics();
   }, []);
 
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash) {
+      const element = document.getElementById(hash.substring(1))
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }, [])
+
   return (
     <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--cream)' }}>
       <SiteHeader />
