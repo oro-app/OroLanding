@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { newsletters } from '../../lib/newsletters'
-import './NewsletterSection.css'
 
 export default function NewsletterSection() {
   const trackRef = useRef(null)

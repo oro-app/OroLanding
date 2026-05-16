@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { trackEvent } from '../../lib/analytics'
 import { APP_STORE_URL } from '../../lib/links'
-import './IntroSection.css'
 
 export default function IntroSection() {
   const [loaded, setLoaded] = useState(false)

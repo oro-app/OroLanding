@@ -1,5 +1,3 @@
-import './SiteHeader.css'
-
 export default function SiteHeader() {
   return (
     <header className="site-header">

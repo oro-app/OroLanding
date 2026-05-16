@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { setAnalyticsConsent } from '../../lib/analytics.js'
-import './CookieConsent.css'
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(() => localStorage.getItem('oro_cookie_consent') === null)
