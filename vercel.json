@@ -1,6 +1,35 @@
 {
-  "buildCommand": "npx vite build",
+  "buildCommand": "pnpm run build && mkdir -p dist/src && cp -R src/assets dist/src/",
   "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/src/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/terms",   "destination": "/terms.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
