@@ -33,12 +33,14 @@ export function formatNewsletterDate(value) {
 }
 
 export const newsletters = Object.entries(newsletterModules)
+  .filter(([, module]) => module.meta?.published === true)
   .map(([path, module]) => {
     const slug = module.meta?.slug || slugFromPath(path)
 
     return {
       slug,
       href: `/newsletter/${slug}`,
+      published: module.meta.published,
       title: module.meta?.title || titleFromSlug(slug),
       tag: module.meta?.tag || 'Oro Insiders',
       date: module.meta?.date || '',
