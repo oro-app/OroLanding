@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
-import WaitlistModal from '../overlays/WaitlistModal'
+import { useEffect, useRef, useState } from 'react'
 import { trackEvent } from '../../lib/analytics'
+import { APP_STORE_URL } from '../../lib/links'
 import './IntroSection.css'
 
 export default function IntroSection() {
   const [loaded, setLoaded] = useState(false)
-  const [open, setOpen] = useState(false)
   const heroRef = useRef(null)
 
   useEffect(() => {
@@ -14,12 +13,6 @@ export default function IntroSection() {
       requestAnimationFrame(() => setLoaded(true))
     )
     return () => cancelAnimationFrame(id)
-  }, [])
-
-  useEffect(() => {
-    if (window.location.hash.includes('access_token')) {
-      setOpen(true)
-    }
   }, [])
 
   return (
@@ -56,21 +49,24 @@ export default function IntroSection() {
             Style is subjective. Looking good shouldn't be hard. Using your own clothes and your own taste, we make it easy.
           </p>
 
-          {/* Inline waitlist */}
+          {/* App Store CTA */}
           <div
-            className="hero-waitlist-row"
+            className="hero-cta-row"
             style={{
               opacity: loaded ? 1 : 0,
               transform: loaded ? 'translateY(0)' : 'translateY(20px)',
               transition: 'opacity 1s cubic-bezier(0.22,1,0.36,1) 0.82s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 0.82s',
             }}
           >
-            <button
-              className="hero-waitlist-btn"
-              onClick={() => { trackEvent('cta_click', { location: 'hero' }); setOpen(true); }}
+            <a
+              className="hero-app-store-btn"
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('cta_click', { location: 'hero', destination: 'app_store' })}
             >
-              Join the Waitlist
-            </button>
+              Download on the App Store
+            </a>
           </div>
         </div>
 
@@ -81,7 +77,6 @@ export default function IntroSection() {
         </a>
       </section>
 
-      {open && <WaitlistModal onClose={() => setOpen(false)} />}
     </>
   )
 }

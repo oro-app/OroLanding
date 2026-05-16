@@ -1,6 +1,7 @@
 import './WaitlistModal.css';
 import { useState } from 'react';
 import { trackEvent } from '../../lib/analytics';
+import { markNewsletterSignedUp } from '../../lib/newsletterSignup';
 
 export default function WaitlistModal({ onClose }) {
   const [email, setEmail] = useState('')
@@ -36,6 +37,7 @@ export default function WaitlistModal({ onClose }) {
       })
 
       if (res.status === 409) {
+        markNewsletterSignedUp()
         setAlreadyOnList(true)
         setLoading(false)
         return
@@ -47,7 +49,8 @@ export default function WaitlistModal({ onClose }) {
         return
       }
 
-      trackEvent('waitlist_signup', { method: 'email' })
+      trackEvent('newsletter_signup', { method: 'email' })
+      markNewsletterSignedUp()
       setSuccess(true)
     } catch {
       setError('Something went wrong. Try again.')
@@ -68,9 +71,9 @@ export default function WaitlistModal({ onClose }) {
                 <path d="M3.5 9.5L7 13L14.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <p className="modal-eyebrow">You're on the list</p>
-            <h3>We'll be in touch.</h3>
-            <p className="modal-subtitle">You'll be among the first to experience Oro.</p>
+            <p className="modal-eyebrow">You're subscribed</p>
+            <h3>Thanks for joining.</h3>
+            <p className="modal-subtitle">We'll send thoughtful style notes and Oro updates to your inbox.</p>
             <button className="modal-done-btn" onClick={onClose}>Done</button>
           </div>
         ) : alreadyOnList ? (
@@ -80,16 +83,16 @@ export default function WaitlistModal({ onClose }) {
                 <path d="M3.5 9.5L7 13L14.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <p className="modal-eyebrow">Already registered</p>
-            <h3>You're already in.</h3>
-            <p className="modal-subtitle">You'll be one of the first to get access to Oro — no need to sign up again.</p>
+            <p className="modal-eyebrow">Already subscribed</p>
+            <h3>You're already on the list.</h3>
+            <p className="modal-subtitle">No need to sign up again — you're set to receive the Oro newsletter.</p>
             <button className="modal-done-btn" onClick={onClose}>Got it</button>
           </div>
         ) : (
           <>
-            <p className="modal-eyebrow">Early access</p>
-            <h3>Join the waitlist</h3>
-            <p className="modal-subtitle">Be first to know when we launch.</p>
+            <p className="modal-eyebrow">Newsletter</p>
+            <h3>Get style notes from Oro</h3>
+            <p className="modal-subtitle">Wardrobe ideas, product updates, and notes from our team — a few times a month.</p>
 
             <form onSubmit={handleSubmit}>
               <div className="email-form">
@@ -102,7 +105,7 @@ export default function WaitlistModal({ onClose }) {
                   required
                   autoFocus
                 />
-                <button type="submit" className="email-submit-btn" disabled={loading} aria-label="Join waitlist">
+                <button type="submit" className="email-submit-btn" disabled={loading} aria-label="Subscribe to newsletter">
                   {loading ? (
                     <span className="btn-spinner" />
                   ) : (
@@ -125,13 +128,13 @@ export default function WaitlistModal({ onClose }) {
                   }}
                 />
                 <label htmlFor="consent-checkbox" className="consent-label">
-                  I agree to receive updates and news from Oro. You can unsubscribe at any time.{' '}
+                  I agree to receive the Oro newsletter and updates. You can unsubscribe at any time.{' '}
                   View our{' '}
                   <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
                 </label>
               </div>
               {consentError && (
-                <p className="consent-error">Please confirm you agree to receive emails from us.</p>
+                <p className="consent-error">Please confirm you agree to receive the Oro newsletter.</p>
               )}
 
               {error && <p className="modal-error">{error}</p>}

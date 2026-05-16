@@ -93,15 +93,18 @@
   letter-spacing: 0.005em;
 }
 
-/* ── Waitlist Row ── */
-.hero-waitlist-row {
+/* ── Hero CTA ── */
+.hero-cta-row {
   display: flex;
   align-items: center;
   gap: 0;
   margin-top: 2.2rem;
 }
 
-.hero-waitlist-btn {
+.hero-app-store-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 1.05rem 3rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   font-size: 0.9rem;
@@ -113,17 +116,18 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  text-decoration: none;
   box-shadow: 0 4px 20px rgba(58, 38, 70, 0.35);
   transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
 }
 
-.hero-waitlist-btn:hover {
+.hero-app-store-btn:hover {
   background: #4a3260;
   transform: translateY(-3px) scale(1.04);
   box-shadow: 0 10px 36px rgba(58, 38, 70, 0.5), 0 2px 10px rgba(238, 186, 43, 0.2);
 }
 
-.hero-waitlist-btn:active {
+.hero-app-store-btn:active {
   transform: translateY(0) scale(0.98);
   box-shadow: 0 2px 8px rgba(58, 38, 70, 0.3);
 }
@@ -185,9 +189,9 @@
     max-width: 90%;
   }
 
-  .hero-waitlist-btn {
+  .hero-app-store-btn {
     width: 100%;
-    max-width: 280px;
+    max-width: 320px;
     text-align: center;
   }
 
