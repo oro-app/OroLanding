@@ -74,6 +74,11 @@ export default function IntroSection() {
           </div>
         </div>
 
+        <a className="hero-scroll" href="#newsletter" aria-label="Scroll to newsletter section">
+          <svg className="hero-scroll-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 5V18M7 13L12 18L17 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
       </section>
 
       {open && <WaitlistModal onClose={() => setOpen(false)} />}
