@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm run build && mkdir -p dist/src && cp -R src/assets dist/src/",
+  "buildCommand": "npm run build && mkdir -p dist/src && cp -R src/assets dist/src/",
   "outputDirectory": "dist",
   "headers": [
     {
