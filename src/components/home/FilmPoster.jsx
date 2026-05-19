@@ -3,7 +3,9 @@ import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 
 // Faithful port of the handoff's shared.jsx → FilmPoster. Prop-driven sizing /
 // ratio / overlay stay inline (computed); static styling lives in TheFilm.css.
-// Pass `src` to enable click-to-play with the real video file.
+// Click-to-play: pass `youtubeId` (preferred — hosted on YouTube) or `src`
+// (a direct video file). The editorial poster + play button stays; clicking
+// swaps in the player.
 const PLAY_SIZE = { sm: 44, md: 60, lg: 80 }
 
 export default function FilmPoster({
@@ -15,6 +17,7 @@ export default function FilmPoster({
   showMeta = true,
   rounded = 0,
   src = null,
+  youtubeId = null,
   poster = null,
 }) {
   const [playing, setPlaying] = useState(false)
@@ -23,6 +26,25 @@ export default function FilmPoster({
     ? 'linear-gradient(180deg, rgba(58,38,70,0.55) 0%, rgba(58,38,70,0.85) 100%)'
     : 'linear-gradient(180deg, rgba(14,11,7,0.18) 0%, rgba(14,11,7,0.55) 100%)'
   const playSize = PLAY_SIZE[size] || PLAY_SIZE.lg
+  const canPlay = Boolean(youtubeId || src)
+  const play = canPlay ? () => setPlaying(true) : undefined
+
+  if (playing && youtubeId) {
+    return (
+      <div
+        className="film-poster"
+        style={{ aspectRatio: ratio, borderRadius: rounded, background: '#000' }}
+      >
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1`}
+          title="oro — the film"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowFullScreen
+          style={{ width: '100%', height: '100%', display: 'block', border: 0 }}
+        />
+      </div>
+    )
+  }
 
   if (playing && src) {
     return (
@@ -52,15 +74,15 @@ export default function FilmPoster({
           ? `${overlay}, url(${poster}) center/cover no-repeat`
           : `${overlay}, url(${photo}) center/cover no-repeat`,
         backgroundBlendMode: 'multiply',
-        cursor: src ? 'pointer' : 'default',
+        cursor: canPlay ? 'pointer' : 'default',
       }}
-      onClick={src ? () => setPlaying(true) : undefined}
+      onClick={play}
     >
       <button
         type="button"
         className="film-poster-play"
         aria-label="play the film"
-        onClick={src ? () => setPlaying(true) : undefined}
+        onClick={play}
         style={{
           width: playSize,
           height: playSize,

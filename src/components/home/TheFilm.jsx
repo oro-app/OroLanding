@@ -3,12 +3,13 @@ import FilmPoster from './FilmPoster'
 // The film — a SHARED section (single component; theme-aware colour, same
 // layout in both themes). Faithful to the handoff's sections/the-film.jsx.
 //
-// The launch film is intentionally NOT committed (19 MB — kept out of git
-// history). Production reads VITE_FILM_URL (point it at Vercel Blob / a CDN);
-// local dev falls back to /film/launch.mp4, which exists on disk but is
-// gitignored. The 88 KB poster is committed so the section looks right even
-// before the video URL is set.
-const FILM_SRC = import.meta.env.VITE_FILM_URL || '/film/launch.mp4'
+// The launch film is hosted on YouTube (no self-hosting / git binary / env).
+// Set FILM_YOUTUBE_ID to the real video id (the part after `v=` or
+// youtu.be/<id>). The committed 88 KB poster.jpg is the thumbnail until then;
+// the play button is inert while the id is the placeholder.
+//
+// https://youtu.be/XI7XrQElqE0
+const FILM_YOUTUBE_ID = 'XI7XrQElqE0'
 
 export default function TheFilm() {
   return (
@@ -22,7 +23,7 @@ export default function TheFilm() {
           tone="dark"
           size="lg"
           showMeta={false}
-          src={FILM_SRC}
+          youtubeId={FILM_YOUTUBE_ID || null}
           poster="/film/poster.jpg"
         />
         <p className="film-sub">a forty-nine-second film. press play.</p>
