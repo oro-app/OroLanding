@@ -20,7 +20,7 @@ export default function SiteFooter({ onTryOro }) {
         <div className="site-footer-brand">
           <img src="/static/oro-logo.png" alt="oro" className="site-footer-logo" />
           <p className="site-footer-tagline">
-            an ai stylist that knows your closet — and what you actually wear.
+            the stylist that fits in your pocket.
           </p>
           <button type="button" className="site-footer-tryoro" onClick={() => onTryOro?.()}>
             try oro
