@@ -1,0 +1,334 @@
+/* Hero — faithful to design_handoff_landing_page/design/hero/v4-conversation*.jsx.
+   Values transcribed 1:1 from the prototype's inline styles. Light & dark are
+   structurally different layouts, not a recolor. */
+
+.hero {
+  font-family: var(--font-sans);
+}
+
+/* shared chat line type */
+.hero-line {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+.hero-line--you {
+  font-size: 18px;
+}
+.hero-accent {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+/* shared primary CTA */
+.hero-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
+  border: none;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.hero-cta-primary:hover {
+  background: var(--oro-plum-soft);
+}
+.hero-cta-primary--ondark {
+  gap: 12px;
+  padding: 16px 26px;
+  background: var(--oro-cream);
+  color: var(--oro-plum-deep);
+  border: 1px solid var(--oro-cream);
+  font-size: 19px;
+}
+.hero-cta-primary--ondark:hover {
+  background: var(--oro-cream);
+  opacity: 0.92;
+}
+.hero-cta-note {
+  font-size: 11px;
+  color: var(--oro-faint);
+  font-weight: 500;
+}
+.hero-cta-note--ondark {
+  font-size: 11.5px;
+  color: var(--oro-cream-70);
+  letter-spacing: 0.2px;
+}
+
+/* ─────────────────────────── LIGHT ─────────────────────────── */
+.hero--light {
+  background: var(--oro-cream);
+  color: var(--oro-ink);
+  padding: 48px 40px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-l-id {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.hero-l-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--oro-plum-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.hero-l-avatar span {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 26px;
+  color: var(--oro-cream);
+  letter-spacing: -0.8px;
+  line-height: 1;
+  margin-top: -2px;
+}
+.hero-l-logo {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+.hero-l-time {
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--oro-faint);
+  letter-spacing: 1.4px;
+  font-weight: 500;
+}
+
+.hero-l-thread {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero-bubble {
+  max-width: 92%;
+  padding: 14px 20px;
+}
+.hero-bubble--oro {
+  align-self: flex-start;
+  border-radius: 20px 20px 20px 4px;
+}
+.hero-bubble--you {
+  align-self: flex-end;
+  border-radius: 20px 20px 4px 20px;
+}
+.hero-bubble.is-plain {
+  background: var(--oro-paper);
+  border: 1px solid var(--oro-faint-line);
+  color: var(--oro-ink);
+}
+.hero-bubble--oro.is-filled {
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
+}
+.hero-bubble--you.is-filled {
+  background: var(--oro-ivory);
+  color: var(--oro-ink);
+}
+
+.hero-l-question {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  color: var(--oro-ink);
+}
+
+.hero-l-phoneblock {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+.hero-l-phoneframe {
+  background: var(--oro-plum-deep);
+  padding: 10px;
+  border-radius: 20px 20px 20px 4px;
+  display: inline-block;
+}
+.hero-l-phonecap {
+  margin-top: 8px;
+  padding-left: 6px;
+  max-width: 280px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--oro-faint);
+  letter-spacing: -0.1px;
+}
+
+.hero-l-cta {
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* ─────────────────────────── DARK ─────────────────────────── */
+.hero--dark {
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
+  padding: 72px 56px 96px;
+}
+.hero--dark .hero-line {
+  color: var(--oro-cream);
+}
+
+.hero-d-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 80px;
+  align-items: start;
+}
+
+.hero-d-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 640px;
+}
+
+.hero-dbubble {
+  max-width: 92%;
+  padding: 14px 20px;
+  background: transparent;
+  border: 1px solid var(--oro-cream-line);
+}
+.hero-dbubble--oro {
+  align-self: flex-start;
+  border-radius: 20px 20px 20px 4px;
+}
+.hero-dbubble--you {
+  align-self: flex-end;
+  border-radius: 20px 20px 4px 20px;
+}
+.hero-dbubble.is-emphasis {
+  border-color: var(--oro-cream);
+}
+
+.hero-d-question {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  color: var(--oro-cream);
+}
+
+.hero-d-photoblock {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+.hero-d-photoframe {
+  background: transparent;
+  border: 1px solid var(--oro-cream);
+  padding: 6px;
+  border-radius: 20px 20px 20px 4px;
+  display: inline-block;
+}
+.hero-d-photo {
+  width: 200px;
+  height: 260px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 16px 16px 16px 2px;
+}
+.hero-d-photocap {
+  margin-top: 8px;
+  padding-left: 6px;
+  max-width: 280px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--oro-cream-70);
+  letter-spacing: -0.1px;
+}
+
+.hero-d-rail {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-top: 8px;
+}
+.hero-d-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -1.4px;
+  color: var(--oro-cream);
+}
+.hero-d-title-accent {
+  font-style: italic;
+}
+.hero-d-sub {
+  margin: 0;
+  max-width: 320px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.45;
+  letter-spacing: -0.2px;
+  color: var(--oro-cream-70);
+}
+.hero-d-ctacol {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+/* ──────────────── responsive (desktop-first; coarse stack < 960px) ──────────────── */
+@media (max-width: 960px) {
+  .hero--light {
+    padding: 40px 20px 56px;
+  }
+  .hero--dark {
+    padding: 56px 20px 64px;
+  }
+  .hero-d-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .hero-d-rail {
+    position: static;
+    top: auto;
+  }
+}
+@media (max-width: 600px) {
+  .hero-l-question,
+  .hero-d-question {
+    font-size: 28px;
+  }
+  .hero-d-title {
+    font-size: 38px;
+  }
+}

@@ -1,4 +1,8 @@
+import { useTheme } from '../../context/ThemeContext'
+
 export default function SiteHeader() {
+  const { theme, setTheme } = useTheme()
+
   return (
     <header className="site-header">
       <a href="/" className="site-header-logo-link" aria-label="Oro home">
@@ -6,6 +10,26 @@ export default function SiteHeader() {
       </a>
 
       <nav className="site-header-icons" aria-label="Oro links">
+        {/* Temporary placement — moves into the redesigned nav when the header section lands. */}
+        <div className="theme-toggle" role="group" aria-label="Theme">
+          <button
+            type="button"
+            className={`theme-toggle-btn${theme === 'dark' ? ' is-active' : ''}`}
+            aria-pressed={theme === 'dark'}
+            onClick={() => setTheme('dark')}
+          >
+            dark
+          </button>
+          <span className="theme-toggle-dot" aria-hidden="true">·</span>
+          <button
+            type="button"
+            className={`theme-toggle-btn${theme === 'light' ? ' is-active' : ''}`}
+            aria-pressed={theme === 'light'}
+            onClick={() => setTheme('light')}
+          >
+            light
+          </button>
+        </div>
         <a href="mailto:admin@buildingoro.ca" className="site-header-icon" aria-label="Email">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="4" width="20" height="16" rx="2"/>

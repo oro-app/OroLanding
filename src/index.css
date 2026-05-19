@@ -17,6 +17,48 @@
   --gold-muted: rgba(212, 168, 83, 0.55);
   --site-header-height: calc(48px + 0.8rem + 1px);
   --site-footer-height: 56px;
+
+  /* ── Redesign: raw ORO palette (theme-independent) ── */
+  --oro-cream:      #FFF9ED;
+  --oro-paper:      #FFFDF8;
+  --oro-ivory:      #FFF2D7;
+  --oro-ink:        #0E0B07;
+  --oro-plum-deep:  #3A2646;
+  --oro-plum-soft:  #4A3560;
+  --oro-gold:       #D4A853;
+  --oro-gold-dim:   #B89343;
+  --oro-faint:      rgba(14, 11, 7, 0.5);
+  --oro-faintest:   rgba(14, 11, 7, 0.1);
+  --oro-faint-line: rgba(14, 11, 7, 0.16);
+  --oro-cream-70:   rgba(255, 249, 237, 0.7);
+  --oro-cream-45:   rgba(255, 249, 237, 0.45);
+  --oro-cream-line: rgba(255, 249, 237, 0.18);
+
+  --font-serif: "Fraunces", "Cormorant Garamond", serif;
+  --font-sans:  "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+
+  /* ── Redesign: semantic theme tokens. Default = dark (no flash). ── */
+  --color-bg:       var(--oro-plum-deep);
+  --color-fg:       var(--oro-cream);
+  --color-fg-faint: var(--oro-cream-70);
+  --color-fg-line:  var(--oro-cream-line);
+  --color-accent:   var(--oro-gold);
+}
+
+:root[data-theme="dark"] {
+  --color-bg:       var(--oro-plum-deep);
+  --color-fg:       var(--oro-cream);
+  --color-fg-faint: var(--oro-cream-70);
+  --color-fg-line:  var(--oro-cream-line);
+  --color-accent:   var(--oro-gold);
+}
+
+:root[data-theme="light"] {
+  --color-bg:       var(--oro-cream);
+  --color-fg:       var(--oro-ink);
+  --color-fg-faint: var(--oro-faint);
+  --color-fg-line:  var(--oro-faint-line);
+  --color-accent:   var(--oro-plum-deep);
 }
 
 ::selection {
@@ -34,6 +76,8 @@
 html, body {
   margin: 0;
   overflow-x: clip;
+  /* Dark is the default theme — paint plum immediately to avoid a flash before React mounts. */
+  background: var(--color-bg);
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', sans-serif;
 }
 
