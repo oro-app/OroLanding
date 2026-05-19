@@ -5,6 +5,8 @@ import TheFilm from './components/home/TheFilm'
 import FitsByOro from './components/home/FitsByOro'
 import Testimonials from './components/home/Testimonials'
 import TheJournal from './components/home/TheJournal'
+import OroInsiders from './components/home/OroInsiders'
+import FinalCTA from './components/home/FinalCTA'
 import SiteHeader from './components/layout/SiteHeader'
 import SiteFooter from './components/layout/SiteFooter'
 import CookieConsent from './components/overlays/CookieConsent'
@@ -66,6 +68,8 @@ function App() {
               <FitsByOro />
               <Testimonials />
               <TheJournal onSubscribe={() => setWaitlistOpen(true)} />
+              <OroInsiders onApply={() => setWaitlistOpen(true)} />
+              <FinalCTA onTryOro={() => setWaitlistOpen(true)} />
               <SiteFooter onTryOro={() => setWaitlistOpen(true)} />
             </>
           )}

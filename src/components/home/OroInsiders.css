@@ -1,0 +1,107 @@
+/* Oro insiders — values transcribed 1:1 from the handoff
+   (sections/oro-insiders.jsx). Shared section: always plum. */
+
+.ins {
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
+  font-family: var(--font-sans);
+  padding: 128px 56px;
+}
+
+.ins-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.ins-head {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 96px;
+  align-items: start;
+  margin-bottom: 80px;
+}
+.ins-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 64px;
+  line-height: 0.98;
+  letter-spacing: -2px;
+  color: var(--oro-cream);
+}
+.ins-em {
+  font-style: italic;
+}
+.ins-lead {
+  margin: 0;
+  max-width: 400px;
+  padding-top: 16px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.45;
+  letter-spacing: -0.3px;
+  color: var(--oro-cream-70);
+}
+
+.ins-perks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px;
+  margin-bottom: 64px;
+}
+.ins-perk-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  color: var(--oro-cream);
+}
+.ins-perk-desc {
+  margin: 10px 0 0;
+  max-width: 280px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--oro-cream-70);
+}
+
+.ins-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 28px;
+  background: var(--oro-cream);
+  color: var(--oro-plum-deep);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 19px;
+  letter-spacing: -0.3px;
+}
+.ins-cta:hover {
+  opacity: 0.92;
+}
+
+/* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
+@media (max-width: 960px) {
+  .ins {
+    padding: 80px 20px;
+  }
+  .ins-head {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  .ins-perks {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    margin-bottom: 48px;
+  }
+  .ins-title {
+    font-size: 44px;
+  }
+}
