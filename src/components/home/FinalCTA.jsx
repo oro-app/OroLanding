@@ -15,7 +15,7 @@ export default function FinalCTA({ onTryOro }) {
       <h2 className="fcta-title">
         start your <span className="fcta-em">morning</span> over.
       </h2>
-      <p className="fcta-sub">free during early access. ios first — android soon.</p>
+      <p className="fcta-sub">your wardrobe is already full of good outfits.</p>
       <div className="fcta-actions">
         <button type="button" className="fcta-cta" onClick={handleTryOro}>
           try oro
