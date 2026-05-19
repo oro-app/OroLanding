@@ -1,5 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import Hero from './components/home/Hero'
+import HowItWorks from './components/home/HowItWorks'
+import WhyOro from './components/home/WhyOro'
 import NewsletterSection from './components/home/NewsletterSection'
 import SiteHeader from './components/layout/SiteHeader'
 import SiteFooter from './components/layout/SiteFooter'
@@ -57,6 +59,8 @@ function App() {
               {/* Redesign, section-by-section: Hero is live; NewsletterSection
                   + SiteFooter are still the old design until their turn. */}
               <Hero onTryOro={() => setWaitlistOpen(true)} />
+              <HowItWorks />
+              <WhyOro />
               <NewsletterSection />
               <SiteFooter onTryOro={() => setWaitlistOpen(true)} />
             </>
