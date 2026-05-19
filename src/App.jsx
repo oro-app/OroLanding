@@ -4,7 +4,7 @@ import WhyOro from './components/home/WhyOro'
 import TheFilm from './components/home/TheFilm'
 import FitsByOro from './components/home/FitsByOro'
 import Testimonials from './components/home/Testimonials'
-import NewsletterSection from './components/home/NewsletterSection'
+import TheJournal from './components/home/TheJournal'
 import SiteHeader from './components/layout/SiteHeader'
 import SiteFooter from './components/layout/SiteFooter'
 import CookieConsent from './components/overlays/CookieConsent'
@@ -65,7 +65,7 @@ function App() {
               <TheFilm />
               <FitsByOro />
               <Testimonials />
-              <NewsletterSection />
+              <TheJournal onSubscribe={() => setWaitlistOpen(true)} />
               <SiteFooter onTryOro={() => setWaitlistOpen(true)} />
             </>
           )}

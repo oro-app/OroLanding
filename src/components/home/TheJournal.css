@@ -1,0 +1,248 @@
+/* The journal — values transcribed 1:1 from the handoff prototypes
+   (sections/the-journal.jsx light, sections/dark/the-journal.jsx dark). */
+
+.jr {
+  font-family: var(--font-sans);
+}
+.jr-accent {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+/* ─────────────────────────── LIGHT ─────────────────────────── */
+.jr--light {
+  background: var(--oro-cream);
+  color: var(--oro-ink);
+  padding: 72px 40px 80px;
+}
+
+.jr-l-head {
+  max-width: 1180px;
+  margin: 0 auto 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.jr-l-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.7px;
+}
+.jr-l-all {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--oro-ink);
+  text-decoration: none;
+  letter-spacing: -0.2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.jr-l-all:hover {
+  opacity: 0.7;
+}
+
+.jr-l-grid {
+  max-width: 1180px;
+  margin: 0 auto 32px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.jr-l-card {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+.jr-l-photo {
+  aspect-ratio: 16 / 10;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 10px;
+}
+.jr-l-date {
+  font-size: 9px;
+  color: var(--oro-faint);
+  letter-spacing: 1.4px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.jr-l-cardtitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+.jr-l-excerpt {
+  margin: 4px 0 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--oro-faint);
+  line-height: 1.45;
+  letter-spacing: -0.1px;
+}
+
+.jr-l-signup {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  border: 1px solid var(--oro-faint-line);
+  background: var(--oro-paper);
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 28px;
+  align-items: center;
+}
+.jr-l-signup-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.1;
+  letter-spacing: -0.4px;
+}
+.jr-l-signup-sub {
+  margin: 4px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--oro-faint);
+}
+.jr-l-field {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--oro-ink);
+}
+.jr-l-input {
+  flex: 1;
+  padding: 7px 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--oro-ink);
+}
+.jr-l-subscribe {
+  padding: 7px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--oro-ink);
+  letter-spacing: -0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.jr-l-subscribe:hover {
+  opacity: 0.7;
+}
+
+/* ─────────────────────────── DARK ─────────────────────────── */
+.jr--dark {
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
+  padding: 128px 56px;
+}
+
+.jr-d-head {
+  max-width: 1080px;
+  margin: 0 auto 56px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.jr-d-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -1.6px;
+  color: var(--oro-cream);
+}
+.jr-em {
+  font-style: italic;
+}
+.jr-d-all {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: var(--oro-cream-70);
+  text-decoration: none;
+}
+.jr-d-all:hover {
+  color: var(--oro-cream);
+}
+
+.jr-d-grid {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.jr-d-card {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+.jr-d-photo {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  margin-bottom: 18px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.jr-d-date {
+  font-size: 11px;
+  color: var(--oro-cream-45);
+  letter-spacing: 0.6px;
+  font-weight: 500;
+  text-transform: lowercase;
+  margin-bottom: 8px;
+}
+.jr-d-cardtitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  color: var(--oro-cream);
+}
+
+/* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
+@media (max-width: 960px) {
+  .jr--light {
+    padding: 56px 20px 64px;
+  }
+  .jr--dark {
+    padding: 80px 20px;
+  }
+  .jr-l-grid,
+  .jr-d-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .jr-l-signup {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .jr-d-title {
+    font-size: 38px;
+  }
+}
