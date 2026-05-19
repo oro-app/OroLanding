@@ -184,3 +184,14 @@
     font-size: 44px;
   }
 }
+
+@media (max-width: 600px) {
+  /* stack the bulleted list: dot beside title, desc under the title */
+  .why-l-item {
+    grid-template-columns: 14px 1fr;
+    row-gap: 4px;
+  }
+  .why-l-dot {
+    grid-row: 1 / span 2;
+  }
+}

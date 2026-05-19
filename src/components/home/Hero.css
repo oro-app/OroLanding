@@ -333,11 +333,22 @@
   }
   .hero-d-grid {
     grid-template-columns: 1fr;
-    gap: 48px;
+    gap: 40px;
   }
-  .hero-d-rail {
-    position: static;
-    top: auto;
+  /* The column-swap pins rail→col1 / thread→col2 with explicit grid
+     placement; that must be undone here or the single 1fr column can't
+     take effect and the conversation overflows off-screen. Stack with
+     the brand/CTA rail first, conversation below. */
+  .hero--dark .hero-d-rail {
+    grid-column: 1;
+    grid-row: 1;
+    margin-left: 0;
+  }
+  .hero--dark .hero-d-thread {
+    grid-column: 1;
+    grid-row: 2;
+    margin-left: 0;
+    max-width: 100%;
   }
 }
 @media (max-width: 600px) {
@@ -346,7 +357,13 @@
     font-size: 28px;
   }
   .hero-d-title {
-    font-size: 28px;
+    font-size: 20px;
+  }
+  /* Scale the cropped logo down for phones (crop margins recomputed at
+     this height — they're linear in the 500px source canvas). */
+  .hero-d-logo {
+    height: 280px;
+    margin: -120px -21px -86px -17px;
   }
 }
 

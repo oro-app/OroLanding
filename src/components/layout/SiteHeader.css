@@ -96,9 +96,14 @@
   font-style: italic;
   font-size: 13px;
   cursor: pointer;
+  white-space: nowrap;
 }
 .site-header-tryoro:hover {
   opacity: 0.7;
+}
+
+.theme-toggle {
+  white-space: nowrap;
 }
 
 @media (max-width: 700px) {
@@ -110,5 +115,20 @@
   }
   .site-header-logo {
     height: 30px;
+  }
+}
+
+/* Phones: drop the secondary text links (still in the footer) so the
+   essential logo / theme toggle / instagram / try-oro fit on one line. */
+@media (max-width: 600px) {
+  .site-header-link {
+    display: none;
+  }
+  .site-header-nav {
+    gap: 12px;
+  }
+  .site-header-tryoro {
+    padding: 7px 12px;
+    font-size: 12px;
   }
 }
