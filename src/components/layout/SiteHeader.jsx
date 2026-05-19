@@ -22,7 +22,7 @@ export default function SiteHeader({ onTryOro }) {
 
       <nav className="site-header-nav" aria-label="oro">
         <a href="/#journal" className="site-header-link">the journal</a>
-        <a href="/manifesto" className="site-header-link">manifesto</a>
+        <a href="/manifesto" className="site-header-link" target="_blank" rel="noopener noreferrer">manifesto</a>
 
         <div className="theme-toggle" role="group" aria-label="Theme">
           <button

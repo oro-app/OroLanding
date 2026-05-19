@@ -12,6 +12,29 @@ import {
 } from '../../lib/newsletterSignup'
 import './NewsletterPage.css'
 
+// MDX <a> override — anything that navigates off the current article (absolute
+// http(s) URL, mailto/tel, or an in-app route to a different page like /...)
+// opens in a new tab. Pure same-page hash anchors (#...) stay in place so
+// table-of-contents-style links still scroll instead of leaving the article.
+function MdxLink({ href = '', children, ...rest }) {
+  const opensNewTab =
+    /^(https?:)?\/\//i.test(href) ||
+    href.startsWith('mailto:') ||
+    href.startsWith('tel:') ||
+    href.startsWith('/')
+  return (
+    <a
+      href={href}
+      {...(opensNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      {...rest}
+    >
+      {children}
+    </a>
+  )
+}
+
+const MDX_COMPONENTS = { a: MdxLink }
+
 export default function NewsletterPage({ slug }) {
   const newsletter = getNewsletterBySlug(slug)
   const [newsletterSignupOpen, setNewsletterSignupOpen] = useState(false)
@@ -92,7 +115,7 @@ export default function NewsletterPage({ slug }) {
           <div className="newsletter-article-grid">
             <div className="newsletter-article-body">
               <div className="newsletter-mdx">
-                <Article />
+                <Article components={MDX_COMPONENTS} />
               </div>
             </div>
 

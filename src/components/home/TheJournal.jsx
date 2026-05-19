@@ -95,7 +95,7 @@ function TheJournalDark() {
 
       <div className="jr-feature">
         {lead && (
-          <a className="jr-lead" href={lead.href}>
+          <a className="jr-lead" href={lead.href} target="_blank" rel="noopener noreferrer">
             <div className="jr-lead-photo" style={{ backgroundImage: `url(${lead.image})` }} />
             <div className="jr-lead-meta">
               <div className="jr-date">{lead.dateLabel.toLowerCase()}</div>
@@ -107,7 +107,7 @@ function TheJournalDark() {
 
         <div className="jr-rest">
           {rest.map((e) => (
-            <a className="jr-mini" href={e.href} key={e.slug}>
+            <a className="jr-mini" href={e.href} key={e.slug} target="_blank" rel="noopener noreferrer">
               <div className="jr-mini-photo" style={{ backgroundImage: `url(${e.image})` }} />
               <div className="jr-mini-meta">
                 <div className="jr-date">{e.dateLabel.toLowerCase()}</div>

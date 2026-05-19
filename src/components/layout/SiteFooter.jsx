@@ -32,20 +32,20 @@ export default function SiteFooter({ onTryOro }) {
           <div className="site-footer-colhead">product</div>
           <button type="button" className="site-footer-link" onClick={() => onTryOro?.()}>try oro</button>
           <a className="site-footer-link" href="/#how">how it works</a>
-          <a className="site-footer-link" href="/the-brief">the brief</a>
+          <a className="site-footer-link" href="/the-brief" target="_blank" rel="noopener noreferrer">the brief</a>
           <a className="site-footer-link" href="/#whyoro">why oro</a>
         </div>
 
         <div className="site-footer-col">
           <div className="site-footer-colhead">oro</div>
-          <a className="site-footer-link" href="/manifesto">manifesto</a>
+          <a className="site-footer-link" href="/manifesto" target="_blank" rel="noopener noreferrer">manifesto</a>
           <a className="site-footer-link" href="/#journal">the journal</a>
-          <a className="site-footer-link" href="/investors">investors</a>
+          <a className="site-footer-link" href="/investors" target="_blank" rel="noopener noreferrer">investors</a>
         </div>
 
         <div className="site-footer-col">
           <div className="site-footer-colhead">say hi.</div>
-          <a className="site-footer-link" href="mailto:admin@buildingoro.ca">admin@buildingoro.ca</a>
+          <a className="site-footer-link" href="mailto:admin@buildingoro.ca" target="_blank" rel="noopener noreferrer">admin@buildingoro.ca</a>
           <a className="site-footer-link" href="https://www.instagram.com/oro.wardrobe/" target="_blank" rel="noopener noreferrer">instagram</a>
           <a className="site-footer-link" href="https://www.tiktok.com/@oro.wardrobe" target="_blank" rel="noopener noreferrer">tiktok</a>
           <a className="site-footer-link" href="https://www.linkedin.com/company/buildingoro/" target="_blank" rel="noopener noreferrer">linkedin</a>
@@ -55,11 +55,11 @@ export default function SiteFooter({ onTryOro }) {
       <div className="site-footer-bottom">
         <span>© 2026 oro digital inc.</span>
         <div className="site-footer-legal">
-          <a href="/terms">terms</a>
+          <a href="/terms" target="_blank" rel="noopener noreferrer">terms</a>
           <span className="site-footer-sep" aria-hidden="true">/</span>
-          <a href="/privacy">privacy</a>
+          <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy</a>
           <span className="site-footer-sep" aria-hidden="true">/</span>
-          <a href="/cookies">cookies</a>
+          <a href="/cookies" target="_blank" rel="noopener noreferrer">cookies</a>
         </div>
         <span className="site-footer-place">toronto / waterloo — 2026</span>
       </div>
