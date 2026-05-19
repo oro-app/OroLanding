@@ -51,13 +51,13 @@ function WhyOroDark() {
       <div className="why-d-grid">
         <div className="why-d-copy">
           <h2 className="why-d-title">
-            a stylist<br />of <span className="why-em-d">one</span>.
+            the wardrobe is where the day <span className="why-em-d">begins</span>.
           </h2>
           <p className="why-d-lead">
-            oro learns your closet, your week, the way you actually live.
-            every outfit is built around <em className="why-em-d">you</em> —
-            your taste, your day, who you’re becoming — not a million strangers
-            in a feed.
+            it’s also where most of the thinking happens: where you’re going,
+            the weather, what you’ve worn this week, what colours and shapes
+            suit you, what you feel like, what goes with what. oro does that
+            thinking for you, so you just bring the taste.
           </p>
         </div>
         <div className="why-d-photo" style={{ backgroundImage: `url(${ORO_PHOTOS.detail})` }} />
