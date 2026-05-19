@@ -1,22 +1,16 @@
 import { useState } from 'react'
 import { newsletters } from '../../lib/newsletters'
 
-// The journal — faithful to the handoff (sections/the-journal.jsx +
-// sections/dark/the-journal.jsx), replacing the old NewsletterSection.
-// Wired to the real src/lib/newsletters.js glob (most recent 3 MDX issues).
+// The journal — replaces the old NewsletterSection; wired to the real
+// src/lib/newsletters.js glob (most recent 3 MDX issues). Renders the dark
+// variant in both themes (colour-themed via --color-*).
 //
-// Light: header + 3 cards (16/10 image, UPPERCASE date, title, italic
-//   excerpt) + an inline newsletter signup box.
-// Dark: big header + 3 cards (4/5 image, lowercase date, title) — no
-//   excerpt, no signup form (per the prototype).
-//
-// Deviations from the prototype, flagged for review:
-// - Card links go to the real /newsletter/:slug (prototype used #journal-i).
-// - "all entries" → /journal, which has no page yet (out of scope per the
-//   handoff; lands on the home view for now).
-// - The light signup form is wired to the existing WaitlistModal (proper
-//   consent flow) instead of the prototype's fake inline-success state.
-// - Real article titles render as authored (not force-lowercased).
+// Reframed from the prototype's flat 3-up grid to an intentional "the
+// latest" editorial moment: big headline + quiet supporting line, then a
+// featured layout — one large lead entry + two smaller. The dead
+// "all entries → /journal" link was removed (the archive page is out of
+// scope; the link was the main thing that made the section feel broken).
+// TheJournalLight is kept for reference / easy revert (unused).
 
 const ENTRIES = newsletters.slice(0, 3)
 
@@ -88,23 +82,40 @@ function TheJournalLight({ onSubscribe }) {
 }
 
 function TheJournalDark() {
+  const [lead, ...rest] = ENTRIES
+
   return (
     <section id="journal" className="jr jr--dark">
-      <div className="jr-d-head">
-        <h2 className="jr-d-title">
+      <div className="jr-head">
+        <h2 className="jr-title">
           the <span className="jr-em">journal</span>.
         </h2>
-        <a className="jr-d-all" href="/journal">all entries →</a>
+        <p className="jr-sub">a slow read on style and mornings. the latest, below.</p>
       </div>
 
-      <div className="jr-d-grid">
-        {ENTRIES.map((e) => (
-          <a className="jr-d-card" href={e.href} key={e.slug}>
-            <div className="jr-d-photo" style={{ backgroundImage: `url(${e.image})` }} />
-            <div className="jr-d-date">{e.dateLabel.toLowerCase()}</div>
-            <h3 className="jr-d-cardtitle">{e.title}</h3>
+      <div className="jr-feature">
+        {lead && (
+          <a className="jr-lead" href={lead.href}>
+            <div className="jr-lead-photo" style={{ backgroundImage: `url(${lead.image})` }} />
+            <div className="jr-lead-meta">
+              <div className="jr-date">{lead.dateLabel.toLowerCase()}</div>
+              <h3 className="jr-lead-title">{lead.title}</h3>
+              {lead.summary && <p className="jr-lead-sum">{lead.summary}</p>}
+            </div>
           </a>
-        ))}
+        )}
+
+        <div className="jr-rest">
+          {rest.map((e) => (
+            <a className="jr-mini" href={e.href} key={e.slug}>
+              <div className="jr-mini-photo" style={{ backgroundImage: `url(${e.image})` }} />
+              <div className="jr-mini-meta">
+                <div className="jr-date">{e.dateLabel.toLowerCase()}</div>
+                <h3 className="jr-mini-title">{e.title}</h3>
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
   )
