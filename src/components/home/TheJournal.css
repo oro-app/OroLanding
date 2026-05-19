@@ -11,7 +11,7 @@
 
 /* ─────────────────────────── LIGHT ─────────────────────────── */
 .jr--light {
-  background: var(--oro-cream);
+  background: var(--color-fg);
   color: var(--oro-ink);
   padding: 72px 40px 80px;
 }
@@ -151,8 +151,8 @@
 
 /* ─────────────────────────── DARK ─────────────────────────── */
 .jr--dark {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   padding: 128px 56px;
 }
 
@@ -170,7 +170,7 @@
   font-size: 56px;
   line-height: 1;
   letter-spacing: -1.6px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .jr-em {
   font-style: italic;
@@ -180,11 +180,11 @@
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.2px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   text-decoration: none;
 }
 .jr-d-all:hover {
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 
 .jr-d-grid {
@@ -209,7 +209,7 @@
 }
 .jr-d-date {
   font-size: 11px;
-  color: var(--oro-cream-45);
+  color: var(--color-fg-faint);
   letter-spacing: 0.6px;
   font-weight: 500;
   text-transform: lowercase;
@@ -222,7 +222,7 @@
   font-size: 20px;
   line-height: 1.2;
   letter-spacing: -0.4px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 
 /* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */

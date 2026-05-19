@@ -2,8 +2,8 @@
    (sections/oro-insiders.jsx). Shared section: always plum. */
 
 .ins {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   font-family: var(--font-sans);
   padding: 128px 56px;
 }
@@ -27,7 +27,7 @@
   font-size: 64px;
   line-height: 0.98;
   letter-spacing: -2px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .ins-em {
   font-style: italic;
@@ -41,7 +41,7 @@
   font-size: 19px;
   line-height: 1.45;
   letter-spacing: -0.3px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
 }
 
 .ins-perks {
@@ -57,7 +57,7 @@
   font-size: 19px;
   line-height: 1.2;
   letter-spacing: -0.4px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .ins-perk-desc {
   margin: 10px 0 0;
@@ -65,7 +65,7 @@
   font-family: var(--font-sans);
   font-size: 13px;
   line-height: 1.55;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
 }
 
 .ins-cta {
@@ -73,8 +73,8 @@
   align-items: center;
   gap: 12px;
   padding: 18px 28px;
-  background: var(--oro-cream);
-  color: var(--oro-plum-deep);
+  background: var(--color-fg);
+  color: var(--color-bg);
   border: none;
   cursor: pointer;
   font-family: var(--font-serif);

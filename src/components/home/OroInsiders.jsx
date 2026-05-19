@@ -1,7 +1,7 @@
 import { trackEvent } from '../../lib/analytics'
 
-// Oro insiders — a SHARED section (single component, always plum, like the
-// footer / the film). Faithful to the handoff's sections/oro-insiders.jsx.
+// Oro insiders — a SHARED section (single component; theme-aware colour, same
+// layout in both themes). Faithful to the handoff's sections/oro-insiders.jsx.
 // "apply for access" opens the existing WaitlistModal (the early-access list).
 
 const PERKS = [

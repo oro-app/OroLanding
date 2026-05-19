@@ -1,6 +1,7 @@
 import { trackEvent } from '../../lib/analytics'
 
-// Final CTA — a SHARED section (single component, always plum). Faithful to
+// Final CTA — a SHARED section (single component; theme-aware colour, same
+// layout in both themes). Faithful to
 // the handoff's sections/final-cta.jsx. "try oro" opens the existing
 // WaitlistModal (consistent with every other try-oro CTA on the page).
 export default function FinalCTA({ onTryOro }) {

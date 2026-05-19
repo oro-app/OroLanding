@@ -1,4 +1,3 @@
-import { useTheme } from '../../context/ThemeContext'
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 
 // Why oro — faithful to the handoff (sections/why-oro.jsx +
@@ -68,6 +67,6 @@ function WhyOroDark() {
 }
 
 export default function WhyOro() {
-  const { theme } = useTheme()
-  return theme === 'dark' ? <WhyOroDark /> : <WhyOroLight />
+  // Light === dark on the home page: always render the dark variant.
+  return <WhyOroDark />
 }

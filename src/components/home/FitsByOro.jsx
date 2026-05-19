@@ -1,4 +1,3 @@
-import { useTheme } from '../../context/ThemeContext'
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 
 // Fits by oro — faithful to the handoff (sections/fits-by-oro.jsx +
@@ -90,6 +89,6 @@ function FitsByOroDark() {
 }
 
 export default function FitsByOro() {
-  const { theme } = useTheme()
-  return theme === 'dark' ? <FitsByOroDark /> : <FitsByOroLight />
+  // Light === dark on the home page: always render the dark variant.
+  return <FitsByOroDark />
 }

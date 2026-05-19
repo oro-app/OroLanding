@@ -1,4 +1,3 @@
-import { useTheme } from '../../context/ThemeContext'
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 
 // Testimonials — faithful to the handoff (sections/testimonials.jsx +
@@ -55,6 +54,6 @@ function TestimonialsDark() {
 }
 
 export default function Testimonials() {
-  const { theme } = useTheme()
-  return theme === 'dark' ? <TestimonialsDark /> : <TestimonialsLight />
+  // Light === dark on the home page: always render the dark variant.
+  return <TestimonialsDark />
 }

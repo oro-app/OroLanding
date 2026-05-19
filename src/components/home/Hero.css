@@ -19,7 +19,7 @@
 }
 .hero-accent {
   font-style: italic;
-  color: var(--color-accent);
+  color: var(--color-accent); /* gold on dark plum, plum on light cream */
 }
 
 /* shared primary CTA */
@@ -28,8 +28,8 @@
   align-items: center;
   gap: 10px;
   padding: 12px 22px;
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   border: none;
   font-family: var(--font-serif);
   font-style: italic;
@@ -44,13 +44,13 @@
 .hero-cta-primary--ondark {
   gap: 12px;
   padding: 16px 26px;
-  background: var(--oro-cream);
-  color: var(--oro-plum-deep);
-  border: 1px solid var(--oro-cream);
+  background: var(--color-fg);
+  color: var(--color-bg);
+  border: 1px solid var(--color-fg);
   font-size: 19px;
 }
 .hero-cta-primary--ondark:hover {
-  background: var(--oro-cream);
+  background: var(--color-fg);
   opacity: 0.92;
 }
 .hero-cta-note {
@@ -60,13 +60,13 @@
 }
 .hero-cta-note--ondark {
   font-size: 11.5px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   letter-spacing: 0.2px;
 }
 
 /* ─────────────────────────── LIGHT ─────────────────────────── */
 .hero--light {
-  background: var(--oro-cream);
+  background: var(--color-fg);
   color: var(--oro-ink);
   padding: 48px 40px 64px;
   display: flex;
@@ -84,7 +84,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: var(--oro-plum-deep);
+  background: var(--color-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +94,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 26px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
   letter-spacing: -0.8px;
   line-height: 1;
   margin-top: -2px;
@@ -138,8 +138,8 @@
   color: var(--oro-ink);
 }
 .hero-bubble--oro.is-filled {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
 }
 .hero-bubble--you.is-filled {
   background: var(--oro-ivory);
@@ -161,7 +161,7 @@
   margin-top: 2px;
 }
 .hero-l-phoneframe {
-  background: var(--oro-plum-deep);
+  background: var(--color-bg);
   padding: 10px;
   border-radius: 20px 20px 20px 4px;
   display: inline-block;
@@ -186,12 +186,12 @@
 
 /* ─────────────────────────── DARK ─────────────────────────── */
 .hero--dark {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   padding: 72px 56px 96px;
 }
 .hero--dark .hero-line {
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 
 .hero-d-grid {
@@ -220,7 +220,7 @@
   max-width: 92%;
   padding: 14px 20px;
   background: transparent;
-  border: 1px solid var(--oro-cream-line);
+  border: 1px solid var(--color-fg-line);
 }
 .hero-dbubble--oro {
   align-self: flex-start;
@@ -231,7 +231,7 @@
   border-radius: 20px 20px 4px 20px;
 }
 .hero-dbubble.is-emphasis {
-  border-color: var(--oro-cream);
+  border-color: var(--color-fg);
 }
 
 .hero-d-question {
@@ -241,7 +241,7 @@
   font-size: 36px;
   line-height: 1.05;
   letter-spacing: -1px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 
 .hero-d-photoblock {
@@ -250,7 +250,7 @@
 }
 .hero-d-photoframe {
   background: transparent;
-  border: 1px solid var(--oro-cream);
+  border: 1px solid var(--color-fg);
   padding: 6px;
   border-radius: 20px 20px 20px 4px;
   display: inline-block;
@@ -270,7 +270,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 12px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   letter-spacing: -0.1px;
 }
 
@@ -300,7 +300,7 @@
   font-size: 22px;
   line-height: 1.25;
   letter-spacing: -0.3px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .hero-d-title-accent {
   font-style: italic;
@@ -314,7 +314,7 @@
   font-size: 16px;
   line-height: 1.45;
   letter-spacing: -0.2px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
 }
 .hero-d-ctacol {
   display: flex;

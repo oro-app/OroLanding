@@ -2,8 +2,8 @@
    (sections/final-cta.jsx). Shared section: always plum, centered. */
 
 .fcta {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   font-family: var(--font-sans);
   padding: 160px 56px;
   text-align: center;
@@ -17,7 +17,7 @@
   font-size: 80px;
   line-height: 0.98;
   letter-spacing: -2.4px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .fcta-em {
   font-style: italic;
@@ -31,7 +31,7 @@
   font-size: 17px;
   line-height: 1.45;
   letter-spacing: -0.2px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
 }
 
 .fcta-actions {
@@ -43,8 +43,8 @@
   align-items: center;
   gap: 12px;
   padding: 18px 28px;
-  background: var(--oro-cream);
-  color: var(--oro-plum-deep);
+  background: var(--color-fg);
+  color: var(--color-bg);
   border: none;
   cursor: pointer;
   font-family: var(--font-serif);

@@ -2,8 +2,8 @@
    + the FilmPoster in shared.jsx). Shared section: always plum. */
 
 .film {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   font-family: var(--font-sans);
   padding: 128px 56px;
 }
@@ -21,7 +21,7 @@
   font-size: 56px;
   line-height: 1;
   letter-spacing: -1.6px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .film-em {
   font-style: italic;
@@ -35,7 +35,7 @@
   font-size: 15px;
   line-height: 1.45;
   letter-spacing: -0.1px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
 }
 
 /* FilmPoster (co-located — only used here) */
@@ -52,7 +52,7 @@
 .film-poster-play {
   border-radius: 50%;
   background: rgba(255, 249, 237, 0.14);
-  border: 1px solid var(--oro-cream-70);
+  border: 1px solid var(--color-fg-faint);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -62,7 +62,7 @@
 .film-poster-meta {
   font-family: var(--font-sans);
   font-size: 10px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   letter-spacing: 1.6px;
   text-transform: lowercase;
   font-weight: 500;
@@ -74,7 +74,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 12px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   letter-spacing: -0.2px;
 }
 

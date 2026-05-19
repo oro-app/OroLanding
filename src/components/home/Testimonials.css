@@ -7,7 +7,7 @@
 
 /* ─────────────────────────── LIGHT ─────────────────────────── */
 .tm--light {
-  background: var(--oro-cream);
+  background: var(--color-fg);
   color: var(--oro-ink);
   padding: 72px 40px 80px;
 }
@@ -56,7 +56,7 @@
   font-size: 42px;
   line-height: 0.5;
   letter-spacing: -2px;
-  color: var(--oro-plum-deep);
+  color: var(--color-bg);
   margin-bottom: 18px;
   height: 14px;
 }
@@ -102,8 +102,8 @@
 
 /* ─────────────────────────── DARK ─────────────────────────── */
 .tm--dark {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   padding: 128px 56px;
 }
 
@@ -128,12 +128,12 @@
   font-size: 22px;
   line-height: 1.35;
   letter-spacing: -0.4px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .tm-d-cap {
   font-family: var(--font-sans);
   font-size: 12px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   letter-spacing: 0.2px;
   font-weight: 500;
 }

@@ -1,7 +1,7 @@
 import FilmPoster from './FilmPoster'
 
-// The film — a SHARED section (single component, always plum regardless of
-// theme, like the footer). Faithful to the handoff's sections/the-film.jsx.
+// The film — a SHARED section (single component; theme-aware colour, same
+// layout in both themes). Faithful to the handoff's sections/the-film.jsx.
 export default function TheFilm() {
   return (
     <section id="film" className="film">

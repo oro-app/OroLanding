@@ -2,8 +2,8 @@
    Always plum-deep regardless of theme (raw --oro-* tokens, not theme-aware). */
 
 .site-footer {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   font-family: var(--font-sans);
   padding: 56px 40px 24px;
 }
@@ -31,7 +31,7 @@
   font-size: 14px;
   line-height: 1.4;
   letter-spacing: -0.2px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 
 .site-footer-tryoro {
@@ -39,10 +39,10 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
   background: transparent;
   padding: 8px 14px;
-  border: 1px solid var(--oro-cream);
+  border: 1px solid var(--color-fg);
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 12.5px;
@@ -66,7 +66,7 @@
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 500;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   text-decoration: none;
   padding: 4px 0;
   letter-spacing: 0.1px;
@@ -77,17 +77,17 @@
   text-align: left;
 }
 .site-footer-link:hover {
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 
 .site-footer-bottom {
   padding-top: 18px;
-  border-top: 1px solid var(--oro-cream-line);
+  border-top: 1px solid var(--color-fg-line);
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   font-size: 10.5px;
-  color: var(--oro-cream-45);
+  color: var(--color-fg-faint);
   letter-spacing: 0.6px;
   font-weight: 500;
 }
@@ -98,11 +98,11 @@
   align-items: baseline;
 }
 .site-footer-legal a {
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   text-decoration: none;
 }
 .site-footer-sep {
-  color: var(--oro-cream-45);
+  color: var(--color-fg-faint);
   user-select: none;
 }
 
@@ -111,7 +111,7 @@
   font-style: italic;
   font-size: 12px;
   letter-spacing: -0.1px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
 }
 
 @media (max-width: 960px) {

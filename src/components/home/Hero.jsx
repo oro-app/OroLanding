@@ -1,4 +1,3 @@
-import { useTheme } from '../../context/ThemeContext'
 import { trackEvent } from '../../lib/analytics'
 import FakePhone from './FakePhone'
 // Real hero conversation photo (replaces the Unsplash placeholder). Imported
@@ -124,14 +123,14 @@ function HeroDark({ onTryOro }) {
 }
 
 export default function Hero({ onTryOro }) {
-  const { theme } = useTheme()
-
   const handleTryOro = () => {
     trackEvent('cta_click', { location: 'hero', destination: 'waitlist' })
     onTryOro?.()
   }
 
-  return theme === 'dark'
-    ? <HeroDark onTryOro={handleTryOro} />
-    : <HeroLight onTryOro={handleTryOro} />
+  // Always render the dark variant's structure in both themes — same
+  // layout/content/formatting; the theme only changes colour (the CSS uses
+  // --color-* tokens). HeroLight is kept for reference / easy revert. Same
+  // pattern across the other home sections.
+  return <HeroDark onTryOro={handleTryOro} />
 }

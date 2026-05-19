@@ -7,7 +7,7 @@
 
 /* ─────────────────────────── LIGHT ─────────────────────────── */
 .why--light {
-  background: var(--oro-cream);
+  background: var(--color-fg);
   color: var(--oro-ink);
   padding: 72px 40px 80px;
 }
@@ -75,7 +75,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 14px;
-  color: var(--oro-plum-deep);
+  color: var(--color-bg);
   line-height: 1;
 }
 .why-l-itemtitle {
@@ -107,7 +107,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 10.5px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
   letter-spacing: -0.1px;
   background: rgba(14, 11, 7, 0.4);
   padding: 4px 8px;
@@ -116,8 +116,8 @@
 
 /* ─────────────────────────── DARK ─────────────────────────── */
 .why--dark {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   padding: 128px 56px;
 }
 
@@ -140,11 +140,11 @@
   font-size: 64px;
   line-height: 0.98;
   letter-spacing: -2px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .why-em-d {
   font-style: italic;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .why-d-lead {
   margin-top: 32px;
@@ -153,7 +153,7 @@
   font-size: 19px;
   line-height: 1.45;
   letter-spacing: -0.3px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
 }
 
 .why-d-photo {

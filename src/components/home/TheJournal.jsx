@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useTheme } from '../../context/ThemeContext'
 import { newsletters } from '../../lib/newsletters'
 
 // The journal — faithful to the handoff (sections/the-journal.jsx +
@@ -111,7 +110,8 @@ function TheJournalDark() {
   )
 }
 
-export default function TheJournal({ onSubscribe }) {
-  const { theme } = useTheme()
-  return theme === 'dark' ? <TheJournalDark /> : <TheJournalLight onSubscribe={onSubscribe} />
+export default function TheJournal() {
+  // Light === dark on the home page: always render the dark variant.
+  // (The dark journal has no signup form, so onSubscribe is unused here.)
+  return <TheJournalDark />
 }

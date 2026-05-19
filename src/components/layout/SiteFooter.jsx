@@ -1,6 +1,6 @@
 // Redesigned site footer — faithful to the handoff's shared.jsx → SiteFooter.
-// Always plum-deep regardless of theme (intentional, per the handoff), so it
-// uses the raw --oro-* palette, not the theme-aware --color-* tokens.
+// Theme-aware via --color-* tokens (plum/cream on dark, cream/ink on light):
+// same layout in both themes, only the colour differs.
 //
 // onTryOro is optional/guarded: App passes it on the home route; NewsletterPage
 // renders <SiteFooter/> without it, so the footer "try oro" is inert there

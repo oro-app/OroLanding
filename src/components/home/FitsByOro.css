@@ -7,7 +7,7 @@
 
 /* ─────────────────────────── LIGHT ─────────────────────────── */
 .fits--light {
-  background: var(--oro-cream);
+  background: var(--color-fg);
   color: var(--oro-ink);
   padding: 64px 40px 72px;
 }
@@ -86,7 +86,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 15px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
   letter-spacing: -0.3px;
 }
 .fits-l-meta {
@@ -98,7 +98,7 @@
   justify-content: space-between;
   align-items: baseline;
   font-size: 9px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
   letter-spacing: 1.4px;
   font-weight: 500;
 }
@@ -128,8 +128,8 @@
 
 /* ─────────────────────────── DARK ─────────────────────────── */
 .fits--dark {
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  background: var(--color-bg);
+  color: var(--color-fg);
   padding: 128px 56px;
 }
 
@@ -144,7 +144,7 @@
   font-size: 56px;
   line-height: 1;
   letter-spacing: -1.6px;
-  color: var(--oro-cream);
+  color: var(--color-fg);
 }
 .fits-em {
   font-style: italic;
@@ -157,7 +157,7 @@
   font-size: 19px;
   line-height: 1.45;
   letter-spacing: -0.3px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
 }
 
 .fits-d-grid {
@@ -183,7 +183,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 14px;
-  color: var(--oro-cream-70);
+  color: var(--color-fg-faint);
   letter-spacing: -0.2px;
 }
 
