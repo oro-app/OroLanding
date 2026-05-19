@@ -1,16 +1,29 @@
 import { useTheme } from '../../context/ThemeContext'
 
-export default function SiteHeader() {
+// Redesigned site header — faithful to the handoff's shared.jsx → SiteHeader.
+// Sticky, hairline bottom border, theme-aware via the --color-* tokens
+// (plum/cream on dark, cream/ink on light). The "try oro" button opens the
+// existing WaitlistModal (onTryOro is wired from App; optional/guarded so
+// routes that render the header without it — none currently — won't break).
+export default function SiteHeader({ onTryOro }) {
   const { theme, setTheme } = useTheme()
 
   return (
     <header className="site-header">
-      <a href="/" className="site-header-logo-link" aria-label="Oro home">
-        <img src="/static/oro-logo.png" alt="Oro" className="site-header-logo" width="48" height="48" fetchpriority="high" decoding="async" />
+      <a href="/" className="site-header-logo-link" aria-label="oro home">
+        <img
+          src="/static/oro-logo.png"
+          alt="oro"
+          className="site-header-logo"
+          fetchpriority="high"
+          decoding="async"
+        />
       </a>
 
-      <nav className="site-header-icons" aria-label="Oro links">
-        {/* Temporary placement — moves into the redesigned nav when the header section lands. */}
+      <nav className="site-header-nav" aria-label="oro">
+        <a href="/#journal" className="site-header-link">the journal</a>
+        <a href="/manifesto" className="site-header-link">manifesto</a>
+
         <div className="theme-toggle" role="group" aria-label="Theme">
           <button
             type="button"
@@ -30,28 +43,27 @@ export default function SiteHeader() {
             light
           </button>
         </div>
-        <a href="mailto:admin@buildingoro.ca" className="site-header-icon" aria-label="Email">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="4" width="20" height="16" rx="2"/>
-            <path d="M2 7l10 7 10-7"/>
+
+        <a
+          href="https://www.instagram.com/oro.wardrobe/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="site-header-ig"
+          aria-label="instagram"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="4.5" />
+            <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" />
           </svg>
         </a>
-        <a href="https://www.instagram.com/oro.wardrobe/" target="_blank" rel="noopener noreferrer" className="site-header-icon" aria-label="Instagram">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="5"/>
-            <circle cx="12" cy="12" r="4.5"/>
-            <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+
+        <button type="button" className="site-header-tryoro" onClick={() => onTryOro?.()}>
+          try oro
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
-        </a>
-        <a href="https://www.linkedin.com/company/buildingoro/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="site-header-icon" aria-label="LinkedIn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="3"/>
-            <path d="M7 10v7"/>
-            <path d="M7 7v.01"/>
-            <path d="M11 17v-4c0-1.1.9-2 2-2s2 .9 2 2v4"/>
-            <path d="M11 10v7"/>
-          </svg>
-        </a>
+        </button>
       </nav>
     </header>
   )

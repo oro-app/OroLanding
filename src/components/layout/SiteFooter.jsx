@@ -1,13 +1,67 @@
-export default function SiteFooter() {
+// Redesigned site footer — faithful to the handoff's shared.jsx → SiteFooter.
+// Always plum-deep regardless of theme (intentional, per the handoff), so it
+// uses the raw --oro-* palette, not the theme-aware --color-* tokens.
+//
+// onTryOro is optional/guarded: App passes it on the home route; NewsletterPage
+// renders <SiteFooter/> without it, so the footer "try oro" is inert there
+// (no regression — the old footer had no try-oro at all).
+function Arrow() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14M13 5l7 7-7 7" />
+    </svg>
+  )
+}
+
+export default function SiteFooter({ onTryOro }) {
   return (
     <footer className="site-footer">
-      <span className="site-footer-copy">Copyright 2026 Oro Digital Inc. All rights reserved.</span>
-      <div className="site-footer-links">
-        <a href="/terms" className="site-footer-link" target="_blank" rel="noopener noreferrer">Terms of Service</a>
-        <span className="site-footer-sep" aria-hidden="true">/</span>
-        <a href="/privacy" className="site-footer-link" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-        <span className="site-footer-sep" aria-hidden="true">/</span>
-        <a href="/cookies" className="site-footer-link" target="_blank" rel="noopener noreferrer">Cookie Policy</a>
+      <div className="site-footer-grid">
+        <div className="site-footer-brand">
+          <img src="/static/oro-logo.png" alt="oro" className="site-footer-logo" />
+          <p className="site-footer-tagline">
+            an ai stylist that knows your closet — and what you actually wear.
+          </p>
+          <button type="button" className="site-footer-tryoro" onClick={() => onTryOro?.()}>
+            try oro
+            <Arrow />
+          </button>
+        </div>
+
+        <div className="site-footer-col">
+          <div className="site-footer-colhead">product</div>
+          <button type="button" className="site-footer-link" onClick={() => onTryOro?.()}>try oro</button>
+          <a className="site-footer-link" href="/#how">how it works</a>
+          <a className="site-footer-link" href="/the-brief">the brief</a>
+          <a className="site-footer-link" href="/#whyoro">why oro</a>
+        </div>
+
+        <div className="site-footer-col">
+          <div className="site-footer-colhead">oro</div>
+          <a className="site-footer-link" href="/manifesto">manifesto</a>
+          <a className="site-footer-link" href="/#journal">the journal</a>
+          <a className="site-footer-link" href="/investors">investors</a>
+        </div>
+
+        <div className="site-footer-col">
+          <div className="site-footer-colhead">say hi.</div>
+          <a className="site-footer-link" href="mailto:admin@buildingoro.ca">admin@buildingoro.ca</a>
+          <a className="site-footer-link" href="https://www.instagram.com/oro.wardrobe/" target="_blank" rel="noopener noreferrer">instagram</a>
+          <a className="site-footer-link" href="https://www.tiktok.com/@oro.wardrobe" target="_blank" rel="noopener noreferrer">tiktok</a>
+          <a className="site-footer-link" href="https://www.linkedin.com/company/buildingoro/" target="_blank" rel="noopener noreferrer">linkedin</a>
+        </div>
+      </div>
+
+      <div className="site-footer-bottom">
+        <span>© 2026 oro digital inc.</span>
+        <div className="site-footer-legal">
+          <a href="/terms">terms</a>
+          <span className="site-footer-sep" aria-hidden="true">/</span>
+          <a href="/privacy">privacy</a>
+          <span className="site-footer-sep" aria-hidden="true">/</span>
+          <a href="/cookies">cookies</a>
+        </div>
+        <span className="site-footer-place">toronto / waterloo — 2026</span>
       </div>
     </footer>
   )

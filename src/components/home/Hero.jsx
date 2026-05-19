@@ -105,13 +105,8 @@ function HeroDark({ onTryOro }) {
         </div>
 
         <aside className="hero-d-rail">
-          <h1 className="hero-d-title">
-            a stylist<br />
-            of <span className="hero-d-title-accent">one</span>.
-          </h1>
-          <p className="hero-d-sub">
-            two questions, every morning. one outfit, from the clothes you already own.
-          </p>
+          <img className="hero-d-logo" src="/static/oro-logo.png" alt="oro" />
+          <h1 className="hero-d-title">make your wardrobe work for you.</h1>
           <div className="hero-d-ctacol">
             <button type="button" className="hero-cta-primary hero-cta-primary--ondark" onClick={onTryOro}>
               start the conversation

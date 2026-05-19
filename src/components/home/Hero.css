@@ -200,7 +200,7 @@
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 80px;
-  align-items: start;
+  align-items: center;
 }
 
 .hero-d-thread {
@@ -269,20 +269,31 @@
 }
 
 .hero-d-rail {
-  position: sticky;
-  top: 96px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding-top: 8px;
+  gap: 10px;
+}
+.hero-d-logo {
+  height: 375px;
+  width: auto;
+  display: block;
+  /* The asset is a 500×500 square; the "oro" mark only occupies x∈[31,463],
+     y∈[214,347]. At height:375 (scale 0.75) these negative margins crop the
+     transparent border exactly so the box === the glyph (~324×100), letting
+     the mark take the spotlight with no dead space. */
+  margin: -161px -28px -115px -23px;
+  /* rail is a flex column (align-items: stretch) — without this the img is
+     stretched to the full rail width and the wordmark smears. */
+  align-self: flex-start;
 }
 .hero-d-title {
   margin: 0;
+  max-width: 240px;
   font-family: var(--font-serif);
-  font-weight: 300;
-  font-size: 44px;
-  line-height: 1;
-  letter-spacing: -1.4px;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
   color: var(--oro-cream);
 }
 .hero-d-title-accent {
@@ -329,6 +340,44 @@
     font-size: 28px;
   }
   .hero-d-title {
-    font-size: 38px;
+    font-size: 28px;
   }
+}
+
+/* ──────────────── entrance: calm staggered reveal on load ────────────────
+   Pure CSS (runs on mount). Gated behind no-preference so reduced-motion
+   users get the final state with no opacity flicker and no animation. */
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-l-id,
+  .hero-l-thread > *,
+  .hero-l-cta,
+  .hero-d-thread > *,
+  .hero-d-rail > * {
+    opacity: 0;
+    animation: heroRise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* light: id → conversation cascade → cta */
+  .hero-l-id { animation-delay: 0.05s; }
+  .hero-l-thread > *:nth-child(1) { animation-delay: 0.14s; }
+  .hero-l-thread > *:nth-child(2) { animation-delay: 0.22s; }
+  .hero-l-thread > *:nth-child(3) { animation-delay: 0.30s; }
+  .hero-l-thread > *:nth-child(4) { animation-delay: 0.38s; }
+  .hero-l-thread > *:nth-child(5) { animation-delay: 0.46s; }
+  .hero-l-cta { animation-delay: 0.55s; }
+
+  /* dark: conversation cascade on the left, rail revealing alongside */
+  .hero-d-thread > *:nth-child(1) { animation-delay: 0.10s; }
+  .hero-d-thread > *:nth-child(2) { animation-delay: 0.18s; }
+  .hero-d-thread > *:nth-child(3) { animation-delay: 0.26s; }
+  .hero-d-thread > *:nth-child(4) { animation-delay: 0.34s; }
+  .hero-d-thread > *:nth-child(5) { animation-delay: 0.42s; }
+  .hero-d-rail > *:nth-child(1) { animation-delay: 0.18s; } /* logo */
+  .hero-d-rail > *:nth-child(2) { animation-delay: 0.30s; } /* headline */
+  .hero-d-rail > *:nth-child(3) { animation-delay: 0.42s; } /* cta */
 }

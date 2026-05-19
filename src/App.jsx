@@ -46,7 +46,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark">
       <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
-        <SiteHeader />
+        <SiteHeader onTryOro={() => setWaitlistOpen(true)} />
         <main id="main">
           {route.type === 'newsletter' ? (
             <Suspense fallback={null}>
@@ -58,7 +58,7 @@ function App() {
                   + SiteFooter are still the old design until their turn. */}
               <Hero onTryOro={() => setWaitlistOpen(true)} />
               <NewsletterSection />
-              <SiteFooter />
+              <SiteFooter onTryOro={() => setWaitlistOpen(true)} />
             </>
           )}
         </main>
