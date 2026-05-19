@@ -73,7 +73,7 @@ function FitsByOroDark() {
           a week, <span className="fits-em">edited</span>.
         </h2>
         <p className="fits-d-lead">
-          five outfits oro picked from real closets. nothing was bought — only re-arranged.
+          five outfits oro picked from real closets. all from clothes they already owned.
         </p>
       </div>
       <div className="fits-d-grid">

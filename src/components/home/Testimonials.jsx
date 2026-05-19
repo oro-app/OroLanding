@@ -7,9 +7,9 @@ import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 // Avatars are still ORO_PHOTOS placeholders pending real content.
 
 const QUOTES = [
-  { quote: 'i hadn’t worn this knit since february. oro pulled it back out.', name: 'alex',   where: 'brooklyn',    avatar: ORO_PHOTOS.hero2 },
-  { quote: 'i used to spiral every morning. now i just ask oro.',             name: 'sam',    where: 'los angeles', avatar: ORO_PHOTOS.hero3 },
-  { quote: 'first ai app that doesn’t try to sell me anything.',              name: 'morgan', where: 'london',      avatar: ORO_PHOTOS.hero4 },
+  { quote: 'i’ve used other style apps and they all kind of give you the same thing. oro feels different — it knows my colours, what actually fits my body, what i keep reaching for. it just gets my taste in a way i didn’t expect.', name: 'alex',   where: 'brooklyn',    avatar: ORO_PHOTOS.hero2 },
+  { quote: 'i own a lot of clothes but kept wearing the same stuff over and over. oro started pulling things i forgot i had. honestly felt like shopping without spending anything.',                                                  name: 'sam',    where: 'los angeles', avatar: ORO_PHOTOS.hero3 },
+  { quote: 'trying on different outfits and changing over and over is exhausting. i just do it on oro now — i can go through as many combinations as i want without actually having to get dressed and undressed. it’s so much faster.', name: 'morgan', where: 'london',      avatar: ORO_PHOTOS.hero4 },
 ]
 
 function TestimonialsLight() {

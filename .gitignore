@@ -6,3 +6,7 @@ dist
 .env
 .env.local
 .env*.local
+
+# Launch film — kept out of git (large binary). Served via VITE_FILM_URL
+# (Vercel Blob / CDN) in prod; the local copy is used for dev only.
+public/film/*.mp4
