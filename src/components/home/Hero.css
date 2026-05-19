@@ -195,13 +195,19 @@
 }
 
 .hero-d-grid {
-  max-width: 1180px;
+  /* narrower than 1180 pulls the left rail and right conversation slightly
+     toward centre (grid is centered, so both move inward symmetrically) */
+  max-width: 1000px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 360px;
+  /* EXPERIMENT: columns swapped — rail (logo+CTA) left, conversation right.
+     Revert by restoring `1fr 360px` and removing the grid-column rules below. */
+  grid-template-columns: 360px 1fr;
   gap: 80px;
   align-items: center;
 }
+.hero--dark .hero-d-rail { grid-column: 1; grid-row: 1; }
+.hero--dark .hero-d-thread { grid-column: 2; grid-row: 1; margin-left: auto; }
 
 .hero-d-thread {
   display: flex;
@@ -281,7 +287,7 @@
      y∈[214,347]. At height:375 (scale 0.75) these negative margins crop the
      transparent border exactly so the box === the glyph (~324×100), letting
      the mark take the spotlight with no dead space. */
-  margin: -161px -28px -115px -23px;
+  margin: -161px -28px -107px -23px;
   /* rail is a flex column (align-items: stretch) — without this the img is
      stretched to the full rail width and the wordmark smears. */
   align-self: flex-start;
