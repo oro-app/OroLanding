@@ -5,9 +5,9 @@ import { trackEvent } from '../../lib/analytics'
 // "apply for access" opens the existing WaitlistModal (the early-access list).
 
 const PERKS = [
-  { title: 'founders’ pricing, locked.', desc: 'whatever oro costs at launch — you pay our first price, forever.' },
-  { title: 'shape what we build.',        desc: 'monthly calls with the team. your asks, our roadmap.' },
-  { title: 'first in line.',              desc: 'every feature, every fit beta — you see it first.' },
+  { title: 'early access, always.', desc: 'every new feature and beta goes to insiders first, before it’s public.' },
+  { title: 'oro irl.',              desc: 'we go to fashion shows, brand nights, community events. insiders come with us.' },
+  { title: 'the group.',            desc: 'a group of people who genuinely love fashion. post your fits, talk about styling, find people who get it.' },
 ]
 
 export default function OroInsiders({ onApply }) {
@@ -25,7 +25,7 @@ export default function OroInsiders({ onApply }) {
           </h2>
           <p className="ins-lead">
             we’re building oro with a small group of early users.
-            they pick the next feature. they get founders’ pricing.
+            they help decide what gets built next.
           </p>
         </div>
 
