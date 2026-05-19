@@ -7,9 +7,9 @@ import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 // Avatars are still ORO_PHOTOS placeholders pending real content.
 
 const QUOTES = [
-  { quote: 'i’ve used other style apps and they all kind of give you the same thing. oro feels different — it knows my colours, what actually fits my body, what i keep reaching for. it just gets my taste in a way i didn’t expect.', name: 'alex',   where: 'brooklyn',    avatar: ORO_PHOTOS.hero2 },
-  { quote: 'i own a lot of clothes but kept wearing the same stuff over and over. oro started pulling things i forgot i had. honestly felt like shopping without spending anything.',                                                  name: 'sam',    where: 'los angeles', avatar: ORO_PHOTOS.hero3 },
-  { quote: 'trying on different outfits and changing over and over is exhausting. i just do it on oro now — i can go through as many combinations as i want without actually having to get dressed and undressed. it’s so much faster.', name: 'morgan', where: 'london',      avatar: ORO_PHOTOS.hero4 },
+  { quote: 'i’ve tried other style apps. oro’s the only one that actually gets my taste — my colours, what fits my body, what i keep reaching for.', name: 'alex',   where: 'brooklyn',    avatar: ORO_PHOTOS.hero2 },
+  { quote: 'i own a lot of clothes but kept wearing the same ten things. oro started pulling pieces i forgot i had. felt like a new wardrobe.',     name: 'sam',    where: 'los angeles', avatar: ORO_PHOTOS.hero3 },
+  { quote: 'changing in and out of outfits is exhausting. now i try everything on oro first and only put on what i’m actually wearing.',            name: 'morgan', where: 'london',      avatar: ORO_PHOTOS.hero4 },
 ]
 
 function TestimonialsLight() {
