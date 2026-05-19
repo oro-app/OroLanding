@@ -1,0 +1,157 @@
+/* Testimonials — values transcribed 1:1 from the handoff prototypes
+   (sections/testimonials.jsx light, sections/dark/testimonials.jsx dark). */
+
+.tm {
+  font-family: var(--font-sans);
+}
+
+/* ─────────────────────────── LIGHT ─────────────────────────── */
+.tm--light {
+  background: var(--oro-cream);
+  color: var(--oro-ink);
+  padding: 72px 40px 80px;
+}
+
+.tm-l-eyebrow {
+  max-width: 1180px;
+  margin: 0 auto 12px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--color-accent);
+  letter-spacing: 0.1px;
+}
+.tm-l-title {
+  max-width: 1180px;
+  margin: 0 auto 48px;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.tm-accent {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.tm-l-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.tm-l-card {
+  margin: 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--oro-faint-line);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.tm-l-mark {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 42px;
+  line-height: 0.5;
+  letter-spacing: -2px;
+  color: var(--oro-plum-deep);
+  margin-bottom: 18px;
+  height: 14px;
+}
+.tm-l-quote {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.35;
+  letter-spacing: -0.3px;
+  color: var(--oro-ink);
+}
+.tm-l-cap {
+  margin-top: auto;
+  padding-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tm-l-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  border: 1px solid var(--oro-faint-line);
+}
+.tm-l-name {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--oro-ink);
+  letter-spacing: -0.2px;
+}
+.tm-l-where {
+  margin-top: 1px;
+  font-size: 9.5px;
+  color: var(--oro-faint);
+  letter-spacing: 1.2px;
+  font-weight: 500;
+}
+
+/* ─────────────────────────── DARK ─────────────────────────── */
+.tm--dark {
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
+  padding: 128px 56px;
+}
+
+.tm-d-grid {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px;
+}
+.tm-d-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.tm-d-quote {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.35;
+  letter-spacing: -0.4px;
+  color: var(--oro-cream);
+}
+.tm-d-cap {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--oro-cream-70);
+  letter-spacing: 0.2px;
+  font-weight: 500;
+}
+
+/* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
+@media (max-width: 960px) {
+  .tm--light {
+    padding: 56px 20px 64px;
+  }
+  .tm--dark {
+    padding: 80px 20px;
+  }
+  .tm-l-grid,
+  .tm-d-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .tm-l-title {
+    font-size: 28px;
+  }
+}

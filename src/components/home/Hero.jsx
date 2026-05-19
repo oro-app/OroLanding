@@ -1,7 +1,10 @@
 import { useTheme } from '../../context/ThemeContext'
 import { trackEvent } from '../../lib/analytics'
-import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 import FakePhone from './FakePhone'
+// Real hero conversation photo (replaces the Unsplash placeholder). Imported
+// so Vite bundles it — note /static is dev-proxied to the backend, so a
+// public/static path would not resolve locally.
+import heroFitPhoto from '../../assets/hero/hero-fit.jpg'
 
 // Hero — the "conversation" hero. Single theme-aware component collapsing the
 // handoff's two prototype files (hero/v4-conversation.jsx + ...-dark.jsx). The
@@ -89,7 +92,7 @@ function HeroDark({ onTryOro }) {
           </DarkBubble>
 
           <DarkBubble side="you">
-            <span className="hero-line">two client meetings, then drinks with kate.</span>
+            <span className="hero-line">coffee with jess, then thrifting downtown.</span>
           </DarkBubble>
 
           <DarkBubble side="oro">
@@ -98,7 +101,7 @@ function HeroDark({ onTryOro }) {
 
           <div className="hero-d-photoblock">
             <div className="hero-d-photoframe">
-              <div className="hero-d-photo" style={{ backgroundImage: `url(${ORO_PHOTOS.hero})` }} />
+              <div className="hero-d-photo" style={{ backgroundImage: `url(${heroFitPhoto})` }} />
             </div>
             <div className="hero-d-photocap">↑ tap to wear it. or tell oro to try again.</div>
           </div>

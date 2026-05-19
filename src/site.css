@@ -2,8 +2,10 @@
 @import './components/layout/SiteHeader.css';
 @import './components/layout/SiteFooter.css';
 @import './components/home/Hero.css';
-@import './components/home/HowItWorks.css';
 @import './components/home/WhyOro.css';
+@import './components/home/TheFilm.css';
+@import './components/home/FitsByOro.css';
+@import './components/home/Testimonials.css';
 @import './components/home/IntroSection.css';
 @import './components/home/NewsletterSection.css';
 @import './components/overlays/CookieConsent.css';
