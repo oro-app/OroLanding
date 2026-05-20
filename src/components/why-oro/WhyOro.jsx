@@ -12,6 +12,10 @@ import './WhyOro.css'
 
 const PRINCIPLES = [
   {
+    label: 'set up in minutes.',
+    body: 'tagging and categorizing every piece in your closet takes hours. with oro, you upload outfits you’ve worn and it figures out the rest.',
+  },
+  {
     label: 'your style, not an average of everyone else’s.',
     body: 'oro doesn’t average you against a million strangers. it learns your closet, your week, the way you actually live. every pick is read against you.',
   },
