@@ -19,11 +19,7 @@ const CARE_SYMBOLS = [
   <g key="iron"><path d="M3 15 L4 9 Q11 4 19 9 Z" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" /><path d="M3 17 L19 17" stroke="currentColor" strokeWidth="1.1" /></g>,
 ]
 
-function nextMonthLabel() {
-  const d = new Date()
-  d.setMonth(d.getMonth() + 1)
-  return d.toLocaleDateString('en', { month: 'long' }).toLowerCase()
-}
+// The cadence is twice a week — no need to compute a "next month".
 
 export default function CareLabelSubscribe() {
   const [email, setEmail] = useState('')
@@ -77,7 +73,7 @@ export default function CareLabelSubscribe() {
 
         <h2 className="cl-title">
           one letter.<br />
-          <span className="cl-em">once a month.</span>
+          <span className="cl-em">twice a week.</span>
         </h2>
 
         <p className="cl-body">
@@ -94,7 +90,7 @@ export default function CareLabelSubscribe() {
 
         {done ? (
           <p className="cl-success">
-            ✓ you’re on the list. talk in {nextMonthLabel()}.
+            ✓ you’re on the list. first letter lands this week.
           </p>
         ) : (
           <form className="cl-form" onSubmit={handleSubmit}>
@@ -119,7 +115,7 @@ export default function CareLabelSubscribe() {
 
         <div className="cl-fibre">
           <span>100% words. 0% spam.</span>
-          <span>unsubscribe any monday.</span>
+          <span>unsubscribe any day.</span>
         </div>
       </div>
     </section>
