@@ -124,7 +124,7 @@ function HeroDark({ onTryOro }) {
 
 export default function Hero({ onTryOro }) {
   const handleTryOro = () => {
-    trackEvent('cta_click', { location: 'hero', destination: 'waitlist' })
+    trackEvent('cta_click', { location: 'hero', destination: 'app_store' })
     onTryOro?.()
   }
 

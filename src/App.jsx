@@ -13,6 +13,7 @@ import CookieConsent from './components/overlays/CookieConsent'
 import WaitlistModal from './components/overlays/WaitlistModal'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics } from './lib/analytics'
+import { APP_STORE_URL } from './lib/links'
 
 // Code-split the article + archive routes — only fetched when needed.
 const NewsletterPage = lazy(() => import('./components/newsletter/NewsletterPage'))
@@ -40,6 +41,14 @@ function App() {
   const route = getRoute()
   const [waitlistOpen, setWaitlistOpen] = useState(false)
 
+  // Every "try oro" CTA opens the App Store in a new tab. WaitlistModal is
+  // still mounted for OroInsiders ("join our community") and for the
+  // periodic newsletter-page signup popup — both genuine email-collection
+  // surfaces, not "try the app" CTAs.
+  const openAppStore = () => {
+    window.open(APP_STORE_URL, '_blank', 'noopener,noreferrer')
+  }
+
   useEffect(() => {
     if (hasAnalyticsConsent()) initAnalytics();
   }, []);
@@ -57,7 +66,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark">
       <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
-        <SiteHeader onTryOro={() => setWaitlistOpen(true)} />
+        <SiteHeader onTryOro={openAppStore} />
         <main id="main">
           {route.type === 'newsletter' ? (
             <Suspense fallback={null}>
@@ -71,15 +80,15 @@ function App() {
             <>
               {/* Redesign, section-by-section: Hero is live; NewsletterSection
                   + SiteFooter are still the old design until their turn. */}
-              <Hero onTryOro={() => setWaitlistOpen(true)} />
+              <Hero onTryOro={openAppStore} />
               <WhyOro />
               <TheFilm />
               <FitsByOro />
               <Testimonials />
               <TheJournal onSubscribe={() => setWaitlistOpen(true)} />
               <OroInsiders onApply={() => setWaitlistOpen(true)} />
-              <FinalCTA onTryOro={() => setWaitlistOpen(true)} />
-              <SiteFooter onTryOro={() => setWaitlistOpen(true)} />
+              <FinalCTA onTryOro={openAppStore} />
+              <SiteFooter onTryOro={openAppStore} />
             </>
           )}
         </main>
