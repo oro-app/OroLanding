@@ -13,7 +13,7 @@ const PERKS = [
   { k: 'styled for you, today',  v: 'every fit weighed against the weather, the occasion, your body, and what actually goes together.' },
   { k: 'virtual try-on',         v: 'see the fit on you before you commit. tap any look, see it on.' },
   { k: 'everything you already have', v: 'we never recommend a piece you don’t already own.' },
-  { k: 'your inspo, your way',   v: 'save the references that move you. oro learns the eye, not the algorithm.' },
+  { k: 'built around your taste', v: 'save the references that move you. oro learns the eye, not the algorithm.' },
 ]
 
 export default function TryOro() {
