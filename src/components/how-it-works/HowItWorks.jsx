@@ -32,9 +32,8 @@ export default function HowItWorks() {
       <section className="hiw-hero">
         <div className="hiw-hero-inner">
           <h1 className="hiw-title">
-            a fit.<br />
-            <span className="hiw-em">picked.</span><br />
-            on you.
+            the right outfit,<br />
+            <span className="hiw-em">every time</span>.
           </h1>
           <p className="hiw-sub">
             set up once. a minute a morning. picked from clothes you already own — and tried on before you commit.
