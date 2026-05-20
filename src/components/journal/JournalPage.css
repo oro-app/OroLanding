@@ -45,10 +45,10 @@
   list-style: none;
   padding: 0;
   margin: 0 auto;
-  max-width: 1180px;
+  max-width: 1040px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 48px 32px;
+  gap: 56px 28px;
 }
 
 .ja-card { margin: 0; }
@@ -64,7 +64,7 @@
    without bleeding past the card frame. */
 .ja-card-photo-wrap {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: var(--color-bg);
 }
@@ -81,11 +81,11 @@
 }
 
 .ja-card-meta {
-  margin-top: 18px;
+  margin-top: 14px;
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  font-size: 11px;
+  gap: 8px;
+  font-size: 10px;
   color: var(--color-fg-faint);
   letter-spacing: 0.6px;
   font-weight: 500;
@@ -94,12 +94,12 @@
 .ja-card-dot { opacity: 0.7; }
 
 .ja-card-title {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: 22px;
-  line-height: 1.2;
-  letter-spacing: -0.4px;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
   color: var(--color-fg);
   transition: color 200ms ease;
 }
@@ -165,10 +165,10 @@
 @media (max-width: 960px) {
   .ja-hero        { padding: 64px 20px 32px; }
   .ja-grid-wrap   { padding: 16px 20px 80px; }
-  .ja-grid        { grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
+  .ja-grid        { grid-template-columns: repeat(2, 1fr); gap: 44px 20px; }
   .ja-title       { font-size: 38px; letter-spacing: -1px; }
   .ja-sub         { font-size: 15px; }
-  .ja-card-title  { font-size: 19px; }
+  .ja-card-title  { font-size: 16px; }
 }
 
 @media (max-width: 600px) {
