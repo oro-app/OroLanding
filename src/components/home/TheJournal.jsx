@@ -90,7 +90,7 @@ function TheJournalDark() {
     <section id="journal" className="jr jr--dark">
       <div className="jr-head">
         <h2 className="jr-title">
-          the <span className="jr-em">journal</span>.
+          from the <span className="jr-em">closet</span>.
         </h2>
         <p className="jr-sub">a slow read on style and mornings. the latest, below.</p>
       </div>

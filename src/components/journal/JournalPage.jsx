@@ -11,7 +11,7 @@ import './JournalPage.css'
 export default function JournalPage() {
   useEffect(() => {
     const prev = document.title
-    document.title = 'the journal — oro'
+    document.title = 'from the closet — oro'
     return () => { document.title = prev }
   }, [])
 
@@ -20,7 +20,7 @@ export default function JournalPage() {
       <section className="ja-hero">
         <div className="ja-hero-inner">
           <h1 className="ja-title">
-            the <span className="ja-em">journal</span>.
+            from the <span className="ja-em">closet</span>.
           </h1>
           <p className="ja-sub">
             a slow read on style and mornings. every issue, in order.
