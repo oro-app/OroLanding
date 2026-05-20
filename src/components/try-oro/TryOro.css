@@ -56,7 +56,19 @@
 }
 
 .tryoro-hero-right {
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tryoro-hero-mockup {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  display: block;
+  /* Soft shadow lifts the phone off the plum surface without competing with
+     the editorial restraint elsewhere on the page. */
+  filter: drop-shadow(0 30px 50px rgba(14, 11, 7, 0.45))
+          drop-shadow(0 10px 24px rgba(14, 11, 7, 0.3));
 }
 
 /* ── PERKS ──────────────────────────────────────────────────────────────── */
@@ -114,31 +126,8 @@
     font-size: 18px;
   }
 
-  /* swap the dual-phone for the front phone only — the rotation + overlap
-     read poorly when there's no horizontal room. The pair is absolutely
-     positioned inside a 520x640 box; on mobile we collapse the box, hide
-     the back phone, and re-center the front one. */
-  .tryoro-hero-right {
-    display: flex;
-    justify-content: center;
-  }
-  .op-pair {
-    width: 100%;
-    height: auto;
-    min-height: 600px;
-  }
-  .op-pair-back {
-    display: none;
-  }
-  .op-pair-front {
-    position: relative;
-    right: auto;
-    top: 0;
-    display: flex;
-    justify-content: center;
-  }
-  .op-pair-front .op-bezel {
-    transform: rotate(0deg) !important; /* drop the rotation on mobile */
+  .tryoro-hero-mockup {
+    max-width: 320px;
   }
 
   .tryoro-perks {

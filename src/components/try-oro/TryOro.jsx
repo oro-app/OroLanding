@@ -3,7 +3,7 @@ import SiteFooter from '../layout/SiteFooter'
 import AppStoreButtons from '../marketing/AppStoreButtons'
 import PlayStoreSoonModal from '../marketing/PlayStoreSoonModal'
 import WaitlistModal from '../overlays/WaitlistModal'
-import { OroPhonePair } from '../marketing/OroPhone'
+import wardrobeMockup from '../../assets/try-oro/wardrobe-mockup.jpg'
 import { trackEvent } from '../../lib/analytics'
 import './TryOro.css'
 
@@ -50,7 +50,15 @@ export default function TryOro() {
           </div>
 
           <div className="tryoro-hero-right">
-            <OroPhonePair />
+            <img
+              className="tryoro-hero-mockup"
+              src={wardrobeMockup}
+              alt="Oro app — your wardrobe, 24 pieces across upper, lower, shoes, and accessories"
+              width="480"
+              height="950"
+              loading="eager"
+              decoding="async"
+            />
           </div>
         </div>
       </section>
