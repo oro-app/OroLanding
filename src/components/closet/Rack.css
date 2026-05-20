@@ -70,13 +70,25 @@
   text-decoration: none;
   transform-origin: top center;
   transform: rotate(var(--rot, 0deg));
-  animation: rack-sway 6.4s ease-in-out infinite;
+  /* The custom properties are read by @keyframes rack-sway via calc().
+     --rot is set inline per-card; --swing defaults to a calm idle. */
+  --swing: 0.9deg;
+  animation: rack-sway 7.6s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
-.rack-hanger:nth-child(2n) { animation-duration: 7.8s; }
-.rack-hanger:nth-child(3n) { animation-duration: 5.6s; }
+
+/* Desync — each card's period AND start phase differ so the rack never
+   reads as a synchronised choir. animation-delay pulls each card into a
+   different point of the cycle on first paint. */
+.rack-hanger:nth-child(2n)   { animation-duration:  9.2s; animation-delay: -2.4s; }
+.rack-hanger:nth-child(3n)   { animation-duration:  6.4s; animation-delay: -4.1s; }
+.rack-hanger:nth-child(4n+1) { animation-duration:  8.4s; animation-delay: -1.3s; }
+
 .rack-hanger:hover {
-  animation-duration: 1.6s;
+  /* Hover used to snap from 7s -> 1.6s, which read as a jolt. The new
+     gentler step keeps the same lazy easing, just wider amplitude and a
+     mildly shorter period. */
   --swing: 1.6deg;
+  animation-duration: 3s;
 }
 
 .rack-hook {
@@ -153,10 +165,14 @@
 }
 
 /* ── sway animation. Pivots from `transform-origin: top center` so each
-   card rocks from where the string meets the rod, like a real hanger. */
+   card rocks from where the string meets the rod, like a real hanger.
+   Bidirectional pendulum: rest -> +swing -> rest -> -swing -> rest,
+   which feels far more natural than the one-sided wobble it had before. */
 @keyframes rack-sway {
   0%, 100% { transform: rotate(var(--rot, 0deg)); }
-  50%      { transform: rotate(calc(var(--rot, 0deg) + var(--swing, 0.7deg))); }
+  25%      { transform: rotate(calc(var(--rot, 0deg) + var(--swing, 0.9deg))); }
+  50%      { transform: rotate(var(--rot, 0deg)); }
+  75%      { transform: rotate(calc(var(--rot, 0deg) - var(--swing, 0.9deg))); }
 }
 
 @media (prefers-reduced-motion: reduce) {
