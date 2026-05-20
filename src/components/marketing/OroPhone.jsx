@@ -207,9 +207,13 @@ function ScreenStyleMe() {
   )
 }
 
-/* ── Phone bezel (the only piece that uses the `width` + `rotate` props) ── */
+/* ── Phone bezel ─────────────────────────────────────────────────────────
+   `imageSrc`, if provided, overrides `screen` and renders an <img> as the
+   screen content (used to drop real app screenshots into the bezel without
+   rebuilding them as React). Otherwise renders one of the programmatic
+   screens (home / styleme). */
 
-export function OroPhone({ screen = 'home', width = 320, rotate = 0 }) {
+export function OroPhone({ screen = 'home', imageSrc = null, imageAlt = '', width = 320, rotate = 0 }) {
   const scale = width / NATIVE_W
   const Screen = screen === 'styleme' ? ScreenStyleMe : ScreenHome
   return (
@@ -221,9 +225,13 @@ export function OroPhone({ screen = 'home', width = 320, rotate = 0 }) {
       }}
     >
       <div className="op-screen-clip">
-        <div className="op-screen-scale">
-          <Screen />
-        </div>
+        {imageSrc ? (
+          <img className="op-screen-image" src={imageSrc} alt={imageAlt} draggable={false} />
+        ) : (
+          <div className="op-screen-scale">
+            <Screen />
+          </div>
+        )}
       </div>
     </div>
   )

@@ -34,6 +34,18 @@
   transform-origin: top left;
 }
 
+/* When `imageSrc` is passed instead of a programmatic screen — fill the
+   clipped screen area, top-aligned so the app's status bar / nav remain
+   visible if the source image's aspect ratio is taller than 390x844. */
+.op-screen-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  user-select: none;
+}
+
 /* ── inside the screen — native 390x844 px, all values verbatim from proto ─ */
 
 .op-screen {
