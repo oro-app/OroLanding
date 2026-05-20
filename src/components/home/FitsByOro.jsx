@@ -1,5 +1,6 @@
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 import slowDaze from '../../assets/fits/slow-daze.jpg'
+import tuePhoto from '../../assets/fits/tue.jpg'
 
 // Fits by oro — faithful to the handoff (sections/fits-by-oro.jsx +
 // sections/dark/fits-by-oro.jsx). Light: staggered photo wall, gradient
@@ -17,7 +18,7 @@ const DAYS_LIGHT = [
 
 const DAYS_DARK = [
   { day: 'mon', photo: slowDaze },
-  { day: 'tue', photo: ORO_PHOTOS.hero2 },
+  { day: 'tue', photo: tuePhoto },
   { day: 'wed', photo: ORO_PHOTOS.hero3 },
   { day: 'thu', photo: ORO_PHOTOS.hero4 },
   { day: 'fri', photo: ORO_PHOTOS.hero5 },
