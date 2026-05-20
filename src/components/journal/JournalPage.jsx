@@ -59,35 +59,41 @@ export default function JournalPage() {
       </section>
 
       <section
-        className="ja-list-wrap"
+        className="ja-grid-wrap"
         aria-label="all issues"
         ref={listRef}
         data-revealed={listRevealed ? 'true' : 'false'}
       >
-        <ol className="ja-list">
+        <ul className="ja-grid">
           {newsletters.map((n, i) => (
-            <li className="ja-row" key={n.slug} style={{ '--reveal-i': i }}>
+            <li className="ja-card" key={n.slug} style={{ '--reveal-i': i }}>
               <a
-                className="ja-row-link"
+                className="ja-card-link"
                 href={n.href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="ja-row-meta">
-                  <span className="ja-row-tag">{n.tag}</span>
+                <div className="ja-card-photo-wrap">
+                  <div
+                    className="ja-card-photo"
+                    style={{ backgroundImage: `url(${n.image})` }}
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ja-card-meta">
+                  <span className="ja-card-tag">{n.tag}</span>
                   {n.dateLabel && (
                     <>
-                      <span className="ja-row-dot" aria-hidden="true">·</span>
-                      <time className="ja-row-date" dateTime={n.date}>{n.dateLabel}</time>
+                      <span className="ja-card-dot" aria-hidden="true">·</span>
+                      <time className="ja-card-date" dateTime={n.date}>{n.dateLabel}</time>
                     </>
                   )}
                 </div>
-                <h2 className="ja-row-title">{n.title}</h2>
-                {n.summary && <p className="ja-row-sum">{n.summary}</p>}
+                <h2 className="ja-card-title">{n.title}</h2>
               </a>
             </li>
           ))}
-        </ol>
+        </ul>
       </section>
 
       <SiteFooter />

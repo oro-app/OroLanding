@@ -1,4 +1,6 @@
-/* /journal archive — editorial dark, same tokens as the home-page section. */
+/* /journal (from the closet) — editorial magazine-style archive.
+   Image-led 3-column card grid; the hero photo on each newsletter is
+   the visual hierarchy, not row dividers. Same plum/cream tokens. */
 
 .journal-archive {
   background: var(--color-bg);
@@ -11,7 +13,7 @@
   padding: 96px 56px 56px;
 }
 .ja-hero-inner {
-  max-width: 1080px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 .ja-title {
@@ -23,9 +25,7 @@
   letter-spacing: -1.6px;
   color: var(--color-fg);
 }
-.ja-em {
-  font-style: italic;
-}
+.ja-em { font-style: italic; }
 .ja-sub {
   margin: 18px 0 0;
   font-family: var(--font-serif);
@@ -37,110 +37,81 @@
   color: var(--color-fg-faint);
 }
 
-/* ── list ───────────────────────────────────────────────────────────────── */
-.ja-list-wrap {
-  padding: 8px 56px 128px;
+/* ── card grid ──────────────────────────────────────────────────────────── */
+.ja-grid-wrap {
+  padding: 24px 56px 128px;
 }
-.ja-list {
-  max-width: 1080px;
-  margin: 0 auto;
+.ja-grid {
   list-style: none;
   padding: 0;
+  margin: 0 auto;
+  max-width: 1180px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px 32px;
 }
 
-/* Each row carries its own hairline divider as a ::before so it can
-   animate (scaleX 0->1) during reveal. The last row also paints an
-   ::after so the bottom of the list is closed. */
-.ja-row {
-  position: relative;
-}
-.ja-row::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: var(--color-fg-line);
-  transform: scaleX(0);
-  transform-origin: left center;
-}
-.ja-row:last-child::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background: var(--color-fg-line);
-  transform: scaleX(0);
-  transform-origin: left center;
-}
-.ja-row-link {
+.ja-card { margin: 0; }
+.ja-card-link {
   display: block;
-  padding: 32px 0;
   color: inherit;
   text-decoration: none;
-  transition: opacity 150ms ease;
-}
-.ja-row-link:hover {
-  opacity: 0.72;
 }
 
-.ja-row-meta {
+/* Photo. 4:5 portrait crop — works for the existing newsletter hero
+   photos (most are landscape and `background-position: center` handles
+   the crop). Container clips on hover so the inner photo can scale
+   without bleeding past the card frame. */
+.ja-card-photo-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+.ja-card-photo {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ja-card-link:hover .ja-card-photo {
+  transform: scale(1.04);
+}
+
+.ja-card-meta {
+  margin-top: 18px;
   display: flex;
   align-items: baseline;
   gap: 10px;
-  margin-bottom: 10px;
   font-size: 11px;
   color: var(--color-fg-faint);
   letter-spacing: 0.6px;
   font-weight: 500;
   text-transform: lowercase;
-  opacity: 0;
-  transform: translateY(8px);
 }
-.ja-row-tag {
-  font-weight: 500;
-}
-.ja-row-dot {
-  opacity: 0.7;
-}
-.ja-row-date {
-  font-weight: 400;
-}
+.ja-card-dot { opacity: 0.7; }
 
-.ja-row-title {
-  margin: 0;
+.ja-card-title {
+  margin: 8px 0 0;
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: 22px;
   line-height: 1.2;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
   color: var(--color-fg);
-  opacity: 0;
-  transform: translateY(14px);
+  transition: color 200ms ease;
 }
-.ja-row-sum {
-  margin: 8px 0 0;
-  max-width: 760px;
-  font-family: var(--font-serif);
-  font-weight: 300;
-  font-style: italic;
-  font-size: 16px;
-  line-height: 1.5;
-  letter-spacing: -0.1px;
-  color: var(--color-fg-faint);
-  opacity: 0;
-  transform: translateY(10px);
+.ja-card-link:hover .ja-card-title {
+  color: var(--oro-gold);
 }
 
 /* ── ANIMATIONS ────────────────────────────────────────────────────────
-   Hero entrance on mount (title, sub), then a scroll-triggered cascade
-   over the list — for each row: hairline draws, meta fades, title rises
-   with a brief gold 'highlight of oro' pass, summary fades. Same gesture
-   as /why-oro + /try-oro so the editorial subpages settle in identically. */
+   Hero entrance on mount, then a scroll-triggered cascade over the grid.
+   Per card: photo fades+lifts in, meta fades, title rises with brief
+   gold 'highlight of oro' pass. Stagger 100 ms between cards. */
 
-@keyframes ja-draw {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
 @keyframes ja-rise {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -149,53 +120,57 @@
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes ja-photo-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
 @keyframes ja-rise-highlight {
   0%   { opacity: 0; transform: translateY(14px); color: var(--oro-cream-45); }
   45%  { opacity: 1; transform: translateY(0);    color: var(--oro-gold); }
   100% { opacity: 1; transform: translateY(0);    color: var(--color-fg); }
 }
 
-/* Hero — on-mount entrance. Always plays (above the fold). */
+/* Hero — on-mount entrance (always plays, above the fold). */
 .ja-title { animation: ja-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1)  80ms both; }
 .ja-sub   { animation: ja-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 240ms both; }
 
-/* List — staggered reveal per row. 120 ms apart so the cascade reads as
-   a continuous gesture even on long archives. */
-.ja-list-wrap[data-revealed='true'] .ja-row::before,
-.ja-list-wrap[data-revealed='true'] .ja-row:last-child::after {
-  animation: ja-draw 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: calc(var(--reveal-i, 0) * 120ms);
+/* Grid cards — hidden until parent reveals, then stagger in. */
+.ja-card-photo { opacity: 0; }
+.ja-card-meta  { opacity: 0; transform: translateY(8px); }
+.ja-card-title { opacity: 0; transform: translateY(14px); }
+
+.ja-grid-wrap[data-revealed='true'] .ja-card-photo {
+  animation: ja-photo-in 800ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--reveal-i, 0) * 100ms);
 }
-.ja-list-wrap[data-revealed='true'] .ja-row-meta {
+.ja-grid-wrap[data-revealed='true'] .ja-card-meta {
   animation: ja-rise-small 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: calc(var(--reveal-i, 0) * 120ms + 140ms);
+  animation-delay: calc(var(--reveal-i, 0) * 100ms + 140ms);
 }
-.ja-list-wrap[data-revealed='true'] .ja-row-title {
+.ja-grid-wrap[data-revealed='true'] .ja-card-title {
   animation: ja-rise-highlight 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: calc(var(--reveal-i, 0) * 120ms + 220ms);
-}
-.ja-list-wrap[data-revealed='true'] .ja-row-sum {
-  animation: ja-rise 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: calc(var(--reveal-i, 0) * 120ms + 360ms);
+  animation-delay: calc(var(--reveal-i, 0) * 100ms + 240ms);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ja-title,
   .ja-sub,
-  .ja-row-meta,
-  .ja-row-title,
-  .ja-row-sum     { opacity: 1 !important; transform: none !important; animation: none !important; }
-  .ja-row::before,
-  .ja-row:last-child::after { transform: scaleX(1) !important; animation: none !important; }
+  .ja-card-photo,
+  .ja-card-meta,
+  .ja-card-title { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .ja-card-link:hover .ja-card-photo { transform: none; }
 }
 
 /* ── responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
-  .ja-hero       { padding: 64px 20px 40px; }
-  .ja-list-wrap  { padding: 8px 20px 80px; }
-  .ja-title      { font-size: 38px; letter-spacing: -1px; }
-  .ja-sub        { font-size: 15px; }
-  .ja-row-link   { padding: 24px 0; }
-  .ja-row-title  { font-size: 21px; }
-  .ja-row-sum    { font-size: 14px; }
+  .ja-hero        { padding: 64px 20px 32px; }
+  .ja-grid-wrap   { padding: 16px 20px 80px; }
+  .ja-grid        { grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
+  .ja-title       { font-size: 38px; letter-spacing: -1px; }
+  .ja-sub         { font-size: 15px; }
+  .ja-card-title  { font-size: 19px; }
+}
+
+@media (max-width: 600px) {
+  .ja-grid        { grid-template-columns: 1fr; gap: 40px; }
 }
