@@ -120,7 +120,7 @@ function TheJournalDark() {
 
           <a className="jr-all" href="/journal" target="_blank" rel="noopener noreferrer">
             see all {ALL_COUNT} issues
-            <Arrow size={11} />
+            <Arrow size={14} />
           </a>
         </div>
       </div>

@@ -280,19 +280,22 @@
 .jr-all {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin-top: 8px;          /* on top of the 32px flex gap */
-  align-self: flex-start;   /* keep tight to the column edge */
+  align-self: flex-start;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--color-fg-line);
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 14px;
-  letter-spacing: -0.2px;
-  color: var(--color-fg-faint);
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  color: var(--color-fg);
   text-decoration: none;
-  transition: color 150ms ease;
+  transition: border-color 150ms ease, color 150ms ease;
 }
 .jr-all:hover {
-  color: var(--color-fg);
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
 }
 
 /* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
