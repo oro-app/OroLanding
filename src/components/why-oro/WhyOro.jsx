@@ -20,6 +20,10 @@ const PRINCIPLES = [
     body: 'most ai stylists are shopping engines in disguise. oro recommends what you already own — the pieces you forgot about, in combinations you wouldn’t have tried.',
   },
   {
+    label: 'no guessing how it’ll look.',
+    body: 'most styling apps show you a flat-lay. oro can put the look on your body so you know exactly what you’re saying yes to.',
+  },
+  {
     label: 'quiet, on purpose.',
     body: 'no scrolling. no quizzes. no morning mood-boards. two questions, one outfit, and the rest of your day back.',
   },
