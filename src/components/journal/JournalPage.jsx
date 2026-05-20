@@ -82,7 +82,7 @@ export default function JournalPage() {
           </div>
           <div className="ftc-hero-right">
             <p className="ftc-sub">
-              a slow read on style, mornings, and the small group of people we’re building oro with. one letter, twice a week — and a rack of older notes you can flip through any time.
+              for the fashion lovers, the outfit planners, the people with opinions about fabric. twice a week — and a rack of older notes you can flip through any time.
             </p>
           </div>
         </div>
