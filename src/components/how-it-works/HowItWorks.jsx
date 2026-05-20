@@ -9,7 +9,7 @@ import tryonImg    from '../../assets/how-it-works/tryon.webp'
 import './HowItWorks.css'
 
 const STEPS = [
-  { n: 'one',   title: 'add your closet.',  img: wardrobeImg, body: 'snap a few fits in good light. oro tags every piece in seconds — fabric, colour, formality, season. the more you add, the better it knows you.' },
+  { n: 'one',   title: 'add your closet.',  img: wardrobeImg, body: 'snap some fit pics. oro tags every piece in seconds — fabric, colour, formality, season. the more you add, the better it knows you.' },
   { n: 'two',   title: 'tell us the day.',  img: stylemeImg,  body: 'two questions every morning. where are you going. how do you feel. that’s the whole brief.' },
   { n: 'three', title: 'see it on you.',    img: resultImg,   body: 'virtual try-on shows the outfit on your body before you commit. ask for another take if it’s not the one. no mirror, no try-everything-on, no doubt.' },
   { n: 'four',  title: 'and you’re out.', img: tryonImg, body: 'one outfit, built from clothes you already own. love it? tap to log. don’t? ask for another. either way — out the door in thirty seconds.' },
