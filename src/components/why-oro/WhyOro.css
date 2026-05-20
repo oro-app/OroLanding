@@ -73,7 +73,10 @@
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   gap: 64px;
-  align-items: baseline;
+  /* Top-align the two columns so the label and body start at the same Y.
+     Was 'baseline' which felt visually misaligned with the big label
+     font vs the smaller body. */
+  align-items: start;
 }
 .wy-principle-end {
   border-top: 1px solid var(--color-fg-line);
@@ -83,9 +86,9 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 300;
-  font-size: 38px;
-  line-height: 1.05;
-  letter-spacing: -1px;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.8px;
   color: var(--color-fg);
 }
 .wy-principle-body {
@@ -146,7 +149,7 @@
     gap: 14px;
   }
   .wy-principle-label {
-    font-size: 30px;
+    font-size: 26px;
     margin-bottom: 14px;
   }
   .wy-cta {
