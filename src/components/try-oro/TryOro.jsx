@@ -3,8 +3,8 @@ import SiteFooter from '../layout/SiteFooter'
 import AppStoreButtons from '../marketing/AppStoreButtons'
 import PlayStoreSoonModal from '../marketing/PlayStoreSoonModal'
 import WaitlistModal from '../overlays/WaitlistModal'
-import phoneHome from '../../assets/try-oro/phone-home.png'
-import phoneStyleme from '../../assets/try-oro/phone-styleme.png'
+import phoneHome from '../../assets/try-oro/phone-home.webp'
+import phoneStyleme from '../../assets/try-oro/phone-styleme.webp'
 import { trackEvent } from '../../lib/analytics'
 import './TryOro.css'
 
@@ -79,14 +79,14 @@ export default function TryOro() {
                 className="tryoro-phone tryoro-phone--back"
                 src={phoneStyleme}
                 alt="Oro app — style me input: where are you going? how many looks?"
-                width="280" height="550"
+                width="828" height="1712"
                 loading="eager" decoding="async" draggable={false}
               />
               <img
                 className="tryoro-phone tryoro-phone--front"
                 src={phoneHome}
-                alt="Oro app — good morning, sunny. yesterday's fit."
-                width="280" height="550"
+                alt="Oro app — good morning, kevin. yesterday's fit."
+                width="828" height="1712"
                 loading="eager" decoding="async" draggable={false}
               />
             </div>
