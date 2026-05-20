@@ -1,0 +1,90 @@
+import { useEffect } from 'react'
+import SiteFooter from '../layout/SiteFooter'
+import { trackEvent } from '../../lib/analytics'
+import heroPhoto from '../../assets/why-oro/wardrobe-day.jpg'
+import './WhyOro.css'
+
+// /why-oro — short editorial subpage. Three beats: hero, principles, CTA.
+// Theme-aware via --color-* tokens. The home page also has a WhyOro
+// section (src/components/home/WhyOro.jsx) — different component, same name
+// because they answer the same question at different fidelities. In App.jsx
+// this is imported as WhyOroPage to disambiguate.
+
+const PRINCIPLES = [
+  {
+    label: 'one user, deeply known.',
+    body: 'oro doesn’t average you against a million strangers. it learns your closet, your week, the way you actually live. every pick is read against you.',
+  },
+  {
+    label: 'no new clothes, unless you ask.',
+    body: 'most ai stylists are shopping engines in disguise. oro recommends what you already own — the pieces you forgot about, in combinations you wouldn’t have tried.',
+  },
+  {
+    label: 'quiet, on purpose.',
+    body: 'no scrolling. no quizzes. no morning mood-boards. two questions, one outfit, and the rest of your day back.',
+  },
+]
+
+export default function WhyOroPage() {
+  useEffect(() => {
+    const prev = document.title
+    document.title = 'why oro — oro'
+    return () => { document.title = prev }
+  }, [])
+
+  const handleTryOro = () => {
+    trackEvent('cta_click', { location: 'why-oro', destination: 'try_oro' })
+    window.open('/try-oro', '_blank', 'noopener,noreferrer')
+  }
+
+  return (
+    <main className="wy">
+      <section className="wy-hero">
+        <div className="wy-hero-inner">
+          <div className="wy-hero-text">
+            <h1 className="wy-title">
+              a stylist<br />
+              of <span className="wy-em">one</span>.
+            </h1>
+            <p className="wy-sub">
+              oro is the only stylist built around you. your taste, your day, the pieces hanging in your closet right now. nothing borrowed from someone else’s feed.
+            </p>
+          </div>
+          <div className="wy-hero-photo-wrap">
+            <img
+              className="wy-hero-photo"
+              src={heroPhoto}
+              alt=""
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="wy-principles" aria-label="why oro">
+        <div className="wy-principles-inner">
+          {PRINCIPLES.map((p) => (
+            <div className="wy-principle" key={p.label}>
+              <div className="wy-principle-label">{p.label}</div>
+              <div className="wy-principle-body">{p.body}</div>
+            </div>
+          ))}
+          {/* trailing hairline so the last row gets a divider beneath */}
+          <div className="wy-principle-end" aria-hidden="true" />
+        </div>
+      </section>
+
+      <section className="wy-cta">
+        <button type="button" className="wy-cta-btn" onClick={handleTryOro}>
+          try oro
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 5l7 7-7 7" />
+          </svg>
+        </button>
+      </section>
+
+      <SiteFooter />
+    </main>
+  )
+}

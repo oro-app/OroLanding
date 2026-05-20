@@ -32,7 +32,7 @@ export default function SiteFooter({ onTryOro }) {
           <div className="site-footer-colhead">product</div>
           <button type="button" className="site-footer-link" onClick={() => onTryOro?.()}>try oro</button>
           <a className="site-footer-link" href="/how-it-works" target="_blank" rel="noopener noreferrer">how it works</a>
-          <a className="site-footer-link" href="/#whyoro">why oro</a>
+          <a className="site-footer-link" href="/why-oro" target="_blank" rel="noopener noreferrer">why oro</a>
         </div>
 
         <div className="site-footer-col">
