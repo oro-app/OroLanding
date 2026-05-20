@@ -1,0 +1,223 @@
+/* OroPhone — native 390x844 wrapper scaled to caller's width via --op-scale.
+   Mirrors handoff design/try-oro/phones.jsx exactly; only the colour refs
+   were swapped from inline ORO.* hex literals to the production --oro-*
+   raw-palette tokens. */
+
+.op-bezel {
+  /* outer device dims = (390+24)*scale x (844+24)*scale  (24px = 2 * bezel) */
+  width: calc((390px + 24px) * var(--op-scale));
+  height: calc((844px + 24px) * var(--op-scale));
+  padding: calc(12px * var(--op-scale));
+  border-radius: calc(54px * var(--op-scale));
+  background: var(--oro-ink);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  box-shadow:
+    0 40px 100px -28px rgba(14, 11, 7, 0.55),
+    0 14px 36px -10px rgba(14, 11, 7, 0.35),
+    inset 0 0 0 1.5px rgba(255, 249, 237, 0.06);
+}
+
+.op-screen-clip {
+  width: calc(390px * var(--op-scale));
+  height: calc(844px * var(--op-scale));
+  overflow: hidden;
+  border-radius: calc(42px * var(--op-scale)); /* 54 - 12 */
+  position: relative;
+  background: var(--oro-cream);
+}
+
+.op-screen-scale {
+  width: 390px;
+  height: 844px;
+  transform: scale(var(--op-scale));
+  transform-origin: top left;
+}
+
+/* ── inside the screen — native 390x844 px, all values verbatim from proto ─ */
+
+.op-screen {
+  width: 390px;
+  height: 844px;
+  background: var(--oro-cream);
+  color: var(--oro-ink);
+  font-family: var(--font-sans);
+  position: relative;
+  overflow: hidden;
+}
+
+/* iOS chrome */
+.op-status {
+  position: absolute; top: 0; left: 0; right: 0; height: 54px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 32px 0;
+  font-family: -apple-system, 'SF Pro', system-ui;
+  font-weight: 600; font-size: 17px;
+  color: var(--oro-ink); z-index: 10;
+}
+.op-status-right { display: flex; align-items: center; gap: 6px; }
+.op-island {
+  position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+  width: 122px; height: 34px; border-radius: 999px;
+  background: #000; z-index: 20;
+}
+.op-home-indicator {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  width: 134px; height: 5px; border-radius: 999px;
+  background: var(--oro-ink); opacity: 0.85; z-index: 20;
+}
+
+/* tab bar */
+.op-tabbar {
+  position: absolute; bottom: 26px; left: 22px; right: 22px;
+  background: var(--oro-paper); border-radius: 999px;
+  padding: 14px 10px;
+  display: flex; justify-content: space-around; align-items: center;
+  box-shadow:
+    0 14px 30px rgba(14, 11, 7, 0.16),
+    0 0 0 1px rgba(14, 11, 7, 0.04);
+}
+.op-tab { padding: 4px 12px; color: rgba(14, 11, 7, 0.32); }
+.op-tab.is-active { color: var(--oro-plum-deep); }
+
+/* shared italic accent inside the app screens */
+.op-em { font-style: italic; color: var(--oro-plum-deep); }
+
+/* ── HOME screen ───────────────────────────────────────────────────────── */
+.op-home-body { padding: 74px 28px 0; }
+
+.op-daterow {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.op-date {
+  font-size: 13px; color: var(--oro-faint);
+  font-weight: 500; letter-spacing: 0.2px;
+}
+.op-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background-size: cover; background-position: center;
+}
+
+.op-greeting { margin-top: 56px; }
+.op-greeting-title {
+  margin: 0; font-family: var(--font-serif);
+  font-size: 54px; line-height: 0.95; font-weight: 400; letter-spacing: -1.6px;
+}
+
+.op-hero-photo {
+  margin-top: 40px; border-radius: 18px; overflow: hidden;
+  height: 320px;
+  background-size: cover; background-position: center 28%;
+}
+.op-hero-cap {
+  margin-top: 10px; font-size: 12px;
+  color: var(--oro-faint); font-weight: 500; letter-spacing: 0.3px;
+}
+
+.op-styleme {
+  margin-top: 36px; width: 100%;
+  background: var(--oro-plum-deep); color: var(--oro-cream);
+  padding: 20px 22px; box-sizing: border-box;
+  font-family: var(--font-serif); font-size: 22px; font-weight: 400;
+  font-style: italic; letter-spacing: -0.3px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.op-logfit {
+  margin-top: 16px; padding: 6px 0;
+  font-size: 13.5px; font-weight: 500; color: var(--oro-ink);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+.op-stats {
+  margin-top: 48px; display: flex; justify-content: space-between;
+}
+.op-stat { flex: 1; }
+.op-stat-value {
+  font-family: var(--font-serif); font-size: 30px; font-weight: 400;
+  letter-spacing: -0.6px; line-height: 0.95;
+}
+.op-stat-label {
+  margin-top: 4px; font-size: 11px; color: var(--oro-faint);
+  font-weight: 500; letter-spacing: 0.3px;
+}
+
+/* ── STYLE ME screen ───────────────────────────────────────────────────── */
+.op-nav {
+  position: absolute; top: 60px; left: 0; right: 0;
+  padding: 10px 24px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  color: var(--oro-ink);
+}
+.op-nav-cancel { font-size: 13.5px; color: var(--oro-faint); }
+
+.op-styleme-body { padding: 128px 28px 0; }
+.op-eyebrow {
+  font-family: var(--font-serif); font-size: 13px; font-style: italic;
+  color: var(--oro-plum-deep); margin-bottom: 10px;
+}
+.op-styleme-title {
+  margin: 0; font-family: var(--font-serif);
+  font-size: 54px; line-height: 0.95; font-weight: 400; letter-spacing: -1.6px;
+}
+
+.op-field { padding: 52px 28px 0; }
+.op-field-label {
+  font-size: 11px; font-weight: 600; color: var(--oro-faint);
+  letter-spacing: 1.4px; margin-bottom: 12px;
+}
+.op-field-row {
+  padding: 14px 4px;
+  border-bottom: 1.5px solid var(--oro-ink);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.op-field-value {
+  font-family: var(--font-serif); font-size: 26px; font-weight: 400;
+  letter-spacing: -0.4px;
+}
+
+.op-stepper { padding: 36px 28px 0; }
+.op-stepper-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0;
+}
+.op-stepper-value {
+  font-family: var(--font-serif); font-size: 64px; font-weight: 400;
+  letter-spacing: -2.4px; line-height: 0.9;
+}
+.op-stepper-controls { display: flex; align-items: center; gap: 14px; }
+.op-stepper-btn {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--oro-paper);
+  border: 1px solid var(--oro-faintest);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--oro-ink);
+}
+.op-stepper-btn--filled {
+  background: var(--oro-ink); border-color: var(--oro-ink); color: var(--oro-cream);
+}
+.op-stepper-hint {
+  margin-top: 6px; font-size: 12px;
+  color: var(--oro-faint); font-style: italic; font-family: var(--font-serif);
+}
+
+.op-styleme-cta {
+  position: absolute; left: 28px; right: 28px; bottom: 56px;
+  background: var(--oro-ink); color: var(--oro-cream);
+  padding: 20px 22px; box-sizing: border-box;
+  font-family: var(--font-serif); font-size: 22px; font-weight: 400;
+  font-style: italic; letter-spacing: -0.3px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* ── /try-oro hero composition ─────────────────────────────────────────── */
+.op-pair {
+  position: relative; width: 520px; height: 640px;
+  color: var(--oro-ink);
+}
+.op-pair-back  { position: absolute; left: -8px; top: 18px; }
+.op-pair-front { position: absolute; right: 0;  top: 80px; }
+
+/* mobile fallback (≤960 px): the page swaps in a single phone via the
+   .op-pair--solo modifier; the back phone is hidden, the front phone is
+   re-centered. .op-pair--solo is set by TryOro.css media query. */

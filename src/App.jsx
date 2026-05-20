@@ -13,11 +13,12 @@ import CookieConsent from './components/overlays/CookieConsent'
 import WaitlistModal from './components/overlays/WaitlistModal'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics } from './lib/analytics'
-import { APP_STORE_URL, DISCORD_URL } from './lib/links'
+import { DISCORD_URL } from './lib/links'
 
-// Code-split the article + archive routes — only fetched when needed.
+// Code-split the article + archive + download-funnel routes.
 const NewsletterPage = lazy(() => import('./components/newsletter/NewsletterPage'))
 const JournalPage = lazy(() => import('./components/journal/JournalPage'))
+const TryOroPage = lazy(() => import('./components/try-oro/TryOro'))
 
 function getRoute() {
   const path = window.location.pathname.replace(/\/+$/, '') || '/'
@@ -30,9 +31,8 @@ function getRoute() {
     }
   }
 
-  if (path === '/journal') {
-    return { type: 'journal' }
-  }
+  if (path === '/journal')  return { type: 'journal' }
+  if (path === '/try-oro')  return { type: 'try-oro' }
 
   return { type: 'home' }
 }
@@ -41,12 +41,14 @@ function App() {
   const route = getRoute()
   const [waitlistOpen, setWaitlistOpen] = useState(false)
 
-  // Every "try oro" CTA opens the App Store in a new tab.
-  // OroInsiders "join our community" opens the Discord invite.
-  // WaitlistModal stays mounted for the periodic newsletter-page signup popup,
-  // which is the only remaining email-collection surface.
-  const openAppStore = () => {
-    window.open(APP_STORE_URL, '_blank', 'noopener,noreferrer')
+  // Every "try oro" CTA now funnels to /try-oro (in a new tab) — the page
+  // pitches the perks and offers both stores. OroInsiders "join our
+  // community" opens the Discord invite directly. WaitlistModal stays
+  // mounted for the periodic newsletter-page signup popup and the
+  // TheJournal mailing-list CTA, the two remaining email-collection
+  // surfaces on the home flow.
+  const openTryOro = () => {
+    window.open('/try-oro', '_blank', 'noopener,noreferrer')
   }
   const openDiscord = () => {
     window.open(DISCORD_URL, '_blank', 'noopener,noreferrer')
@@ -69,7 +71,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark">
       <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
-        <SiteHeader onTryOro={openAppStore} />
+        <SiteHeader onTryOro={openTryOro} />
         <main id="main">
           {route.type === 'newsletter' ? (
             <Suspense fallback={null}>
@@ -79,19 +81,21 @@ function App() {
             <Suspense fallback={null}>
               <JournalPage />
             </Suspense>
+          ) : route.type === 'try-oro' ? (
+            <Suspense fallback={null}>
+              <TryOroPage />
+            </Suspense>
           ) : (
             <>
-              {/* Redesign, section-by-section: Hero is live; NewsletterSection
-                  + SiteFooter are still the old design until their turn. */}
-              <Hero onTryOro={openAppStore} />
+              <Hero onTryOro={openTryOro} />
               <WhyOro />
               <TheFilm />
               <FitsByOro />
               <Testimonials />
               <TheJournal onSubscribe={() => setWaitlistOpen(true)} />
               <OroInsiders onApply={openDiscord} />
-              <FinalCTA onTryOro={openAppStore} />
-              <SiteFooter onTryOro={openAppStore} />
+              <FinalCTA onTryOro={openTryOro} />
+              <SiteFooter onTryOro={openTryOro} />
             </>
           )}
         </main>

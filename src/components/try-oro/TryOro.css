@@ -1,0 +1,158 @@
+/* /try-oro — dark-default download funnel page. Theme-aware via --color-*
+   tokens; values transcribed 1:1 from the handoff's design/try-oro/index.html
+   with the prototype's hardcoded plum hex literals swapped for tokens. */
+
+.tryoro {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+}
+
+/* ── HERO ───────────────────────────────────────────────────────────────── */
+.tryoro-hero {
+  padding: 96px 56px 128px;
+  overflow: hidden; /* phones rotate slightly and intentionally clip */
+}
+.tryoro-hero-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 520px;
+  gap: 64px;
+  align-items: center;
+}
+
+.tryoro-hero-left { max-width: 560px; }
+
+.tryoro-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 96px;
+  line-height: 0.98;
+  letter-spacing: -2.8px;
+  color: var(--color-fg);
+}
+.tryoro-em { font-style: italic; }
+
+.tryoro-sub {
+  margin: 36px 0 0;
+  max-width: 460px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 21px;
+  line-height: 1.45;
+  letter-spacing: -0.3px;
+  color: var(--color-fg-faint);
+}
+
+.tryoro-stores { margin-top: 44px; }
+
+.tryoro-micro {
+  margin: 18px 0 0;
+  font-size: 12px;
+  color: var(--color-fg-faint);
+  letter-spacing: 0.1px;
+}
+
+.tryoro-hero-right {
+  position: relative;
+}
+
+/* ── PERKS ──────────────────────────────────────────────────────────────── */
+.tryoro-perks {
+  padding: 32px 56px 128px;
+}
+.tryoro-perks-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.tryoro-perk {
+  padding: 36px 0;
+  border-top: 1px solid var(--color-fg-line);
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 56px;
+  align-items: baseline;
+}
+.tryoro-perk-end {
+  border-top: 1px solid var(--color-fg-line);
+}
+
+.tryoro-perk-label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--color-fg);
+  letter-spacing: -0.6px;
+}
+.tryoro-perk-desc {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.45;
+  letter-spacing: -0.2px;
+  color: var(--color-fg-faint);
+  max-width: 480px;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .tryoro-hero {
+    padding: 48px 20px 80px;
+  }
+  .tryoro-hero-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .tryoro-title {
+    font-size: 64px;
+    letter-spacing: -1.6px;
+  }
+  .tryoro-sub {
+    font-size: 18px;
+  }
+
+  /* swap the dual-phone for the front phone only — the rotation + overlap
+     read poorly when there's no horizontal room. The pair is absolutely
+     positioned inside a 520x640 box; on mobile we collapse the box, hide
+     the back phone, and re-center the front one. */
+  .tryoro-hero-right {
+    display: flex;
+    justify-content: center;
+  }
+  .op-pair {
+    width: 100%;
+    height: auto;
+    min-height: 600px;
+  }
+  .op-pair-back {
+    display: none;
+  }
+  .op-pair-front {
+    position: relative;
+    right: auto;
+    top: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .op-pair-front .op-bezel {
+    transform: rotate(0deg) !important; /* drop the rotation on mobile */
+  }
+
+  .tryoro-perks {
+    padding: 16px 20px 80px;
+  }
+  .tryoro-perk {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .tryoro-perk-label {
+    margin-bottom: 6px;
+    font-size: 24px;
+  }
+  .tryoro-perk-desc {
+    font-size: 17px;
+  }
+}
