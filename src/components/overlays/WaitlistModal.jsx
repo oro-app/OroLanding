@@ -5,22 +5,18 @@ import { markNewsletterSignedUp } from '../../lib/newsletterSignup';
 
 export default function WaitlistModal({ onClose }) {
   const [email, setEmail] = useState('')
-  const [consent, setConsent] = useState(false)
-  const [consentError, setConsentError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [alreadyOnList, setAlreadyOnList] = useState(false)
   const [error, setError] = useState(null)
 
+  // Consent used to be a separate checkbox; replaced with an inline blurb
+  // below the email field ("by signing up, you agree..."). Submitting the
+  // form is now the consent action, so we always send consent: true.
   const handleSubmit = async (e) => {
     e.preventDefault()
     const cleanEmail = email.trim().toLowerCase()
     if (!cleanEmail) return
-
-    if (!consent) {
-      setConsentError(true)
-      return
-    }
 
     setLoading(true)
     setError(null)
@@ -116,26 +112,10 @@ export default function WaitlistModal({ onClose }) {
                 </button>
               </div>
 
-              <div className="consent-row">
-                <input
-                  type="checkbox"
-                  id="consent-checkbox"
-                  className="consent-checkbox"
-                  checked={consent}
-                  onChange={(e) => {
-                    setConsent(e.target.checked)
-                    if (e.target.checked) setConsentError(false)
-                  }}
-                />
-                <label htmlFor="consent-checkbox" className="consent-label">
-                  I agree to receive the Oro newsletter and updates. You can unsubscribe at any time.{' '}
-                  View our{' '}
-                  <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-                </label>
-              </div>
-              {consentError && (
-                <p className="consent-error">Please confirm you agree to receive the Oro newsletter.</p>
-              )}
+              <p className="consent-text">
+                by signing up, you agree to receive emails from oro. unsubscribe any time. see our{' '}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.
+              </p>
 
               {error && <p className="modal-error">{error}</p>}
             </form>
