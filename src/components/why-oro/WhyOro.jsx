@@ -55,11 +55,10 @@ export default function WhyOroPage() {
         <div className="wy-hero-inner">
           <div className="wy-hero-text">
             <h1 className="wy-title">
-              a stylist<br />
-              of <span className="wy-em">one</span>.
+              the wardrobe is where the day <span className="wy-em">begins</span>.
             </h1>
             <p className="wy-sub">
-              oro is the only stylist built around you. your taste, your day, the pieces hanging in your closet right now. nothing borrowed from someone else’s feed.
+              it’s also where most of the thinking happens: where you’re going, the weather, what you’ve worn this week, what colours and shapes suit you, what you feel like, what goes with what. oro does that thinking for you, so you just bring the taste.
             </p>
           </div>
           <div className="wy-hero-photo-wrap">
