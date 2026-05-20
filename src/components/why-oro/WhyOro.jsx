@@ -28,8 +28,8 @@ const PRINCIPLES = [
     body: 'most styling apps show you a flat-lay. oro can put the look on your body so you know exactly what you’re saying yes to.',
   },
   {
-    label: 'quiet, on purpose.',
-    body: 'no scrolling. no quizzes. no morning mood-boards. two questions, one outfit, and the rest of your day back.',
+    label: 'it gets better every week.',
+    body: 'oro ships updates constantly. what you tell us on monday tends to be in the product by friday.',
   },
 ]
 
