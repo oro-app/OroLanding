@@ -293,7 +293,7 @@
   align-self: flex-start;
 }
 .hero-d-title {
-  margin: 0;
+  margin: 24px 0 0;
   max-width: 240px;
   font-family: var(--font-serif);
   font-weight: 400;

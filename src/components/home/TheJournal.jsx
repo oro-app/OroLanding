@@ -83,7 +83,7 @@ function TheJournalLight({ onSubscribe }) {
   )
 }
 
-function TheJournalDark() {
+function TheJournalDark({ onSubscribe }) {
   const [lead, ...rest] = ENTRIES
 
   return (
@@ -122,14 +122,18 @@ function TheJournalDark() {
             see all {ALL_COUNT} issues
             <Arrow size={14} />
           </a>
+
+          <button type="button" className="jr-subscribe" onClick={() => onSubscribe?.()}>
+            join the mailing list
+            <Arrow size={12} />
+          </button>
         </div>
       </div>
     </section>
   )
 }
 
-export default function TheJournal() {
+export default function TheJournal({ onSubscribe }) {
   // Light === dark on the home page: always render the dark variant.
-  // (The dark journal has no signup form, so onSubscribe is unused here.)
-  return <TheJournalDark />
+  return <TheJournalDark onSubscribe={onSubscribe} />
 }

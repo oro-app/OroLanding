@@ -298,6 +298,32 @@
   border-bottom-color: var(--color-accent);
 }
 
+/* Secondary CTA under "see all N issues" — quieter sibling that opens the
+   mailing-list signup (WaitlistModal). Italic serif so it reads as part of
+   the same editorial voice, faint colour so it doesn't compete with the
+   archive link above it. */
+.jr-subscribe {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  align-self: flex-start;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: -0.2px;
+  color: var(--color-fg-faint);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.jr-subscribe:hover {
+  color: var(--color-fg);
+}
+
 /* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
 @media (max-width: 960px) {
   .jr--light {
