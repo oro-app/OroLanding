@@ -14,8 +14,9 @@ import WaitlistModal from './components/overlays/WaitlistModal'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics } from './lib/analytics'
 
-// Code-split the article route — only fetched when /newsletter/:slug is opened.
+// Code-split the article + archive routes — only fetched when needed.
 const NewsletterPage = lazy(() => import('./components/newsletter/NewsletterPage'))
+const JournalPage = lazy(() => import('./components/journal/JournalPage'))
 
 function getRoute() {
   const path = window.location.pathname.replace(/\/+$/, '') || '/'
@@ -26,6 +27,10 @@ function getRoute() {
       type: 'newsletter',
       slug: decodeURIComponent(newsletterMatch[1]),
     }
+  }
+
+  if (path === '/journal') {
+    return { type: 'journal' }
   }
 
   return { type: 'home' }
@@ -57,6 +62,10 @@ function App() {
           {route.type === 'newsletter' ? (
             <Suspense fallback={null}>
               <NewsletterPage slug={route.slug} />
+            </Suspense>
+          ) : route.type === 'journal' ? (
+            <Suspense fallback={null}>
+              <JournalPage />
             </Suspense>
           ) : (
             <>

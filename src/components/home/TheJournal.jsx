@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { newsletters } from '../../lib/newsletters'
 
+const ALL_COUNT = newsletters.length
+
 // The journal — replaces the old NewsletterSection; wired to the real
 // src/lib/newsletters.js glob (most recent 3 MDX issues). Renders the dark
 // variant in both themes (colour-themed via --color-*).
@@ -116,6 +118,13 @@ function TheJournalDark() {
             </a>
           ))}
         </div>
+      </div>
+
+      <div className="jr-all-wrap">
+        <a className="jr-all" href="/journal" target="_blank" rel="noopener noreferrer">
+          see all {ALL_COUNT} issues
+          <Arrow size={11} />
+        </a>
       </div>
     </section>
   )

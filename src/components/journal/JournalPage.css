@@ -1,0 +1,117 @@
+/* /journal archive — editorial dark, same tokens as the home-page section. */
+
+.journal-archive {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+}
+
+/* ── hero ───────────────────────────────────────────────────────────────── */
+.ja-hero {
+  padding: 96px 56px 56px;
+}
+.ja-hero-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.ja-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -1.6px;
+  color: var(--color-fg);
+}
+.ja-em {
+  font-style: italic;
+}
+.ja-sub {
+  margin: 18px 0 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.45;
+  letter-spacing: -0.2px;
+  color: var(--color-fg-faint);
+}
+
+/* ── list ───────────────────────────────────────────────────────────────── */
+.ja-list-wrap {
+  padding: 8px 56px 128px;
+}
+.ja-list {
+  max-width: 1080px;
+  margin: 0 auto;
+  list-style: none;
+  padding: 0;
+  border-top: 1px solid var(--color-fg-line);
+}
+
+.ja-row {
+  border-bottom: 1px solid var(--color-fg-line);
+}
+.ja-row-link {
+  display: block;
+  padding: 32px 0;
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+.ja-row-link:hover {
+  opacity: 0.72;
+}
+
+.ja-row-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: var(--color-fg-faint);
+  letter-spacing: 0.6px;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+.ja-row-tag {
+  font-weight: 500;
+}
+.ja-row-dot {
+  opacity: 0.7;
+}
+.ja-row-date {
+  font-weight: 400;
+}
+
+.ja-row-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  color: var(--color-fg);
+}
+.ja-row-sum {
+  margin: 8px 0 0;
+  max-width: 760px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.1px;
+  color: var(--color-fg-faint);
+}
+
+/* ── responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .ja-hero       { padding: 64px 20px 40px; }
+  .ja-list-wrap  { padding: 8px 20px 80px; }
+  .ja-title      { font-size: 38px; letter-spacing: -1px; }
+  .ja-sub        { font-size: 15px; }
+  .ja-row-link   { padding: 24px 0; }
+  .ja-row-title  { font-size: 21px; }
+  .ja-row-sum    { font-size: 14px; }
+}

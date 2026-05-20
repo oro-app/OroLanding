@@ -274,6 +274,29 @@
   opacity: 0.72;
 }
 
+/* "see all N issues" — quiet italic link beneath the featured trio.
+   Left-aligned to the same content column as the trio above. */
+.jr-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 56px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: -0.2px;
+  color: var(--color-fg-faint);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.jr-all:hover {
+  color: var(--color-fg);
+}
+.jr-all-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
 /* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
 @media (max-width: 960px) {
   .jr--light {
