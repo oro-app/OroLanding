@@ -59,6 +59,41 @@
   position: relative;
 }
 
+/* Dual-phone composition. Pre-rendered PNG mockups (bezel + screen +
+   chrome baked in) instead of the OroPhone primitive — these are the
+   designer's exact phone artwork, so wrapping them in our own bezel
+   would have double-bezeled. */
+.tryoro-phones {
+  position: relative;
+  width: 520px;
+  height: 640px;
+}
+.tryoro-phone {
+  position: absolute;
+  display: block;
+  /* Soft shadow lifts each phone off the plum surface. */
+  filter: drop-shadow(0 30px 50px rgba(14, 11, 7, 0.45))
+          drop-shadow(0 10px 24px rgba(14, 11, 7, 0.3));
+  -webkit-user-select: none;
+          user-select: none;
+}
+.tryoro-phone--back {
+  left: 28px;
+  top: 8px;
+  width: 244px;
+  height: auto;
+  transform: rotate(-4.5deg);
+  z-index: 1;
+}
+.tryoro-phone--front {
+  right: 0;
+  top: 60px;
+  width: 290px;
+  height: auto;
+  transform: rotate(3deg);
+  z-index: 2;
+}
+
 /* ── PERKS ──────────────────────────────────────────────────────────────── */
 .tryoro-perks {
   padding: 32px 56px 128px;
@@ -193,21 +228,20 @@
     display: flex;
     justify-content: center;
   }
-  .op-pair {
+  .tryoro-phones {
     width: 100%;
     height: auto;
     min-height: 600px;
-  }
-  .op-pair-back { display: none; }
-  .op-pair-front {
-    position: relative;
-    right: auto;
-    top: 0;
     display: flex;
     justify-content: center;
   }
-  .op-pair-front .op-bezel {
-    transform: rotate(0deg) !important;
+  .tryoro-phone--back { display: none; }
+  .tryoro-phone--front {
+    position: relative;
+    right: auto;
+    top: 0;
+    transform: rotate(0deg);
+    width: 280px;
   }
 
   .tryoro-perks {

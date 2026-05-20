@@ -3,8 +3,8 @@ import SiteFooter from '../layout/SiteFooter'
 import AppStoreButtons from '../marketing/AppStoreButtons'
 import PlayStoreSoonModal from '../marketing/PlayStoreSoonModal'
 import WaitlistModal from '../overlays/WaitlistModal'
-import { OroPhone } from '../marketing/OroPhone'
-import phoneScreen from '../../assets/try-oro/phone-screen.webp'
+import phoneHome from '../../assets/try-oro/phone-home.png'
+import phoneStyleme from '../../assets/try-oro/phone-styleme.png'
 import { trackEvent } from '../../lib/analytics'
 import './TryOro.css'
 
@@ -74,18 +74,21 @@ export default function TryOro() {
           </div>
 
           <div className="tryoro-hero-right">
-            <div className="op-pair">
-              <div className="op-pair-back">
-                <OroPhone screen="styleme" width={252} rotate={-4.5} />
-              </div>
-              <div className="op-pair-front">
-                <OroPhone
-                  imageSrc={phoneScreen}
-                  imageAlt="Oro app home screen — good morning greeting and yesterday's fit"
-                  width={296}
-                  rotate={3}
-                />
-              </div>
+            <div className="tryoro-phones">
+              <img
+                className="tryoro-phone tryoro-phone--back"
+                src={phoneStyleme}
+                alt="Oro app — style me input: where are you going? how many looks?"
+                width="280" height="550"
+                loading="eager" decoding="async" draggable={false}
+              />
+              <img
+                className="tryoro-phone tryoro-phone--front"
+                src={phoneHome}
+                alt="Oro app — good morning, sunny. yesterday's fit."
+                width="280" height="550"
+                loading="eager" decoding="async" draggable={false}
+              />
             </div>
           </div>
         </div>
