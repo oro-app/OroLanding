@@ -42,11 +42,17 @@ export const newsletters = Object.entries(newsletterModules)
       href: `/newsletter/${slug}`,
       published: module.meta.published,
       title: module.meta?.title || titleFromSlug(slug),
+      // Optional italic-accent word(s) inside the title. When the title is
+      // rendered on /journal, this substring is wrapped in <em>. Set in the
+      // MDX frontmatter as `italicTitle: 'closet.'` (must be a substring of
+      // the title to match).
+      italicTitle: module.meta?.italicTitle || '',
       tag: module.meta?.tag || 'Oro Insiders',
       date: module.meta?.date || '',
       dateLabel: formatNewsletterDate(module.meta?.date),
       image: module.meta?.image || '/static/oro-logo.png',
       summary: module.meta?.summary || '',
+      readTime: module.meta?.readTime || '',
       Component: module.default,
     }
   })

@@ -1,100 +1,72 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { newsletters } from '../../lib/newsletters'
 import SiteFooter from '../layout/SiteFooter'
+import FeaturedLetter from '../closet/FeaturedLetter'
+import Rack from '../closet/Rack'
+import CareLabelSubscribe from '../closet/CareLabelSubscribe'
 import './JournalPage.css'
 
-// The journal archive — a chronological list of every published newsletter.
-// Same editorial dark aesthetic as the home-page section (TheJournalDark):
-// big italic-accent serif headline, vertical list of issue rows, hairline
-// dividers, plum/cream tokens. Each row links to /newsletter/:slug and opens
-// in a new tab (matches the rest of the site's link policy).
+// /journal — "from the closet." A four-section editorial page that leans
+// into the closet metaphor:
+//   1. Hero       (kicker + italic-accent headline + right-column subhead)
+//   2. Featured   (this week's letter — pre-rule + asymmetric card)
+//   3. Rack       (hangers on hairline rods; the centerpiece visual)
+//   4. CareLabel  (subscribe form styled as a fabric care label)
 //
-// Reveal animations: hero enters on mount (title, sub), each issue row
-// cascades in as the list scrolls into view (hairline draws, meta fades,
-// title rises with a brief gold 'highlight of oro' pass, summary fades).
-// Same gesture as /why-oro + /try-oro so all the editorial subpages settle
-// in identically.
+// Featured letter logic: for the launch, pin to the bespoke
+// 'what-we-mean-by-closet' piece if present (it's the namesake intro).
+// After that, fall through to "latest newsletter by date".
+//
+// (Route stays /journal — per-handoff rename to /from-the-closet was
+// blocked since it requires header/footer updates that are out of scope
+// for this branch.)
 
-function useRevealOnScroll(threshold = 0.1) {
-  const ref = useRef(null)
-  const [revealed, setRevealed] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el || revealed) return
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setRevealed(true)
-          obs.disconnect()
-        }
-      },
-      { threshold }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [revealed, threshold])
-  return [ref, revealed]
+const LAUNCH_SLUG = 'what-we-mean-by-closet'
+
+function pickFeatured(list) {
+  const launch = list.find((n) => n.slug === LAUNCH_SLUG)
+  if (launch) return launch
+  return list[0]  // newsletters is already sorted desc by date
 }
 
 export default function JournalPage() {
-  const [listRef, listRevealed] = useRevealOnScroll(0.05)
-
   useEffect(() => {
     const prev = document.title
-    document.title = 'from the closet — oro'
+    document.title = 'oro — from the closet'
     return () => { document.title = prev }
   }, [])
 
+  const featured = pickFeatured(newsletters)
+  const rest = newsletters.filter((n) => n.slug !== featured?.slug)
+
   return (
-    <main className="journal-archive">
-      <section className="ja-hero">
-        <div className="ja-hero-inner">
-          <h1 className="ja-title">
-            from the <span className="ja-em">closet</span>.
-          </h1>
-          <p className="ja-sub">
-            oro’s newsletter on style and getting dressed. twice a week.
-          </p>
+    <main className="ftc">
+      {/* 1. Hero */}
+      <section className="ftc-hero">
+        <div className="ftc-hero-inner">
+          <div className="ftc-hero-left">
+            <p className="ftc-kicker">letters &amp; notes from oro</p>
+            <h1 className="ftc-title">
+              from the<br />
+              <span className="ftc-em">closet</span>.
+            </h1>
+          </div>
+          <div className="ftc-hero-right">
+            <p className="ftc-sub">
+              a slow read on style, mornings, and the small group of people we’re building oro with. one letter, once a month — and a rack of older notes you can flip through any time.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section
-        className="ja-grid-wrap"
-        aria-label="all issues"
-        ref={listRef}
-        data-revealed={listRevealed ? 'true' : 'false'}
-      >
-        <ul className="ja-grid">
-          {newsletters.map((n, i) => (
-            <li className="ja-card" key={n.slug} style={{ '--reveal-i': i }}>
-              <a
-                className="ja-card-link"
-                href={n.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div className="ja-card-photo-wrap">
-                  <div
-                    className="ja-card-photo"
-                    style={{ backgroundImage: `url(${n.image})` }}
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="ja-card-meta">
-                  <span className="ja-card-tag">{n.tag}</span>
-                  {n.dateLabel && (
-                    <>
-                      <span className="ja-card-dot" aria-hidden="true">·</span>
-                      <time className="ja-card-date" dateTime={n.date}>{n.dateLabel}</time>
-                    </>
-                  )}
-                </div>
-                <h2 className="ja-card-title">{n.title}</h2>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/* 2. Featured letter */}
+      {featured && <FeaturedLetter letter={featured} />}
+
+      {/* 3. The rack — older letters */}
+      <Rack entries={rest} />
+
+      {/* 4. Care label subscribe */}
+      <CareLabelSubscribe />
 
       <SiteFooter />
     </main>

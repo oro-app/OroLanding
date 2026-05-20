@@ -1,0 +1,175 @@
+/* The Rack — articles hanging from hairline rods. The centerpiece of
+   /from-the-closet. Theme-aware via --color-* tokens; the rod colour is
+   slightly stronger than the standard --color-fg-line for presence. */
+
+.rack {
+  padding: 24px 56px 96px;
+}
+.rack-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* section header */
+.rack-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 56px;
+  gap: 24px;
+}
+.rack-title-h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -1.2px;
+  color: var(--color-fg);
+}
+.rack-title-h2 em { font-style: italic; }
+.rack-sub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--color-fg-faint);
+  letter-spacing: -0.2px;
+}
+
+/* each row = one rod + a flex of hangers below */
+.rack-row {
+  margin-bottom: 96px;
+}
+.rack-row:last-child { margin-bottom: 0; }
+
+.rack-rod {
+  height: 1px;
+  width: 100%;
+  /* The rod reads as a real garment rail — slightly stronger than the
+     standard hairline so it has presence behind the hanging cards. */
+  background: rgba(255, 249, 237, 0.55);
+}
+:root[data-theme='light'] .rack-rod {
+  background: rgba(14, 11, 7, 0.4);
+}
+
+.rack-row-items {
+  display: flex;
+  gap: 64px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* a single hanger — composes S-hook + string + photo + meta */
+.rack-hanger {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  color: inherit;
+  text-decoration: none;
+  transform-origin: top center;
+  transform: rotate(var(--rot, 0deg));
+  animation: rack-sway 6.4s ease-in-out infinite;
+}
+.rack-hanger:nth-child(2n) { animation-duration: 7.8s; }
+.rack-hanger:nth-child(3n) { animation-duration: 5.6s; }
+.rack-hanger:hover {
+  animation-duration: 1.6s;
+  --swing: 1.6deg;
+}
+
+.rack-hook {
+  display: block;
+  margin: -10px auto 0;     /* sits on the rod */
+  color: rgba(255, 249, 237, 0.55);
+}
+:root[data-theme='light'] .rack-hook {
+  color: rgba(14, 11, 7, 0.35);
+}
+
+.rack-string {
+  display: block;
+  width: 1px;
+  height: var(--s, 48px);
+  margin: 0 auto;
+  background: var(--color-fg-line);
+}
+
+.rack-photo {
+  display: block;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 16px;
+}
+
+.rack-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  color: var(--color-fg);
+}
+
+.rack-excerpt {
+  margin: 8px 0 12px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.45;
+  letter-spacing: -0.1px;
+  color: var(--color-fg-faint);
+}
+
+/* care-label date tag */
+.rack-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border: 1px solid var(--color-fg-line);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--color-fg-faint);
+  letter-spacing: 0.1px;
+}
+.rack-tag-dot { opacity: 0.6; }
+
+/* empty-state */
+.rack-empty {
+  margin: 40px 0 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  text-align: center;
+  color: var(--color-fg-faint);
+}
+
+/* ── sway animation. Pivots from `transform-origin: top center` so each
+   card rocks from where the string meets the rod, like a real hanger. */
+@keyframes rack-sway {
+  0%, 100% { transform: rotate(var(--rot, 0deg)); }
+  50%      { transform: rotate(calc(var(--rot, 0deg) + var(--swing, 0.7deg))); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rack-hanger { animation: none; }
+}
+
+/* responsive */
+@media (max-width: 960px) {
+  .rack             { padding: 16px 20px 64px; }
+  .rack-header      { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 40px; }
+  .rack-title-h2    { font-size: 36px; letter-spacing: -0.9px; }
+  .rack-sub         { font-size: 13px; }
+  .rack-row         { margin-bottom: 72px; }
+  .rack-row-items   { gap: 40px; }
+  .rack-hanger      { width: min(280px, 80vw) !important; }
+}

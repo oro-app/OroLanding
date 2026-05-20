@@ -1,0 +1,118 @@
+/* FeaturedLetter — "this week" asymmetric card with a labelled hairline
+   pre-rule. Theme-aware via --color-* tokens. */
+
+.fl {
+  padding: 32px 56px 96px;
+}
+.fl-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* labelled hairline */
+.fl-prerule {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.fl-prerule-label {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--oro-gold);
+  letter-spacing: 0.3px;
+}
+.fl-prerule-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-fg-line);
+}
+.fl-prerule-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-fg-faint);
+  letter-spacing: 0.6px;
+  text-transform: lowercase;
+}
+.fl-prerule-dot { opacity: 0.6; }
+
+/* card */
+.fl-card {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 56px;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.fl-photo-wrap {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+}
+.fl-photo {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fl-card:hover .fl-photo { transform: scale(1.03); }
+
+.fl-text { max-width: 460px; }
+
+.fl-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 56px;
+  line-height: 1.02;
+  letter-spacing: -1.6px;
+  color: var(--color-fg);
+}
+.fl-em {
+  font-style: italic;
+  /* italic alone is the emphasis; no colour change */
+}
+
+.fl-excerpt {
+  margin: 28px 0 0;
+  max-width: 460px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.5;
+  letter-spacing: -0.2px;
+  color: var(--color-fg-faint);
+}
+
+.fl-readlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  padding-bottom: 4px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--color-fg);
+  border-bottom: 1px solid currentColor;
+  transition: color 200ms ease;
+}
+.fl-card:hover .fl-readlink { color: var(--oro-gold); }
+
+/* responsive */
+@media (max-width: 960px) {
+  .fl              { padding: 24px 20px 64px; }
+  .fl-card         { grid-template-columns: 1fr; gap: 32px; }
+  .fl-title        { font-size: 40px; letter-spacing: -1.1px; }
+  .fl-excerpt      { font-size: 17px; }
+  .fl-readlink     { font-size: 16px; }
+}

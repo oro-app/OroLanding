@@ -1,0 +1,158 @@
+/* Care-label subscribe block — cream rectangle pinned to the page,
+   dashed stitching, two punched holes, care symbols, hairline-bottom-
+   bordered email form, fibre-content footer row.
+   The tag is intentionally NOT theme-aware — always cream + ink. It's a
+   physical object pinned to the page. The punched-hole color matches
+   --color-bg so the holes read as cutouts through the tag. */
+
+.cl-wrap {
+  padding: 64px 56px 128px;
+}
+
+.cl-tag {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--oro-cream);
+  color: var(--oro-ink);
+  padding: 56px 48px 44px;
+  font-family: var(--font-sans);
+}
+
+.cl-stitch {
+  position: absolute;
+  inset: 14px;
+  border: 1px dashed rgba(14, 11, 7, 0.18);
+  pointer-events: none;
+}
+
+/* Two punched holes at the top of the tag — the background colour matches
+   the page (--color-bg) so they read as cutouts. */
+.cl-holes {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 64px;
+  pointer-events: none;
+}
+.cl-hole {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-bg);
+}
+
+.cl-kicker {
+  margin: 0 0 22px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--oro-plum-deep);
+  letter-spacing: 0.3px;
+}
+
+.cl-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 42px;
+  line-height: 1.02;
+  letter-spacing: -1.2px;
+  color: var(--oro-ink);
+}
+.cl-em {
+  font-style: italic;
+  color: var(--oro-plum-deep);
+}
+
+.cl-body {
+  margin: 24px 0 0;
+  max-width: 440px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.2px;
+  color: rgba(14, 11, 7, 0.55);
+}
+
+.cl-symbols {
+  display: flex;
+  gap: 22px;
+  margin: 36px 0;
+  color: rgba(14, 11, 7, 0.55);
+}
+
+/* email form — hairline-bottom underline */
+.cl-form {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--oro-ink);
+}
+.cl-input {
+  flex: 1;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--oro-ink);
+}
+.cl-input::placeholder { color: rgba(14, 11, 7, 0.4); }
+
+.cl-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 4px 10px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--oro-plum-deep);
+  transition: opacity 150ms ease;
+}
+.cl-submit:hover { opacity: 0.75; }
+
+.cl-success {
+  margin: 0;
+  padding-bottom: 12px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--oro-plum-deep);
+}
+
+.cl-error {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: #b04545;
+}
+
+/* fibre-content footer */
+.cl-fibre {
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(14, 11, 7, 0.18);
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: rgba(14, 11, 7, 0.55);
+  letter-spacing: 0.6px;
+}
+
+/* responsive */
+@media (max-width: 720px) {
+  .cl-wrap      { padding: 40px 20px 80px; }
+  .cl-tag       { padding: 40px 28px 32px; }
+  .cl-title     { font-size: 34px; letter-spacing: -1px; }
+  .cl-symbols   { gap: 16px; margin: 28px 0; }
+  .cl-fibre     { flex-direction: column; gap: 6px; }
+}
