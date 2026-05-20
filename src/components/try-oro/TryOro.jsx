@@ -12,7 +12,7 @@ const PERKS = [
   { k: 'free to start',          v: 'no card required. sign up and start styling in under a minute.' },
   { k: 'styled for you, today',  v: 'every fit weighed against the weather, the occasion, your body, and what actually goes together.' },
   { k: 'virtual try-on',         v: 'see the fit on you before you commit. tap any look, see it on.' },
-  { k: 'everything you already have', v: 'we never recommend a piece you don’t already own. sometimes we forget what we actually have.' },
+  { k: 'everything you already have', v: 'we never recommend a piece you don’t already own. sometimes you forget what you actually have.' },
   { k: 'built around your taste', v: 'show us your inspo. oro learns the eye, not the algorithm.' },
 ]
 
