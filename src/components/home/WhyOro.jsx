@@ -1,5 +1,22 @@
+import { useEffect, useState } from 'react'
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
-import wardrobePhoto from '../../assets/why-oro/wardrobe.jpg'
+import wardrobeDay from '../../assets/why-oro/wardrobe-day.jpg'
+import wardrobeNight from '../../assets/why-oro/wardrobe-night.jpg'
+
+// Day / night photo swap in the dark "why oro" section. Daytime = the soft,
+// candid hand-lifting-a-hanger shot (mauve / ivory / sage); evening + early
+// morning = the moodier rings-on-rack shot (paisley, gold rings on dark).
+//
+// "Day" is 6am-inclusive through 5pm-exclusive in the viewer's local time
+// (getHours returns local hours, including DST). Re-checked once a minute so
+// a tab open across the boundary swaps without a reload.
+function isDaytime(d = new Date()) {
+  const h = d.getHours()
+  return h >= 6 && h < 17
+}
+function currentWardrobePhoto() {
+  return isDaytime() ? wardrobeDay : wardrobeNight
+}
 
 // Why oro — faithful to the handoff (sections/why-oro.jsx +
 // sections/dark/why-oro.jsx). Light and dark are structurally different:
@@ -47,6 +64,12 @@ function WhyOroLight() {
 }
 
 function WhyOroDark() {
+  const [photo, setPhoto] = useState(currentWardrobePhoto)
+  useEffect(() => {
+    const id = setInterval(() => setPhoto(currentWardrobePhoto()), 60_000)
+    return () => clearInterval(id)
+  }, [])
+
   return (
     <section id="whyoro" className="why why--dark">
       <div className="why-d-grid">
@@ -61,7 +84,7 @@ function WhyOroDark() {
             thinking for you, so you just bring the taste.
           </p>
         </div>
-        <div className="why-d-photo" style={{ backgroundImage: `url(${wardrobePhoto})` }} />
+        <div className="why-d-photo" style={{ backgroundImage: `url(${photo})` }} />
       </div>
     </section>
   )
