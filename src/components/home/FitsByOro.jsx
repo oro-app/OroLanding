@@ -1,5 +1,5 @@
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
-import slowDaze from '../../assets/fits/slow-daze.jpg'
+import monPhoto from '../../assets/fits/mon.jpg'
 import tuePhoto from '../../assets/fits/tue.jpg'
 import wedPhoto from '../../assets/fits/wed.jpg'
 import thuPhoto from '../../assets/fits/thu.jpg'
@@ -19,7 +19,7 @@ const DAYS_LIGHT = [
 ]
 
 const DAYS_DARK = [
-  { day: 'mon', photo: slowDaze },
+  { day: 'mon', photo: monPhoto },
   { day: 'tue', photo: tuePhoto },
   { day: 'wed', photo: wedPhoto },
   { day: 'thu', photo: thuPhoto },
