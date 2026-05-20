@@ -68,16 +68,35 @@
   margin: 0 auto;
 }
 
+/* Each row is positioned so that ::before can render the hairline divider
+   above it as an independently-animatable element. The previous static
+   `border-top` is replaced by this so the hairline can draw in from the
+   left rather than appearing all at once. */
 .tryoro-perk {
+  position: relative;
   padding: 36px 0;
-  border-top: 1px solid var(--color-fg-line);
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 56px;
   align-items: baseline;
 }
+.tryoro-perk::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-fg-line);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
 .tryoro-perk-end {
-  border-top: 1px solid var(--color-fg-line);
+  position: relative;
+  height: 1px;
+  background: var(--color-fg-line);
+  transform: scaleX(0);
+  transform-origin: left center;
 }
 
 .tryoro-perk-label {
@@ -86,6 +105,9 @@
   font-size: 28px;
   color: var(--color-fg);
   letter-spacing: -0.6px;
+  /* hidden until reveal */
+  opacity: 0;
+  transform: translateY(14px);
 }
 .tryoro-perk-desc {
   font-family: var(--font-serif);
@@ -95,6 +117,57 @@
   letter-spacing: -0.2px;
   color: var(--color-fg-faint);
   max-width: 480px;
+  /* hidden until reveal */
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* ── REVEAL ANIMATION ──────────────────────────────────────────────────────
+   Triggered when [data-revealed="true"] is set on .tryoro-perks (by an
+   IntersectionObserver in TryOro.jsx). Each row staggers by 140 ms via
+   --reveal-i custom property on the row. Inside a row:
+     - hairline draws in (left -> right)  500 ms
+     - label rises + flashes gold        900 ms
+     - description fades in              500 ms
+   All three start with row-relative delays so the row feels like a single
+   "settling" gesture rather than three independent fades. */
+
+@keyframes tryoro-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes tryoro-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* The "highlight of oro" pass — label briefly glows gold mid-animation
+   before settling to cream. Editorial, not flashy. */
+@keyframes tryoro-rise-highlight {
+  0%   { opacity: 0; transform: translateY(14px); color: var(--oro-cream-45); }
+  45%  { opacity: 1; transform: translateY(0);    color: var(--oro-gold); }
+  100% { opacity: 1; transform: translateY(0);    color: var(--color-fg); }
+}
+
+.tryoro-perks[data-revealed='true'] .tryoro-perk::before,
+.tryoro-perks[data-revealed='true'] .tryoro-perk-end {
+  animation: tryoro-draw 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--reveal-i, 0) * 140ms);
+}
+.tryoro-perks[data-revealed='true'] .tryoro-perk-label {
+  animation: tryoro-rise-highlight 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--reveal-i, 0) * 140ms + 180ms);
+}
+.tryoro-perks[data-revealed='true'] .tryoro-perk-desc {
+  animation: tryoro-rise 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--reveal-i, 0) * 140ms + 320ms);
+}
+
+/* Reduced-motion: skip the cascade, just show the final state. */
+@media (prefers-reduced-motion: reduce) {
+  .tryoro-perk::before,
+  .tryoro-perk-end           { transform: scaleX(1); animation: none !important; }
+  .tryoro-perk-label,
+  .tryoro-perk-desc          { opacity: 1; transform: none; animation: none !important; }
 }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
