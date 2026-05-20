@@ -92,7 +92,7 @@ function TheJournalDark({ onSubscribe }) {
         <h2 className="jr-title">
           from the <span className="jr-em">closet</span>.
         </h2>
-        <p className="jr-sub">two letters a week on fashion and getting dressed.</p>
+        <p className="jr-sub">oro’s newsletter on style and getting dressed. twice a week.</p>
       </div>
 
       <div className="jr-feature">
