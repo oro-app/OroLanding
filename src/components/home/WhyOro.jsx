@@ -1,4 +1,5 @@
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
+import wardrobePhoto from '../../assets/why-oro/wardrobe.jpg'
 
 // Why oro — faithful to the handoff (sections/why-oro.jsx +
 // sections/dark/why-oro.jsx). Light and dark are structurally different:
@@ -60,7 +61,7 @@ function WhyOroDark() {
             thinking for you, so you just bring the taste.
           </p>
         </div>
-        <div className="why-d-photo" style={{ backgroundImage: `url(${ORO_PHOTOS.detail})` }} />
+        <div className="why-d-photo" style={{ backgroundImage: `url(${wardrobePhoto})` }} />
       </div>
     </section>
   )
