@@ -60,7 +60,7 @@ function TheJournalLight({ onSubscribe }) {
           <h3 className="jr-l-signup-title">
             one letter. <span className="jr-accent">once a month</span>.
           </h3>
-          <p className="jr-l-signup-sub">a slow read on style and mornings. no growth hacks.</p>
+          <p className="jr-l-signup-sub">two letters a week on fashion and getting dressed. no growth hacks.</p>
         </div>
         <form className="jr-l-form" onSubmit={handleSubmit}>
           <div className="jr-l-field">
@@ -92,7 +92,7 @@ function TheJournalDark() {
         <h2 className="jr-title">
           from the <span className="jr-em">closet</span>.
         </h2>
-        <p className="jr-sub">a slow read on style and mornings. the latest, below.</p>
+        <p className="jr-sub">two letters a week on fashion and getting dressed.</p>
       </div>
 
       <div className="jr-feature">

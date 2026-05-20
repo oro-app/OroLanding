@@ -23,7 +23,7 @@ export default function JournalPage() {
             from the <span className="ja-em">closet</span>.
           </h1>
           <p className="ja-sub">
-            a slow read on style and mornings. every issue, in order.
+            two letters a week on fashion and getting dressed. every issue, in order.
           </p>
         </div>
       </section>
