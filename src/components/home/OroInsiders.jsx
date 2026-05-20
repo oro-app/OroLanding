@@ -21,7 +21,7 @@ export default function OroInsiders({ onApply }) {
       <div className="ins-inner">
         <div className="ins-head">
           <h2 className="ins-title">
-            be an <span className="ins-em">insider</span>.
+            oro <span className="ins-em">insiders</span>.
           </h2>
           <p className="ins-lead">
             we’re building oro with a small group of early users.
