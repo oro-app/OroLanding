@@ -15,10 +15,11 @@ import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics } from './lib/analytics'
 import { DISCORD_URL } from './lib/links'
 
-// Code-split the article + archive + download-funnel routes.
+// Code-split the article + archive + product-subpage routes.
 const NewsletterPage = lazy(() => import('./components/newsletter/NewsletterPage'))
 const JournalPage = lazy(() => import('./components/journal/JournalPage'))
 const TryOroPage = lazy(() => import('./components/try-oro/TryOro'))
+const HowItWorksPage = lazy(() => import('./components/how-it-works/HowItWorks'))
 
 function getRoute() {
   const path = window.location.pathname.replace(/\/+$/, '') || '/'
@@ -31,8 +32,9 @@ function getRoute() {
     }
   }
 
-  if (path === '/journal')  return { type: 'journal' }
-  if (path === '/try-oro')  return { type: 'try-oro' }
+  if (path === '/journal')        return { type: 'journal' }
+  if (path === '/try-oro')        return { type: 'try-oro' }
+  if (path === '/how-it-works')   return { type: 'how-it-works' }
 
   return { type: 'home' }
 }
@@ -84,6 +86,10 @@ function App() {
           ) : route.type === 'try-oro' ? (
             <Suspense fallback={null}>
               <TryOroPage />
+            </Suspense>
+          ) : route.type === 'how-it-works' ? (
+            <Suspense fallback={null}>
+              <HowItWorksPage />
             </Suspense>
           ) : (
             <>
