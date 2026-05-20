@@ -3,6 +3,7 @@ import monPhoto from '../../assets/fits/mon.jpg'
 import tuePhoto from '../../assets/fits/tue.jpg'
 import wedPhoto from '../../assets/fits/wed.jpg'
 import thuPhoto from '../../assets/fits/thu.jpg'
+import friPhoto from '../../assets/fits/fri.jpg'
 
 // Fits by oro — faithful to the handoff (sections/fits-by-oro.jsx +
 // sections/dark/fits-by-oro.jsx). Light: staggered photo wall, gradient
@@ -23,7 +24,7 @@ const DAYS_DARK = [
   { day: 'tue', photo: tuePhoto },
   { day: 'wed', photo: wedPhoto },
   { day: 'thu', photo: thuPhoto },
-  { day: 'fri', photo: ORO_PHOTOS.hero5 },
+  { day: 'fri', photo: friPhoto },
 ]
 
 function FitsByOroLight() {
