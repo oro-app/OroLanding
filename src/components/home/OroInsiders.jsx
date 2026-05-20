@@ -12,7 +12,7 @@ const PERKS = [
 
 export default function OroInsiders({ onApply }) {
   const handleApply = () => {
-    trackEvent('cta_click', { location: 'insiders', destination: 'waitlist' })
+    trackEvent('cta_click', { location: 'insiders', destination: 'discord' })
     onApply?.()
   }
 

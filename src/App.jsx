@@ -13,7 +13,7 @@ import CookieConsent from './components/overlays/CookieConsent'
 import WaitlistModal from './components/overlays/WaitlistModal'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics } from './lib/analytics'
-import { APP_STORE_URL } from './lib/links'
+import { APP_STORE_URL, DISCORD_URL } from './lib/links'
 
 // Code-split the article + archive routes — only fetched when needed.
 const NewsletterPage = lazy(() => import('./components/newsletter/NewsletterPage'))
@@ -41,12 +41,15 @@ function App() {
   const route = getRoute()
   const [waitlistOpen, setWaitlistOpen] = useState(false)
 
-  // Every "try oro" CTA opens the App Store in a new tab. WaitlistModal is
-  // still mounted for OroInsiders ("join our community") and for the
-  // periodic newsletter-page signup popup — both genuine email-collection
-  // surfaces, not "try the app" CTAs.
+  // Every "try oro" CTA opens the App Store in a new tab.
+  // OroInsiders "join our community" opens the Discord invite.
+  // WaitlistModal stays mounted for the periodic newsletter-page signup popup,
+  // which is the only remaining email-collection surface.
   const openAppStore = () => {
     window.open(APP_STORE_URL, '_blank', 'noopener,noreferrer')
+  }
+  const openDiscord = () => {
+    window.open(DISCORD_URL, '_blank', 'noopener,noreferrer')
   }
 
   useEffect(() => {
@@ -86,7 +89,7 @@ function App() {
               <FitsByOro />
               <Testimonials />
               <TheJournal onSubscribe={() => setWaitlistOpen(true)} />
-              <OroInsiders onApply={() => setWaitlistOpen(true)} />
+              <OroInsiders onApply={openDiscord} />
               <FinalCTA onTryOro={openAppStore} />
               <SiteFooter onTryOro={openAppStore} />
             </>
