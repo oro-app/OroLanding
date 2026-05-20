@@ -37,9 +37,7 @@ export default function SiteFooter({ onTryOro }) {
 
         <div className="site-footer-col">
           <div className="site-footer-colhead">oro</div>
-          <a className="site-footer-link" href="/manifesto" target="_blank" rel="noopener noreferrer">manifesto</a>
           <a className="site-footer-link" href="/#journal">from the closet</a>
-          <a className="site-footer-link" href="/investors" target="_blank" rel="noopener noreferrer">investors</a>
         </div>
 
         <div className="site-footer-col">
