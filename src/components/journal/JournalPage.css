@@ -46,11 +46,31 @@
   margin: 0 auto;
   list-style: none;
   padding: 0;
-  border-top: 1px solid var(--color-fg-line);
 }
 
+/* Each row carries its own hairline divider as a ::before so it can
+   animate (scaleX 0->1) during reveal. The last row also paints an
+   ::after so the bottom of the list is closed. */
 .ja-row {
-  border-bottom: 1px solid var(--color-fg-line);
+  position: relative;
+}
+.ja-row::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--color-fg-line);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.ja-row:last-child::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--color-fg-line);
+  transform: scaleX(0);
+  transform-origin: left center;
 }
 .ja-row-link {
   display: block;
@@ -73,6 +93,8 @@
   letter-spacing: 0.6px;
   font-weight: 500;
   text-transform: lowercase;
+  opacity: 0;
+  transform: translateY(8px);
 }
 .ja-row-tag {
   font-weight: 500;
@@ -92,6 +114,8 @@
   line-height: 1.2;
   letter-spacing: -0.5px;
   color: var(--color-fg);
+  opacity: 0;
+  transform: translateY(14px);
 }
 .ja-row-sum {
   margin: 8px 0 0;
@@ -103,6 +127,66 @@
   line-height: 1.5;
   letter-spacing: -0.1px;
   color: var(--color-fg-faint);
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* ── ANIMATIONS ────────────────────────────────────────────────────────
+   Hero entrance on mount (title, sub), then a scroll-triggered cascade
+   over the list — for each row: hairline draws, meta fades, title rises
+   with a brief gold 'highlight of oro' pass, summary fades. Same gesture
+   as /why-oro + /try-oro so the editorial subpages settle in identically. */
+
+@keyframes ja-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes ja-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ja-rise-small {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ja-rise-highlight {
+  0%   { opacity: 0; transform: translateY(14px); color: var(--oro-cream-45); }
+  45%  { opacity: 1; transform: translateY(0);    color: var(--oro-gold); }
+  100% { opacity: 1; transform: translateY(0);    color: var(--color-fg); }
+}
+
+/* Hero — on-mount entrance. Always plays (above the fold). */
+.ja-title { animation: ja-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1)  80ms both; }
+.ja-sub   { animation: ja-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 240ms both; }
+
+/* List — staggered reveal per row. 120 ms apart so the cascade reads as
+   a continuous gesture even on long archives. */
+.ja-list-wrap[data-revealed='true'] .ja-row::before,
+.ja-list-wrap[data-revealed='true'] .ja-row:last-child::after {
+  animation: ja-draw 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--reveal-i, 0) * 120ms);
+}
+.ja-list-wrap[data-revealed='true'] .ja-row-meta {
+  animation: ja-rise-small 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--reveal-i, 0) * 120ms + 140ms);
+}
+.ja-list-wrap[data-revealed='true'] .ja-row-title {
+  animation: ja-rise-highlight 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--reveal-i, 0) * 120ms + 220ms);
+}
+.ja-list-wrap[data-revealed='true'] .ja-row-sum {
+  animation: ja-rise 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--reveal-i, 0) * 120ms + 360ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ja-title,
+  .ja-sub,
+  .ja-row-meta,
+  .ja-row-title,
+  .ja-row-sum     { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .ja-row::before,
+  .ja-row:last-child::after { transform: scaleX(1) !important; animation: none !important; }
 }
 
 /* ── responsive ─────────────────────────────────────────────────────────── */

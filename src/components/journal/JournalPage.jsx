@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { newsletters } from '../../lib/newsletters'
 import SiteFooter from '../layout/SiteFooter'
 import './JournalPage.css'
@@ -8,7 +8,37 @@ import './JournalPage.css'
 // big italic-accent serif headline, vertical list of issue rows, hairline
 // dividers, plum/cream tokens. Each row links to /newsletter/:slug and opens
 // in a new tab (matches the rest of the site's link policy).
+//
+// Reveal animations: hero enters on mount (title, sub), each issue row
+// cascades in as the list scrolls into view (hairline draws, meta fades,
+// title rises with a brief gold 'highlight of oro' pass, summary fades).
+// Same gesture as /why-oro + /try-oro so all the editorial subpages settle
+// in identically.
+
+function useRevealOnScroll(threshold = 0.1) {
+  const ref = useRef(null)
+  const [revealed, setRevealed] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || revealed) return
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true)
+          obs.disconnect()
+        }
+      },
+      { threshold }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [revealed, threshold])
+  return [ref, revealed]
+}
+
 export default function JournalPage() {
+  const [listRef, listRevealed] = useRevealOnScroll(0.05)
+
   useEffect(() => {
     const prev = document.title
     document.title = 'from the closet — oro'
@@ -28,10 +58,15 @@ export default function JournalPage() {
         </div>
       </section>
 
-      <section className="ja-list-wrap" aria-label="all issues">
+      <section
+        className="ja-list-wrap"
+        aria-label="all issues"
+        ref={listRef}
+        data-revealed={listRevealed ? 'true' : 'false'}
+      >
         <ol className="ja-list">
-          {newsletters.map((n) => (
-            <li className="ja-row" key={n.slug}>
+          {newsletters.map((n, i) => (
+            <li className="ja-row" key={n.slug} style={{ '--reveal-i': i }}>
               <a
                 className="ja-row-link"
                 href={n.href}
