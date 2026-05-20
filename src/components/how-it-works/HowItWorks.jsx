@@ -36,7 +36,7 @@ export default function HowItWorks() {
             <span className="hiw-em">every time</span>.
           </h1>
           <p className="hiw-sub">
-            set up once. a minute a morning. picked from clothes you already own — and tried on before you commit.
+            a minute a morning. picked from clothes you already own — and tried on before you commit.
           </p>
         </div>
       </section>
