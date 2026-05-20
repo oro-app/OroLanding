@@ -4,7 +4,7 @@ import AppStoreButtons from '../marketing/AppStoreButtons'
 import PlayStoreSoonModal from '../marketing/PlayStoreSoonModal'
 import WaitlistModal from '../overlays/WaitlistModal'
 import { OroPhone } from '../marketing/OroPhone'
-import wardrobeScreenshot from '../../assets/try-oro/wardrobe-mockup.jpg'
+import phoneScreen from '../../assets/try-oro/phone-screen.webp'
 import { trackEvent } from '../../lib/analytics'
 import './TryOro.css'
 
@@ -80,8 +80,8 @@ export default function TryOro() {
               </div>
               <div className="op-pair-front">
                 <OroPhone
-                  imageSrc={wardrobeScreenshot}
-                  imageAlt="Oro app — your wardrobe, 24 pieces across upper, lower, shoes, and accessories"
+                  imageSrc={phoneScreen}
+                  imageAlt="Oro app home screen — good morning greeting and yesterday's fit"
                   width={296}
                   rotate={3}
                 />
