@@ -274,13 +274,15 @@
   opacity: 0.72;
 }
 
-/* "see all N issues" — quiet italic link beneath the featured trio.
-   Left-aligned to the same content column as the trio above. */
+/* "see all N issues" — quiet italic link beneath the two mini cards in
+   the right column. Lives inside .jr-rest (flex column, gap: 32px) so
+   the gap positions it; an extra margin-top extends the breathing room. */
 .jr-all {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 56px;
+  margin-top: 8px;          /* on top of the 32px flex gap */
+  align-self: flex-start;   /* keep tight to the column edge */
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 14px;
@@ -291,10 +293,6 @@
 }
 .jr-all:hover {
   color: var(--color-fg);
-}
-.jr-all-wrap {
-  max-width: 1080px;
-  margin: 0 auto;
 }
 
 /* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */

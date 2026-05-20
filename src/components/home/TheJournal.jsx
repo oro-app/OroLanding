@@ -117,14 +117,12 @@ function TheJournalDark() {
               </div>
             </a>
           ))}
-        </div>
-      </div>
 
-      <div className="jr-all-wrap">
-        <a className="jr-all" href="/journal" target="_blank" rel="noopener noreferrer">
-          see all {ALL_COUNT} issues
-          <Arrow size={11} />
-        </a>
+          <a className="jr-all" href="/journal" target="_blank" rel="noopener noreferrer">
+            see all {ALL_COUNT} issues
+            <Arrow size={11} />
+          </a>
+        </div>
       </div>
     </section>
   )
