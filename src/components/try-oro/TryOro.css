@@ -157,6 +157,21 @@
   transform: translateY(10px);
 }
 
+/* ── HERO ENTRANCE — on mount ──────────────────────────────────────────── */
+@keyframes tryoro-hero-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes tryoro-hero-photo {
+  from { opacity: 0; transform: translateY(20px) scale(1.02); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.tryoro-title  { animation: tryoro-hero-rise 800ms cubic-bezier(0.2, 0.8, 0.2, 1)  80ms both; }
+.tryoro-sub    { animation: tryoro-hero-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 240ms both; }
+.tryoro-stores { animation: tryoro-hero-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 380ms both; }
+.tryoro-micro  { animation: tryoro-hero-rise 600ms cubic-bezier(0.2, 0.8, 0.2, 1) 520ms both; }
+.tryoro-phones { animation: tryoro-hero-photo 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 200ms both; }
+
 /* ── REVEAL ANIMATION ──────────────────────────────────────────────────────
    Triggered when [data-revealed="true"] is set on .tryoro-perks (by an
    IntersectionObserver in TryOro.jsx). Each row staggers by 140 ms via
@@ -203,6 +218,11 @@
   .tryoro-perk-end           { transform: scaleX(1); animation: none !important; }
   .tryoro-perk-label,
   .tryoro-perk-desc          { opacity: 1; transform: none; animation: none !important; }
+  .tryoro-title,
+  .tryoro-sub,
+  .tryoro-stores,
+  .tryoro-micro,
+  .tryoro-phones             { opacity: 1; transform: none; animation: none !important; }
 }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────────────────── */

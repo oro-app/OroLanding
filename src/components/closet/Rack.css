@@ -175,8 +175,45 @@
   75%      { transform: rotate(calc(var(--rot, 0deg) - var(--swing, 0.9deg))); }
 }
 
+/* ── ENTRANCE — scroll-triggered via [data-revealed='true'] on parent.
+   Header rises, each rod draws, hangers fade in. Fade-in uses transition
+   (not animation) so the existing nth-child sway-desync isn't clobbered. */
+@keyframes rack-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes rack-rod-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* initial hidden */
+.rack-header { opacity: 0; }
+.rack-rod    { transform: scaleX(0); transform-origin: left center; }
+.rack-hanger {
+  opacity: 0;
+  transition: opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* reveal */
+[data-revealed='true'] .rack-header { animation: rack-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 80ms both; }
+[data-revealed='true'] .rack-row .rack-rod { animation: rack-rod-draw 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+[data-revealed='true'] .rack-row:nth-child(1) .rack-rod { animation-delay: 280ms; }
+[data-revealed='true'] .rack-row:nth-child(2) .rack-rod { animation-delay: 540ms; }
+[data-revealed='true'] .rack-row:nth-child(3) .rack-rod { animation-delay: 800ms; }
+[data-revealed='true'] .rack-row:nth-child(4) .rack-rod { animation-delay: 1060ms; }
+/* Hanger fade-in via transition. transition-delay creates the stagger
+   without colliding with the per-hanger sway animation. */
+[data-revealed='true'] .rack-hanger { opacity: 1; }
+[data-revealed='true'] .rack-row:nth-child(1) .rack-hanger { transition-delay: 460ms; }
+[data-revealed='true'] .rack-row:nth-child(2) .rack-hanger { transition-delay: 720ms; }
+[data-revealed='true'] .rack-row:nth-child(3) .rack-hanger { transition-delay: 980ms; }
+[data-revealed='true'] .rack-row:nth-child(4) .rack-hanger { transition-delay: 1240ms; }
+
 @media (prefers-reduced-motion: reduce) {
-  .rack-hanger { animation: none; }
+  .rack-hanger { animation: none; opacity: 1; transition: none; }
+  .rack-header { opacity: 1; animation: none !important; }
+  .rack-rod    { transform: scaleX(1); animation: none !important; }
 }
 
 /* responsive */

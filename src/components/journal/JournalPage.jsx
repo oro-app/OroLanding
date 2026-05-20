@@ -1,10 +1,35 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { newsletters } from '../../lib/newsletters'
 import SiteFooter from '../layout/SiteFooter'
 import FeaturedLetter from '../closet/FeaturedLetter'
 import Rack from '../closet/Rack'
 import CareLabelSubscribe from '../closet/CareLabelSubscribe'
 import './JournalPage.css'
+
+// One-shot intersection-observer hook. Returns a [ref, revealed] tuple —
+// revealed flips to true the first time the element crosses the threshold,
+// then the observer disconnects. Used to scroll-trigger entrance animations
+// for the featured letter, rack, and care label sections.
+function useRevealOnScroll(threshold = 0.1) {
+  const ref = useRef(null)
+  const [revealed, setRevealed] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || revealed) return
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true)
+          obs.disconnect()
+        }
+      },
+      { threshold }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [revealed, threshold])
+  return [ref, revealed]
+}
 
 // /journal — "from the closet." A four-section editorial page that leans
 // into the closet metaphor:
@@ -30,6 +55,10 @@ function pickFeatured(list) {
 }
 
 export default function JournalPage() {
+  const [featRef, featRevealed]  = useRevealOnScroll(0.15)
+  const [rackRef, rackRevealed]  = useRevealOnScroll(0.05)
+  const [careRef, careRevealed]  = useRevealOnScroll(0.2)
+
   useEffect(() => {
     const prev = document.title
     document.title = 'oro — from the closet'
@@ -53,20 +82,26 @@ export default function JournalPage() {
           </div>
           <div className="ftc-hero-right">
             <p className="ftc-sub">
-              a slow read on style, mornings, and the small group of people we’re building oro with. one letter, once a month — and a rack of older notes you can flip through any time.
+              a slow read on style, mornings, and the small group of people we’re building oro with. one letter, twice a week — and a rack of older notes you can flip through any time.
             </p>
           </div>
         </div>
       </section>
 
       {/* 2. Featured letter */}
-      {featured && <FeaturedLetter letter={featured} />}
+      <div ref={featRef} data-revealed={featRevealed ? 'true' : 'false'}>
+        {featured && <FeaturedLetter letter={featured} />}
+      </div>
 
       {/* 3. The rack — older letters */}
-      <Rack entries={rest} />
+      <div ref={rackRef} data-revealed={rackRevealed ? 'true' : 'false'}>
+        <Rack entries={rest} />
+      </div>
 
       {/* 4. Care label subscribe */}
-      <CareLabelSubscribe />
+      <div ref={careRef} data-revealed={careRevealed ? 'true' : 'false'}>
+        <CareLabelSubscribe />
+      </div>
 
       <SiteFooter />
     </main>

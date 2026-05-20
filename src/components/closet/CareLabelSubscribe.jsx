@@ -69,7 +69,7 @@ export default function CareLabelSubscribe() {
           <span className="cl-hole" />
         </div>
 
-        <p className="cl-kicker">care · oro · once a month</p>
+        <p className="cl-kicker">letters from oro · twice a week</p>
 
         <h2 className="cl-title">
           one letter.<br />
@@ -77,7 +77,7 @@ export default function CareLabelSubscribe() {
         </h2>
 
         <p className="cl-body">
-          no growth hacks. no algorithms. just us, writing about clothes — the ones we wear, the ones we keep, and the ones we’re still figuring out.
+          we spend most of our time building oro. but we also just really like fashion, and this is where that goes.
         </p>
 
         <div className="cl-symbols" aria-hidden="true">

@@ -1,10 +1,8 @@
 // Redesigned site footer — faithful to the handoff's shared.jsx → SiteFooter.
-// Theme-aware via --color-* tokens (plum/cream on dark, cream/ink on light):
-// same layout in both themes, only the colour differs.
-//
-// onTryOro is optional/guarded: App passes it on the home route; NewsletterPage
-// renders <SiteFooter/> without it, so the footer "try oro" is inert there
-// (no regression — the old footer had no try-oro at all).
+// Theme-aware via --color-* tokens. Self-contained: every link is a real
+// <a href>, so the footer works on every route without depending on a prop
+// wired from App.jsx (which only happened on the home route before, leaving
+// the 'try oro' buttons inert on subpages).
 function Arrow() {
   return (
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -13,7 +11,7 @@ function Arrow() {
   )
 }
 
-export default function SiteFooter({ onTryOro }) {
+export default function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="site-footer-grid">
@@ -22,22 +20,27 @@ export default function SiteFooter({ onTryOro }) {
           <p className="site-footer-tagline">
             the stylist that fits in your pocket.
           </p>
-          <button type="button" className="site-footer-tryoro" onClick={() => onTryOro?.()}>
+          <a
+            className="site-footer-tryoro"
+            href="/try-oro"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             try oro
             <Arrow />
-          </button>
+          </a>
         </div>
 
         <div className="site-footer-col">
           <div className="site-footer-colhead">product</div>
-          <button type="button" className="site-footer-link" onClick={() => onTryOro?.()}>try oro</button>
+          <a className="site-footer-link" href="/try-oro" target="_blank" rel="noopener noreferrer">try oro</a>
           <a className="site-footer-link" href="/how-it-works" target="_blank" rel="noopener noreferrer">how it works</a>
           <a className="site-footer-link" href="/why-oro" target="_blank" rel="noopener noreferrer">why oro</a>
         </div>
 
         <div className="site-footer-col">
           <div className="site-footer-colhead">editorial</div>
-          <a className="site-footer-link" href="/#journal">from the closet</a>
+          <a className="site-footer-link" href="/journal" target="_blank" rel="noopener noreferrer">from the closet</a>
           <a className="site-footer-link" href="/manifesto" target="_blank" rel="noopener noreferrer">manifesto</a>
         </div>
 

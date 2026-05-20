@@ -75,7 +75,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark">
       <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
-        <SiteHeader onTryOro={openTryOro} />
+        <SiteHeader />
         <main id="main">
           {route.type === 'newsletter' ? (
             <Suspense fallback={null}>
@@ -107,7 +107,7 @@ function App() {
               <TheJournal onSubscribe={() => setWaitlistOpen(true)} />
               <OroInsiders onApply={openDiscord} />
               <FinalCTA onTryOro={openTryOro} />
-              <SiteFooter onTryOro={openTryOro} />
+              <SiteFooter />
             </>
           )}
         </main>
