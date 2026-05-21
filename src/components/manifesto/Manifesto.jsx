@@ -127,7 +127,7 @@ export default function Manifesto() {
           {/* 6. Long taped note — belief 02 (paper tape, no pushpin) */}
           <div
             className="mn-item mn-item--taped"
-            style={{ top: 360, right: 16, width: 380, transform: 'rotate(-1deg)' }}
+            style={{ top: 430, right: 16, width: 380, transform: 'rotate(-1deg)' }}
           >
             <Tape />
             <p className="mn-label mn-label--plum">take 02.</p>
