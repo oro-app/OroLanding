@@ -38,7 +38,7 @@ function TheJournalLight({ onSubscribe }) {
         <h2 className="jr-l-title">
           the <span className="jr-accent">journal</span>.
         </h2>
-        <a className="jr-l-all" href="/journal">
+        <a className="jr-l-all" href="/from-the-closet">
           all entries
           <Arrow size={10} />
         </a>
@@ -118,7 +118,7 @@ function TheJournalDark({ onSubscribe }) {
             </a>
           ))}
 
-          <a className="jr-all" href="/journal" target="_blank" rel="noopener noreferrer">
+          <a className="jr-all" href="/from-the-closet" target="_blank" rel="noopener noreferrer">
             see all {ALL_COUNT} issues
             <Arrow size={14} />
           </a>

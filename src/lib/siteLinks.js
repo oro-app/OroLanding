@@ -9,14 +9,14 @@ export const NAV_COLUMNS = [
     links: [
       { label: 'try oro',      href: '/try-oro' },
       { label: 'how it works', href: '/how-it-works' },
-      { label: 'why oro',      href: '/why-oro' },
+      { label: 'why oro?',     href: '/why-oro' },
     ],
   },
   {
     head: 'editorial',
     links: [
-      { label: 'from the closet', href: '/journal' },
-      { label: 'honestly…',       href: '/manifesto' },
+      { label: 'from the closet', href: '/from-the-closet' },
+      { label: 'honestly…',       href: '/honestly' },
     ],
   },
   {

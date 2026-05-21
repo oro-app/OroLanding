@@ -35,12 +35,13 @@ function getRoute() {
     }
   }
 
-  if (path === '/journal')        return { type: 'journal' }
-  if (path === '/try-oro')        return { type: 'try-oro' }
-  if (path === '/how-it-works')   return { type: 'how-it-works' }
-  if (path === '/why-oro')        return { type: 'why-oro' }
-  if (path === '/manifesto')      return { type: 'manifesto' }
-  if (path === '/contact')        return { type: 'contact' }
+  // Route slugs match the labels shown in the header/footer.
+  if (path === '/from-the-closet') return { type: 'journal' }
+  if (path === '/try-oro')         return { type: 'try-oro' }
+  if (path === '/how-it-works')    return { type: 'how-it-works' }
+  if (path === '/why-oro')         return { type: 'why-oro' }
+  if (path === '/honestly')        return { type: 'manifesto' }
+  if (path === '/contact')         return { type: 'contact' }
 
   return { type: 'home' }
 }
