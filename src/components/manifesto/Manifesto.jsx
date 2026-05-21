@@ -48,7 +48,7 @@ export default function Manifesto() {
           the manifesto.
         </p>
         <h1 className="mn-title">
-          six things we <span className="mn-em">believe</span>.
+          6 takes we <span className="mn-em">live by</span>.
         </h1>
       </section>
 
@@ -75,7 +75,7 @@ export default function Manifesto() {
             style={{ top: 64, left: 230, width: 340, transform: 'rotate(2deg)' }}
           >
             <Pin />
-            <p className="mn-label mn-label--plum">belief 01.</p>
+            <p className="mn-label mn-label--plum">take 01.</p>
             <p className="mn-belief mn-belief--ink">
               the best thing in your wardrobe might be something you haven’t worn in <span className="mn-italic-plum">two years.</span>
             </p>
@@ -87,7 +87,7 @@ export default function Manifesto() {
             style={{ top: 320, left: 24, width: 320, transform: 'rotate(-2deg)' }}
           >
             <Pin />
-            <p className="mn-label mn-label--plum">belief 03.</p>
+            <p className="mn-label mn-label--plum">take 03.</p>
             <p className="mn-belief mn-belief--ink mn-belief--italic">
               <span className="mn-highlight">nobody can tell you what your style is. they can only help you see it.</span>
             </p>
@@ -129,7 +129,7 @@ export default function Manifesto() {
             style={{ top: 360, right: 16, width: 380, transform: 'rotate(-1deg)' }}
           >
             <Tape />
-            <p className="mn-label mn-label--plum">belief 02.</p>
+            <p className="mn-label mn-label--plum">take 02.</p>
             <p className="mn-belief mn-belief--ink">
               a million data points from strangers will never add up to knowing <span className="mn-italic-plum">one person.</span>
             </p>
@@ -141,7 +141,7 @@ export default function Manifesto() {
             style={{ top: 600, left: 100, width: 300, transform: 'rotate(3deg)' }}
           >
             <Pin />
-            <p className="mn-label mn-label--plum">belief 04.</p>
+            <p className="mn-label mn-label--plum">take 04.</p>
             <p className="mn-belief mn-belief--ink mn-belief--italic">
               fashion should work for your life, not the other way around.
             </p>
@@ -153,7 +153,7 @@ export default function Manifesto() {
             style={{ top: 580, right: 24, width: 380, transform: 'rotate(-2.4deg)' }}
           >
             <Pin />
-            <p className="mn-label mn-label--gold">belief 06.</p>
+            <p className="mn-label mn-label--gold">take 06.</p>
             <p className="mn-belief mn-belief--cream">
               there’s a confidence that comes from knowing you look right for the room. <span className="mn-italic-gold">everyone</span> deserves that.
             </p>
