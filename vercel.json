@@ -30,6 +30,10 @@
       ]
     }
   ],
+  "redirects": [
+    { "source": "/journal",   "destination": "/from-the-closet", "permanent": true },
+    { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
+  ],
   "rewrites": [
     { "source": "/terms",   "destination": "/terms.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
