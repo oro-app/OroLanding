@@ -181,7 +181,6 @@ export default function Contact() {
               yours,<br />
               <span className="ct-signoff-name">oro.</span>
             </p>
-            <p className="ct-tag">toronto · waterloo · mmxxvi</p>
           </div>
 
           {/* Right — visitor's form */}

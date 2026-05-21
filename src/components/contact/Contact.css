@@ -67,14 +67,14 @@
   position: relative;
   background: #FFFDF7;
   color: var(--oro-ink);
-  padding: 56px 56px 64px;
+  padding: 72px 72px 76px;
   box-shadow:
     0 30px 60px -20px rgba(0, 0, 0, 0.45),
     0 8px 20px -6px rgba(0, 0, 0, 0.30);
-  /* faint ruled-paper lines, inset 56px from the edges */
+  /* faint ruled-paper lines, inset from the edges (content-box clipped) */
   background-image: linear-gradient(rgba(14, 11, 7, 0.04) 1px, transparent 1px);
   background-size: 100% 32px;
-  background-position: 56px 100px;
+  background-position: 72px 116px;
   background-origin: content-box;
   background-clip: content-box;
 }
@@ -131,17 +131,6 @@
   font-weight: 300;
   font-size: 28px;
 }
-.ct-tag {
-  margin: 18px 0 0;
-  padding-top: 12px;
-  border-top: 1px dashed rgba(14, 11, 7, 0.2);
-  font-family: var(--font-sans);
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 2.6px;
-  color: rgba(14, 11, 7, 0.55);
-}
-
 /* ── VISITOR FORM ─────────────────────────────────────────────────────── */
 .ct-textarea {
   display: block;
@@ -354,7 +343,7 @@
   .ct-title        { font-size: 64px; line-height: 0.98; letter-spacing: -1.8px; }
   .ct-letters-wrap { padding: 16px 20px 48px; }
   .ct-letters      { grid-template-columns: 1fr; gap: 24px; justify-items: center; }
-  .ct-sheet        { width: 100%; max-width: 560px; padding: 40px 28px 48px; }
+  .ct-sheet        { width: 100%; max-width: 560px; padding: 48px 36px 56px; }
   .ct-faq-wrap     { padding: 24px 20px 64px; }
   .ct-faq-row      { grid-template-columns: 1fr; gap: 4px; }
   .ct-faq-q        { font-size: 20px; }
