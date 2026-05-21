@@ -1,0 +1,126 @@
+/* "android, almost ready." modal. Visual chrome mirrors WaitlistModal
+   (cream card on a darkened plum backdrop) so the two notification surfaces
+   feel like a set. Editorial dark-on-cream card content, sentence-case
+   copy to match the existing modal's voice. */
+
+.psm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 11, 7, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 100;
+  animation: psm-fade 200ms ease;
+}
+
+.psm-card {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  padding: 56px 56px 44px;
+  background: var(--oro-cream);
+  color: var(--oro-ink);
+  border-radius: 22px;
+  font-family: var(--font-sans);
+  box-shadow: 0 30px 80px -20px rgba(14, 11, 7, 0.55);
+  animation: psm-rise 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.psm-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--oro-ink);
+  opacity: 0.55;
+  font-size: 18px;
+  transition: opacity 150ms ease;
+}
+.psm-close:hover { opacity: 1; }
+
+.psm-eyebrow {
+  margin: 0 0 18px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--oro-gold-dim);
+}
+
+.psm-title {
+  margin: 0 0 14px;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.6px;
+  color: var(--oro-ink);
+}
+
+.psm-sub {
+  margin: 0 0 28px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(14, 11, 7, 0.65);
+}
+
+.psm-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.psm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: -0.1px;
+  transition: opacity 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.psm-btn--filled {
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
+}
+.psm-btn--filled:hover { opacity: 0.92; }
+
+.psm-btn--outlined {
+  background: transparent;
+  color: var(--oro-plum-deep);
+  border-color: var(--oro-plum-deep);
+}
+.psm-btn--outlined:hover {
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
+}
+
+@keyframes psm-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes psm-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .psm-card { padding: 44px 28px 32px; border-radius: 18px; }
+  .psm-title { font-size: 26px; }
+  .psm-actions { flex-direction: column; align-items: stretch; }
+  .psm-btn { justify-content: center; }
+}

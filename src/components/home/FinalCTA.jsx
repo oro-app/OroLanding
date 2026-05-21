@@ -6,7 +6,7 @@ import { trackEvent } from '../../lib/analytics'
 // WaitlistModal (consistent with every other try-oro CTA on the page).
 export default function FinalCTA({ onTryOro }) {
   const handleTryOro = () => {
-    trackEvent('cta_click', { location: 'final-cta', destination: 'app_store' })
+    trackEvent('cta_click', { location: 'final-cta', destination: 'try_oro' })
     onTryOro?.()
   }
 

@@ -1,0 +1,226 @@
+/* HorizontalSteps — scroll-jacked horizontal stepper.
+   Values mirror handoff/design/steps.jsx; ORO.* hex literals → --color-*. */
+
+.hi-section {
+  position: relative;
+  background: var(--color-bg);
+  /* height set inline as `${total * 110}vh` */
+}
+
+.hi-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;          /* clip the off-stage panels */
+  background: var(--color-bg);
+}
+
+.hi-section-eyebrow {
+  position: absolute;
+  top: 44px;
+  left: 0; right: 0;
+  z-index: 5;
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--color-fg-faint);
+  letter-spacing: -0.2px;
+  transition: opacity 240ms ease;
+}
+
+.hi-track {
+  display: flex;
+  height: 100%;
+  will-change: transform;    /* Safari first-frame hitch fix */
+  transition: transform 60ms linear; /* gentle smoothing on top of the raw scroll-driven transform */
+}
+
+.hi-panel {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  padding: 0 96px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 96px;
+  align-items: center;
+  justify-content: center;
+}
+
+.hi-text {
+  max-width: 560px;
+  justify-self: end;
+  transition: transform 200ms linear, opacity 200ms linear;
+}
+
+.hi-eyebrow {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--color-fg-faint);
+  letter-spacing: -0.2px;
+  margin-bottom: 22px;
+}
+
+.hi-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 76px;
+  line-height: 0.98;
+  letter-spacing: -2.2px;
+  color: var(--color-fg);
+}
+
+.hi-body {
+  margin: 28px 0 0;
+  max-width: 480px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.3px;
+  color: var(--color-fg-faint);
+}
+
+.hi-phone-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 200ms linear;
+}
+
+.hi-phone-scale {
+  width: 260px;
+  transform-origin: center center;
+  transition: transform 200ms linear;
+}
+
+/* Continuous gentle float-bob. Applied to a child wrapper INSIDE the scale
+   transform so the entrance scale and the bob translateY don't fight each
+   other. Paused via inline animationPlayState when off-stage. */
+@keyframes hi-float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-12px); }
+}
+.hi-phone-float {
+  animation: hi-float 6s ease-in-out infinite;
+}
+
+.hi-phone-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter:
+    drop-shadow(0 60px 100px rgba(14, 11, 7, 0.55))
+    drop-shadow(0 24px 40px rgba(14, 11, 7, 0.40))
+    drop-shadow(0 6px 14px rgba(14, 11, 7, 0.35));
+}
+
+/* Progress dots */
+.hi-dots {
+  position: absolute;
+  bottom: 36px;
+  left: 0; right: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: none;
+}
+.hi-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 249, 237, 0.22);
+  transition: background 380ms ease, transform 380ms ease;
+}
+.hi-dot.is-active {
+  background: rgba(212, 168, 83, 0.92);
+  transform: scale(1.35);
+}
+
+/* "scroll →" hint */
+.hi-hint {
+  position: absolute;
+  bottom: 30px;
+  right: 56px;
+  z-index: 5;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 249, 237, 0.55);
+  letter-spacing: 0.6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  transition: opacity 600ms ease;
+}
+
+/* ── RESPONSIVE / MOBILE FALLBACK ───────────────────────────────────────
+   Below 960px, drop the scroll-jack entirely — each step becomes a normal
+   full-width section, text above, phone below, vertical scroll. Drop the
+   progress dots and the "scroll →" hint (they're chrome for the desktop
+   interaction). The component renders the same DOM; CSS just unwinds
+   the sticky + horizontal-track layout. */
+@media (max-width: 960px) {
+  .hi-section {
+    height: auto !important;   /* override the inline n*110vh */
+  }
+  .hi-sticky {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+  .hi-track {
+    display: block;
+    transform: none !important;
+    height: auto;
+    will-change: auto;
+    transition: none;
+  }
+  .hi-panel {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    padding: 80px 20px;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: left;
+  }
+  .hi-text {
+    max-width: none;
+    justify-self: start;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .hi-title { font-size: 48px; letter-spacing: -1.4px; }
+  .hi-body  { font-size: 17px; }
+  .hi-phone-col {
+    opacity: 1 !important;
+    margin: 0 auto;
+  }
+  .hi-phone-scale {
+    transform: none !important;
+    width: 240px;
+  }
+  .hi-section-eyebrow,
+  .hi-dots,
+  .hi-hint { display: none; }
+}
+
+/* ── REDUCED MOTION ────────────────────────────────────────────────────
+   Disable the bob and the per-step entrance transitions. Scroll-jack
+   interaction stays (motion is user-driven, not autoplay). */
+@media (prefers-reduced-motion: reduce) {
+  .hi-phone-float { animation: none; }
+  .hi-text,
+  .hi-phone-col,
+  .hi-phone-scale,
+  .hi-track { transition: none; }
+}

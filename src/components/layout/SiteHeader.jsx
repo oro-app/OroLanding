@@ -2,10 +2,10 @@ import { useTheme } from '../../context/ThemeContext'
 
 // Redesigned site header — faithful to the handoff's shared.jsx → SiteHeader.
 // Sticky, hairline bottom border, theme-aware via the --color-* tokens
-// (plum/cream on dark, cream/ink on light). The "try oro" button opens the
-// existing WaitlistModal (onTryOro is wired from App; optional/guarded so
-// routes that render the header without it — none currently — won't break).
-export default function SiteHeader({ onTryOro }) {
+// (plum/cream on dark, cream/ink on light). Self-contained: every nav link
+// is a real <a href>, so the header works identically on every route
+// without depending on a prop wired from App.jsx.
+export default function SiteHeader() {
   const { theme, setTheme } = useTheme()
 
   return (
@@ -21,8 +21,7 @@ export default function SiteHeader({ onTryOro }) {
       </a>
 
       <nav className="site-header-nav" aria-label="oro">
-        <a href="/#journal" className="site-header-link">from the closet</a>
-        <a href="/manifesto" className="site-header-link" target="_blank" rel="noopener noreferrer">manifesto</a>
+        <a href="/journal" className="site-header-link" target="_blank" rel="noopener noreferrer">from the closet</a>
 
         <div className="theme-toggle" role="group" aria-label="Theme">
           <button
@@ -58,12 +57,17 @@ export default function SiteHeader({ onTryOro }) {
           </svg>
         </a>
 
-        <button type="button" className="site-header-tryoro" onClick={() => onTryOro?.()}>
+        <a
+          href="/try-oro"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="site-header-tryoro"
+        >
           try oro
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
-        </button>
+        </a>
       </nav>
     </header>
   )

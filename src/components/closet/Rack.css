@@ -1,0 +1,228 @@
+/* The Rack — articles hanging from hairline rods. The centerpiece of
+   /from-the-closet. Theme-aware via --color-* tokens; the rod colour is
+   slightly stronger than the standard --color-fg-line for presence. */
+
+.rack {
+  padding: 24px 56px 96px;
+}
+.rack-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* section header */
+.rack-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 56px;
+  gap: 24px;
+}
+.rack-title-h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -1.2px;
+  color: var(--color-fg);
+}
+.rack-title-h2 em { font-style: italic; }
+.rack-sub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--color-fg-faint);
+  letter-spacing: -0.2px;
+}
+
+/* each row = one rod + a flex of hangers below */
+.rack-row {
+  margin-bottom: 96px;
+}
+.rack-row:last-child { margin-bottom: 0; }
+
+.rack-rod {
+  height: 1px;
+  width: 100%;
+  /* The rod reads as a real garment rail — slightly stronger than the
+     standard hairline so it has presence behind the hanging cards. */
+  background: rgba(255, 249, 237, 0.55);
+}
+:root[data-theme='light'] .rack-rod {
+  background: rgba(14, 11, 7, 0.4);
+}
+
+.rack-row-items {
+  display: flex;
+  gap: 64px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* a single hanger — composes S-hook + string + photo + meta */
+.rack-hanger {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  color: inherit;
+  text-decoration: none;
+  transform-origin: top center;
+  transform: rotate(var(--rot, 0deg));
+  /* The custom properties are read by @keyframes rack-sway via calc().
+     --rot is set inline per-card; --swing defaults to a calm idle. */
+  --swing: 0.9deg;
+  animation: rack-sway 7.6s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+}
+
+/* Desync — each card's period AND start phase differ so the rack never
+   reads as a synchronised choir. animation-delay pulls each card into a
+   different point of the cycle on first paint. */
+.rack-hanger:nth-child(2n)   { animation-duration:  9.2s; animation-delay: -2.4s; }
+.rack-hanger:nth-child(3n)   { animation-duration:  6.4s; animation-delay: -4.1s; }
+.rack-hanger:nth-child(4n+1) { animation-duration:  8.4s; animation-delay: -1.3s; }
+
+.rack-hanger:hover {
+  /* Hover used to snap from 7s -> 1.6s, which read as a jolt. The new
+     gentler step keeps the same lazy easing, just wider amplitude and a
+     mildly shorter period. */
+  --swing: 1.6deg;
+  animation-duration: 3s;
+}
+
+.rack-hook {
+  display: block;
+  margin: -10px auto 0;     /* sits on the rod */
+  color: rgba(255, 249, 237, 0.55);
+}
+:root[data-theme='light'] .rack-hook {
+  color: rgba(14, 11, 7, 0.35);
+}
+
+.rack-string {
+  display: block;
+  width: 1px;
+  height: var(--s, 48px);
+  margin: 0 auto;
+  background: var(--color-fg-line);
+}
+
+.rack-photo {
+  display: block;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 16px;
+}
+
+.rack-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  color: var(--color-fg);
+}
+
+.rack-excerpt {
+  margin: 8px 0 12px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.45;
+  letter-spacing: -0.1px;
+  color: var(--color-fg-faint);
+}
+
+/* care-label date tag */
+.rack-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border: 1px solid var(--color-fg-line);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--color-fg-faint);
+  letter-spacing: 0.1px;
+}
+.rack-tag-dot { opacity: 0.6; }
+
+/* empty-state */
+.rack-empty {
+  margin: 40px 0 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  text-align: center;
+  color: var(--color-fg-faint);
+}
+
+/* ── sway animation. Pivots from `transform-origin: top center` so each
+   card rocks from where the string meets the rod, like a real hanger.
+   Bidirectional pendulum: rest -> +swing -> rest -> -swing -> rest,
+   which feels far more natural than the one-sided wobble it had before. */
+@keyframes rack-sway {
+  0%, 100% { transform: rotate(var(--rot, 0deg)); }
+  25%      { transform: rotate(calc(var(--rot, 0deg) + var(--swing, 0.9deg))); }
+  50%      { transform: rotate(var(--rot, 0deg)); }
+  75%      { transform: rotate(calc(var(--rot, 0deg) - var(--swing, 0.9deg))); }
+}
+
+/* ── ENTRANCE — scroll-triggered via [data-revealed='true'] on parent.
+   Header rises, each rod draws, hangers fade in. Fade-in uses transition
+   (not animation) so the existing nth-child sway-desync isn't clobbered. */
+@keyframes rack-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes rack-rod-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* initial hidden */
+.rack-header { opacity: 0; }
+.rack-rod    { transform: scaleX(0); transform-origin: left center; }
+.rack-hanger {
+  opacity: 0;
+  transition: opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* reveal */
+[data-revealed='true'] .rack-header { animation: rack-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 80ms both; }
+[data-revealed='true'] .rack-row .rack-rod { animation: rack-rod-draw 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+[data-revealed='true'] .rack-row:nth-child(1) .rack-rod { animation-delay: 280ms; }
+[data-revealed='true'] .rack-row:nth-child(2) .rack-rod { animation-delay: 540ms; }
+[data-revealed='true'] .rack-row:nth-child(3) .rack-rod { animation-delay: 800ms; }
+[data-revealed='true'] .rack-row:nth-child(4) .rack-rod { animation-delay: 1060ms; }
+/* Hanger fade-in via transition. transition-delay creates the stagger
+   without colliding with the per-hanger sway animation. */
+[data-revealed='true'] .rack-hanger { opacity: 1; }
+[data-revealed='true'] .rack-row:nth-child(1) .rack-hanger { transition-delay: 460ms; }
+[data-revealed='true'] .rack-row:nth-child(2) .rack-hanger { transition-delay: 720ms; }
+[data-revealed='true'] .rack-row:nth-child(3) .rack-hanger { transition-delay: 980ms; }
+[data-revealed='true'] .rack-row:nth-child(4) .rack-hanger { transition-delay: 1240ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rack-hanger { animation: none; opacity: 1; transition: none; }
+  .rack-header { opacity: 1; animation: none !important; }
+  .rack-rod    { transform: scaleX(1); animation: none !important; }
+}
+
+/* responsive */
+@media (max-width: 960px) {
+  .rack             { padding: 16px 20px 64px; }
+  .rack-header      { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 40px; }
+  .rack-title-h2    { font-size: 36px; letter-spacing: -0.9px; }
+  .rack-sub         { font-size: 13px; }
+  .rack-row         { margin-bottom: 72px; }
+  .rack-row-items   { gap: 40px; }
+  .rack-hanger      { width: min(280px, 80vw) !important; }
+}
