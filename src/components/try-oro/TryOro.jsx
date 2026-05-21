@@ -6,6 +6,7 @@ import WaitlistModal from '../overlays/WaitlistModal'
 import phoneHome from '../../assets/try-oro/phone-home.webp'
 import phoneStyleme from '../../assets/try-oro/phone-styleme.webp'
 import { trackEvent } from '../../lib/analytics'
+import { USER_COUNT } from '../../lib/stats'
 import './TryOro.css'
 
 const PERKS = [
@@ -71,6 +72,7 @@ export default function TryOro() {
             </div>
 
             <p className="tryoro-micro">free to start.</p>
+            <p className="tryoro-proof">join {USER_COUNT} people already getting dressed with oro.</p>
           </div>
 
           <div className="tryoro-hero-right">
