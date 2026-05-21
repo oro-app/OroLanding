@@ -46,6 +46,7 @@ export default function SiteFooter() {
 
         <div className="site-footer-col">
           <div className="site-footer-colhead">say hi.</div>
+          <a className="site-footer-link" href="/contact" target="_blank" rel="noopener noreferrer">contact &amp; help</a>
           <a className="site-footer-link" href="mailto:admin@buildingoro.ca" target="_blank" rel="noopener noreferrer">admin@buildingoro.ca</a>
           <a className="site-footer-link" href="https://www.instagram.com/oro.wardrobe/" target="_blank" rel="noopener noreferrer">instagram</a>
           <a className="site-footer-link" href="https://www.tiktok.com/@oro.wardrobe" target="_blank" rel="noopener noreferrer">tiktok</a>
