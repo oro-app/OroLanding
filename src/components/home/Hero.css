@@ -221,6 +221,17 @@
   padding: 14px 20px;
   background: transparent;
   border: 1px solid var(--color-fg-line);
+  transition: background 200ms ease, border-color 200ms ease;
+}
+/* hover fills the bubble with a lighter purple (plum-soft on dark; a faint
+   plum tint on light so it still reads as a gentle highlight). */
+.hero-dbubble:hover {
+  background: var(--oro-plum-soft);
+  border-color: var(--oro-plum-soft);
+}
+:root[data-theme='light'] .hero-dbubble:hover {
+  background: rgba(58, 38, 70, 0.08);
+  border-color: rgba(58, 38, 70, 0.12);
 }
 .hero-dbubble--oro {
   align-self: flex-start;
