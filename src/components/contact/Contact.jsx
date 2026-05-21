@@ -10,7 +10,7 @@ import './Contact.css'
 const TOPICS = ['hello', 'support', 'press', 'partnership', 'careers', 'feedback']
 
 const FAQ = [
-  { q: 'is oro free?',                 a: 'yes — free to start.' },
+  { q: 'is oro free?',                 a: 'yes. completely free to use.' },
   { q: 'do you sell my closet data?',  a: 'no. never. it stays on your account.' },
   { q: 'when does the app launch?',    a: 'ios is live now. android is days away.' },
   { q: 'can i write about oro?',       a: 'yes, please. write us and someone on the team will get back to you.' },
