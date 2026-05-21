@@ -1,4 +1,5 @@
 import { trackEvent } from '../../lib/analytics'
+import { USER_COUNT } from '../../lib/stats'
 
 // Final CTA — a SHARED section (single component; theme-aware colour, same
 // layout in both themes). Faithful to
@@ -23,6 +24,7 @@ export default function FinalCTA({ onTryOro }) {
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
         </button>
+        <p className="fcta-proof">join {USER_COUNT} people already getting dressed with oro.</p>
       </div>
     </section>
   )
