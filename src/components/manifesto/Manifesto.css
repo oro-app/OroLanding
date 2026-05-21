@@ -152,8 +152,15 @@
   padding: 12px 12px 48px;
 }
 .mn-item--polaroid-cap .mn-polaroid-photo { height: 260px; }
+/* "take 05." label inside the captioned polaroid — centered + nudged
+   between photo and caption. Overrides the default left-aligned label
+   margin to fit the polaroid's centered caption layout. */
+.mn-polaroid-label {
+  margin: 14px 0 0;
+  text-align: center;
+}
 .mn-polaroid-caption {
-  margin: 14px 4px 0;
+  margin: 8px 4px 0;
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 300;

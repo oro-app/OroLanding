@@ -117,6 +117,7 @@ export default function Manifesto() {
               style={{ backgroundImage: `url(${polaroidPhoto})` }}
               aria-hidden="true"
             />
+            <p className="mn-label mn-label--plum mn-polaroid-label">take 05.</p>
             <p className="mn-polaroid-caption">
               a great outfit is a small joy.<br />
               and small joys <span className="mn-italic-plum">add up.</span>
