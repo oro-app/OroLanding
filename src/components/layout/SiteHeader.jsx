@@ -21,7 +21,14 @@ export default function SiteHeader() {
       </a>
 
       <nav className="site-header-nav" aria-label="oro">
+        {/* Page links mirror the footer's navigational sections
+            (product + editorial + say-hi). Socials + legal stay in the
+            footer only. */}
+        <a href="/how-it-works" className="site-header-link" target="_blank" rel="noopener noreferrer">how it works</a>
+        <a href="/why-oro" className="site-header-link" target="_blank" rel="noopener noreferrer">why oro</a>
         <a href="/journal" className="site-header-link" target="_blank" rel="noopener noreferrer">from the closet</a>
+        <a href="/manifesto" className="site-header-link" target="_blank" rel="noopener noreferrer">manifesto</a>
+        <a href="/contact" className="site-header-link" target="_blank" rel="noopener noreferrer">contact</a>
 
         <div className="theme-toggle" role="group" aria-label="Theme">
           <button
@@ -42,20 +49,6 @@ export default function SiteHeader() {
             light
           </button>
         </div>
-
-        <a
-          href="https://www.instagram.com/oro.wardrobe/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="site-header-ig"
-          aria-label="instagram"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="5" />
-            <circle cx="12" cy="12" r="4.5" />
-            <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" />
-          </svg>
-        </a>
 
         <a
           href="/try-oro"
