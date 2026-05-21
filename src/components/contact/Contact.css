@@ -59,7 +59,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
-  align-items: flex-start;
+  /* stretch so both paper sheets match the taller one's height */
+  align-items: stretch;
 }
 
 /* shared sheet */
