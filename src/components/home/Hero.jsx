@@ -1,4 +1,5 @@
 import { trackEvent } from '../../lib/analytics'
+import { USER_COUNT } from '../../lib/stats'
 import FakePhone from './FakePhone'
 // Real hero conversation photo (replaces the Unsplash placeholder). Imported
 // so Vite bundles it — note /static is dev-proxied to the backend, so a
@@ -115,6 +116,7 @@ function HeroDark({ onTryOro }) {
               <Arrow size={14} />
             </button>
             <span className="hero-cta-note hero-cta-note--ondark">free, ios — early access.</span>
+            <span className="hero-cta-proof">join {USER_COUNT} people already getting dressed with oro.</span>
           </div>
         </aside>
       </div>
