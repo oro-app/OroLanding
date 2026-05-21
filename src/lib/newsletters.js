@@ -45,7 +45,7 @@ export const newsletters = Object.entries(newsletterModules)
       tag: module.meta?.tag || 'Oro Insiders',
       date: module.meta?.date || '',
       dateLabel: formatNewsletterDate(module.meta?.date),
-      image: module.meta?.image || '/static/oro-4.png',
+      image: module.meta?.image || '/static/oro-logo.png',
       summary: module.meta?.summary || '',
       Component: module.default,
     }

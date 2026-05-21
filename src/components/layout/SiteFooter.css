@@ -1,55 +1,136 @@
+/* Site footer — faithful to design_handoff_landing_page/design/shared.jsx → SiteFooter.
+   Always plum-deep regardless of theme (raw --oro-* tokens, not theme-aware). */
+
 .site-footer {
-  width: 100%;
-  min-height: var(--site-footer-height);
-  padding: 1rem 2rem 1.25rem;
-  display: flex;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  padding: 56px 40px 24px;
+}
+
+.site-footer-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 36px;
+}
+
+.site-footer-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.site-footer-tagline {
+  margin: 0;
+  max-width: 280px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: -0.2px;
+  color: var(--color-fg);
+}
+
+.site-footer-tryoro {
+  margin-top: 18px;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  background: rgba(58, 38, 70, 0.05);
-  border-top: 1px solid rgba(58, 38, 70, 0.1);
+  gap: 8px;
+  color: var(--color-fg);
+  background: transparent;
+  padding: 8px 14px;
+  border: 1px solid var(--color-fg);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.site-footer-tryoro:hover {
+  opacity: 0.75;
 }
 
-.site-footer-links {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
+.site-footer-colhead {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--oro-gold);
+  letter-spacing: -0.1px;
+  margin-bottom: 14px;
 }
 
-.site-footer-copy,
 .site-footer-link {
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-  font-size: 0.7rem;
-  /* Solid muted purple instead of opacity 0.7 over cream — satisfies WCAG AA (>4.5:1). */
-  color: #4a3556;
-  letter-spacing: 0;
-}
-
-.site-footer-link {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-fg-faint);
   text-decoration: none;
-  transition: opacity 0.2s ease;
+  padding: 4px 0;
+  letter-spacing: 0.1px;
+  /* button reset so the <button> "try oro" matches the <a> links exactly */
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
 }
-
 .site-footer-link:hover {
-  color: #3A2646;
+  color: var(--color-fg);
 }
 
+.site-footer-bottom {
+  padding-top: 18px;
+  border-top: 1px solid var(--color-fg-line);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 10.5px;
+  color: var(--color-fg-faint);
+  letter-spacing: 0.6px;
+  font-weight: 500;
+}
+
+.site-footer-legal {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+.site-footer-legal a {
+  color: var(--color-fg-faint);
+  text-decoration: none;
+}
 .site-footer-sep {
-  font-size: 0.7rem;
-  color: #6b5876;
+  color: var(--color-fg-faint);
   user-select: none;
 }
 
-.newsletter-page .site-footer {
-  background: rgba(58, 38, 70, 0.04);
+.site-footer-place {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: -0.1px;
+  color: var(--color-fg-faint);
 }
 
-@media (max-width: 700px) {
+@media (max-width: 960px) {
   .site-footer {
+    padding: 48px 20px 24px;
+  }
+  .site-footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .site-footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .site-footer-bottom {
     flex-direction: column;
+    gap: 10px;
     align-items: flex-start;
-    gap: 0.75rem;
-    padding: 1rem 1.2rem 1.25rem;
   }
 }

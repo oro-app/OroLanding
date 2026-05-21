@@ -1,0 +1,68 @@
+/* Final CTA — values transcribed 1:1 from the handoff
+   (sections/final-cta.jsx). Shared section: always plum, centered. */
+
+.fcta {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  padding: 160px 56px;
+  text-align: center;
+}
+
+.fcta-title {
+  margin: 0 auto;
+  max-width: 900px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 80px;
+  line-height: 0.98;
+  letter-spacing: -2.4px;
+  color: var(--color-fg);
+}
+.fcta-em {
+  font-style: italic;
+}
+
+.fcta-sub {
+  margin: 32px auto 0;
+  max-width: 400px;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.45;
+  letter-spacing: -0.2px;
+  color: var(--color-fg-faint);
+}
+
+.fcta-actions {
+  margin-top: 44px;
+  display: inline-flex;
+}
+.fcta-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 28px;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 19px;
+  letter-spacing: -0.3px;
+}
+.fcta-cta:hover {
+  opacity: 0.92;
+}
+
+/* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
+@media (max-width: 960px) {
+  .fcta {
+    padding: 96px 20px;
+  }
+  .fcta-title {
+    font-size: 48px;
+    letter-spacing: -1.4px;
+  }
+}

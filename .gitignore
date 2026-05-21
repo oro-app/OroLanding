@@ -6,3 +6,6 @@ dist
 .env
 .env.local
 .env*.local
+
+# Launch film is hosted on YouTube — keep any local video file out of git.
+public/film/*.mp4

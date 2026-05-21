@@ -20,7 +20,7 @@ export default function NewsletterRecommendations({ currentSlug }) {
       <ul className="newsletter-recs-list">
         {recommendations.map((newsletter) => (
           <li key={newsletter.slug}>
-            <a className="newsletter-recs-card" href={newsletter.href}>
+            <a className="newsletter-recs-card" href={newsletter.href} target="_blank" rel="noopener noreferrer">
               <div className="newsletter-recs-image-wrap">
                 <img
                   className="newsletter-recs-image"

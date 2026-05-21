@@ -236,46 +236,26 @@
   background: rgba(255, 255, 255, 0.28);
 }
 
-/* ── CASL Consent ── */
-.consent-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  margin-top: 0.9rem;
-}
-
-.consent-checkbox {
-  width: 15px;
-  height: 15px;
-  margin-top: 2px;
-  flex-shrink: 0;
-  accent-color: var(--gold);
-  cursor: pointer;
-}
-
-.consent-label {
-  font-size: 0.7rem;
-  color: rgba(58, 38, 70, 0.58);
+/* ── CASL consent — implicit on submit. The checkbox was replaced with a
+   short inline blurb beneath the email field. Submitting the form counts as
+   consent; the form still sends consent: true + consent_timestamp to the API. */
+.consent-text {
+  margin: 0.9rem 0 0;
+  font-size: 0.72rem;
   line-height: 1.55;
-  cursor: pointer;
+  color: rgba(58, 38, 70, 0.58);
+  letter-spacing: 0.01em;
 }
 
-.consent-label a {
+.consent-text a {
   color: #8a6416;
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color 0.2s ease;
 }
 
-.consent-label a:hover {
+.consent-text a:hover {
   color: var(--purple-deep);
-}
-
-.consent-error {
-  margin-top: 0.45rem;
-  font-size: 0.78rem;
-  color: #e07070;
-  letter-spacing: 0.01em;
 }
 
 @media (max-width: 480px) {
