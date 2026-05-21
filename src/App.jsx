@@ -22,6 +22,7 @@ const TryOroPage = lazy(() => import('./components/try-oro/TryOro'))
 const HowItWorksPage = lazy(() => import('./components/how-it-works/HowItWorks'))
 const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
+const ContactPage = lazy(() => import('./components/contact/Contact'))
 
 function getRoute() {
   const path = window.location.pathname.replace(/\/+$/, '') || '/'
@@ -39,6 +40,7 @@ function getRoute() {
   if (path === '/how-it-works')   return { type: 'how-it-works' }
   if (path === '/why-oro')        return { type: 'why-oro' }
   if (path === '/manifesto')      return { type: 'manifesto' }
+  if (path === '/contact')        return { type: 'contact' }
 
   return { type: 'home' }
 }
@@ -102,6 +104,10 @@ function App() {
           ) : route.type === 'manifesto' ? (
             <Suspense fallback={null}>
               <ManifestoPage />
+            </Suspense>
+          ) : route.type === 'contact' ? (
+            <Suspense fallback={null}>
+              <ContactPage />
             </Suspense>
           ) : (
             <>

@@ -46,10 +46,12 @@ export default function SiteFooter() {
 
         <div className="site-footer-col">
           <div className="site-footer-colhead">say hi.</div>
+          <a className="site-footer-link" href="/contact" target="_blank" rel="noopener noreferrer">contact &amp; help</a>
           <a className="site-footer-link" href="mailto:admin@buildingoro.ca" target="_blank" rel="noopener noreferrer">admin@buildingoro.ca</a>
           <a className="site-footer-link" href="https://www.instagram.com/oro.wardrobe/" target="_blank" rel="noopener noreferrer">instagram</a>
           <a className="site-footer-link" href="https://www.tiktok.com/@oro.wardrobe" target="_blank" rel="noopener noreferrer">tiktok</a>
           <a className="site-footer-link" href="https://www.linkedin.com/company/buildingoro/" target="_blank" rel="noopener noreferrer">linkedin</a>
+          <a className="site-footer-link" href="https://linktr.ee/buildingoro" target="_blank" rel="noopener noreferrer">linktree</a>
         </div>
 
         <div className="site-footer-col">
@@ -61,7 +63,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="site-footer-bottom">
-        <span>© 2026 oro digital inc.</span>
+        <span>© 2026 Oro Digital Inc.</span>
       </div>
     </footer>
   )
