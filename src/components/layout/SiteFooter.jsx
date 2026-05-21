@@ -1,8 +1,8 @@
-// Redesigned site footer — faithful to the handoff's shared.jsx → SiteFooter.
-// Theme-aware via --color-* tokens. Self-contained: every link is a real
-// <a href>, so the footer works on every route without depending on a prop
-// wired from App.jsx (which only happened on the home route before, leaving
-// the 'try oro' buttons inert on subpages).
+import { NAV_COLUMNS } from '../../lib/siteLinks'
+
+// Redesigned site footer — theme-aware via --color-* tokens. The four link
+// columns are driven by the shared NAV_COLUMNS data (same source the header
+// dropdowns use), so footer and navbar are always identical.
 function Arrow() {
   return (
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -31,35 +31,22 @@ export default function SiteFooter() {
           </a>
         </div>
 
-        <div className="site-footer-col">
-          <div className="site-footer-colhead">product</div>
-          <a className="site-footer-link" href="/try-oro" target="_blank" rel="noopener noreferrer">try oro</a>
-          <a className="site-footer-link" href="/how-it-works" target="_blank" rel="noopener noreferrer">how it works</a>
-          <a className="site-footer-link" href="/why-oro" target="_blank" rel="noopener noreferrer">why oro</a>
-        </div>
-
-        <div className="site-footer-col">
-          <div className="site-footer-colhead">editorial</div>
-          <a className="site-footer-link" href="/journal" target="_blank" rel="noopener noreferrer">from the closet</a>
-          <a className="site-footer-link" href="/manifesto" target="_blank" rel="noopener noreferrer">manifesto</a>
-        </div>
-
-        <div className="site-footer-col">
-          <div className="site-footer-colhead">say hi.</div>
-          <a className="site-footer-link" href="/contact" target="_blank" rel="noopener noreferrer">contact &amp; help</a>
-          <a className="site-footer-link" href="mailto:admin@buildingoro.ca" target="_blank" rel="noopener noreferrer">admin@buildingoro.ca</a>
-          <a className="site-footer-link" href="https://www.instagram.com/oro.wardrobe/" target="_blank" rel="noopener noreferrer">instagram</a>
-          <a className="site-footer-link" href="https://www.tiktok.com/@oro.wardrobe" target="_blank" rel="noopener noreferrer">tiktok</a>
-          <a className="site-footer-link" href="https://www.linkedin.com/company/buildingoro/" target="_blank" rel="noopener noreferrer">linkedin</a>
-          <a className="site-footer-link" href="https://linktr.ee/buildingoro" target="_blank" rel="noopener noreferrer">linktree</a>
-        </div>
-
-        <div className="site-footer-col">
-          <div className="site-footer-colhead">legal</div>
-          <a className="site-footer-link" href="/terms" target="_blank" rel="noopener noreferrer">terms</a>
-          <a className="site-footer-link" href="/privacy" target="_blank" rel="noopener noreferrer">privacy</a>
-          <a className="site-footer-link" href="/cookies" target="_blank" rel="noopener noreferrer">cookies</a>
-        </div>
+        {NAV_COLUMNS.map((col) => (
+          <div className="site-footer-col" key={col.head}>
+            <div className="site-footer-colhead">{col.head}</div>
+            {col.links.map((link) => (
+              <a
+                key={link.label}
+                className="site-footer-link"
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        ))}
       </div>
 
       <div className="site-footer-bottom">
