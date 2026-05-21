@@ -51,6 +51,35 @@
   text-decoration: none;
 }
 
+/* coming-soon variant: non-clickable + a gold badge pinned over the photo */
+.fl-card--soon {
+  position: relative;
+  cursor: default;
+}
+.fl-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  padding: 6px 14px;
+  background: var(--oro-gold);
+  color: var(--oro-ink);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: -0.2px;
+  box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.5);
+}
+.fl-soonline {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 26px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--color-fg-faint);
+}
+
 .fl-photo-wrap {
   width: 100%;
   aspect-ratio: 5 / 4;
@@ -127,7 +156,8 @@
 .fl-prerule-meta,
 .fl-title,
 .fl-excerpt,
-.fl-readlink     { opacity: 0; }
+.fl-readlink,
+.fl-soonline     { opacity: 0; }
 .fl-prerule-line { transform: scaleX(0); transform-origin: left center; }
 .fl-photo        { opacity: 0; }
 
@@ -138,7 +168,8 @@
 [data-revealed='true'] .fl-photo         { animation: fl-photo-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 280ms both; }
 [data-revealed='true'] .fl-title         { animation: fl-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 380ms both; }
 [data-revealed='true'] .fl-excerpt       { animation: fl-rise 600ms cubic-bezier(0.2, 0.8, 0.2, 1) 520ms both; }
-[data-revealed='true'] .fl-readlink      { animation: fl-rise 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 640ms both; }
+[data-revealed='true'] .fl-readlink,
+[data-revealed='true'] .fl-soonline      { animation: fl-rise 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 640ms both; }
 
 @media (prefers-reduced-motion: reduce) {
   .fl-prerule-label,

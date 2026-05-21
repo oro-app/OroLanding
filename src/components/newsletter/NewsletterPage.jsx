@@ -63,7 +63,7 @@ export default function NewsletterPage({ slug }) {
         <section className="newsletter-not-found">
           <p className="newsletter-page-eyebrow">Newsletter</p>
           <h1>We could not find that note.</h1>
-          <a className="newsletter-back-link" href="/journal">
+          <a className="newsletter-back-link" href="/from-the-closet">
             <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path d="M14 9H4M9 4L4 9l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -80,7 +80,7 @@ export default function NewsletterPage({ slug }) {
   return (
     <main className="newsletter-page">
       <div className="newsletter-page-shell">
-        <a className="newsletter-back-link" href="/journal">
+        <a className="newsletter-back-link" href="/from-the-closet">
           <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
             <path d="M14 9H4M9 4L4 9l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>

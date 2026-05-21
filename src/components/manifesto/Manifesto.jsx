@@ -35,7 +35,7 @@ function Tape() {
 export default function Manifesto() {
   useEffect(() => {
     const prev = document.title
-    document.title = 'manifesto — oro'
+    document.title = 'honestly… — oro'
     return () => { document.title = prev }
   }, [])
 
@@ -45,7 +45,7 @@ export default function Manifesto() {
       <section className="mn-title-wrap">
         <p className="mn-kicker">
           <span className="mn-kicker-dot" aria-hidden="true" />
-          the manifesto.
+          honestly…
         </p>
         <h1 className="mn-title">
           6 takes we <span className="mn-em">live by</span>.

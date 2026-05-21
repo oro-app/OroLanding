@@ -1,12 +1,42 @@
 import { useTheme } from '../../context/ThemeContext'
+import { NAV_COLUMNS } from '../../lib/siteLinks'
 
-// Redesigned site header — faithful to the handoff's shared.jsx → SiteHeader.
-// Sticky, hairline bottom border, theme-aware via the --color-* tokens
-// (plum/cream on dark, cream/ink on light). Self-contained: every nav link
-// is a real <a href>, so the header works identically on every route
-// without depending on a prop wired from App.jsx.
+// Redesigned site header — sticky, hairline bottom border, theme-aware via
+// --color-* tokens. The nav mirrors the footer exactly: each footer column
+// (product / editorial / say hi / legal) is a hover/focus dropdown here,
+// driven by the shared NAV_COLUMNS data so the two never drift apart.
+//
+// Theme control is a single sun/moon icon toggle (was two literal
+// dark / light text buttons).
+
+function SunIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.2" />
+      <path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
+    </svg>
+  )
+}
+
+function NavArrow() {
+  return (
+    <svg className="site-header-caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  )
+}
+
 export default function SiteHeader() {
-  const { theme, setTheme } = useTheme()
+  const { theme, toggleTheme } = useTheme()
+  const nextTheme = theme === 'dark' ? 'light' : 'dark'
 
   return (
     <header className="site-header">
@@ -21,34 +51,38 @@ export default function SiteHeader() {
       </a>
 
       <nav className="site-header-nav" aria-label="oro">
-        {/* Page links mirror the footer's navigational sections
-            (product + editorial + say-hi). Socials + legal stay in the
-            footer only. */}
-        <a href="/how-it-works" className="site-header-link" target="_blank" rel="noopener noreferrer">how it works</a>
-        <a href="/why-oro" className="site-header-link" target="_blank" rel="noopener noreferrer">why oro</a>
-        <a href="/journal" className="site-header-link" target="_blank" rel="noopener noreferrer">from the closet</a>
-        <a href="/manifesto" className="site-header-link" target="_blank" rel="noopener noreferrer">manifesto</a>
-        <a href="/contact" className="site-header-link" target="_blank" rel="noopener noreferrer">contact</a>
+        {NAV_COLUMNS.map((col) => (
+          <div className="site-header-group" key={col.head}>
+            <button type="button" className="site-header-group-trigger" aria-haspopup="true">
+              {col.head}
+              <NavArrow />
+            </button>
+            <div className="site-header-menu" role="menu">
+              {col.links.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="site-header-menu-link"
+                  role="menuitem"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
 
-        <div className="theme-toggle" role="group" aria-label="Theme">
-          <button
-            type="button"
-            className={`theme-toggle-btn${theme === 'dark' ? ' is-active' : ''}`}
-            aria-pressed={theme === 'dark'}
-            onClick={() => setTheme('dark')}
-          >
-            dark
-          </button>
-          <span className="theme-toggle-dot" aria-hidden="true">·</span>
-          <button
-            type="button"
-            className={`theme-toggle-btn${theme === 'light' ? ' is-active' : ''}`}
-            aria-pressed={theme === 'light'}
-            onClick={() => setTheme('light')}
-          >
-            light
-          </button>
-        </div>
+        <button
+          type="button"
+          className="site-header-theme"
+          onClick={toggleTheme}
+          aria-label={`switch to ${nextTheme} mode`}
+          title={`switch to ${nextTheme} mode`}
+        >
+          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+        </button>
 
         <a
           href="/try-oro"
