@@ -53,6 +53,9 @@ export const newsletters = Object.entries(newsletterModules)
       image: module.meta?.image || '/static/oro-logo.png',
       summary: module.meta?.summary || '',
       readTime: module.meta?.readTime || '',
+      // When true, the piece isn't published yet — surfaced as a "coming
+      // soon" featured letter on /from-the-closet (badge + non-clickable).
+      comingSoon: module.meta?.comingSoon === true,
       Component: module.default,
     }
   })
