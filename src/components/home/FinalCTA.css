@@ -36,7 +36,17 @@
 
 .fcta-actions {
   margin-top: 44px;
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.fcta-proof {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  color: var(--color-fg-faint);
 }
 .fcta-cta {
   display: inline-flex;
