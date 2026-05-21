@@ -10,11 +10,10 @@ import './Contact.css'
 const TOPICS = ['hello', 'support', 'press', 'partnership', 'careers', 'feedback']
 
 const FAQ = [
-  { q: 'is oro free?',                 a: 'yes, to start. founders’ pricing for early users; full pricing later.' },
+  { q: 'is oro free?',                 a: 'yes — free to start.' },
   { q: 'do you sell my closet data?',  a: 'no. never. it stays on your account.' },
-  { q: 'when does the app launch?',    a: 'ios + android are live now. there is no waitlist.' },
-  { q: 'can i write about oro?',       a: 'yes, please. press kit comes back with your email within a day.' },
-  { q: 'are you hiring?',              a: 'occasionally. write us anyway — we keep a list.' },
+  { q: 'when does the app launch?',    a: 'ios is live now. android is days away.' },
+  { q: 'can i write about oro?',       a: 'yes, please. write us and someone on the team will get back to you.' },
 ]
 
 function Arrow() {
@@ -173,7 +172,7 @@ export default function Contact() {
             <p className="ct-salutation">dear reader,</p>
             <div className="ct-body">
               <p>we read everything that comes through this page. it’s a small team, so the reply isn’t always immediate, but it’s always written by a person.</p>
-              <p>tell us anything — an idea, a bug, a question, a polite complaint about how the app handles wednesdays. press inquiries, partnerships, hellos, all welcome at the same address.</p>
+              <p>tell us anything — an idea, a bug, a question, a polite complaint. press inquiries, partnerships, hellos, all welcome at the same address.</p>
               <p>if you’d like a faster answer, the short list of common questions on the next page might already cover it.</p>
               <p>otherwise — write us a letter.</p>
             </div>

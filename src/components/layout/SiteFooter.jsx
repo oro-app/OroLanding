@@ -63,7 +63,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="site-footer-bottom">
-        <span>© 2026 oro digital inc.</span>
+        <span>© 2026 Oro Digital Inc.</span>
       </div>
     </footer>
   )

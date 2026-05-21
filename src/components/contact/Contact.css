@@ -67,16 +67,17 @@
   position: relative;
   background: #FFFDF7;
   color: var(--oro-ink);
-  padding: 72px 72px 76px;
+  padding: 88px 92px 92px;
   box-shadow:
     0 30px 60px -20px rgba(0, 0, 0, 0.45),
     0 8px 20px -6px rgba(0, 0, 0, 0.30);
-  /* faint ruled-paper lines, inset from the edges (content-box clipped) */
+  /* faint ruled-paper lines — span the full sheet (edge to edge, like real
+     notepad paper) rather than clipping to the content box, which created a
+     visible inner-frame artifact. Generous padding keeps the text well off
+     the paper edges. */
   background-image: linear-gradient(rgba(14, 11, 7, 0.04) 1px, transparent 1px);
-  background-size: 100% 32px;
-  background-position: 72px 116px;
-  background-origin: content-box;
-  background-clip: content-box;
+  background-size: 100% 34px;
+  background-position: 0 60px;
 }
 .ct-sheet--oro { border-top: 4px solid var(--oro-plum-deep); }
 .ct-sheet--you { border-top: 4px solid var(--oro-gold); }
