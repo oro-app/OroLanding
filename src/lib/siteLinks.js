@@ -16,7 +16,7 @@ export const NAV_COLUMNS = [
     head: 'editorial',
     links: [
       { label: 'from the closet', href: '/journal' },
-      { label: 'manifesto',       href: '/manifesto' },
+      { label: 'honestly…',       href: '/manifesto' },
     ],
   },
   {
