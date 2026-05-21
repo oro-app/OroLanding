@@ -51,6 +51,7 @@ export default function SiteFooter() {
           <a className="site-footer-link" href="https://www.instagram.com/oro.wardrobe/" target="_blank" rel="noopener noreferrer">instagram</a>
           <a className="site-footer-link" href="https://www.tiktok.com/@oro.wardrobe" target="_blank" rel="noopener noreferrer">tiktok</a>
           <a className="site-footer-link" href="https://www.linkedin.com/company/buildingoro/" target="_blank" rel="noopener noreferrer">linkedin</a>
+          <a className="site-footer-link" href="https://linktr.ee/buildingoro" target="_blank" rel="noopener noreferrer">linktree</a>
         </div>
 
         <div className="site-footer-col">
