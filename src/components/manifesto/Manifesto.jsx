@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import SiteFooter from '../layout/SiteFooter'
-import wardrobePhoto from '../../assets/why-oro/wardrobe-day.jpg'
-import editorialPhoto from '../../assets/hero/hero-fit.jpg'
-import polaroidPhoto from '../../assets/fits/mon.jpg'
+import polaroidOne from '../../assets/manifesto/closet-polaroid.webp'
+import editorialPhoto from '../../assets/manifesto/editorial-photo.webp'
+import polaroidFive from '../../assets/manifesto/captioned-polaroid.webp'
 import './Manifesto.css'
 
 // /manifesto — "six things we believe." A curated pinboard above someone's
@@ -64,7 +64,7 @@ export default function Manifesto() {
             <Pin leftPct="40%" />
             <div
               className="mn-polaroid-photo"
-              style={{ backgroundImage: `url(${wardrobePhoto})` }}
+              style={{ backgroundImage: `url(${polaroidOne})` }}
               aria-hidden="true"
             />
           </div>
@@ -114,7 +114,7 @@ export default function Manifesto() {
             <Pin />
             <div
               className="mn-polaroid-photo"
-              style={{ backgroundImage: `url(${polaroidPhoto})` }}
+              style={{ backgroundImage: `url(${polaroidFive})` }}
               aria-hidden="true"
             />
             <p className="mn-label mn-label--plum mn-polaroid-label">take 05.</p>
