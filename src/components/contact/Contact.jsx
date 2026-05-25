@@ -139,7 +139,7 @@ function VisitorForm() {
 export default function Contact() {
   useEffect(() => {
     const prev = document.title
-    document.title = 'contact & help — oro'
+    document.title = 'Oro - Contact & Help'
     return () => { document.title = prev }
   }, [])
 

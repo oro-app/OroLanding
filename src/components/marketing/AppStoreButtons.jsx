@@ -36,7 +36,7 @@ export default function AppStoreButtons({ onPlayStoreClick }) {
       <a
         className="appstore-btn appstore-btn--filled"
         href={APP_STORE_URL}
-       
+        target="_blank"
         rel="noopener noreferrer"
       >
         <AppleIcon />

@@ -18,7 +18,7 @@ const STEPS = [
 export default function HowItWorks() {
   useEffect(() => {
     const prev = document.title
-    document.title = 'how it works — oro'
+    document.title = 'Oro - How It Works'
     return () => { document.title = prev }
   }, [])
 

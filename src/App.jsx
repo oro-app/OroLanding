@@ -50,14 +50,14 @@ function App() {
   const route = getRoute()
   const [waitlistOpen, setWaitlistOpen] = useState(false)
 
-  // Every "try oro" CTA now funnels to /try-oro (in a new tab) — the page
+  // Every "try oro" CTA now funnels to /try-oro — the page
   // pitches the perks and offers both stores. OroInsiders "join our
   // community" opens the Discord invite directly. WaitlistModal stays
   // mounted for the periodic newsletter-page signup popup and the
   // TheJournal mailing-list CTA, the two remaining email-collection
   // surfaces on the home flow.
   const openTryOro = () => {
-    window.open('/try-oro', '_blank', 'noopener,noreferrer')
+    window.location.href = '/try-oro'
   }
   const openDiscord = () => {
     window.open(DISCORD_URL, '_blank', 'noopener,noreferrer')
