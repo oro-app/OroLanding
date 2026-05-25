@@ -25,7 +25,7 @@ export default function TryOro() {
 
   useEffect(() => {
     const prev = document.title
-    document.title = 'try oro'
+    document.title = 'Oro - Try Oro'
     return () => { document.title = prev }
   }, [])
 
