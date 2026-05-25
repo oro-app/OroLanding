@@ -61,7 +61,6 @@ function HeroLight({ onTryOro }) {
           <div className="hero-l-phoneframe">
             <FakePhone width={200} screen="styled" shadow={false} />
           </div>
-          <div className="hero-l-phonecap">↑ tap to wear it. or tell oro to try again.</div>
         </div>
       </div>
 
@@ -103,7 +102,6 @@ function HeroDark({ onTryOro }) {
             <div className="hero-d-photoframe">
               <div className="hero-d-photo" style={{ backgroundImage: `url(${heroFitPhoto})` }} />
             </div>
-            <div className="hero-d-photocap">↑ tap to wear it. or tell oro to try again.</div>
           </div>
         </div>
 

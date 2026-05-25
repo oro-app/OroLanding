@@ -34,7 +34,7 @@ export default function PlayStoreSoonModal({ onClose, onMailingList }) {
           <a
             className="psm-btn psm-btn--outlined"
             href={DISCORD_URL}
-            target="_blank"
+           
             rel="noopener noreferrer"
             onClick={onClose}
           >

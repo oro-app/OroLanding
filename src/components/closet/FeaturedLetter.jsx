@@ -78,7 +78,7 @@ export default function FeaturedLetter({ letter }) {
             {inner}
           </div>
         ) : (
-          <a className="fl-card" href={letter.href} target="_blank" rel="noopener noreferrer">
+          <a className="fl-card" href={letter.href} rel="noopener noreferrer">
             {inner}
           </a>
         )}

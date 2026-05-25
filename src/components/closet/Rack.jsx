@@ -54,7 +54,7 @@ function Hanger({ entry }) {
     <a
       className="rack-hanger"
       href={entry.href}
-      target="_blank"
+     
       rel="noopener noreferrer"
       style={{
         '--rot': `${v.rotDeg}deg`,

@@ -60,7 +60,7 @@ export default function IntroSection() {
             <a
               className="hero-app-store-btn"
               href={APP_STORE_URL}
-              target="_blank"
+             
               rel="noopener noreferrer"
               onClick={() => trackEvent('cta_click', { location: 'hero', destination: 'app_store' })}
             >

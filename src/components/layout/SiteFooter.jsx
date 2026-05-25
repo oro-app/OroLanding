@@ -23,7 +23,7 @@ export default function SiteFooter() {
           <a
             className="site-footer-tryoro"
             href="/try-oro"
-            target="_blank"
+           
             rel="noopener noreferrer"
           >
             try oro
@@ -39,7 +39,7 @@ export default function SiteFooter() {
                 key={link.label}
                 className="site-footer-link"
                 href={link.href}
-                target="_blank"
+               
                 rel="noopener noreferrer"
               >
                 {link.label}
