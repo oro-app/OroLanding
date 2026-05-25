@@ -68,7 +68,7 @@ export default function WhyOroPage() {
 
   useEffect(() => {
     const prev = document.title
-    document.title = 'Oro - Why Oro?'
+    document.title = 'Why Oro?'
     return () => { document.title = prev }
   }, [])
 
