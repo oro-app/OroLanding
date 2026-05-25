@@ -20,7 +20,7 @@ export default function NewsletterRecommendations({ currentSlug }) {
       <ul className="newsletter-recs-list">
         {recommendations.map((newsletter) => (
           <li key={newsletter.slug}>
-            <a className="newsletter-recs-card" href={newsletter.href} target="_blank" rel="noopener noreferrer">
+            <a className="newsletter-recs-card" href={newsletter.href} rel="noopener noreferrer">
               <div className="newsletter-recs-image-wrap">
                 <img
                   className="newsletter-recs-image"
@@ -46,7 +46,7 @@ export default function NewsletterRecommendations({ currentSlug }) {
         ))}
       </ul>
 
-      <a className="newsletter-recs-all" href="/from-the-closet" target="_blank" rel="noopener noreferrer">
+      <a className="newsletter-recs-all" href="/from-the-closet" rel="noopener noreferrer">
         See all notes
         <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <path d="M4 9h10M9.5 4l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />

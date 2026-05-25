@@ -97,7 +97,7 @@ function TheJournalDark({ onSubscribe }) {
 
       <div className="jr-feature">
         {lead && (
-          <a className="jr-lead" href={lead.href} target="_blank" rel="noopener noreferrer">
+          <a className="jr-lead" href={lead.href} rel="noopener noreferrer">
             <div className="jr-lead-photo" style={{ backgroundImage: `url(${lead.image})` }} />
             <div className="jr-lead-meta">
               <div className="jr-date">{lead.dateLabel.toLowerCase()}</div>
@@ -109,7 +109,7 @@ function TheJournalDark({ onSubscribe }) {
 
         <div className="jr-rest">
           {rest.map((e) => (
-            <a className="jr-mini" href={e.href} key={e.slug} target="_blank" rel="noopener noreferrer">
+            <a className="jr-mini" href={e.href} key={e.slug} rel="noopener noreferrer">
               <div className="jr-mini-photo" style={{ backgroundImage: `url(${e.image})` }} />
               <div className="jr-mini-meta">
                 <div className="jr-date">{e.dateLabel.toLowerCase()}</div>
@@ -118,7 +118,7 @@ function TheJournalDark({ onSubscribe }) {
             </a>
           ))}
 
-          <a className="jr-all" href="/from-the-closet" target="_blank" rel="noopener noreferrer">
+          <a className="jr-all" href="/from-the-closet" rel="noopener noreferrer">
             see all {ALL_COUNT} issues
             <Arrow size={14} />
           </a>

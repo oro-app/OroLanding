@@ -114,7 +114,7 @@ export default function WaitlistModal({ onClose }) {
 
               <p className="consent-text">
                 By signing up, you agree to receive emails from Oro. Unsubscribe any time. See our{' '}
-                <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+                <a href="/privacy" rel="noopener noreferrer">Privacy Policy</a>.
               </p>
 
               {error && <p className="modal-error">{error}</p>}

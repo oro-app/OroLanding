@@ -130,7 +130,7 @@ export default function NewsletterPage({ slug }) {
             <a
               className="newsletter-article-cta-button"
               href={APP_STORE_URL}
-              target="_blank"
+             
               rel="noopener noreferrer"
               onClick={() => {
                 trackEvent('cta_click', { location: 'newsletter_article', slug: newsletter.slug, destination: 'app_store' })

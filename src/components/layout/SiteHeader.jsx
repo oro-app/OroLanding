@@ -64,7 +64,7 @@ export default function SiteHeader() {
                   href={link.href}
                   className="site-header-menu-link"
                   role="menuitem"
-                  target="_blank"
+                 
                   rel="noopener noreferrer"
                 >
                   {link.label}
@@ -86,7 +86,7 @@ export default function SiteHeader() {
 
         <a
           href="/try-oro"
-          target="_blank"
+         
           rel="noopener noreferrer"
           className="site-header-tryoro"
         >
