@@ -61,7 +61,7 @@ export default function JournalPage() {
 
   useEffect(() => {
     const prev = document.title
-    document.title = 'oro — from the closet'
+    document.title = 'Oro - From the Closet'
     return () => { document.title = prev }
   }, [])
 

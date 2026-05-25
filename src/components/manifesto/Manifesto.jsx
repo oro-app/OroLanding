@@ -35,7 +35,7 @@ function Tape() {
 export default function Manifesto() {
   useEffect(() => {
     const prev = document.title
-    document.title = 'honestly… — oro'
+    document.title = 'Oro - Honestly…'
     return () => { document.title = prev }
   }, [])
 
