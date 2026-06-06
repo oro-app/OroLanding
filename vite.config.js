@@ -15,6 +15,7 @@ const legalPagePlugin = {
         '/terms':   '/terms.html',
         '/privacy': '/privacy.html',
         '/cookies': '/cookies.html',
+        '/google-play': '/google-play.html',
       }
       if (map[req.url]) req.url = map[req.url]
       next()
