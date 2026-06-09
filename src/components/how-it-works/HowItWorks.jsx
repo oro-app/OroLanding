@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import SiteFooter from '../layout/SiteFooter'
 import HorizontalSteps from './HorizontalSteps'
-import { trackEvent } from '../../lib/analytics'
+import { trackCtaClick } from '../../lib/analytics'
 import wardrobeImg from '../../assets/how-it-works/wardrobe.webp'
 import stylemeImg  from '../../assets/how-it-works/styleme.webp'
 import resultImg   from '../../assets/how-it-works/result.webp'
@@ -23,7 +23,7 @@ export default function HowItWorks() {
   }, [])
 
   const handleTryOro = () => {
-    trackEvent('cta_click', { location: 'how-it-works', destination: 'try_oro' })
+    trackCtaClick('cta_click', { location: 'how-it-works', destination: 'try_oro' })
     window.open('/try-oro', '_blank', 'noopener,noreferrer')
   }
 

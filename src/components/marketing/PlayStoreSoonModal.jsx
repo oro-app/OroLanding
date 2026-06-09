@@ -1,4 +1,5 @@
 import { DISCORD_URL } from '../../lib/links'
+import { trackCtaClick } from '../../lib/analytics'
 import './PlayStoreSoonModal.css'
 
 // "android, almost ready." — fires when someone taps the Google Play button.
@@ -8,6 +9,7 @@ import './PlayStoreSoonModal.css'
 // Discord (direct link).
 export default function PlayStoreSoonModal({ onClose, onMailingList }) {
   const handleMailingList = () => {
+    trackCtaClick('join_mailing_list_click', { location: 'play_store_soon_modal' })
     onClose?.()
     onMailingList?.()
   }

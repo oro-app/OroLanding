@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { trackEvent } from '../../lib/analytics'
+import { trackCtaClick } from '../../lib/analytics'
 import { APP_STORE_URL } from '../../lib/links'
 
 export default function IntroSection() {
@@ -62,7 +62,7 @@ export default function IntroSection() {
               href={APP_STORE_URL}
              
               rel="noopener noreferrer"
-              onClick={() => trackEvent('cta_click', { location: 'hero', destination: 'app_store' })}
+              onClick={() => trackCtaClick('cta_click', { location: 'hero', destination: 'app_store' })}
             >
               Download on the App Store
             </a>

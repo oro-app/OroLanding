@@ -1,4 +1,4 @@
-import { trackEvent } from '../../lib/analytics'
+import { trackCtaClick } from '../../lib/analytics'
 
 // Oro insiders — a SHARED section (single component; theme-aware colour, same
 // layout in both themes). Faithful to the handoff's sections/oro-insiders.jsx.
@@ -12,7 +12,10 @@ const PERKS = [
 
 export default function OroInsiders({ onApply }) {
   const handleApply = () => {
-    trackEvent('cta_click', { location: 'insiders', destination: 'discord' })
+    trackCtaClick('join_community_click', {
+      location: 'insiders',
+      destination: 'discord',
+    })
     onApply?.()
   }
 

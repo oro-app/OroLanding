@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { trackCtaClick } from '../../lib/analytics'
 import { newsletters } from '../../lib/newsletters'
 
 const ALL_COUNT = newsletters.length
@@ -86,6 +87,11 @@ function TheJournalLight({ onSubscribe }) {
 function TheJournalDark({ onSubscribe }) {
   const [lead, ...rest] = ENTRIES
 
+  const handleSubscribe = () => {
+    trackCtaClick('join_mailing_list_click', { location: 'home_journal' })
+    onSubscribe?.()
+  }
+
   return (
     <section id="journal" className="jr jr--dark">
       <div className="jr-head">
@@ -123,7 +129,7 @@ function TheJournalDark({ onSubscribe }) {
             <Arrow size={14} />
           </a>
 
-          <button type="button" className="jr-subscribe" onClick={() => onSubscribe?.()}>
+          <button type="button" className="jr-subscribe" onClick={handleSubscribe}>
             join the mailing list
             <Arrow size={12} />
           </button>

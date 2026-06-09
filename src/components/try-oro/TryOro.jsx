@@ -5,7 +5,7 @@ import PlayStoreSoonModal from '../marketing/PlayStoreSoonModal'
 import WaitlistModal from '../overlays/WaitlistModal'
 import phoneHome from '../../assets/try-oro/phone-home.webp'
 import phoneStyleme from '../../assets/try-oro/phone-styleme.webp'
-import { trackEvent } from '../../lib/analytics'
+import { trackCtaClick } from '../../lib/analytics'
 import { USER_COUNT } from '../../lib/stats'
 import './TryOro.css'
 
@@ -51,7 +51,7 @@ export default function TryOro() {
   }, [perksRevealed])
 
   const handlePlayStoreClick = () => {
-    trackEvent('cta_click', { location: 'try-oro', destination: 'play_store_soon' })
+    trackCtaClick('cta_click', { location: 'try-oro', destination: 'play_store_soon' })
     setPlaySoonOpen(true)
   }
 

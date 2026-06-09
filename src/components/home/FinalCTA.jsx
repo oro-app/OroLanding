@@ -1,4 +1,4 @@
-import { trackEvent } from '../../lib/analytics'
+import { trackCtaClick } from '../../lib/analytics'
 import { USER_COUNT } from '../../lib/stats'
 
 // Final CTA — a SHARED section (single component; theme-aware colour, same
@@ -7,7 +7,10 @@ import { USER_COUNT } from '../../lib/stats'
 // WaitlistModal (consistent with every other try-oro CTA on the page).
 export default function FinalCTA({ onTryOro }) {
   const handleTryOro = () => {
-    trackEvent('cta_click', { location: 'final-cta', destination: 'try_oro' })
+    trackCtaClick('try_oro_click', {
+      location: 'bottom_of_page',
+      destination: 'try_oro',
+    })
     onTryOro?.()
   }
 
