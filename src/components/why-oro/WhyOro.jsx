@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import SiteFooter from '../layout/SiteFooter'
-import { trackEvent } from '../../lib/analytics'
+import { trackCtaClick } from '../../lib/analytics'
 import heroPhoto from '../../assets/why-oro/wardrobe-day.jpg'
 import './WhyOro.css'
 
@@ -73,7 +73,7 @@ export default function WhyOroPage() {
   }, [])
 
   const handleTryOro = () => {
-    trackEvent('cta_click', { location: 'why-oro', destination: 'try_oro' })
+    trackCtaClick('cta_click', { location: 'why-oro', destination: 'try_oro' })
     window.open('/try-oro', '_blank', 'noopener,noreferrer')
   }
 

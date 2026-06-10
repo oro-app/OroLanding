@@ -1,4 +1,5 @@
 import { NAV_COLUMNS } from '../../lib/siteLinks'
+import { trackCtaClick } from '../../lib/analytics'
 
 // Redesigned site footer — theme-aware via --color-* tokens. The four link
 // columns are driven by the shared NAV_COLUMNS data (same source the header
@@ -25,6 +26,12 @@ export default function SiteFooter() {
             href="/try-oro"
            
             rel="noopener noreferrer"
+            onClick={() => {
+              trackCtaClick('try_oro_click', {
+                location: 'footer',
+                destination: 'try_oro',
+              })
+            }}
           >
             try oro
             <Arrow />

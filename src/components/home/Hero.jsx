@@ -1,4 +1,4 @@
-import { trackEvent } from '../../lib/analytics'
+import { trackCtaClick } from '../../lib/analytics'
 import { USER_COUNT } from '../../lib/stats'
 import FakePhone from './FakePhone'
 // Real hero conversation photo (replaces the Unsplash placeholder). Imported
@@ -124,7 +124,10 @@ function HeroDark({ onTryOro }) {
 
 export default function Hero({ onTryOro }) {
   const handleTryOro = () => {
-    trackEvent('cta_click', { location: 'hero', destination: 'try_oro' })
+    trackCtaClick('start_conversation_click', {
+      location: 'hero',
+      destination: 'try_oro',
+    })
     onTryOro?.()
   }
 

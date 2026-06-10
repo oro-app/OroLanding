@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { trackEvent } from '../../lib/analytics'
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
 
 // Faithful port of the handoff's shared.jsx → FilmPoster. Prop-driven sizing /
@@ -27,7 +28,18 @@ export default function FilmPoster({
     : 'linear-gradient(180deg, rgba(14,11,7,0.18) 0%, rgba(14,11,7,0.55) 100%)'
   const playSize = PLAY_SIZE[size] || PLAY_SIZE.lg
   const canPlay = Boolean(youtubeId || src)
-  const play = canPlay ? () => setPlaying(true) : undefined
+  const play = canPlay
+    ? (event) => {
+        event?.stopPropagation()
+        trackEvent('video_play_click', {
+          location: 'film',
+          video_provider: youtubeId ? 'youtube' : 'self_hosted',
+          ...(youtubeId ? { video_id: youtubeId } : {}),
+          ...(src ? { video_src: src } : {}),
+        })
+        setPlaying(true)
+      }
+    : undefined
 
   if (playing && youtubeId) {
     return (

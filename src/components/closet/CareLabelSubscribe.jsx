@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { trackCtaClick } from '../../lib/analytics'
 import './CareLabelSubscribe.css'
 
 // Subscribe block styled as a fabric care label — cream rectangle pinned
@@ -31,6 +32,8 @@ export default function CareLabelSubscribe() {
     e.preventDefault()
     const cleanEmail = email.trim().toLowerCase()
     if (!cleanEmail) return
+
+    trackCtaClick('join_mailing_list_click', { location: 'journal_archive' })
 
     setLoading(true)
     setError(null)

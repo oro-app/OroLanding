@@ -12,7 +12,7 @@ import SiteFooter from './components/layout/SiteFooter'
 import CookieConsent from './components/overlays/CookieConsent'
 import WaitlistModal from './components/overlays/WaitlistModal'
 import { ThemeProvider } from './context/ThemeContext'
-import { hasAnalyticsConsent, initAnalytics } from './lib/analytics'
+import { hasAnalyticsConsent, initAnalytics, trackPageNavigation, trackPageView, trackSocialLinkClick } from './lib/analytics'
 import { DISCORD_URL } from './lib/links'
 
 // Code-split the article + archive + product-subpage routes.
@@ -57,15 +57,78 @@ function App() {
   // TheJournal mailing-list CTA, the two remaining email-collection
   // surfaces on the home flow.
   const openTryOro = () => {
-    window.location.href = '/try-oro'
+    trackPageNavigation({
+      to_path: '/try-oro',
+      navigation_type: 'programmatic',
+    })
+    window.location.assign('/try-oro')
   }
   const openDiscord = () => {
     window.open(DISCORD_URL, '_blank', 'noopener,noreferrer')
   }
 
   useEffect(() => {
-    if (hasAnalyticsConsent()) initAnalytics();
-  }, []);
+    if (hasAnalyticsConsent()) {
+      initAnalytics()
+      trackPageView({
+        route_type: route.type,
+        ...(route.slug ? { newsletter_slug: route.slug } : {}),
+      })
+    }
+  }, [route.slug, route.type])
+
+  useEffect(() => {
+    const handleLinkClick = (event) => {
+      const link = event.target.closest?.('a[href]')
+      if (!link) return
+
+      const href = link.getAttribute('href')
+      if (!href || href.startsWith('mailto:') || href.startsWith('tel:')) return
+
+      const destination = new URL(href, window.location.href)
+      const destinationPath = `${destination.pathname}${destination.search}${destination.hash}`
+      const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`
+
+      if (destination.href === window.location.href) return
+
+      trackPageNavigation({
+        to_path: destinationPath,
+        destination_url: destination.href,
+        link_text: link.textContent?.trim().replace(/\s+/g, ' ').slice(0, 120) || '',
+        link_target: link.target || '_self',
+        navigation_type: destination.origin === window.location.origin ? 'internal_link' : 'external_link',
+        is_external: destination.origin !== window.location.origin,
+        ...(currentPath === destinationPath ? { same_path: true } : {}),
+      })
+
+      if (destination.origin !== window.location.origin) {
+        trackSocialLinkClick({
+          destination_url: destination.href,
+          link_text: link.textContent?.trim().replace(/\s+/g, ' ').slice(0, 120) || '',
+          link_target: link.target || '_self',
+          location: link.closest('header') ? 'header' : link.closest('footer') ? 'footer' : 'page',
+        })
+      }
+    }
+
+    const handleLocationChange = () => {
+      const nextRoute = getRoute()
+      trackPageView({
+        route_type: nextRoute.type,
+        ...(nextRoute.slug ? { newsletter_slug: nextRoute.slug } : {}),
+      })
+    }
+
+    document.addEventListener('click', handleLinkClick)
+    window.addEventListener('popstate', handleLocationChange)
+    window.addEventListener('hashchange', handleLocationChange)
+
+    return () => {
+      document.removeEventListener('click', handleLinkClick)
+      window.removeEventListener('popstate', handleLocationChange)
+      window.removeEventListener('hashchange', handleLocationChange)
+    }
+  }, [])
 
   useEffect(() => {
     const hash = window.location.hash

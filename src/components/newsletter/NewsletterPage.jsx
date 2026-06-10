@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getNewsletterBySlug } from '../../lib/newsletters'
 import NewsletterRecommendations from './NewsletterRecommendations'
 import SiteFooter from '../layout/SiteFooter'
 import WaitlistModal from '../overlays/WaitlistModal'
-import { trackEvent } from '../../lib/analytics'
+import { hasAnalyticsConsent, trackCtaClick, trackEvent } from '../../lib/analytics'
 import { APP_STORE_URL } from '../../lib/links'
 import {
   hasSeenNewsletterSignupThisSession,
@@ -37,6 +37,8 @@ const MDX_COMPONENTS = { a: MdxLink }
 
 export default function NewsletterPage({ slug }) {
   const newsletter = getNewsletterBySlug(slug)
+  const articleRef = useRef(null)
+  const readThresholdsRef = useRef(new Set())
   const [newsletterSignupOpen, setNewsletterSignupOpen] = useState(false)
 
   useEffect(() => {
@@ -45,6 +47,57 @@ export default function NewsletterPage({ slug }) {
 
     return () => {
       document.title = previousTitle
+    }
+  }, [newsletter])
+
+  useEffect(() => {
+    if (!newsletter) return
+
+    trackEvent('newsletter_open', {
+      newsletter_slug: newsletter.slug,
+      newsletter_title: newsletter.title,
+      newsletter_date: newsletter.date,
+    })
+  }, [newsletter])
+
+  useEffect(() => {
+    if (!newsletter) return
+
+    readThresholdsRef.current = new Set()
+    const thresholds = [25, 50, 75, 100]
+
+    const trackReadProgress = () => {
+      const article = articleRef.current
+      if (!article) return
+
+      const rect = article.getBoundingClientRect()
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+      const readableHeight = Math.max(1, article.scrollHeight - viewportHeight)
+      const pixelsRead = Math.min(Math.max(-rect.top, 0), readableHeight)
+      const percentRead = article.scrollHeight <= viewportHeight
+        ? 100
+        : Math.round((pixelsRead / readableHeight) * 100)
+
+      thresholds.forEach((threshold) => {
+        if (percentRead < threshold || readThresholdsRef.current.has(threshold)) return
+        if (!hasAnalyticsConsent()) return
+
+        readThresholdsRef.current.add(threshold)
+        trackEvent('percent_read', {
+          percent_read: threshold,
+          newsletter_slug: newsletter.slug,
+          newsletter_title: newsletter.title,
+        })
+      })
+    }
+
+    trackReadProgress()
+    window.addEventListener('scroll', trackReadProgress, { passive: true })
+    window.addEventListener('resize', trackReadProgress)
+
+    return () => {
+      window.removeEventListener('scroll', trackReadProgress)
+      window.removeEventListener('resize', trackReadProgress)
     }
   }, [newsletter])
 
@@ -87,7 +140,7 @@ export default function NewsletterPage({ slug }) {
           All notes
         </a>
 
-        <article className="newsletter-article">
+        <article className="newsletter-article" ref={articleRef}>
           <header className="newsletter-article-header">
             <div className="newsletter-article-meta">
               <span className="newsletter-page-tag">{newsletter.tag}</span>
@@ -133,7 +186,13 @@ export default function NewsletterPage({ slug }) {
              
               rel="noopener noreferrer"
               onClick={() => {
-                trackEvent('cta_click', { location: 'newsletter_article', slug: newsletter.slug, destination: 'app_store' })
+                trackCtaClick('app_store_click', {
+                  location: 'newsletter_article',
+                  slug: newsletter.slug,
+                  store: 'apple_app_store',
+                  destination: 'app_store',
+                  destination_url: APP_STORE_URL,
+                })
               }}
             >
               Download on the App Store
