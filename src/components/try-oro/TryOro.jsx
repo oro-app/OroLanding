@@ -6,6 +6,7 @@ import WaitlistModal from '../overlays/WaitlistModal'
 import phoneHome from '../../assets/try-oro/phone-home.webp'
 import phoneStyleme from '../../assets/try-oro/phone-styleme.webp'
 import { trackCtaClick } from '../../lib/analytics'
+import { APP_STORE_URL } from '../../lib/links'
 import { USER_COUNT } from '../../lib/stats'
 import './TryOro.css'
 
@@ -50,8 +51,21 @@ export default function TryOro() {
     return () => obs.disconnect()
   }, [perksRevealed])
 
+  const handleAppStoreClick = () => {
+    trackCtaClick('app_store_click', {
+      location: 'try-oro',
+      store: 'apple_app_store',
+      destination: 'app_store',
+      destination_url: APP_STORE_URL,
+    })
+  }
+
   const handlePlayStoreClick = () => {
-    trackCtaClick('cta_click', { location: 'try-oro', destination: 'play_store_soon' })
+    trackCtaClick('google_play_click', {
+      location: 'try-oro',
+      store: 'google_play',
+      destination: 'play_store_soon',
+    })
     setPlaySoonOpen(true)
   }
 
@@ -68,7 +82,10 @@ export default function TryOro() {
             </p>
 
             <div className="tryoro-stores">
-              <AppStoreButtons onPlayStoreClick={handlePlayStoreClick} />
+              <AppStoreButtons
+                onAppStoreClick={handleAppStoreClick}
+                onPlayStoreClick={handlePlayStoreClick}
+              />
             </div>
 
             <p className="tryoro-micro">free to start.</p>

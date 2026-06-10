@@ -186,7 +186,13 @@ export default function NewsletterPage({ slug }) {
              
               rel="noopener noreferrer"
               onClick={() => {
-                trackCtaClick('cta_click', { location: 'newsletter_article', slug: newsletter.slug, destination: 'app_store' })
+                trackCtaClick('app_store_click', {
+                  location: 'newsletter_article',
+                  slug: newsletter.slug,
+                  store: 'apple_app_store',
+                  destination: 'app_store',
+                  destination_url: APP_STORE_URL,
+                })
               }}
             >
               Download on the App Store

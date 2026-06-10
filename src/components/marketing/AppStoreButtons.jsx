@@ -30,7 +30,7 @@ function PlayIcon() {
   )
 }
 
-export default function AppStoreButtons({ onPlayStoreClick }) {
+export default function AppStoreButtons({ onAppStoreClick, onPlayStoreClick }) {
   return (
     <div className="appstore-buttons">
       <a
@@ -38,6 +38,7 @@ export default function AppStoreButtons({ onPlayStoreClick }) {
         href={APP_STORE_URL}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={onAppStoreClick}
       >
         <AppleIcon />
         <div className="appstore-btn-labels">
