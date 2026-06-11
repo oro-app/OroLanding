@@ -38,20 +38,17 @@ function useRevealOnScroll(threshold = 0.1) {
 //   3. Rack       (hangers on hairline rods; the centerpiece visual)
 //   4. CareLabel  (subscribe form styled as a fabric care label)
 //
-// Featured letter logic: for the launch, pin to the bespoke
-// 'what-we-mean-by-closet' piece if present (it's the namesake intro).
-// After that, fall through to "latest newsletter by date".
+// Featured letter logic: always the latest released letter. `newsletters`
+// (lib/newsletters.js) is already filtered to published issues whose date has
+// arrived and sorted newest-first, so the featured slot is just the top of the
+// list — when a new issue's date comes, it auto-becomes the featured one.
 //
 // (Route stays /journal — per-handoff rename to /from-the-closet was
 // blocked since it requires header/footer updates that are out of scope
 // for this branch.)
 
-const LAUNCH_SLUG = 'what-we-mean-by-closet'
-
 function pickFeatured(list) {
-  const launch = list.find((n) => n.slug === LAUNCH_SLUG)
-  if (launch) return launch
-  return list[0]  // newsletters is already sorted desc by date
+  return list[0]  // newest published, date-gated letter
 }
 
 export default function JournalPage() {

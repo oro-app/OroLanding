@@ -32,8 +32,17 @@ export function formatNewsletterDate(value) {
   }).format(date)
 }
 
+// Date-only "today" (YYYY-MM-DD, UTC) for release gating. Compared lexically
+// against meta.date, which is also YYYY-MM-DD — string compare is chronological.
+const todayISO = new Date().toISOString().slice(0, 10)
+
 export const newsletters = Object.entries(newsletterModules)
-  .filter(([, module]) => module.meta?.published === true)
+  // Published AND the send date has arrived. Future-dated issues stay hidden
+  // everywhere until their date, so issues can be written ahead and auto-release.
+  .filter(([, module]) => {
+    const m = module.meta
+    return m?.published === true && (!m.date || m.date <= todayISO)
+  })
   .map(([path, module]) => {
     const slug = module.meta?.slug || slugFromPath(path)
 
@@ -53,9 +62,6 @@ export const newsletters = Object.entries(newsletterModules)
       image: module.meta?.image || '/static/oro-logo.png',
       summary: module.meta?.summary || '',
       readTime: module.meta?.readTime || '',
-      // When true, the piece isn't published yet — surfaced as a "coming
-      // soon" featured letter on /from-the-closet (badge + non-clickable).
-      comingSoon: module.meta?.comingSoon === true,
       Component: module.default,
     }
   })
