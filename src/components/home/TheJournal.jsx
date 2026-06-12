@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { trackCtaClick } from '../../lib/analytics'
 import { readableNewsletters } from '../../lib/newsletters'
 
@@ -13,7 +12,6 @@ const ALL_COUNT = readableNewsletters.length
 // featured layout — one large lead entry + two smaller. The dead
 // "all entries → /journal" link was removed (the archive page is out of
 // scope; the link was the main thing that made the section feel broken).
-// TheJournalLight is kept for reference / easy revert (unused).
 
 const ENTRIES = readableNewsletters.slice(0, 3)
 
@@ -22,65 +20,6 @@ function Arrow({ size = 10 }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M5 12h14M13 5l7 7-7 7" />
     </svg>
-  )
-}
-
-function TheJournalLight({ onSubscribe }) {
-  const [email, setEmail] = useState('')
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    onSubscribe?.(email)
-  }
-
-  return (
-    <section id="journal" className="jr jr--light">
-      <div className="jr-l-head">
-        <h2 className="jr-l-title">
-          the <span className="jr-accent">journal</span>.
-        </h2>
-        <a className="jr-l-all" href="/from-the-closet">
-          all entries
-          <Arrow size={10} />
-        </a>
-      </div>
-
-      <div className="jr-l-grid">
-        {ENTRIES.map((e) => (
-          <a className="jr-l-card" href={e.href} key={e.slug}>
-            <div className="jr-l-photo" style={{ backgroundImage: `url(${e.image})` }} />
-            <div className="jr-l-date">{e.dateLabel.toUpperCase()}</div>
-            <h3 className="jr-l-cardtitle">{e.title}</h3>
-            <p className="jr-l-excerpt">{e.summary}</p>
-          </a>
-        ))}
-      </div>
-
-      <div className="jr-l-signup">
-        <div>
-          <h3 className="jr-l-signup-title">
-            one letter. <span className="jr-accent">once a month</span>.
-          </h3>
-          <p className="jr-l-signup-sub">two letters a week on fashion and getting dressed. no growth hacks.</p>
-        </div>
-        <form className="jr-l-form" onSubmit={handleSubmit}>
-          <div className="jr-l-field">
-            <input
-              type="email"
-              className="jr-l-input"
-              placeholder="your email"
-              value={email}
-              onChange={(ev) => setEmail(ev.target.value)}
-              required
-            />
-            <button type="submit" className="jr-l-subscribe">
-              subscribe
-              <Arrow size={10} />
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
   )
 }
 

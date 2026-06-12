@@ -103,7 +103,7 @@
 .newsletter-not-found h1 {
   margin: 0 auto;
   max-width: 760px;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: clamp(2.6rem, 5.4vw, 4.6rem);
   font-weight: 400;
   line-height: 1;
@@ -115,7 +115,7 @@
   max-width: 620px;
   margin: 1.4rem auto 0;
   color: #5a554d;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: clamp(1.15rem, 1.6vw, 1.35rem);
   font-style: italic;
   font-weight: 400;
@@ -174,7 +174,7 @@
   float: left;
   margin: 0.35rem 0.55rem 0 0;
   padding: 0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 4.2rem;
   font-weight: 500;
   line-height: 0.85;
@@ -183,7 +183,7 @@
 
 .newsletter-mdx h2,
 .newsletter-mdx h3 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-weight: 500;
   color: var(--ink);
   line-height: 1.15;
@@ -245,7 +245,7 @@
   margin: 2.25rem 0;
   padding: 0.5rem 0 0.5rem 1.5rem;
   color: #5f594f;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.4rem;
   font-style: italic;
   line-height: 1.45;
@@ -302,7 +302,7 @@
   margin: 0 auto 1.1rem;
   max-width: 420px;
   color: var(--purple-deep);
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.25;

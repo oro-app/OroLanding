@@ -26,7 +26,7 @@
 .newsletter-title {
   margin: 0;
   margin-bottom: 0.75rem;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   max-width: 760px;
   font-size: clamp(2.6rem, 5vw, 4.45rem);
   font-weight: 400;
@@ -141,7 +141,7 @@
 
 .newsletter-card h3 {
   margin: 0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.45rem;
   font-weight: 400;
   line-height: 1.1;

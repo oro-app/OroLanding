@@ -53,7 +53,7 @@ export const meta = {
   tag: 'From the Closet · Issue 008',  // from the draft's eyebrow line
   date: '2026-05-26',              // YYYY-MM-DD; cadence is Tuesdays & Saturdays; gates visibility (above)
   readTime: '3 min',               // ~200 words/min, rounded
-  image: '/newsletter-images/breakfast-at-tiffanys.jpg',  // card art; omit -> /static/oro-logo.png fallback
+  image: '/newsletter-images/breakfast-at-tiffanys.webp',  // card art; omit -> /static/oro-logo.png fallback
   summary: "One line — the draft's preheader.",
 }
 
@@ -69,7 +69,7 @@ Body in plain markdown starts here, after a blank line.
 | `<hr style="…">` | `---` (with a blank line above and below) |
 | `<strong>` / `<b>` | `**bold**` |
 | `<em>` / `<i>` | `_italic_` |
-| `<img src="https://buildingoro.ca/static/newsletter-images/x.jpg" alt="…">` | `![alt](/newsletter-images/x.jpg)` |
+| `<img src="https://buildingoro.ca/static/newsletter-images/x.webp" alt="…">` | `![alt](/newsletter-images/x.webp)` |
 | image caption `<p style="…italic">Still from…</p>` | `_Still from…_` on the next line |
 | logo header / "Issue 00X" eyebrow / `<h1>` / footer / `{{UNSUBSCRIBE_URL}}` | **delete** |
 | sign-off | `_- Oro_` |

@@ -10,7 +10,6 @@ import FinalCTA from './components/home/FinalCTA'
 import SiteHeader from './components/layout/SiteHeader'
 import SiteFooter from './components/layout/SiteFooter'
 import CookieConsent from './components/overlays/CookieConsent'
-import WaitlistModal from './components/overlays/WaitlistModal'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics, trackPageNavigation, trackPageView, trackSocialLinkClick } from './lib/analytics'
 import { DISCORD_URL } from './lib/links'
@@ -23,6 +22,7 @@ const HowItWorksPage = lazy(() => import('./components/how-it-works/HowItWorks')
 const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
+const WaitlistModal = lazy(() => import('./components/overlays/WaitlistModal'))
 
 export function getRouteFromPath(pathname = '/') {
   const path = pathname.replace(/\/+$/, '') || '/'
@@ -193,7 +193,11 @@ function App({ initialRoute }) {
           )}
         </main>
         <CookieConsent />
-        {waitlistOpen && <WaitlistModal onClose={() => setWaitlistOpen(false)} />}
+        {waitlistOpen && (
+          <Suspense fallback={null}>
+            <WaitlistModal onClose={() => setWaitlistOpen(false)} />
+          </Suspense>
+        )}
       </div>
     </ThemeProvider>
   )
