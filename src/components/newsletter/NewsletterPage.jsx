@@ -42,15 +42,6 @@ export default function NewsletterPage({ slug }) {
   const [newsletterSignupOpen, setNewsletterSignupOpen] = useState(false)
 
   useEffect(() => {
-    const previousTitle = document.title
-    document.title = newsletter ? `${newsletter.title} - Oro` : 'Newsletter - Oro'
-
-    return () => {
-      document.title = previousTitle
-    }
-  }, [newsletter])
-
-  useEffect(() => {
     if (!newsletter) return
 
     trackEvent('newsletter_open', {

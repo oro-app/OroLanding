@@ -67,6 +67,8 @@ export const newsletters = Object.entries(newsletterModules)
   })
   .sort((a, b) => String(b.date).localeCompare(String(a.date)))
 
+export const readableNewsletters = newsletters.filter((newsletter) => !newsletter.comingSoon)
+
 export function getNewsletterBySlug(slug) {
-  return newsletters.find((newsletter) => newsletter.slug === slug)
+  return readableNewsletters.find((newsletter) => newsletter.slug === slug)
 }

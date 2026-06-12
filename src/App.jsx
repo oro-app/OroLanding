@@ -24,8 +24,8 @@ const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
 
-function getRoute() {
-  const path = window.location.pathname.replace(/\/+$/, '') || '/'
+export function getRouteFromPath(pathname = '/') {
+  const path = pathname.replace(/\/+$/, '') || '/'
   const newsletterMatch = path.match(/^\/newsletter\/([^/]+)$/)
 
   if (newsletterMatch) {
@@ -46,11 +46,16 @@ function getRoute() {
   return { type: 'home' }
 }
 
-function App() {
-  const route = getRoute()
+function getBrowserRoute() {
+  if (typeof window === 'undefined') return { type: 'home' }
+  return getRouteFromPath(window.location.pathname)
+}
+
+function App({ initialRoute }) {
+  const route = initialRoute || getBrowserRoute()
   const [waitlistOpen, setWaitlistOpen] = useState(false)
 
-  // Every "try oro" CTA now funnels to /try-oro — the page
+  // Every "try oro" CTA now funnels to /try-oro - the page
   // pitches the perks and offers both stores. OroInsiders "join our
   // community" opens the Discord invite directly. WaitlistModal stays
   // mounted for the periodic newsletter-page signup popup and the
@@ -112,7 +117,7 @@ function App() {
     }
 
     const handleLocationChange = () => {
-      const nextRoute = getRoute()
+      const nextRoute = getBrowserRoute()
       trackPageView({
         route_type: nextRoute.type,
         ...(nextRoute.slug ? { newsletter_slug: nextRoute.slug } : {}),

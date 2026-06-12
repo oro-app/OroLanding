@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import SiteFooter from '../layout/SiteFooter'
+import { CONTACT_FAQS } from '../../lib/faqs'
 import './Contact.css'
 
 // /contact — "a letter to oro." Two facing sheets of stationery: oro's
@@ -8,13 +9,6 @@ import './Contact.css'
 // sheets are warm paper in both themes.
 
 const TOPICS = ['hello', 'support', 'press', 'partnership', 'careers', 'feedback']
-
-const FAQ = [
-  { q: 'is oro free?',                 a: 'yes. completely free to use.' },
-  { q: 'do you sell my closet data?',  a: 'no. never. it stays on your account.' },
-  { q: 'when does the app launch?',    a: 'ios is live now. android is days away.' },
-  { q: 'can i write about oro?',       a: 'yes, please. write us and someone on the team will get back to you.' },
-]
 
 function Arrow() {
   return (
@@ -137,12 +131,6 @@ function VisitorForm() {
 }
 
 export default function Contact() {
-  useEffect(() => {
-    const prev = document.title
-    document.title = 'Oro - Contact & Help'
-    return () => { document.title = prev }
-  }, [])
-
   return (
     <main className="ct">
       {/* Title block */}
@@ -192,10 +180,10 @@ export default function Contact() {
         <div className="ct-faq-inner">
           <p className="ct-faq-kicker">postscript — a few things people often ask.</p>
           <div className="ct-faq-list">
-            {FAQ.map((row) => (
-              <div className="ct-faq-row" key={row.q}>
-                <div className="ct-faq-q">{row.q}</div>
-                <div className="ct-faq-a">{row.a}</div>
+            {CONTACT_FAQS.map((row) => (
+              <div className="ct-faq-row" key={row.question}>
+                <div className="ct-faq-q">{row.question}</div>
+                <div className="ct-faq-a">{row.answer}</div>
               </div>
             ))}
           </div>

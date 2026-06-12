@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import SiteFooter from '../layout/SiteFooter'
 import AppStoreButtons from '../marketing/AppStoreButtons'
 import PlayStoreSoonModal from '../marketing/PlayStoreSoonModal'
+import ProductFaq from '../marketing/ProductFaq'
 import WaitlistModal from '../overlays/WaitlistModal'
 import phoneHome from '../../assets/try-oro/phone-home.webp'
 import phoneStyleme from '../../assets/try-oro/phone-styleme.webp'
@@ -23,12 +24,6 @@ export default function TryOro() {
   const [mailingOpen, setMailingOpen] = useState(false)
   const [perksRevealed, setPerksRevealed] = useState(false)
   const perksRef = useRef(null)
-
-  useEffect(() => {
-    const prev = document.title
-    document.title = 'Try Oro'
-    return () => { document.title = prev }
-  }, [])
 
   // Reveal-on-scroll for the perks list. Once any part of the section is
   // ~15% in view, flip the data attribute and let CSS animate each row
@@ -130,6 +125,8 @@ export default function TryOro() {
           <div className="tryoro-perk-end" aria-hidden="true" style={{ '--reveal-i': PERKS.length }} />
         </div>
       </section>
+
+      <ProductFaq />
 
       <SiteFooter />
 

@@ -1,10 +1,10 @@
-import { newsletters } from '../../lib/newsletters'
+import { readableNewsletters } from '../../lib/newsletters'
 import './NewsletterRecommendations.css'
 
 const MAX_RECOMMENDATIONS = 3
 
 export default function NewsletterRecommendations({ currentSlug }) {
-  const recommendations = newsletters
+  const recommendations = readableNewsletters
     .filter((newsletter) => newsletter.slug !== currentSlug)
     .slice(0, MAX_RECOMMENDATIONS)
 

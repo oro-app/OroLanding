@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { trackCtaClick } from '../../lib/analytics'
-import { newsletters } from '../../lib/newsletters'
+import { readableNewsletters } from '../../lib/newsletters'
 
-const ALL_COUNT = newsletters.length
+const ALL_COUNT = readableNewsletters.length
 
 // The journal — replaces the old NewsletterSection; wired to the real
 // src/lib/newsletters.js glob (most recent 3 MDX issues). Renders the dark
@@ -15,7 +15,7 @@ const ALL_COUNT = newsletters.length
 // scope; the link was the main thing that made the section feel broken).
 // TheJournalLight is kept for reference / easy revert (unused).
 
-const ENTRIES = newsletters.slice(0, 3)
+const ENTRIES = readableNewsletters.slice(0, 3)
 
 function Arrow({ size = 10 }) {
   return (
