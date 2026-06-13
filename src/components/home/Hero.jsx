@@ -100,7 +100,13 @@ function HeroDark({ onTryOro }) {
 
           <div className="hero-d-photoblock">
             <div className="hero-d-photoframe">
-              <div className="hero-d-photo" style={{ backgroundImage: `url(${heroFitPhoto})` }} />
+              <img
+                className="hero-d-photo"
+                src={heroFitPhoto}
+                alt=""
+                fetchpriority="high"
+                decoding="async"
+              />
             </div>
           </div>
         </div>

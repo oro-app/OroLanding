@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import SiteFooter from '../layout/SiteFooter'
 import polaroidOne from '../../assets/manifesto/closet-polaroid.webp'
 import editorialPhoto from '../../assets/manifesto/editorial-photo.webp'
@@ -33,12 +32,6 @@ function Tape() {
 }
 
 export default function Manifesto() {
-  useEffect(() => {
-    const prev = document.title
-    document.title = 'Oro - Honestly…'
-    return () => { document.title = prev }
-  }, [])
-
   return (
     <main className="mn">
       {/* Title block */}

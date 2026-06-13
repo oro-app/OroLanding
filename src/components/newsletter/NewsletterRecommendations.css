@@ -31,7 +31,7 @@
 
 .newsletter-recs-title {
   margin: 0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.55rem;
   font-weight: 500;
   line-height: 1.1;
@@ -110,7 +110,7 @@
 
 .newsletter-recs-card-title {
   margin: 0;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 1.1rem;
   font-weight: 500;
   line-height: 1.2;

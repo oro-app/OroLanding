@@ -1,6 +1,8 @@
-const newsletterModules = import.meta.glob('../content/newsletters/*.mdx', {
-  eager: true,
-})
+import { lazy } from 'react'
+import { newsletterMeta } from './newsletterMeta'
+
+const newsletterModules = import.meta.glob('../content/newsletters/*.mdx')
+const newsletterMetaByFile = new Map(newsletterMeta.map((entry) => [entry.file, entry]))
 
 function slugFromPath(path) {
   return path.split('/').pop().replace(/\.mdx$/, '')
@@ -37,36 +39,34 @@ export function formatNewsletterDate(value) {
 const todayISO = new Date().toISOString().slice(0, 10)
 
 export const newsletters = Object.entries(newsletterModules)
-  // Published AND the send date has arrived. Future-dated issues stay hidden
-  // everywhere until their date, so issues can be written ahead and auto-release.
-  .filter(([, module]) => {
-    const m = module.meta
-    return m?.published === true && (!m.date || m.date <= todayISO)
-  })
-  .map(([path, module]) => {
-    const slug = module.meta?.slug || slugFromPath(path)
+  .map(([path, loader]) => {
+    const file = slugFromPath(path)
+    const meta = newsletterMetaByFile.get(file) || {}
+    const slug = meta.slug || file
 
     return {
       slug,
       href: `/newsletter/${slug}`,
-      published: module.meta.published,
-      title: module.meta?.title || titleFromSlug(slug),
-      // Optional italic-accent word(s) inside the title. When the title is
-      // rendered on /journal, this substring is wrapped in <em>. Set in the
-      // MDX frontmatter as `italicTitle: 'closet.'` (must be a substring of
-      // the title to match).
-      italicTitle: module.meta?.italicTitle || '',
-      tag: module.meta?.tag || 'Oro Insiders',
-      date: module.meta?.date || '',
-      dateLabel: formatNewsletterDate(module.meta?.date),
-      image: module.meta?.image || '/static/oro-logo.png',
-      summary: module.meta?.summary || '',
-      readTime: module.meta?.readTime || '',
-      Component: module.default,
+      published: meta.published,
+      title: meta.title || titleFromSlug(slug),
+      italicTitle: meta.italicTitle || '',
+      tag: meta.tag || 'Oro Insiders',
+      date: meta.date || '',
+      dateLabel: formatNewsletterDate(meta.date),
+      image: meta.image || '/static/oro-logo.png',
+      summary: meta.summary || '',
+      readTime: meta.readTime || '',
+      comingSoon: meta.comingSoon,
+      Component: lazy(loader),
     }
   })
+  // Published AND the send date has arrived. Future-dated issues stay hidden
+  // everywhere until their date, so issues can be written ahead and auto-release.
+  .filter((newsletter) => newsletter.published === true && (!newsletter.date || newsletter.date <= todayISO))
   .sort((a, b) => String(b.date).localeCompare(String(a.date)))
 
+export const readableNewsletters = newsletters.filter((newsletter) => !newsletter.comingSoon)
+
 export function getNewsletterBySlug(slug) {
-  return newsletters.find((newsletter) => newsletter.slug === slug)
+  return readableNewsletters.find((newsletter) => newsletter.slug === slug)
 }

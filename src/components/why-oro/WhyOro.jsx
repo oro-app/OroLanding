@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import SiteFooter from '../layout/SiteFooter'
+import ProductFaq from '../marketing/ProductFaq'
 import { trackCtaClick } from '../../lib/analytics'
 import heroPhoto from '../../assets/why-oro/wardrobe-day.jpg'
 import './WhyOro.css'
@@ -66,15 +67,8 @@ export default function WhyOroPage() {
   const [principlesRef, principlesRevealed] = useRevealOnScroll(0.15)
   const [ctaRef, ctaRevealed] = useRevealOnScroll(0.4)
 
-  useEffect(() => {
-    const prev = document.title
-    document.title = 'Why Oro?'
-    return () => { document.title = prev }
-  }, [])
-
   const handleTryOro = () => {
     trackCtaClick('cta_click', { location: 'why-oro', destination: 'try_oro' })
-    window.open('/try-oro', '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -128,13 +122,15 @@ export default function WhyOroPage() {
         ref={ctaRef}
         data-revealed={ctaRevealed ? 'true' : 'false'}
       >
-        <button type="button" className="wy-cta-btn" onClick={handleTryOro}>
+        <a className="wy-cta-btn" href="/try-oro" onClick={handleTryOro}>
           try oro
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
-        </button>
+        </a>
       </section>
+
+      <ProductFaq />
 
       <SiteFooter />
     </main>

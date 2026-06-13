@@ -276,9 +276,9 @@
 .hero-d-photo {
   width: 200px;
   height: 260px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: block;
+  object-fit: cover;
+  object-position: center;
   border-radius: 16px 16px 16px 2px;
 }
 .hero-d-photocap {

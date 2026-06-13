@@ -10,7 +10,6 @@ import FinalCTA from './components/home/FinalCTA'
 import SiteHeader from './components/layout/SiteHeader'
 import SiteFooter from './components/layout/SiteFooter'
 import CookieConsent from './components/overlays/CookieConsent'
-import WaitlistModal from './components/overlays/WaitlistModal'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics, trackPageNavigation, trackPageView, trackSocialLinkClick } from './lib/analytics'
 import { DISCORD_URL } from './lib/links'
@@ -23,9 +22,10 @@ const HowItWorksPage = lazy(() => import('./components/how-it-works/HowItWorks')
 const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
+const WaitlistModal = lazy(() => import('./components/overlays/WaitlistModal'))
 
-function getRoute() {
-  const path = window.location.pathname.replace(/\/+$/, '') || '/'
+export function getRouteFromPath(pathname = '/') {
+  const path = pathname.replace(/\/+$/, '') || '/'
   const newsletterMatch = path.match(/^\/newsletter\/([^/]+)$/)
 
   if (newsletterMatch) {
@@ -46,11 +46,16 @@ function getRoute() {
   return { type: 'home' }
 }
 
-function App() {
-  const route = getRoute()
+function getBrowserRoute() {
+  if (typeof window === 'undefined') return { type: 'home' }
+  return getRouteFromPath(window.location.pathname)
+}
+
+function App({ initialRoute }) {
+  const route = initialRoute || getBrowserRoute()
   const [waitlistOpen, setWaitlistOpen] = useState(false)
 
-  // Every "try oro" CTA now funnels to /try-oro — the page
+  // Every "try oro" CTA now funnels to /try-oro - the page
   // pitches the perks and offers both stores. OroInsiders "join our
   // community" opens the Discord invite directly. WaitlistModal stays
   // mounted for the periodic newsletter-page signup popup and the
@@ -112,7 +117,7 @@ function App() {
     }
 
     const handleLocationChange = () => {
-      const nextRoute = getRoute()
+      const nextRoute = getBrowserRoute()
       trackPageView({
         route_type: nextRoute.type,
         ...(nextRoute.slug ? { newsletter_slug: nextRoute.slug } : {}),
@@ -188,7 +193,11 @@ function App() {
           )}
         </main>
         <CookieConsent />
-        {waitlistOpen && <WaitlistModal onClose={() => setWaitlistOpen(false)} />}
+        {waitlistOpen && (
+          <Suspense fallback={null}>
+            <WaitlistModal onClose={() => setWaitlistOpen(false)} />
+          </Suspense>
+        )}
       </div>
     </ThemeProvider>
   )

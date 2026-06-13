@@ -1,8 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { setAnalyticsConsent } from '../../lib/analytics.js'
 
 export default function CookieConsent() {
-  const [visible, setVisible] = useState(() => localStorage.getItem('oro_cookie_consent') === null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    try {
+      setVisible(localStorage.getItem('oro_cookie_consent') === null)
+    } catch {
+      setVisible(false)
+    }
+  }, [])
 
   if (!visible) return null
 

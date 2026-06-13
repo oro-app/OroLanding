@@ -21,9 +21,17 @@ function readInitialTheme(defaultTheme) {
 }
 
 export function ThemeProvider({ children, defaultTheme = 'dark' }) {
-  const [theme, setThemeState] = useState(() => readInitialTheme(defaultTheme))
+  const [theme, setThemeState] = useState(defaultTheme)
+  const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
+    const storedTheme = readInitialTheme(defaultTheme)
+    if (storedTheme !== theme) setThemeState(storedTheme)
+    setInitialized(true)
+  }, [])
+
+  useEffect(() => {
+    if (!initialized) return
     try {
       localStorage.setItem(STORAGE_KEY, theme)
     } catch {
@@ -34,7 +42,7 @@ export function ThemeProvider({ children, defaultTheme = 'dark' }) {
       // Keep <body> in sync so overscroll / scroll gutters don't flash the wrong color.
       document.body.style.background = theme === 'dark' ? '#3A2646' : '#FFF9ED'
     }
-  }, [theme])
+  }, [initialized, theme])
 
   const setTheme = useCallback((next) => {
     if (next === 'dark' || next === 'light') setThemeState(next)

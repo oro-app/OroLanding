@@ -56,14 +56,8 @@ export default function JournalPage() {
   const [rackRef, rackRevealed]  = useRevealOnScroll(0.05)
   const [careRef, careRevealed]  = useRevealOnScroll(0.2)
 
-  useEffect(() => {
-    const prev = document.title
-    document.title = 'Oro - From the Closet'
-    return () => { document.title = prev }
-  }, [])
-
   const featured = pickFeatured(newsletters)
-  const rest = newsletters.filter((n) => n.slug !== featured?.slug)
+  const rest = newsletters.filter((n) => n.slug !== featured?.slug && !n.comingSoon)
 
   return (
     <main className="ftc">

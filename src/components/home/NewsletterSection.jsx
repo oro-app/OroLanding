@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { newsletters } from '../../lib/newsletters'
+import { readableNewsletters } from '../../lib/newsletters'
 
 export default function NewsletterSection() {
   const trackRef = useRef(null)
@@ -34,7 +34,7 @@ export default function NewsletterSection() {
             : bestIndex
         }, 0)
 
-        setPageCount(newsletters.length)
+        setPageCount(readableNewsletters.length)
         setActivePage(closestIndex)
         return
       }
@@ -60,7 +60,7 @@ export default function NewsletterSection() {
     }
   }, [isMobileCarousel])
 
-  if (newsletters.length === 0) return null
+  if (readableNewsletters.length === 0) return null
 
   const scrollToPage = (index) => {
     const track = trackRef.current
@@ -131,7 +131,7 @@ export default function NewsletterSection() {
         </div>
 
         <div className="newsletter-track" ref={trackRef}>
-          {newsletters.map((newsletter) => (
+          {readableNewsletters.map((newsletter) => (
             <a className="newsletter-card" href={newsletter.href} key={newsletter.slug}>
               <div className="newsletter-card-image-wrap">
                 <img className="newsletter-card-image" src={newsletter.image} alt="" loading="lazy" />
