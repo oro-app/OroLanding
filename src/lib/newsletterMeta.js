@@ -1,5 +1,15 @@
 export const newsletterMeta = [
   {
+    file: 'why-everyone-looks-the-same',
+    published: true,
+    title: 'Why everyone looks the same now.',
+    tag: 'From the Closet · Issue 015',
+    date: '2026-06-16',
+    readTime: '3 min',
+    image: '/newsletter-images/clones.gif',
+    summary: "It isn't a trend. It's the machinery underneath.",
+  },
+  {
     file: 'clothes-youve-never-worn',
     published: true,
     title: 'Some of your clothes have never been worn.',
