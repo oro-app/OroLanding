@@ -34,9 +34,22 @@ export function formatNewsletterDate(value) {
   }).format(date)
 }
 
-// Date-only "today" (YYYY-MM-DD, UTC) for release gating. Compared lexically
-// against meta.date, which is also YYYY-MM-DD — string compare is chronological.
-const todayISO = new Date().toISOString().slice(0, 10)
+// Release gating. By default an issue releases at UTC-midnight of meta.date
+// (date-only, compared lexically against today's UTC date — string compare is
+// chronological). An issue MAY instead set meta.releaseAt to a full ISO
+// timestamp for to-the-minute control (e.g. noon Eastern = 16:00Z in summer);
+// when present it takes precedence over the date-only check. meta.date is still
+// used for the displayed label and the sort order.
+const now = new Date()
+const todayISO = now.toISOString().slice(0, 10)
+
+function hasReleased(newsletter) {
+  if (newsletter.releaseAt) {
+    const releaseTime = new Date(newsletter.releaseAt)
+    if (!Number.isNaN(releaseTime.getTime())) return releaseTime <= now
+  }
+  return !newsletter.date || newsletter.date <= todayISO
+}
 
 export const newsletters = Object.entries(newsletterModules)
   .map(([path, loader]) => {
@@ -52,6 +65,7 @@ export const newsletters = Object.entries(newsletterModules)
       italicTitle: meta.italicTitle || '',
       tag: meta.tag || 'Oro Insiders',
       date: meta.date || '',
+      releaseAt: meta.releaseAt || '',
       dateLabel: formatNewsletterDate(meta.date),
       image: meta.image || '/static/oro-logo.png',
       summary: meta.summary || '',
@@ -60,9 +74,10 @@ export const newsletters = Object.entries(newsletterModules)
       Component: lazy(loader),
     }
   })
-  // Published AND the send date has arrived. Future-dated issues stay hidden
-  // everywhere until their date, so issues can be written ahead and auto-release.
-  .filter((newsletter) => newsletter.published === true && (!newsletter.date || newsletter.date <= todayISO))
+  // Published AND released (releaseAt timestamp if set, else date-only at UTC
+  // midnight). Future issues stay hidden everywhere until then, so they can be
+  // written ahead and auto-release.
+  .filter((newsletter) => newsletter.published === true && hasReleased(newsletter))
   .sort((a, b) => String(b.date).localeCompare(String(a.date)))
 
 export const readableNewsletters = newsletters.filter((newsletter) => !newsletter.comingSoon)

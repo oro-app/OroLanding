@@ -1,5 +1,17 @@
 export const newsletterMeta = [
   {
+    file: 'oro-is-on-android',
+    published: true,
+    title: 'Oro is on Android.',
+    italicTitle: 'Android.',
+    tag: 'From the Closet · Issue 016',
+    date: '2026-06-20',
+    releaseAt: '2026-06-20T16:00:00Z',
+    readTime: '1 min',
+    image: '/newsletter-images/gatsby.gif',
+    summary: "The wait is over. It's on the Google Play Store.",
+  },
+  {
     file: 'why-everyone-looks-the-same',
     published: true,
     title: 'Why everyone looks the same now.',
