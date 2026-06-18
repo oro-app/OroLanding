@@ -1,8 +1,14 @@
 import { lazy } from 'react'
-import { newsletterMeta } from './newsletterMeta'
 
+// Each article is self-contained: its `export const meta` is the single source
+// of truth for listing + release. The component stays lazy (one chunk per
+// article); `meta` is pulled eagerly (tiny object, tree-shakes away the body).
+// No central registry — adding or releasing an article touches only its .mdx.
 const newsletterModules = import.meta.glob('../content/newsletters/*.mdx')
-const newsletterMetaByFile = new Map(newsletterMeta.map((entry) => [entry.file, entry]))
+const newsletterMetas = import.meta.glob('../content/newsletters/*.mdx', {
+  eager: true,
+  import: 'meta',
+})
 
 function slugFromPath(path) {
   return path.split('/').pop().replace(/\.mdx$/, '')
@@ -54,7 +60,7 @@ function hasReleased(newsletter) {
 export const newsletters = Object.entries(newsletterModules)
   .map(([path, loader]) => {
     const file = slugFromPath(path)
-    const meta = newsletterMetaByFile.get(file) || {}
+    const meta = newsletterMetas[path] || {}
     const slug = meta.slug || file
 
     return {
