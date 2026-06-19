@@ -1,4 +1,4 @@
-import { APP_STORE_URL } from '../../lib/links'
+import { APP_STORE_URL, PLAY_STORE_URL } from '../../lib/links'
 import './AppStoreButtons.css'
 
 // Bespoke App Store + Google Play buttons. NOT Apple's / Google's official
@@ -7,9 +7,7 @@ import './AppStoreButtons.css'
 // icons are intentional per the /try-oro handoff (and explicitly called out
 // at handoff README line 163).
 //
-// App Store: real link, opens in a new tab.
-// Google Play: not live yet — calls onPlayStoreClick so the page can open
-// its own "android, almost ready." modal.
+// Both are real links that open in a new tab.
 
 function AppleIcon() {
   return (
@@ -47,9 +45,11 @@ export default function AppStoreButtons({ onAppStoreClick, onPlayStoreClick }) {
         </div>
       </a>
 
-      <button
-        type="button"
+      <a
         className="appstore-btn appstore-btn--outlined"
+        href={PLAY_STORE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
         onClick={onPlayStoreClick}
       >
         <PlayIcon />
@@ -57,7 +57,7 @@ export default function AppStoreButtons({ onAppStoreClick, onPlayStoreClick }) {
           <span className="appstore-btn-small">get it on</span>
           <span className="appstore-btn-name">google play</span>
         </div>
-      </button>
+      </a>
     </div>
   )
 }

@@ -69,7 +69,7 @@ function HeroLight({ onTryOro }) {
           start the conversation
           <Arrow size={13} />
         </button>
-        <span className="hero-cta-note">free, ios — early access.</span>
+        <span className="hero-cta-note">free, ios + android — early access.</span>
       </div>
     </section>
   )
@@ -119,7 +119,7 @@ function HeroDark({ onTryOro }) {
               start the conversation
               <Arrow size={14} />
             </button>
-            <span className="hero-cta-note hero-cta-note--ondark">free, ios — early access.</span>
+            <span className="hero-cta-note hero-cta-note--ondark">free, ios + android — early access.</span>
             <span className="hero-cta-proof">join {USER_COUNT} people already getting dressed with oro.</span>
           </div>
         </aside>
