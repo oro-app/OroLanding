@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import SiteFooter from '../layout/SiteFooter'
 import AppStoreButtons from '../marketing/AppStoreButtons'
-import PlayStoreSoonModal from '../marketing/PlayStoreSoonModal'
 import ProductFaq from '../marketing/ProductFaq'
-import WaitlistModal from '../overlays/WaitlistModal'
 import phoneHome from '../../assets/try-oro/phone-home.webp'
 import phoneStyleme from '../../assets/try-oro/phone-styleme.webp'
 import { trackCtaClick } from '../../lib/analytics'
-import { APP_STORE_URL } from '../../lib/links'
+import { APP_STORE_URL, PLAY_STORE_URL } from '../../lib/links'
 import { USER_COUNT } from '../../lib/stats'
 import './TryOro.css'
 
@@ -20,8 +18,6 @@ const PERKS = [
 ]
 
 export default function TryOro() {
-  const [playSoonOpen, setPlaySoonOpen] = useState(false)
-  const [mailingOpen, setMailingOpen] = useState(false)
   const [perksRevealed, setPerksRevealed] = useState(false)
   const perksRef = useRef(null)
 
@@ -59,9 +55,9 @@ export default function TryOro() {
     trackCtaClick('google_play_click', {
       location: 'try-oro',
       store: 'google_play',
-      destination: 'play_store_soon',
+      destination: 'play_store',
+      destination_url: PLAY_STORE_URL,
     })
-    setPlaySoonOpen(true)
   }
 
   return (
@@ -73,7 +69,7 @@ export default function TryOro() {
               try <span className="tryoro-em">oro</span>.
             </h1>
             <p className="tryoro-sub">
-              live this week on iOS and Android. download, sign in, and we’ll have a fit for you in under a minute.
+              now on iOS and android. download, sign in, and we’ll have a fit for you in under a minute.
             </p>
 
             <div className="tryoro-stores">
@@ -129,14 +125,6 @@ export default function TryOro() {
       <ProductFaq />
 
       <SiteFooter />
-
-      {playSoonOpen && (
-        <PlayStoreSoonModal
-          onClose={() => setPlaySoonOpen(false)}
-          onMailingList={() => setMailingOpen(true)}
-        />
-      )}
-      {mailingOpen && <WaitlistModal onClose={() => setMailingOpen(false)} />}
     </main>
   )
 }

@@ -9,7 +9,7 @@ export const CONTACT_FAQS = [
   },
   {
     question: 'when does the app launch?',
-    answer: 'ios is live now. android is days away.',
+    answer: 'ios and android are both live now.',
   },
   {
     question: 'can i write about oro?',

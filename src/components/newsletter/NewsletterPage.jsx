@@ -4,7 +4,7 @@ import NewsletterRecommendations from './NewsletterRecommendations'
 import SiteFooter from '../layout/SiteFooter'
 import WaitlistModal from '../overlays/WaitlistModal'
 import { hasAnalyticsConsent, trackCtaClick, trackEvent } from '../../lib/analytics'
-import { APP_STORE_URL } from '../../lib/links'
+import { APP_STORE_URL, PLAY_STORE_URL } from '../../lib/links'
 import {
   hasSeenNewsletterSignupThisSession,
   hasSignedUpForNewsletter,
@@ -174,7 +174,7 @@ export default function NewsletterPage({ slug }) {
             <a
               className="newsletter-article-cta-button"
               href={APP_STORE_URL}
-             
+
               rel="noopener noreferrer"
               onClick={() => {
                 trackCtaClick('app_store_click', {
@@ -187,6 +187,23 @@ export default function NewsletterPage({ slug }) {
               }}
             >
               Download on the App Store
+            </a>
+            <a
+              className="newsletter-article-cta-button"
+              href={PLAY_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                trackCtaClick('google_play_click', {
+                  location: 'newsletter_article',
+                  slug: newsletter.slug,
+                  store: 'google_play',
+                  destination: 'play_store',
+                  destination_url: PLAY_STORE_URL,
+                })
+              }}
+            >
+              Get it on Google Play
             </a>
           </div>
         </article>
