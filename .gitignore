@@ -5,6 +5,9 @@ dist
 .vercel
 .seo-server
 
+# Ephemeral build-output dirs from the `verify` skill (never commit)
+.verify_build*/
+
 # Vite temp config files leaked when a dev/build process is killed mid-load
 vite.config.js.timestamp-*.mjs
 
