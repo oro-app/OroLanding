@@ -22,6 +22,7 @@ const HowItWorksPage = lazy(() => import('./components/how-it-works/HowItWorks')
 const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
+const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
 const WaitlistModal = lazy(() => import('./components/overlays/WaitlistModal'))
 
 export function getRouteFromPath(pathname = '/') {
@@ -42,6 +43,7 @@ export function getRouteFromPath(pathname = '/') {
   if (path === '/why-oro')         return { type: 'why-oro' }
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
+  if (path === '/get-started')     return { type: 'get-started' }
 
   return { type: 'home' }
 }
@@ -177,6 +179,10 @@ function App({ initialRoute }) {
           ) : route.type === 'contact' ? (
             <Suspense fallback={null}>
               <ContactPage />
+            </Suspense>
+          ) : route.type === 'get-started' ? (
+            <Suspense fallback={null}>
+              <GetStartedPage />
             </Suspense>
           ) : (
             <>
