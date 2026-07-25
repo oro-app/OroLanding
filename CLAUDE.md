@@ -10,11 +10,24 @@ npm run build     # Client build → SSR build → SEO prerender (see below)
 npm run preview   # Preview the production build locally
 ```
 
-No lint or typecheck scripts exist — the frontend is plain JSX with no TypeScript. `npm run build` is the only verification step.
+No lint or typecheck scripts exist — the frontend is plain JSX with no TypeScript. `npm run build` verifies the build; Playwright e2e tests verify runtime behavior (below).
+
+## E2E tests (Playwright)
+
+```bash
+E2E_BASE_URL=https://<deployment>.vercel.app npm run e2e   # full suite against a deployment
+E2E_BASE_URL=https://buildingoro.ca npm run e2e:smoke      # @smoke subset (what prod runs)
+```
+
+Specs in `e2e/`, config in `playwright.config.js`. The suite is **BASE_URL-driven and always targets a deployed URL** — there's no webServer, because `vite preview` can't serve the `/api/*` functions or the `vercel.json` rewrites/redirects. Tests needing those call `deploymentOnly()` (from `e2e/fixtures.js`) and auto-skip on a localhost target, so `E2E_BASE_URL=http://localhost:4173 npm run e2e` against `npm run preview` still works for the SPA-only subset.
+
+Conventions (see `e2e/fixtures.js`): every test pre-seeds `oro_cookie_consent='declined'` + the newsletter-modal session key so overlays don't interfere (opt out with `test.use({ seedStorage: false })`); `/api/waitlist` is always mocked via the `mockWaitlist` fixture — **e2e must never write to the real Supabase waitlist table**. All API-side tests are read-only (GETs, method-guard 405s, bad-token 400s).
+
+CI: `.github/workflows/e2e.yml` triggers on Vercel's `deployment_status` events — full suite on preview (PR) deployments, `@smoke` on production. If Vercel Deployment Protection is on, set the `VERCEL_AUTOMATION_BYPASS_SECRET` repo secret (Playwright sends it as `x-vercel-protection-bypass`).
 
 `build` is **not** a bare `vite build`. It runs three stages in sequence: (1) the client bundle; (2) an SSR bundle of `src/entry-server.jsx` into `.seo-server/`; (3) `node scripts/generate-seo.mjs`, which imports the SSR `render()` to prerender each public route into its own `dist/<route>/index.html`, enriches the static legal pages' `<head>`, and emits `dist/sitemap.xml` + `dist/llms.txt`. A build can therefore fail in the SSR or SEO stage, not just the client bundle. The runtime is still a client-rendered SPA — the SSR pass is build-time prerendering only (used for SEO/meta/crawlers).
 
-**Lockfile footgun:** both `package-lock.json` (current, used by Vercel + local) and a stale `pnpm-lock.yaml` from an earlier toolchain are checked in. Always use `npm`; running `pnpm install` will diverge the two lockfiles further.
+**Lockfile:** `package-lock.json` is the only lockfile — always use `npm`. (A stale `pnpm-lock.yaml` used to coexist and made Vercel resolve the package manager to pnpm, breaking builds on any dependency change; it was removed. Don't reintroduce it or run `pnpm install` here.)
 
 ## Architecture
 
@@ -49,7 +62,7 @@ All non-home pages are `React.lazy` + `Suspense` code-split. `vercel.json` redir
 - `src/context/ThemeContext.jsx` — dark/light theme provider. Default is dark; persisted to `localStorage['oro_theme']`; toggles `<html data-theme="dark|light">` so the CSS variables in `index.css` flip, and sets `<body>` background to avoid overscroll color flashes.
 - `src/components/` — grouped by feature/page: `layout/` (`SiteHeader`, `SiteFooter` — chrome on every route), `overlays/` (`CookieConsent`, `WaitlistModal`), `home/`, `newsletter/`, `journal/`, `try-oro/`, `how-it-works/`, `why-oro/`, `manifesto/`, `contact/`, plus shared `marketing/`, `closet/`. Each component has a co-located `.css` file for layout/animation that's awkward in Tailwind.
 - `src/components/overlays/WaitlistModal.jsx` — email signup; POSTs to `api/waitlist`, returns 409 if already registered. Mounted lazily from `App.jsx` (the journal/newsletter mailing-list CTAs); most "try Oro" CTAs instead route to `/try-oro`.
-- `src/content/newsletters/*.mdx` — newsletter source. Filename = slug (URL `/newsletter/<filename>`). The `export const meta = {…}` block supplies title/tag/date/image/summary/readTime. **Gating fields the build respects:** only `published === true` entries are prerendered/sitemapped/listed; `comingSoon === true` marks an entry as not-yet-readable (listed but no article prerender). `src/lib/newsletters.js` globs them with `import.meta.glob` for the client; `generate-seo.mjs` re-parses the meta independently at build time.
+- `src/content/newsletters/*.mdx` — newsletter source. Filename = slug (URL `/newsletter/<filename>`). The `export const meta = {…}` block supplies title/tag/date/image/summary/readTime. **Gating fields the build respects:** only `published === true` entries are prerendered/sitemapped/listed; `comingSoon === true` marks an entry as not-yet-readable (listed but no article prerender); `releaseAt` (full ISO timestamp) time-gates an issue — `src/lib/newsletters.js` filters the `releasedNewsletters` list on `published === true && hasReleased(...)`, so an issue with a future `releaseAt` is hidden until that moment (falls back to date-only at UTC midnight when `releaseAt` is unset). Note the two derived lists in `newsletters.js`: `releasedNewsletters` (published + released, for the public client) vs `readableNewsletters` (just `!comingSoon`). `src/lib/newsletters.js` globs them with `import.meta.glob` for the client; `generate-seo.mjs` re-parses the meta independently at build time.
 - `src/lib/` — `analytics.js` (consent-gated `window.gtag` wrapper + event helpers; has a hardcoded fallback GA ID), `seo.js`, `faqs.js`, `newsletters.js`, `newsletterSignup.js` (sessionStorage/localStorage gating for the signup modal — "seen this session" + "already signed up"), `links.js`/`siteLinks.js` (external + nav URLs), `stats.js`, `placeholderPhotos.js`.
 
 **Vite alias:** `@newsletter-images` → `src/assets/newsletters` (defined in `vite.config.js`); use this in MDX `meta.image` and component imports rather than relative paths.

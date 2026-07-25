@@ -17,3 +17,7 @@ vite.config.js.timestamp-*.mjs
 
 # Launch film is hosted on YouTube — keep any local video file out of git.
 public/film/*.mp4
+
+# Playwright
+playwright-report/
+test-results/
