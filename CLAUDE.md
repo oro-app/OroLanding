@@ -27,7 +27,7 @@ CI: `.github/workflows/e2e.yml` triggers on Vercel's `deployment_status` events 
 
 `build` is **not** a bare `vite build`. It runs three stages in sequence: (1) the client bundle; (2) an SSR bundle of `src/entry-server.jsx` into `.seo-server/`; (3) `node scripts/generate-seo.mjs`, which imports the SSR `render()` to prerender each public route into its own `dist/<route>/index.html`, enriches the static legal pages' `<head>`, and emits `dist/sitemap.xml` + `dist/llms.txt`. A build can therefore fail in the SSR or SEO stage, not just the client bundle. The runtime is still a client-rendered SPA — the SSR pass is build-time prerendering only (used for SEO/meta/crawlers).
 
-**Lockfile footgun:** both `package-lock.json` (current, used by Vercel + local) and a stale `pnpm-lock.yaml` from an earlier toolchain are checked in. Always use `npm`; running `pnpm install` will diverge the two lockfiles further.
+**Lockfile:** `package-lock.json` is the only lockfile — always use `npm`. (A stale `pnpm-lock.yaml` used to coexist and made Vercel resolve the package manager to pnpm, breaking builds on any dependency change; it was removed. Don't reintroduce it or run `pnpm install` here.)
 
 ## Architecture
 
