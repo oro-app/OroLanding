@@ -42,6 +42,9 @@ export default defineConfig({
     proxy: {
       '/api': backendUrl,
       '/static': backendUrl,
+      // oro-central public onboarding endpoints (BUI-415) — the /get-started
+      // signup form posts here; oro-central has no CORS, so dev goes via proxy.
+      '/onboarding': backendUrl,
     }
   }
 })

@@ -201,6 +201,43 @@
 }
 .gs-consent-line a:hover { border-bottom-color: var(--color-accent); }
 
+/* ── otp code input ───────────────────────────────────────────────────── */
+.gs-input-otp {
+  font-size: 36px;
+  letter-spacing: 10px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── inline error / notice under the field ────────────────────────────── */
+.gs-error,
+.gs-notice {
+  margin: 16px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  letter-spacing: 0.1px;
+}
+.gs-error { color: var(--color-accent); }
+.gs-notice { color: var(--color-fg-faint); }
+
+/* ── resend link (otp footer) ─────────────────────────────────────────── */
+.gs-resend {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-fg);
+  font: inherit;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-fg-line);
+  transition: border-color 0.2s ease;
+}
+.gs-resend:hover:not(:disabled) { border-bottom-color: var(--color-accent); }
+.gs-resend:disabled {
+  color: var(--color-fg-faint);
+  cursor: default;
+  border-bottom-color: transparent;
+}
+
 /* ── CTA: full-width filled, italic serif, square ─────────────────────── */
 .gs-cta {
   margin-top: 48px;
