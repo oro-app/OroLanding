@@ -7,10 +7,37 @@
 // Tests that exercise those overlays opt out via `test.use({ seedStorage: false })`.
 import { test as base, expect } from '@playwright/test'
 
+// Vercel Deployment Protection bypass — sent on same-origin requests only
+// (cross-origin CORS preflights reject the unknown header; see config note).
+const BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+const SITE_ORIGIN = new URL(process.env.E2E_BASE_URL ?? 'http://unset.invalid').origin
+
 export const test = base.extend({
   seedStorage: [true, { option: true }],
 
+  // Scoped API-request context so api.spec.js also sends the bypass header.
+  request: async ({ playwright, baseURL }, use) => {
+    const ctx = await playwright.request.newContext({
+      baseURL,
+      extraHTTPHeaders: BYPASS_SECRET
+        ? { 'x-vercel-protection-bypass': BYPASS_SECRET }
+        : undefined,
+    })
+    await use(ctx)
+    await ctx.dispose()
+  },
+
   context: async ({ context, seedStorage }, use) => {
+    if (BYPASS_SECRET) {
+      await context.route('**/*', (route) => {
+        const sameOrigin = new URL(route.request().url()).origin === SITE_ORIGIN
+        return route.continue(
+          sameOrigin
+            ? { headers: { ...route.request().headers(), 'x-vercel-protection-bypass': BYPASS_SECRET } }
+            : {}
+        )
+      })
+    }
     if (seedStorage) {
       await context.addInitScript(() => {
         window.localStorage.setItem('oro_cookie_consent', 'declined')
