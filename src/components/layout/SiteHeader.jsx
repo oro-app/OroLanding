@@ -40,7 +40,8 @@ export default function SiteHeader() {
 
   return (
     <header className="site-header">
-      <a href="/" className="site-header-logo-link" aria-label="oro home">
+      <div className="site-header-inner">
+        <a href="/" className="site-header-logo-link" aria-label="oro home">
         <img
           src="/static/oro-logo.png"
           alt="oro"
@@ -48,9 +49,9 @@ export default function SiteHeader() {
           fetchpriority="high"
           decoding="async"
         />
-      </a>
+        </a>
 
-      <nav className="site-header-nav" aria-label="oro">
+        <nav className="site-header-nav" aria-label="oro">
         {NAV_COLUMNS.map((col) => (
           <div className="site-header-group" key={col.head}>
             <button type="button" className="site-header-group-trigger" aria-haspopup="true">
@@ -95,7 +96,8 @@ export default function SiteHeader() {
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
         </a>
-      </nav>
+        </nav>
+      </div>
     </header>
   )
 }

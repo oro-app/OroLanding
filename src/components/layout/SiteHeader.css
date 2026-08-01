@@ -2,16 +2,23 @@
    Nav mirrors the footer: each column is a hover/focus dropdown. */
 
 .site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 40px;
+  padding: 0 40px;
   font-family: var(--font-sans);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-fg-line);
   position: sticky;
   top: 0;
   z-index: 20;            /* above page content + the dropdown panels */
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 16px 0;
 }
 
 .site-header-logo-link {
@@ -162,7 +169,10 @@
 
 @media (max-width: 860px) {
   .site-header {
-    padding: 12px 20px;
+    padding: 0 20px;
+  }
+  .site-header-inner {
+    padding: 12px 0;
   }
   .site-header-nav {
     gap: 16px;

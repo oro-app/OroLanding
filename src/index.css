@@ -41,6 +41,7 @@
   --color-bg:       var(--oro-plum-deep);
   --color-fg:       var(--oro-cream);
   --color-fg-faint: var(--oro-cream-70);
+  --color-fg-light: var(--oro-cream-45);
   --color-fg-line:  var(--oro-cream-line);
   --color-accent:   var(--oro-gold);
 }

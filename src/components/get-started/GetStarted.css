@@ -14,7 +14,8 @@
 
 /* ── top bar: back + progress ─────────────────────────────────────────── */
 .gs-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
   align-items: center;
   gap: 16px;
   width: 100%;
@@ -32,7 +33,9 @@
   cursor: pointer;
   padding: 4px 6px;
   border-radius: 0;
+  margin-bottom: 3px;
   transition: color 0.2s ease;
+  justify-self: start;
 }
 .gs-back:hover { color: var(--color-fg); }
 
@@ -53,10 +56,11 @@
 .gs-progress-count {
   font-size: 12px;
   letter-spacing: 0.3px;
-  color: var(--color-fg);
+  color: var(--color-fg-faint);
   font-variant-numeric: tabular-nums;
+  justify-self: end;
 }
-.gs-progress-of { color: var(--color-fg-faint); }
+.gs-progress-total { color: var(--color-fg); }
 
 /* ── stage: centers the active screen ─────────────────────────────────── */
 .gs-stage {
@@ -152,14 +156,66 @@
 }
 .gs-input::placeholder { color: var(--color-fg-faint); opacity: 0.55; }
 .gs-input:focus { border-bottom-color: var(--color-accent); }
-/* date input inherits the theme's calendar UI where supported */
-.gs-input[type='date'] { color-scheme: light dark; }
+.gs-date-field { position: relative; }
+.gs-date-parts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 38px 14px 2px;
+  border-bottom: 1px solid var(--color-fg-line);
+  color: var(--color-fg);
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 300;
+  transition: border-color 0.25s ease;
+}
+.gs-date-parts:focus-within { border-bottom-color: var(--color-accent); }
+.gs-date-parts input {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-fg);
+  font: inherit;
+  text-align: center;
+}
+.gs-date-parts input:first-child { width: 76px; }
+.gs-date-parts input:not(:first-child) { width: 40px; }
+.gs-date-parts input:nth-of-type(2) { width: 52px; }
+.gs-date-parts input::placeholder { color: var(--color-fg-faint); opacity: 0.55; }
+.gs-date-picker {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  transform: translateY(-50%);
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+.gs-date-field svg {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: var(--color-fg);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
 
 /* ── chips (how'd you hear) ───────────────────────────────────────────── */
 .gs-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  margin-bottom: 24px;
 }
 .gs-chip {
   border: 1px solid var(--color-fg-line);
@@ -188,17 +244,20 @@
 }
 .gs-consent-line {
   margin: 0;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.5;
   letter-spacing: 0.1px;
-  color: var(--color-fg-faint);
+  color: var(--color-fg-light);
 }
+.gs[data-view='phone'] .gs-consent-line { font-size: 11px; }
+:root[data-theme='light'] .gs-consent-line { color: var(--color-fg-faint); }
 .gs-consent-line a {
-  color: var(--color-fg);
+  color: var(--color-fg-faint);
   text-decoration: none;
   border-bottom: 1px solid var(--color-fg-line);
   transition: border-color 0.2s ease;
 }
+:root[data-theme='light'] .gs-consent-line a { color: var(--color-fg); }
 .gs-consent-line a:hover { border-bottom-color: var(--color-accent); }
 
 /* ── otp code input ───────────────────────────────────────────────────── */
@@ -291,4 +350,5 @@
   .gs-q-label { font-size: 32px; }
   .gs-terminal-title { font-size: 40px; }
   .gs-input { font-size: 24px; }
+  .gs-date-parts { font-size: 24px; }
 }

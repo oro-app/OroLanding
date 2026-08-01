@@ -30,12 +30,15 @@ const MIN_AGE = 16
 // Matches the server's resend cooldown on /onboarding/start.
 const RESEND_COOLDOWN_SECONDS = 60
 
-const API_BASE = import.meta.env.VITE_ORO_API_URL || ''
+const API_BASE = import.meta.env.VITE_ORO_API_URL || 'https://api.buildingoro.ca'
 
 function ageFromISO(iso) {
   if (!iso) return null
-  const dob = new Date(iso)
-  if (Number.isNaN(dob.getTime())) return null
+  const match = iso.match(/^(\d{4})\/(\d{2})\/(\d{2})$/)
+  if (!match) return null
+  const [, year, month, day] = match.map(Number)
+  const dob = new Date(year, month - 1, day)
+  if (dob.getFullYear() !== year || dob.getMonth() !== month - 1 || dob.getDate() !== day) return null
   const now = new Date()
   let age = now.getFullYear() - dob.getFullYear()
   const m = now.getMonth() - dob.getMonth()
@@ -63,7 +66,24 @@ export default function GetStarted() {
   // 'welcome' → question screens → 'otp' → 'done'.
   // Dead ends: 'ineligible' (age/province) and 'already' (phone already signed up).
   const [view, setView] = useState('welcome')
-  const [form, setForm] = useState({ name: '', birthday: '', hear: '', phone: '' })
+  const [form, setForm] = useState(() => {
+    if (typeof window === 'undefined') {
+      return { name: '', birthday: '', hear: [], hearOther: '', phone: '' }
+    }
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('oro_get_started_responses'))
+      return {
+        name: typeof saved?.name === 'string' ? saved.name.slice(0, 50) : '',
+        birthday: typeof saved?.birthday === 'string' ? saved.birthday : '',
+        hear: Array.isArray(saved?.hear) ? saved.hear.filter((item) => typeof item === 'string') : [],
+        hearOther: typeof saved?.hearOther === 'string' ? saved.hearOther.slice(0, 100) : '',
+        phone: typeof saved?.phone === 'string' ? saved.phone : '',
+      }
+    } catch {
+      return { name: '', birthday: '', hear: [], hearOther: '', phone: '' }
+    }
+  })
   const [code, setCode] = useState('')
 
   const [loading, setLoading] = useState(false)
@@ -81,6 +101,14 @@ export default function GetStarted() {
     const t = setTimeout(() => setResendLeft((s) => s - 1), 1000)
     return () => clearTimeout(t)
   }, [resendLeft])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('oro_get_started_responses', JSON.stringify(form))
+    } catch {
+      // Signup still works when storage is unavailable or full.
+    }
+  }, [form])
 
   const set = (key) => (value) => setForm((f) => ({ ...f, [key]: value }))
 
@@ -107,7 +135,7 @@ export default function GetStarted() {
   }
 
   const restart = () => {
-    setForm({ name: '', birthday: '', hear: '', phone: '' })
+    setForm({ name: '', birthday: '', hear: [], hearOther: '', phone: '' })
     setCode('')
     setResendLeft(0)
     goTo('welcome', 'back')
@@ -122,9 +150,12 @@ export default function GetStarted() {
     setNotice('')
     try {
       const { status, detail } = await postJSON('/onboarding/start', {
-        name: form.name.trim(),
-        birthday: form.birthday,
-        heard_about: form.hear,
+        name: form.name,
+        birthday: form.birthday.replaceAll('/', '-'),
+        heard_about: [
+          ...form.hear,
+          form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
+        ].filter(Boolean).join(', '),
         phone: form.phone.trim(),
       })
       if (status === 200) {
@@ -200,7 +231,19 @@ export default function GetStarted() {
     goTo(QUESTIONS[qIndex - 1], 'back')
   }
 
-  const firstName = form.name.trim().split(/\s+/)[0]
+  const displayName = form.name
+
+  const toggleHear = (option) => {
+    setForm((current) => ({
+      ...current,
+      hear: current.hear.includes(option)
+        ? current.hear.filter((item) => item !== option)
+        : [...current.hear, option],
+      hearOther: option === 'somewhere else' && current.hear.includes(option)
+        ? ''
+        : current.hearOther,
+    }))
+  }
 
   return (
     <main className="gs" data-view={view}>
@@ -217,7 +260,8 @@ export default function GetStarted() {
             />
           </div>
           <span className="gs-progress-count">
-            {qIndex + 1}<span className="gs-progress-of"> / {QUESTIONS.length}</span>
+            <span className="gs-progress-current">{qIndex + 1}</span>
+            <span className="gs-progress-of"> / <span className="gs-progress-total">{QUESTIONS.length}</span></span>
           </span>
         </div>
       )}
@@ -241,6 +285,7 @@ export default function GetStarted() {
                 onEnter={advance}
                 placeholder="your name"
                 autoComplete="given-name"
+                maxLength={50}
                 autoFocus
               />
             </Question>
@@ -253,12 +298,10 @@ export default function GetStarted() {
               canContinue={canContinue}
               onContinue={advance}
             >
-              <TextField
-                type="date"
+              <DateField
                 value={form.birthday}
                 onChange={set('birthday')}
                 onEnter={advance}
-                autoComplete="bday"
               />
             </Question>
           )}
@@ -266,7 +309,6 @@ export default function GetStarted() {
           {view === 'hear' && (
             <Question
               label="how'd you hear about oro?"
-              hint="no wrong answer."
               canContinue={canContinue}
               onContinue={advance}
             >
@@ -276,20 +318,31 @@ export default function GetStarted() {
                     type="button"
                     key={opt}
                     className="gs-chip"
-                    data-selected={form.hear === opt}
-                    onClick={() => set('hear')(opt)}
+                    data-selected={form.hear.includes(opt)}
+                    aria-pressed={form.hear.includes(opt)}
+                    onClick={() => toggleHear(opt)}
                   >
                     {opt}
                   </button>
                 ))}
               </div>
+              {form.hear.includes('somewhere else') && (
+                <TextField
+                  value={form.hearOther}
+                  onChange={set('hearOther')}
+                  onEnter={advance}
+                  placeholder="tell us more (optional)"
+                  maxLength={100}
+                  aria-label="tell us where you heard about oro"
+                />
+              )}
             </Question>
           )}
 
           {view === 'phone' && (
             <Question
-              label={firstName ? `last thing, ${firstName}.` : 'last thing.'}
-              hint="your number — this is where oro texts you."
+              label={displayName ? `last thing, ${displayName}.` : 'last thing.'}
+              hint="your number"
               canContinue={canContinue}
               onContinue={advance}
               cta={loading ? 'sending' : 'text me'}
@@ -354,7 +407,7 @@ export default function GetStarted() {
                 check your <span className="gs-em">phone</span>.
               </h1>
               <p className="gs-terminal-sub">
-                {firstName ? `${firstName}, oro` : 'oro'} just texted you 🤍 open it up and we'll
+                {displayName ? `${displayName}, oro` : 'oro'} just texted you 🤍 open it up and we'll
                 get your closet started — first fit's minutes away.
               </p>
             </div>
@@ -383,7 +436,7 @@ export default function GetStarted() {
                 that code <span className="gs-em">expired</span>.
               </h1>
               <p className="gs-terminal-sub">
-                no stress — it just means a little time passed. run through the questions once
+                no stress — run through the questions once
                 more and we'll text you a fresh one.
               </p>
               <button type="button" className="gs-textlink" onClick={restart}>
@@ -399,7 +452,7 @@ export default function GetStarted() {
                 oro is <span className="gs-em">16+</span> for now.
               </h1>
               <p className="gs-terminal-sub">
-                come back when you're a little older — we'll be here, and we'll have a fit waiting.
+                come back in a bit — we'll be here, and we'll have a fit waiting.
               </p>
               <button type="button" className="gs-textlink" onClick={restart}>
                 start over
@@ -415,13 +468,12 @@ export default function GetStarted() {
 function Welcome({ onStart }) {
   return (
     <div className="gs-welcome">
-      <p className="gs-eyebrow">your stylist, in your texts.</p>
+      <p className="gs-eyebrow">your stylist, on demand.</p>
       <h1 className="gs-welcome-title">
         your stylist is <span className="gs-em">2 minutes</span> away.
       </h1>
       <p className="gs-welcome-sub">
-        a few quick questions, then oro texts you and we get to work. no app to open, no card to
-        start.
+        a few quick questions, then oro texts you and we get to work.
       </p>
       <button type="button" className="gs-cta" onClick={onStart}>
         get started.
@@ -491,5 +543,90 @@ function TextField({ value, onChange, onEnter, autoFocus, className = 'gs-input'
       }}
       {...rest}
     />
+  )
+}
+
+function DateField({ value, onChange, onEnter }) {
+  const yearRef = useRef(null)
+  const monthRef = useRef(null)
+  const dayRef = useRef(null)
+  const [year = '', month = '', day = ''] = value.split('/')
+
+  const updatePart = (part, next) => {
+    const digits = next.replace(/\D/g, '')
+    const parts = [year, month, day]
+    parts[part] = digits.slice(0, part === 0 ? 4 : 2)
+    onChange(parts.join('/'))
+
+    if (part === 0 && digits.length >= 4) monthRef.current?.focus()
+    if (part === 1 && digits.length >= 2) dayRef.current?.focus()
+  }
+
+  const handlePaste = (event) => {
+    const digits = event.clipboardData.getData('text').replace(/\D/g, '').slice(0, 8)
+    if (digits.length < 4) return
+    event.preventDefault()
+    onChange([digits.slice(0, 4), digits.slice(4, 6), digits.slice(6, 8)].join('/'))
+    if (digits.length >= 6) dayRef.current?.focus()
+    else monthRef.current?.focus()
+  }
+
+  return (
+    <div className="gs-date-field">
+      <div className="gs-date-parts" onPaste={handlePaste}>
+        <input
+          ref={yearRef}
+          value={year}
+          onChange={(event) => updatePart(0, event.target.value)}
+          onKeyDown={(event) => { if (event.key === 'Enter') onEnter?.() }}
+          placeholder="yyyy"
+          inputMode="numeric"
+          autoComplete="bday-year"
+          maxLength={4}
+          aria-label="birth year"
+        />
+        <span>/</span>
+        <input
+          ref={monthRef}
+          value={month}
+          onChange={(event) => updatePart(1, event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Backspace' && !month) yearRef.current?.focus()
+            if (event.key === 'Enter') onEnter?.()
+          }}
+          placeholder="mm"
+          inputMode="numeric"
+          autoComplete="bday-month"
+          maxLength={2}
+          aria-label="birth month"
+        />
+        <span>/</span>
+        <input
+          ref={dayRef}
+          value={day}
+          onChange={(event) => updatePart(2, event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Backspace' && !day) monthRef.current?.focus()
+            if (event.key === 'Enter') onEnter?.()
+          }}
+          placeholder="dd"
+          inputMode="numeric"
+          autoComplete="bday-day"
+          maxLength={2}
+          aria-label="birth day"
+        />
+      </div>
+      <input
+        className="gs-date-picker"
+        type="date"
+        value={/^\d{4}\/\d{2}\/\d{2}$/.test(value) ? value.replaceAll('/', '-') : ''}
+        onChange={(event) => onChange(event.target.value.replaceAll('-', '/'))}
+        aria-label="open birthday date picker"
+        tabIndex={-1}
+      />
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" />
+      </svg>
+    </div>
   )
 }
