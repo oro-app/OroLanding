@@ -162,7 +162,7 @@ export default function GetStarted() {
       case 'province': return (form.country === 'CA' ? PROVINCES : form.country === 'US' ? US_STATES : [])
         .some(([code]) => code === form.province)
       case 'hear': return form.hear.length > 0
-      case 'phone': return form.phone.replace(/\D/g, '').length >= 7
+      case 'phone': return form.phone.length > 0
       case 'otp': return code.length === 6
       default: return true
     }
@@ -469,9 +469,12 @@ export default function GetStarted() {
               <TextField
                 type="tel"
                 value={form.phone}
-                onChange={set('phone')}
+                onChange={(value) => set('phone')(value.replace(/\D/g, '').slice(0, 11))}
                 onEnter={advance}
-                placeholder="(555) 000-0000"
+                placeholder="15550000000"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={11}
                 autoComplete="tel"
                 autoFocus
               />
