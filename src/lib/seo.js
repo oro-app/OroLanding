@@ -85,6 +85,16 @@ export const ROUTE_SEO = {
     priority: '0.5',
     faqs: CONTACT_FAQS,
   },
+  'get-started': {
+    path: '/get-started',
+    title: 'Get Started - Oro texts you your first outfit',
+    description:
+      'Sign up for Oro in under two minutes: a few quick questions, then Oro texts you and styles your first outfit from your own closet.',
+    h1: 'your stylist is 2 minutes away.',
+    summary:
+      'The Oro signup flow: answer a few questions, verify your number, and Oro texts you to start styling.',
+    priority: '0.8',
+  },
   terms: {
     path: '/terms',
     title: 'Oro - Terms of Service',
@@ -128,6 +138,7 @@ export const PUBLIC_ROUTE_TYPES = [
   'journal',
   'manifesto',
   'contact',
+  'get-started',
   'terms',
   'privacy',
   'cookies',
