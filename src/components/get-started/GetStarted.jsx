@@ -11,7 +11,39 @@ import './GetStarted.css'
 // Ordered question screens. Drives the progress bar + next/back navigation.
 // Quebec exclusion is a passive attestation in the consent note (product call,
 // July 2026 — wording to be blessed by counsel under BUI-421), not a screen.
-const QUESTIONS = ['name', 'birthday', 'hear', 'phone']
+const QUESTIONS = ['name', 'birthday', 'province', 'hear', 'phone']
+
+const PROVINCES = [
+  ['AB', 'Alberta'],
+  ['BC', 'British Columbia'],
+  ['MB', 'Manitoba'],
+  ['NB', 'New Brunswick'],
+  ['NL', 'Newfoundland and Labrador'],
+  ['NS', 'Nova Scotia'],
+  ['NT', 'Northwest Territories'],
+  ['NU', 'Nunavut'],
+  ['ON', 'Ontario'],
+  ['PE', 'Prince Edward Island'],
+  ['QC', 'Quebec'],
+  ['SK', 'Saskatchewan'],
+  ['YT', 'Yukon'],
+]
+
+const US_STATES = [
+  ['AL', 'Alabama'], ['AK', 'Alaska'], ['AZ', 'Arizona'], ['AR', 'Arkansas'],
+  ['CA', 'California'], ['CO', 'Colorado'], ['CT', 'Connecticut'], ['DE', 'Delaware'],
+  ['DC', 'District of Columbia'], ['FL', 'Florida'], ['GA', 'Georgia'], ['HI', 'Hawaii'],
+  ['ID', 'Idaho'], ['IL', 'Illinois'], ['IN', 'Indiana'], ['IA', 'Iowa'],
+  ['KS', 'Kansas'], ['KY', 'Kentucky'], ['LA', 'Louisiana'], ['ME', 'Maine'],
+  ['MD', 'Maryland'], ['MA', 'Massachusetts'], ['MI', 'Michigan'], ['MN', 'Minnesota'],
+  ['MS', 'Mississippi'], ['MO', 'Missouri'], ['MT', 'Montana'], ['NE', 'Nebraska'],
+  ['NV', 'Nevada'], ['NH', 'New Hampshire'], ['NJ', 'New Jersey'], ['NM', 'New Mexico'],
+  ['NY', 'New York'], ['NC', 'North Carolina'], ['ND', 'North Dakota'], ['OH', 'Ohio'],
+  ['OK', 'Oklahoma'], ['OR', 'Oregon'], ['PA', 'Pennsylvania'], ['RI', 'Rhode Island'],
+  ['SC', 'South Carolina'], ['SD', 'South Dakota'], ['TN', 'Tennessee'], ['TX', 'Texas'],
+  ['UT', 'Utah'], ['VT', 'Vermont'], ['VA', 'Virginia'], ['WA', 'Washington'],
+  ['WV', 'West Virginia'], ['WI', 'Wisconsin'], ['WY', 'Wyoming'],
+]
 
 const HEAR_OPTIONS = [
   'instagram',
@@ -68,23 +100,30 @@ export default function GetStarted() {
   const [view, setView] = useState('welcome')
   const [form, setForm] = useState(() => {
     if (typeof window === 'undefined') {
-      return { name: '', birthday: '', hear: [], hearOther: '', phone: '' }
+      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '' }
     }
 
     try {
       const saved = JSON.parse(localStorage.getItem('oro_get_started_responses'))
+      const country = saved?.country === 'CA' || saved?.country === 'US'
+        ? saved.country
+        : PROVINCES.some(([code]) => code === saved?.province) ? 'CA' : ''
+      const locations = country === 'US' ? US_STATES : PROVINCES
       return {
         name: typeof saved?.name === 'string' ? saved.name.slice(0, 50) : '',
         birthday: typeof saved?.birthday === 'string' ? saved.birthday : '',
+        country,
+        province: locations.some(([code]) => code === saved?.province) ? saved.province : '',
         hear: Array.isArray(saved?.hear) ? saved.hear.filter((item) => typeof item === 'string') : [],
         hearOther: typeof saved?.hearOther === 'string' ? saved.hearOther.slice(0, 100) : '',
         phone: typeof saved?.phone === 'string' ? saved.phone : '',
       }
     } catch {
-      return { name: '', birthday: '', hear: [], hearOther: '', phone: '' }
+      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '' }
     }
   })
   const [code, setCode] = useState('')
+  const [provinceOpen, setProvinceOpen] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -120,9 +159,11 @@ export default function GetStarted() {
     switch (view) {
       case 'name': return form.name.trim().length > 0
       case 'birthday': return ageFromISO(form.birthday) !== null
+      case 'province': return (form.country === 'CA' ? PROVINCES : form.country === 'US' ? US_STATES : [])
+        .some(([code]) => code === form.province)
       case 'hear': return form.hear.length > 0
       case 'phone': return form.phone.replace(/\D/g, '').length >= 7
-      case 'otp': return code.trim().replace(/\D/g, '').length >= 4
+      case 'otp': return code.length === 6
       default: return true
     }
   }, [view, form, code])
@@ -135,7 +176,7 @@ export default function GetStarted() {
   }
 
   const restart = () => {
-    setForm({ name: '', birthday: '', hear: [], hearOther: '', phone: '' })
+    setForm({ name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '' })
     setCode('')
     setResendLeft(0)
     goTo('welcome', 'back')
@@ -152,11 +193,15 @@ export default function GetStarted() {
       const { status, detail } = await postJSON('/onboarding/start', {
         name: form.name,
         birthday: form.birthday.replaceAll('/', '-'),
+        ...(form.country === 'CA'
+          ? { province: form.province }
+          : { state: form.province }),
         heard_about: [
           ...form.hear,
           form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
         ].filter(Boolean).join(', '),
         phone: form.phone.trim(),
+        consent: true,
       })
       if (status === 200) {
         trackEvent('onboarding_start', { resend })
@@ -219,6 +264,10 @@ export default function GetStarted() {
       goTo('ineligible')
       return
     }
+    if (view === 'province' && form.country === 'CA' && form.province === 'QC') {
+      goTo('region-ineligible')
+      return
+    }
     if (view === 'welcome') { goTo(QUESTIONS[0]); return }
     if (view === 'phone') { startSignup(); return }
     if (view === 'otp') { verifyCode(); return }
@@ -232,6 +281,7 @@ export default function GetStarted() {
   }
 
   const displayName = form.name
+  const locationOptions = form.country === 'US' ? US_STATES : PROVINCES
 
   const toggleHear = (option) => {
     setForm((current) => ({
@@ -339,6 +389,72 @@ export default function GetStarted() {
             </Question>
           )}
 
+          {view === 'province' && (
+            <Question
+              label="where are you located?"
+              hint="choose your country, then your region."
+              canContinue={canContinue}
+              onContinue={advance}
+            >
+              <div className="gs-country-options">
+                {[
+                  ['CA', 'canada'],
+                  ['US', 'united states'],
+                ].map(([code, name]) => (
+                  <button
+                    type="button"
+                    className="gs-chip"
+                    data-selected={form.country === code}
+                    aria-pressed={form.country === code}
+                    onClick={() => {
+                      setForm((current) => ({ ...current, country: code, province: '' }))
+                      setProvinceOpen(false)
+                    }}
+                    key={code}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+              {form.country && <div className="gs-province-select">
+                <button
+                  type="button"
+                  className="gs-province-trigger"
+                  aria-expanded={provinceOpen}
+                  aria-controls="gs-province-options"
+                  onClick={() => setProvinceOpen((open) => !open)}
+                  autoFocus
+                >
+                  <span data-placeholder={!form.province}>
+                    {locationOptions.find(([code]) => code === form.province)?.[1]
+                      || (form.country === 'CA' ? 'province or territory' : 'state')}
+                  </span>
+                  <span className="gs-province-caret" aria-hidden="true">⌄</span>
+                </button>
+                {provinceOpen && (
+                  <div className="gs-province-options" id="gs-province-options" role="listbox">
+                    {locationOptions.map(([code, name]) => (
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={form.province === code}
+                        data-selected={form.province === code}
+                        onClick={() => {
+                          set('province')(code)
+                          setProvinceOpen(false)
+                        }}
+                        key={code}
+                      >
+                        <span>{name}</span>
+                        <span className="gs-province-code">{code}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>}
+            </Question>
+          )}
+
           {view === 'phone' && (
             <Question
               label={displayName ? `last thing, ${displayName}.` : 'last thing.'}
@@ -388,12 +504,12 @@ export default function GetStarted() {
             >
               <TextField
                 value={code}
-                onChange={setCode}
+                onChange={(value) => setCode(value.replace(/\D/g, '').slice(0, 6))}
                 onEnter={advance}
                 placeholder="000000"
                 inputMode="numeric"
                 autoComplete="one-time-code"
-                maxLength={10}
+                maxLength={6}
                 className="gs-input gs-input-otp"
                 autoFocus
               />
@@ -407,8 +523,7 @@ export default function GetStarted() {
                 check your <span className="gs-em">phone</span>.
               </h1>
               <p className="gs-terminal-sub">
-                {displayName ? `${displayName}, oro` : 'oro'} just texted you 🤍 open it up and we'll
-                get your closet started — first fit's minutes away.
+                {displayName ? `${displayName}, oro` : 'oro'} just texted you 🤍
               </p>
             </div>
           )}
@@ -453,6 +568,21 @@ export default function GetStarted() {
               </h1>
               <p className="gs-terminal-sub">
                 come back in a bit — we'll be here, and we'll have a fit waiting.
+              </p>
+              <button type="button" className="gs-textlink" onClick={restart}>
+                start over
+              </button>
+            </div>
+          )}
+
+          {view === 'region-ineligible' && (
+            <div className="gs-terminal">
+              <p className="gs-eyebrow">not there just yet.</p>
+              <h1 className="gs-terminal-title">
+                oro isn't available in <span className="gs-em">quebec</span> yet.
+              </h1>
+              <p className="gs-terminal-sub">
+                we're working on it — check back soon.
               </p>
               <button type="button" className="gs-textlink" onClick={restart}>
                 start over
