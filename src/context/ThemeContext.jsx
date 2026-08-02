@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { colors } from '@oro/tokens'
 
 // Dark/light theme for the redesigned marketing surface.
 // Ported from the design handoff's `shared.jsx` ThemeProvider.
@@ -40,7 +41,7 @@ export function ThemeProvider({ children, defaultTheme = 'dark' }) {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme)
       // Keep <body> in sync so overscroll / scroll gutters don't flash the wrong color.
-      document.body.style.background = theme === 'dark' ? '#3A2646' : '#FFF9ED'
+      document.body.style.background = theme === 'dark' ? colors.plum : colors.paper
     }
   }, [initialized, theme])
 

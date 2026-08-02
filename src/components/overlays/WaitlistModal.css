@@ -18,7 +18,7 @@
 
 .modal {
   position: relative;
-  background: linear-gradient(180deg, #fff7e6 0%, #fff2d7 100%);
+  background: linear-gradient(180deg, #fff7e6 0%, var(--oro-ivory) 100%);
   border: 1px solid rgba(58, 38, 70, 0.14);
   padding: 3rem 2.5rem 2.5rem;
   width: 100%;
@@ -146,7 +146,7 @@
 }
 
 .email-submit-btn:hover:not(:disabled) {
-  background: #4a3260;
+  background: var(--oro-plum-soft);
 }
 
 .email-submit-btn:active:not(:disabled) {

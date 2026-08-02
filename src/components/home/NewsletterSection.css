@@ -1,7 +1,7 @@
 .newsletter-section {
   position: relative;
   overflow: hidden;
-  background: #3A2646;
+  background: var(--oro-plum-deep);
   color: #f6f4f1;
   height: 100vh;
   padding: clamp(3rem, 6vw, 4.75rem) 0;
@@ -31,7 +31,7 @@
   font-size: clamp(2.6rem, 5vw, 4.45rem);
   font-weight: 400;
   line-height: 0.98;
-  color: #fff2d7;
+  color: var(--oro-ivory);
 }
 
 .newsletter-controls {
@@ -48,7 +48,7 @@
   width: 42px;
   height: 42px;
   min-width: 42px;
-  color: #fff2d7;
+  color: var(--oro-ivory);
   background: rgba(255, 242, 215, 0.08);
   border: 1px solid rgba(255, 242, 215, 0.14);
   border-radius: 8px;
@@ -145,7 +145,7 @@
   font-size: 1.45rem;
   font-weight: 400;
   line-height: 1.1;
-  color: #fff2d7;
+  color: var(--oro-ivory);
 }
 
 .newsletter-card p {

@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir .seo-server --emptyOutDir && node scripts/generate-seo.mjs",
+    "build": "npm run gen:tokens && vite build && vite build --ssr src/entry-server.jsx --outDir .seo-server --emptyOutDir && node scripts/generate-seo.mjs",
     "preview": "vite preview",
     "e2e": "playwright test",
-    "e2e:smoke": "playwright test --grep @smoke"
+    "e2e:smoke": "playwright test --grep @smoke",
+    "gen:tokens": "node scripts/generate-tokens.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.90.1",
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "@mdx-js/rollup": "^3.1.1",
+    "@oro/tokens": "github:oro-app/oro-design-system#release/tokens",
     "@playwright/test": "^1.62.0",
     "@vercel/node": "^5.7.15",
     "@vitejs/plugin-react": "^4.2.1",

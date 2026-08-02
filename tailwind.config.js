@@ -1,22 +1,14 @@
+import oroPreset from '@oro/tokens/tailwind';
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  presets: [oroPreset],
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        serif: ['"Cormorant Garamond"', '"Times New Roman"', 'serif'],
-        display: ['"Playfair Display"', 'Georgia', 'serif'],
-      },
-      colors: {
-        oro: {
-          gold: '#ff9a00',
-          purple: '#576092',
-        },
-      },
-    },
+    extend: {},
   },
   plugins: [],
 }
