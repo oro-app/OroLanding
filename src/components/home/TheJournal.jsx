@@ -1,3 +1,4 @@
+import { Cta } from '@oro/web'
 import { trackCtaClick } from '../../lib/analytics'
 import { readableNewsletters } from '../../lib/newsletters'
 
@@ -68,10 +69,10 @@ function TheJournalDark({ onSubscribe }) {
             <Arrow size={14} />
           </a>
 
-          <button type="button" className="jr-subscribe" onClick={handleSubscribe}>
+          <Cta size="standard" inverse className="jr-subscribe" onClick={handleSubscribe}>
             join the mailing list
             <Arrow size={12} />
-          </button>
+          </Cta>
         </div>
       </div>
     </section>

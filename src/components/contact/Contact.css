@@ -205,23 +205,6 @@
   flex-wrap: wrap;
   gap: 8px;
 }
-.ct-chip {
-  padding: 6px 14px;
-  background: transparent;
-  border: 1px solid rgba(14, 11, 7, 0.16);
-  cursor: pointer;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 13px;
-  color: var(--oro-plum-deep);
-  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
-}
-.ct-chip:hover { border-color: var(--oro-plum-deep); }
-.ct-chip.is-selected {
-  background: var(--oro-plum-deep);
-  border-color: var(--oro-plum-deep);
-  color: var(--oro-cream);
-}
 
 .ct-send {
   width: 100%;

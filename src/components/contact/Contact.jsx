@@ -1,3 +1,4 @@
+import { Chip } from '@oro/web'
 import { useState } from 'react'
 import SiteFooter from '../layout/SiteFooter'
 import { CONTACT_FAQS } from '../../lib/faqs'
@@ -100,16 +101,9 @@ function VisitorForm() {
         <span className="ct-chips-label">kind of letter</span>
         <div className="ct-chips-row">
           {TOPICS.map((t) => (
-            <button
-              type="button"
-              key={t}
-              className={`ct-chip${topic === t ? ' is-selected' : ''}`}
-              role="radio"
-              aria-checked={topic === t}
-              onClick={() => setTopic(t)}
-            >
+            <Chip key={t} selected={topic === t} onClick={() => setTopic(t)}>
               {t}.
-            </button>
+            </Chip>
           ))}
         </div>
       </div>

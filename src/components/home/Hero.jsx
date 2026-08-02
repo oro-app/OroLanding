@@ -1,3 +1,4 @@
+import { Cta } from '@oro/web'
 import { trackCtaClick } from '../../lib/analytics'
 import { USER_COUNT } from '../../lib/stats'
 import FakePhone from './FakePhone'
@@ -65,10 +66,10 @@ function HeroLight({ onTryOro }) {
       </div>
 
       <div className="hero-l-cta">
-        <button type="button" className="hero-cta-primary" onClick={onTryOro}>
+        <Cta size="compact" onClick={onTryOro}>
           start the conversation
           <Arrow size={13} />
-        </button>
+        </Cta>
         <span className="hero-cta-note">free, ios + android — early access.</span>
       </div>
     </section>
@@ -115,10 +116,10 @@ function HeroDark({ onTryOro }) {
           <img className="hero-d-logo" src="/static/oro-logo.png" alt="oro" />
           <h1 className="hero-d-title">make your wardrobe work for you.</h1>
           <div className="hero-d-ctacol">
-            <button type="button" className="hero-cta-primary hero-cta-primary--ondark" onClick={onTryOro}>
+            <Cta size="hero" inverse onClick={onTryOro}>
               start the conversation
               <Arrow size={14} />
-            </button>
+            </Cta>
             <span className="hero-cta-note hero-cta-note--ondark">free, ios + android — early access.</span>
             <span className="hero-cta-proof">join {USER_COUNT} people already getting dressed with oro.</span>
           </div>

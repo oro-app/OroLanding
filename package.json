@@ -17,13 +17,18 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@fontsource/fraunces": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
     "@mdx-js/rollup": "^3.1.1",
     "@oro/tokens": "github:oro-app/oro-design-system#release/tokens",
+    "@oro/ui": "github:oro-app/oro-design-system#release/ui",
+    "@oro/web": "github:oro-app/oro-design-system#release/web",
     "@playwright/test": "^1.62.0",
     "@vercel/node": "^5.7.15",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
+    "react-native-web": "^0.21.2",
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.1",
     "vite": "^5.1.0"
