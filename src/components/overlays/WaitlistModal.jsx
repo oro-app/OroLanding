@@ -68,7 +68,7 @@ export default function WaitlistModal({ onClose }) {
                 <path d="M3.5 9.5L7 13L14.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <p className="modal-eyebrow">You're subscribed</p>
+            <p className="modal-eyebrow">you're subscribed</p>
             <h3>Thanks for joining.</h3>
             <p className="modal-subtitle">We'll send thoughtful style notes and Oro updates to your inbox.</p>
             <Btn variant="quiet" className="modal-done-btn" onClick={onClose}>done</Btn>
@@ -80,14 +80,14 @@ export default function WaitlistModal({ onClose }) {
                 <path d="M3.5 9.5L7 13L14.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <p className="modal-eyebrow">Already subscribed</p>
+            <p className="modal-eyebrow">already subscribed</p>
             <h3>You're already on the list.</h3>
             <p className="modal-subtitle">No need to sign up again — you're set to receive the Oro newsletter.</p>
             <Btn variant="quiet" className="modal-done-btn" onClick={onClose}>got it</Btn>
           </div>
         ) : (
           <>
-            <p className="modal-eyebrow">Newsletter</p>
+            <p className="modal-eyebrow">newsletter</p>
             <h3>Get style notes from Oro</h3>
             <p className="modal-subtitle">Wardrobe ideas, product updates, and notes from our team — a few times a month.</p>
 

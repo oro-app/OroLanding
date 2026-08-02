@@ -27,9 +27,8 @@
   border-radius: 999px;
   font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: normal;
   text-decoration: none;
-  text-transform: uppercase;
 }
 
 .newsletter-back-link svg {
@@ -70,8 +69,7 @@
   border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: normal;
 }
 
 .newsletter-article-meta-dot {
@@ -95,8 +93,7 @@
   color: #8a6a21;
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: normal;
 }
 
 .newsletter-article-header h1,
@@ -294,8 +291,7 @@
   color: #8a6a21;
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: normal;
 }
 
 .newsletter-article-cta-text {
@@ -318,9 +314,8 @@
   font-family: inherit;
   font-size: 0.82rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: normal;
   text-decoration: none;
-  text-transform: uppercase;
   cursor: pointer;
   transition: background 0.25s ease, transform 0.25s ease;
 }
