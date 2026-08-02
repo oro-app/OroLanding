@@ -163,14 +163,8 @@ function routeOutputPath(routePath) {
 async function writeRoute(template, seo, appHtml) {
   const output = routeOutputPath(seo.path)
   await fs.mkdir(path.dirname(output), { recursive: true })
-  // react-native-web critical CSS so @oro/ui components render styled pre-hydration.
-  const styled = rnwStyleTag
-    ? withSeo(template, seo, appHtml).replace('</head>', `${rnwStyleTag}</head>`)
-    : withSeo(template, seo, appHtml)
-  await fs.writeFile(output, styled)
+  await fs.writeFile(output, withSeo(template, seo, appHtml))
 }
-
-let rnwStyleTag = ''
 
 async function writeSitemap(newsletters) {
   const now = new Date().toISOString().slice(0, 10)
@@ -241,13 +235,11 @@ async function main() {
   const newsletters = newsletterEntries.filter((newsletter) => newsletter.readable)
   const unreadableNewsletters = newsletterEntries.filter((newsletter) => !newsletter.readable)
   const serverEntry = pathToFileURL(path.join(serverDir, 'entry-server.js')).href
-  const { render, getRnwStyleTag } = await import(serverEntry)
+  const { render } = await import(serverEntry)
 
   for (const type of APP_ROUTE_TYPES) {
     const seo = getSeoForRoute({ type })
-    const appHtml = await render(seo.path)
-    rnwStyleTag = getRnwStyleTag ? getRnwStyleTag() : ''
-    await writeRoute(template, seo, appHtml)
+    await writeRoute(template, seo, await render(seo.path))
   }
 
   for (const type of STATIC_PAGE_TYPES) {

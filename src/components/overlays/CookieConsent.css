@@ -55,6 +55,44 @@
   flex-shrink: 0;
 }
 
+.cookie-consent-accept {
+  padding: 0.78rem 1.2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--purple-deep);
+  background: var(--gold);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(58, 38, 70, 0.18);
+}
+
+.cookie-consent-accept:hover {
+  background: var(--gold-light);
+}
+
+.cookie-consent-decline {
+  padding: 0.78rem 1.2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 232, 0.72);
+  background: transparent;
+  border: 1px solid rgba(245, 240, 232, 0.14);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cookie-consent-decline:hover {
+  border-color: rgba(212, 168, 83, 0.35);
+  color: rgba(245, 240, 232, 0.92);
+}
+
 @media (max-width: 700px) {
   .cookie-consent {
     flex-direction: column;
@@ -63,5 +101,10 @@
 
   .cookie-consent-actions {
     width: 100%;
+  }
+
+  .cookie-consent-accept,
+  .cookie-consent-decline {
+    flex: 1;
   }
 }

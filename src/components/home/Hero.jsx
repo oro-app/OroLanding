@@ -1,4 +1,3 @@
-import UiButton from '../base/UiButton'
 import { trackCtaClick } from '../../lib/analytics'
 import { USER_COUNT } from '../../lib/stats'
 import FakePhone from './FakePhone'
@@ -66,7 +65,10 @@ function HeroLight({ onTryOro }) {
       </div>
 
       <div className="hero-l-cta">
-        <UiButton label="start the conversation" prominence="hero" onPress={onTryOro} />
+        <button type="button" className="hero-cta-primary" onClick={onTryOro}>
+          start the conversation
+          <Arrow size={13} />
+        </button>
         <span className="hero-cta-note">free, ios + android — early access.</span>
       </div>
     </section>
@@ -113,7 +115,10 @@ function HeroDark({ onTryOro }) {
           <img className="hero-d-logo" src="/static/oro-logo.png" alt="oro" />
           <h1 className="hero-d-title">make your wardrobe work for you.</h1>
           <div className="hero-d-ctacol">
-            <UiButton label="start the conversation" prominence="hero" invertOnDark onPress={onTryOro} />
+            <button type="button" className="hero-cta-primary hero-cta-primary--ondark" onClick={onTryOro}>
+              start the conversation
+              <Arrow size={14} />
+            </button>
             <span className="hero-cta-note hero-cta-note--ondark">free, ios + android — early access.</span>
             <span className="hero-cta-proof">join {USER_COUNT} people already getting dressed with oro.</span>
           </div>

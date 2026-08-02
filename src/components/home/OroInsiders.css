@@ -68,6 +68,33 @@
   color: var(--color-fg-faint);
 }
 
+.ins-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 28px;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 19px;
+  letter-spacing: -0.3px;
+}
+.ins-cta:hover {
+  background: var(--oro-ivory);
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1.5px var(--oro-gold), 0 8px 24px rgba(11, 11, 11, 0.35);
+}
+/* Light theme: these CTAs are ink-on-cream — brightening to paper would kill
+   the cream label; step to plum instead (label stays light). */
+:root[data-theme='light'] .ins-cta:hover {
+  background: var(--oro-plum-deep);
+  box-shadow: 0 8px 24px rgba(58, 38, 70, 0.3);
+}
+
+
 /* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
 @media (max-width: 960px) {
   .ins {

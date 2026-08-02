@@ -1,4 +1,3 @@
-import UiButton from '../base/UiButton'
 import './WaitlistModal.css';
 import { useState } from 'react';
 import { trackEvent } from '../../lib/analytics';
@@ -71,7 +70,7 @@ export default function WaitlistModal({ onClose }) {
             <p className="modal-eyebrow">You're subscribed</p>
             <h3>Thanks for joining.</h3>
             <p className="modal-subtitle">We'll send thoughtful style notes and Oro updates to your inbox.</p>
-            <UiButton label="done" onPress={onClose} />
+            <button className="modal-done-btn" onClick={onClose}>Done</button>
           </div>
         ) : alreadyOnList ? (
           <div className="modal-success">
@@ -83,7 +82,7 @@ export default function WaitlistModal({ onClose }) {
             <p className="modal-eyebrow">Already subscribed</p>
             <h3>You're already on the list.</h3>
             <p className="modal-subtitle">No need to sign up again — you're set to receive the Oro newsletter.</p>
-            <UiButton label="got it" onPress={onClose} />
+            <button className="modal-done-btn" onClick={onClose}>Got it</button>
           </div>
         ) : (
           <>

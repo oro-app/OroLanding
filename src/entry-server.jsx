@@ -1,6 +1,5 @@
 import { Writable } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
-import { StyleSheet } from 'react-native'
 import App, { getRouteFromPath } from './App.jsx'
 
 function streamToString(stream) {
@@ -42,12 +41,4 @@ export function render(pathname) {
       },
     )
   })
-}
-
-// react-native-web injects its stylesheet at runtime on the client; for the
-// prerendered HTML we extract it once so @oro/ui components aren't unstyled
-// before hydration. Call after render() — the sheet accumulates as pages render.
-export function getRnwStyleTag() {
-  const sheet = StyleSheet.getSheet()
-  return `<style id="${sheet.id}">${sheet.textContent}</style>`
 }
