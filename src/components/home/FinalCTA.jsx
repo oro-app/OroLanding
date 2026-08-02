@@ -1,3 +1,4 @@
+import { Cta } from '@oro/web'
 import { trackCtaClick } from '../../lib/analytics'
 import { USER_COUNT } from '../../lib/stats'
 
@@ -21,12 +22,12 @@ export default function FinalCTA({ onTryOro }) {
       </h2>
       <p className="fcta-sub">your wardrobe is already full of good outfits.</p>
       <div className="fcta-actions">
-        <button type="button" className="fcta-cta" onClick={handleTryOro}>
+        <Cta size="statement" inverse onClick={handleTryOro}>
           try oro
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
-        </button>
+        </Cta>
         <p className="fcta-proof">join {USER_COUNT} people already getting dressed with oro.</p>
       </div>
     </section>

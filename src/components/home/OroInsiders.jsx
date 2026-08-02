@@ -1,3 +1,4 @@
+import { Cta } from '@oro/web'
 import { trackCtaClick } from '../../lib/analytics'
 
 // Oro insiders — a SHARED section (single component; theme-aware colour, same
@@ -41,12 +42,12 @@ export default function OroInsiders({ onApply }) {
           ))}
         </div>
 
-        <button type="button" className="ins-cta" onClick={handleApply}>
+        <Cta size="statement" inverse onClick={handleApply}>
           join our community
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
-        </button>
+        </Cta>
       </div>
     </section>
   )
