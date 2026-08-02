@@ -1,3 +1,4 @@
+import { Pill } from '@oro/ui'
 import { useState } from 'react'
 import SiteFooter from '../layout/SiteFooter'
 import { CONTACT_FAQS } from '../../lib/faqs'
@@ -99,17 +100,10 @@ function VisitorForm() {
       <div className="ct-chips" role="radiogroup" aria-label="kind of letter">
         <span className="ct-chips-label">kind of letter</span>
         <div className="ct-chips-row">
+          {/* The chips sit on the cream letter card in BOTH themes — use the
+              stock light-surface Pill, not the theme-aware wrapper. */}
           {TOPICS.map((t) => (
-            <button
-              type="button"
-              key={t}
-              className={`ct-chip${topic === t ? ' is-selected' : ''}`}
-              role="radio"
-              aria-checked={topic === t}
-              onClick={() => setTopic(t)}
-            >
-              {t}.
-            </button>
+            <Pill key={t} label={`${t}.`} active={topic === t} onPress={() => setTopic(t)} />
           ))}
         </div>
       </div>

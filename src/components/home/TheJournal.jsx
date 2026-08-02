@@ -1,3 +1,4 @@
+import UiButton from '../base/UiButton'
 import { trackCtaClick } from '../../lib/analytics'
 import { readableNewsletters } from '../../lib/newsletters'
 
@@ -68,10 +69,7 @@ function TheJournalDark({ onSubscribe }) {
             <Arrow size={14} />
           </a>
 
-          <button type="button" className="jr-subscribe" onClick={handleSubscribe}>
-            join the mailing list
-            <Arrow size={12} />
-          </button>
+          <UiButton label="join the mailing list" invertOnDark onPress={handleSubscribe} />
         </div>
       </div>
     </section>

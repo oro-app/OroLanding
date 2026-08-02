@@ -214,28 +214,6 @@
   color: var(--gold);
 }
 
-.modal-done-btn {
-  margin-top: 2rem;
-  width: 100%;
-  padding: 0.875rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  background: transparent;
-  color: rgba(58, 38, 70, 0.68);
-  border: 1px solid rgba(58, 38, 70, 0.16);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
-}
-
-.modal-done-btn:hover {
-  border-color: rgba(238, 186, 43, 0.7);
-  color: var(--purple-deep);
-  background: rgba(255, 255, 255, 0.28);
-}
-
 /* ── CASL consent — implicit on submit. The checkbox was replaced with a
    short inline blurb beneath the email field. Submitting the form counts as
    consent; the form still sends consent: true + consent_timestamp to the API. */
