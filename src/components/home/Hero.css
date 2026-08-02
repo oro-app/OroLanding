@@ -22,16 +22,6 @@
   color: var(--color-accent); /* gold on dark plum, plum on light cream */
 }
 
-.hero-cta-note {
-  font-size: 11px;
-  color: var(--oro-faint);
-  font-weight: 500;
-}
-.hero-cta-note--ondark {
-  font-size: 11.5px;
-  color: var(--color-fg-faint);
-  letter-spacing: 0.2px;
-}
 .hero-cta-proof {
   font-size: 11.5px;
   font-weight: 500;
