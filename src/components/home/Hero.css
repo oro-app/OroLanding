@@ -37,7 +37,6 @@
   font-weight: 500;
   color: var(--color-fg-faint);
   letter-spacing: 0.2px;
-  margin-top: -6px; /* tighten toward the note line above (shares the meta cluster) */
 }
 
 /* ─────────────────────────── LIGHT ─────────────────────────── */
@@ -264,7 +263,7 @@
 .hero-d-rail {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px; /* spacing.md */
 }
 .hero-d-logo {
   height: 375px;
@@ -280,17 +279,23 @@
   align-self: flex-start;
 }
 .hero-d-title {
+  /* headline settings (matches .hero-d-question): tight leading + tracking.
+     more air above (separates from the wordmark), a little below so the
+     statement + CTA read as one group. */
+  /* brand-moment scale (@oro/tokens brandTypography.tagline = 21, the wordmark
+     is the display element here); lineHeights.snug + letterSpacing.tight. */
   margin: 24px 0 0;
   max-width: 240px;
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: 22px;
-  line-height: 1.25;
-  letter-spacing: -0.3px;
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
   color: var(--color-fg);
 }
 .hero-d-title-accent {
   font-style: italic;
+  color: var(--color-accent); /* gold on dark, plum on light — same as .hero-accent */
 }
 .hero-d-sub {
   margin: 0;
@@ -306,7 +311,7 @@
 .hero-d-ctacol {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 24px; /* spacing.lg — the CTA and its social proof are separate beats */
   align-items: flex-start;
 }
 
@@ -344,7 +349,7 @@
     font-size: 28px;
   }
   .hero-d-title {
-    font-size: 20px;
+    font-size: 18px; /* brandTypography.taglineSmall */
   }
   /* Scale the cropped logo down for phones (crop margins recomputed at
      this height — they're linear in the 500px source canvas). */

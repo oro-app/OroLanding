@@ -70,7 +70,6 @@ function HeroLight({ onTryOro }) {
           start the conversation
           <Arrow size={13} />
         </Cta>
-        <span className="hero-cta-note">free, ios + android — early access.</span>
       </div>
     </section>
   )
@@ -114,13 +113,12 @@ function HeroDark({ onTryOro }) {
 
         <aside className="hero-d-rail">
           <img className="hero-d-logo" src="/static/oro-logo.png" alt="oro" />
-          <h1 className="hero-d-title">make your wardrobe work for you.</h1>
+          <h1 className="hero-d-title">make your wardrobe <span className="hero-d-title-accent">work</span> for you.</h1>
           <div className="hero-d-ctacol">
             <Cta size="hero" inverse onClick={onTryOro}>
               start the conversation
               <Arrow size={14} />
             </Cta>
-            <span className="hero-cta-note hero-cta-note--ondark">free, ios + android — early access.</span>
             <span className="hero-cta-proof">join {USER_COUNT} people already getting dressed with oro.</span>
           </div>
         </aside>
