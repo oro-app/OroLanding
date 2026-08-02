@@ -71,8 +71,7 @@
 /* ── Eyebrow ── */
 .modal-eyebrow {
   font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  letter-spacing: normal;
   color: #8a6416;
   opacity: 0.9;
   margin-bottom: 0.75rem;

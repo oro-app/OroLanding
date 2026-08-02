@@ -105,13 +105,13 @@ export default function NewsletterPage({ slug }) {
     return (
       <main className="newsletter-page">
         <section className="newsletter-not-found">
-          <p className="newsletter-page-eyebrow">Newsletter</p>
+          <p className="newsletter-page-eyebrow">newsletter</p>
           <h1>We could not find that note.</h1>
           <a className="newsletter-back-link" href="/from-the-closet">
             <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               <path d="M14 9H4M9 4L4 9l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Back to all notes
+            back to all notes
           </a>
         </section>
         <SiteFooter />
@@ -128,7 +128,7 @@ export default function NewsletterPage({ slug }) {
           <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
             <path d="M14 9H4M9 4L4 9l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          All notes
+          all notes
         </a>
 
         <article className="newsletter-article" ref={articleRef}>
@@ -167,7 +167,7 @@ export default function NewsletterPage({ slug }) {
           </div>
 
           <div className="newsletter-article-cta">
-            <p className="newsletter-article-cta-eyebrow">Try Oro</p>
+            <p className="newsletter-article-cta-eyebrow">try oro</p>
             <p className="newsletter-article-cta-text">
               Download Oro and start creating outfits from your style with your clothes.
             </p>
@@ -186,7 +186,7 @@ export default function NewsletterPage({ slug }) {
                 })
               }}
             >
-              Download on the App Store
+              download on the app store
             </a>
             <a
               className="newsletter-article-cta-button"
@@ -203,7 +203,7 @@ export default function NewsletterPage({ slug }) {
                 })
               }}
             >
-              Get it on Google Play
+              get it on google play
             </a>
           </div>
         </article>

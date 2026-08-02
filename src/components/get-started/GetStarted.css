@@ -98,8 +98,7 @@
 .gs-eyebrow {
   margin: 0 0 20px;
   font-size: 12px;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
+  letter-spacing: normal;
   color: var(--color-accent);
 }
 

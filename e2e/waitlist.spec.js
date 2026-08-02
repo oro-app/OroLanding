@@ -15,7 +15,7 @@ test('successful signup shows the subscribed state', async ({ page, mockWaitlist
   const getBody = await mockWaitlist(201)
   await openModalAndSubmit(page, '  E2E-Test@Example.COM ')
 
-  await expect(page.locator('.modal-success')).toContainText("You're subscribed")
+  await expect(page.locator('.modal-success')).toContainText("you're subscribed")
   await expect(page.locator('.modal-done-btn')).toBeVisible()
 
   // Email is trimmed + lowercased and consent is always sent.

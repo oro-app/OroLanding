@@ -109,8 +109,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: normal;
   color: #EEBA2B;
   background: var(--oro-plum-deep);
   border: none;
