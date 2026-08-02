@@ -304,6 +304,9 @@
   line-height: 1.25;
 }
 
+/* KEPT BESPOKE: fully-rounded (999px) plum pill in the sans face. No Cta size
+   and no Btn variant matches — snapping it to --compact or --quiet would change
+   radius, face and size, i.e. a visible restyle needing sign-off. */
 .newsletter-article-cta-button {
   display: inline-block;
   padding: 0.7rem 1.5rem;

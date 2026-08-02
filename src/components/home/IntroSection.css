@@ -101,6 +101,10 @@
   margin-top: 2.2rem;
 }
 
+/* KEPT BESPOKE (and dead): IntroSection.jsx is imported by nobody — the live
+   hero is home/Hero.jsx. Not a Btn variant either (sans 0.9rem/600, radius 8,
+   gold-on-plum, scale+lift hover); @oro/web has no analogue. Delete the whole
+   orphaned component in a separate cleanup rather than restyling it here. */
 .hero-app-store-btn {
   display: inline-flex;
   align-items: center;

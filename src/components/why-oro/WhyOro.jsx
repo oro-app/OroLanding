@@ -122,6 +122,8 @@ export default function WhyOroPage() {
         ref={ctaRef}
         data-revealed={ctaRevealed ? 'true' : 'false'}
       >
+        {/* Same as HowItWorks: recipe by class name because this is an <a href>
+            and @oro/web Cta only renders a <button>. Raised upstream. */}
         <a className="oro-cta oro-cta--statement oro-cta--inverse wy-cta-btn" href="/try-oro" onClick={handleTryOro}>
           try oro
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

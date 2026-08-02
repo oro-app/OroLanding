@@ -182,7 +182,8 @@
   animation-delay: calc(var(--reveal-i, 0) * 140ms + 320ms);
 }
 
-/* CTA — fade up when in view */
+/* CTA — fade up when in view. Motion-only leftovers for the @oro/web Cta
+   recipe the anchor consumes by class name; not part of the recipe. */
 .wy-cta-btn { opacity: 0; transform: translateY(12px); }
 .wy-cta[data-revealed='true'] .wy-cta-btn {
   animation: wy-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
