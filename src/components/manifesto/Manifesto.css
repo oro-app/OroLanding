@@ -77,7 +77,7 @@
   width: 14px;
   height: 14px;
   border-radius: 999px;
-  background: radial-gradient(circle at 35% 30%, #f3c97a 0%, #d4a853 70%, #6a4a14 100%);
+  background: radial-gradient(circle at 35% 30%, #f3c97a 0%, var(--oro-gold) 70%, #6a4a14 100%);
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.5),
     inset 0 -1px 1px rgba(0, 0, 0, 0.3);
@@ -205,7 +205,7 @@
 
 /* Ivory sticky (item 7) */
 .mn-item--sticky {
-  background: #FFF2D7;
+  background: var(--oro-ivory);
   padding: 22px;
 }
 .mn-item--sticky .mn-belief {

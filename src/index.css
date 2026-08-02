@@ -1,41 +1,13 @@
+/* Palette + type primitives are generated from @oro/tokens — see scripts/generate-tokens.mjs. */
+@import './generated/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg: #FFF9ED;
-  --bg-dark: #0a0a0a;
-  --ink: #141414;
-  --stone: #8a8a86;
-  --sand: #e8e5e0;
-  --cream: #FFF9ED;
-  --purple: #3A2646;
-  --purple-deep: #3A2646;
-  --purple-soft: #4a3560;
-  --gold: #d4a853;
-  --gold-light: #e8c878;
-  --gold-muted: rgba(212, 168, 83, 0.55);
   --site-header-height: calc(48px + 0.8rem + 1px);
   --site-footer-height: 56px;
-
-  /* ── Redesign: raw ORO palette (theme-independent) ── */
-  --oro-cream:      #FFF9ED;
-  --oro-paper:      #FFFDF8;
-  --oro-ivory:      #FFF2D7;
-  --oro-ink:        #0E0B07;
-  --oro-plum-deep:  #3A2646;
-  --oro-plum-soft:  #4A3560;
-  --oro-gold:       #D4A853;
-  --oro-gold-dim:   #B89343;
-  --oro-faint:      rgba(14, 11, 7, 0.5);
-  --oro-faintest:   rgba(14, 11, 7, 0.1);
-  --oro-faint-line: rgba(14, 11, 7, 0.16);
-  --oro-cream-70:   rgba(255, 249, 237, 0.7);
-  --oro-cream-45:   rgba(255, 249, 237, 0.45);
-  --oro-cream-line: rgba(255, 249, 237, 0.18);
-
-  --font-serif: "Fraunces", "Cormorant Garamond", serif;
-  --font-sans:  "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
 
   /* ── Redesign: semantic theme tokens. Default = dark (no flash). ── */
   --color-bg:       var(--oro-plum-deep);

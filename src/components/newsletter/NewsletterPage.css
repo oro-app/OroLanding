@@ -3,7 +3,7 @@
   background:
     radial-gradient(1200px 600px at 80% -10%, rgba(212, 168, 83, 0.18), transparent 60%),
     radial-gradient(900px 500px at -10% 10%, rgba(58, 38, 70, 0.06), transparent 60%),
-    #fff2d7;
+    var(--oro-ivory);
   color: var(--ink);
 }
 
@@ -311,7 +311,7 @@
 .newsletter-article-cta-button {
   display: inline-block;
   padding: 0.7rem 1.5rem;
-  color: #fff2d7;
+  color: var(--oro-ivory);
   background: var(--purple-deep);
   border: 0;
   border-radius: 999px;
@@ -326,7 +326,7 @@
 }
 
 .newsletter-article-cta-button:hover {
-  background: #4a3560;
+  background: var(--oro-plum-soft);
   transform: translateY(-1px);
 }
 
