@@ -126,22 +126,7 @@
   text-align: center;
 }
 
-.wy-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px 28px;
-  background: var(--color-fg);
-  color: var(--color-bg);
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 19px;
-  letter-spacing: -0.3px;
-  transition: opacity 150ms ease;
-}
-.wy-cta-btn:hover { opacity: 0.92; }
+
 
 /* ── ANIMATIONS ────────────────────────────────────────────────────────
    Three reveal moments on this page:

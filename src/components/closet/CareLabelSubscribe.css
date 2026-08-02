@@ -104,21 +104,7 @@
 }
 .cl-input::placeholder { color: rgba(14, 11, 7, 0.4); }
 
-.cl-submit {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 4px 10px 16px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 15px;
-  color: var(--oro-plum-deep);
-  transition: opacity 150ms ease;
-}
-.cl-submit:hover { opacity: 0.75; }
+
 
 .cl-success {
   margin: 0;

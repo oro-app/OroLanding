@@ -28,10 +28,10 @@ export default function CookieConsent() {
         </p>
         <div className="cookie-consent-actions">
           <Btn variant="accent" className="cookie-consent-accept" onClick={() => handleChoice(true)}>
-            Accept
+            accept
           </Btn>
           <Btn variant="ghost" className="cookie-consent-decline" onClick={() => handleChoice(false)}>
-            No thanks
+            no thanks
           </Btn>
         </div>
       </div>
