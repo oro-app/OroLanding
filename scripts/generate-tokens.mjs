@@ -12,7 +12,9 @@ const out = resolve(dirname(fileURLToPath(import.meta.url)), '../src/generated/t
 // palette. Factors chosen to approximate the previous hand-picked values
 // (plum-soft #4A3560, gold-dim #B89343, gold-light #e8c878).
 const plumSoft = shiftLightness(colors.plum, 1.25);
-// Interaction colors (fallbacks until the installed @oro/tokens includes them).
+// Interaction colors. The `??` fallbacks are now vestigial — @oro/tokens ships
+// primaryActionHoverOnDark/focusRing/hoverTint, and each real token value is
+// byte-identical to the fallback it replaced. Kept for resilience.
 const hoverOnDark = colors.primaryActionHoverOnDark ?? shiftLightness(colors.plum, 1.5);
 const focusRing = colors.focusRing ?? withAlpha(colors.gold, 'B3');
 const hoverTint = colors.hoverTint ?? withAlpha(colors.plum, '12');
