@@ -108,7 +108,7 @@ function VisitorForm() {
         </div>
       </div>
 
-      <button type="submit" className="ct-send" disabled={status === 'submitting'}>
+      <button type="submit" className="oro-cta oro-cta--block ct-send" disabled={status === 'submitting'}>
         {status === 'submitting' ? '…sealing.' : (<>seal &amp; send <Arrow /></>)}
       </button>
 
