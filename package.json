@@ -21,7 +21,7 @@
     "@fontsource/inter": "^5.3.0",
     "@mdx-js/rollup": "^3.1.1",
     "@oro/tokens": "github:oro-app/oro-design-system#release/tokens",
-    "@oro/ui": "file:../../../../private/tmp/claude-501/-Users-sunny-oro-workspace-oro-design-system/d82e3876-f080-4253-88e4-b8ac3b788b4b/scratchpad/uipack/oro-ui-4.tgz",
+    "@oro/ui": "github:oro-app/oro-design-system#release/ui",
     "@playwright/test": "^1.62.0",
     "@vercel/node": "^5.7.15",
     "@vitejs/plugin-react": "^4.2.1",
