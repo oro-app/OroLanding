@@ -1,4 +1,3 @@
-import UiButton from '../base/UiButton'
 import { useEffect, useState } from 'react'
 import { setAnalyticsConsent } from '../../lib/analytics.js'
 
@@ -27,8 +26,12 @@ export default function CookieConsent() {
           We use analytics <a href="/cookies" rel="noopener noreferrer">cookies</a> to understand how people find and use our site.
         </p>
         <div className="cookie-consent-actions">
-          <UiButton label="accept" onPress={() => handleChoice(true)} />
-          <UiButton label="no thanks" variant="tertiary" onPress={() => handleChoice(false)} />
+          <button type="button" className="cookie-consent-accept" onClick={() => handleChoice(true)}>
+            Accept
+          </button>
+          <button type="button" className="cookie-consent-decline" onClick={() => handleChoice(false)}>
+            No thanks
+          </button>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { test, expect } from './fixtures'
 
 async function openModalAndSubmit(page, email) {
   await page.goto('/')
-  await page.getByRole('button', { name: 'join the mailing list' }).click()
+  await page.locator('.jr-subscribe').click()
   await expect(page.locator('.modal-backdrop')).toBeVisible()
   await page.locator('.email-input').fill(email)
   await page.locator('button[aria-label="Subscribe to newsletter"]').click()
@@ -16,7 +16,7 @@ test('successful signup shows the subscribed state', async ({ page, mockWaitlist
   await openModalAndSubmit(page, '  E2E-Test@Example.COM ')
 
   await expect(page.locator('.modal-success')).toContainText("You're subscribed")
-  await expect(page.getByRole('button', { name: 'done' })).toBeVisible()
+  await expect(page.locator('.modal-done-btn')).toBeVisible()
 
   // Email is trimmed + lowercased and consent is always sent.
   const body = getBody()
@@ -24,7 +24,7 @@ test('successful signup shows the subscribed state', async ({ page, mockWaitlist
   expect(body.consent).toBe(true)
   expect(body.consent_timestamp).toBeTruthy()
 
-  await page.getByRole('button', { name: 'done' }).click()
+  await page.locator('.modal-done-btn').click()
   await expect(page.locator('.modal-backdrop')).toHaveCount(0)
 })
 
@@ -44,7 +44,7 @@ test('server error shows the retry message', async ({ page, mockWaitlist }) => {
 
 test('close button dismisses the modal', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: 'join the mailing list' }).click()
+  await page.locator('.jr-subscribe').click()
   await expect(page.locator('.modal-backdrop')).toBeVisible()
   await page.locator('.modal-close-x').click()
   await expect(page.locator('.modal-backdrop')).toHaveCount(0)

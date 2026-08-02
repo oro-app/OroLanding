@@ -21,4 +21,3 @@ public/film/*.mp4
 # Playwright
 playwright-report/
 test-results/
-.claude/

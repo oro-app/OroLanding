@@ -298,6 +298,30 @@
   border-bottom-color: var(--color-accent);
 }
 
+/* Primary mailing-list CTA under "see all N issues" — rectangular cream
+   button on the plum surface, matching the .ins-cta pattern used elsewhere
+   on the dark home (OroInsiders) so the two primary CTAs feel like a set. */
+.jr-subscribe {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;        /* on top of the 32px flex gap */
+  padding: 16px 26px;
+  align-self: flex-start;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  transition: opacity 150ms ease;
+}
+.jr-subscribe:hover {
+  opacity: 0.92;
+}
+
 /* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */
 @media (max-width: 960px) {
   .jr--light {
