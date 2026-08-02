@@ -1,6 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import { injectOroFonts } from './lib/oroFonts.js'
+
+injectOroFonts()
 
 const root = document.getElementById('root')
 const app = (

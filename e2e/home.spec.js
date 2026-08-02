@@ -9,6 +9,6 @@ test('home page loads cleanly @smoke', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveTitle(/oro/i)
   // TheJournal is the live newsletter section on the home page.
-  await expect(page.locator('.jr-subscribe')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'join the mailing list' })).toBeVisible()
   expect(consoleErrors).toEqual([])
 })

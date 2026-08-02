@@ -1,3 +1,6 @@
+import { BackButton, Dropdown } from '@oro/ui'
+import UiButton from '../base/UiButton'
+import UiPill from '../base/UiPill'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { trackEvent } from '../../lib/analytics'
 import './GetStarted.css'
@@ -123,7 +126,6 @@ export default function GetStarted() {
     }
   })
   const [code, setCode] = useState('')
-  const [provinceOpen, setProvinceOpen] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -300,9 +302,7 @@ export default function GetStarted() {
       {/* Top bar: back + progress. Only shown on the question screens. */}
       {onQuestion && (
         <div className="gs-bar">
-          <button type="button" className="gs-back" onClick={back} aria-label="go back">
-            ←
-          </button>
+          <BackButton onPress={back} accessibilityLabel="go back" />
           <div className="gs-progress" aria-hidden="true">
             <span
               className="gs-progress-fill"
@@ -364,16 +364,7 @@ export default function GetStarted() {
             >
               <div className="gs-chips">
                 {HEAR_OPTIONS.map((opt) => (
-                  <button
-                    type="button"
-                    key={opt}
-                    className="gs-chip"
-                    data-selected={form.hear.includes(opt)}
-                    aria-pressed={form.hear.includes(opt)}
-                    onClick={() => toggleHear(opt)}
-                  >
-                    {opt}
-                  </button>
+                  <UiPill key={opt} label={opt} active={form.hear.includes(opt)} onPress={() => toggleHear(opt)} />
                 ))}
               </div>
               {form.hear.includes('somewhere else') && (
@@ -401,56 +392,25 @@ export default function GetStarted() {
                   ['CA', 'canada'],
                   ['US', 'united states'],
                 ].map(([code, name]) => (
-                  <button
-                    type="button"
-                    className="gs-chip"
-                    data-selected={form.country === code}
-                    aria-pressed={form.country === code}
-                    onClick={() => {
-                      setForm((current) => ({ ...current, country: code, province: '' }))
-                      setProvinceOpen(false)
-                    }}
+                  <UiPill
                     key={code}
-                  >
-                    {name}
-                  </button>
+                    label={name}
+                    active={form.country === code}
+                    onPress={() => {
+                      setForm((current) => ({ ...current, country: code, province: '' }))
+                    }}
+                  />
                 ))}
               </div>
               {form.country && <div className="gs-province-select">
-                <button
-                  type="button"
-                  className="gs-province-trigger"
-                  aria-expanded={provinceOpen}
-                  aria-controls="gs-province-options"
-                  onClick={() => setProvinceOpen((open) => !open)}
-                  autoFocus
-                >
-                  <span data-placeholder={!form.province}>
-                    {locationOptions.find(([code]) => code === form.province)?.[1]
-                      || (form.country === 'CA' ? 'province or territory' : 'state')}
-                  </span>
-                  <span className="gs-province-caret" aria-hidden="true">⌄</span>
-                </button>
-                {provinceOpen && (
-                  <div className="gs-province-options" id="gs-province-options" role="listbox">
-                    {locationOptions.map(([code, name]) => (
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={form.province === code}
-                        data-selected={form.province === code}
-                        onClick={() => {
-                          set('province')(code)
-                          setProvinceOpen(false)
-                        }}
-                        key={code}
-                      >
-                        <span>{name}</span>
-                        <span className="gs-province-code">{code}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <Dropdown
+                  label={form.country === 'CA' ? 'province or territory' : 'state'}
+                  value={form.province}
+                  options={locationOptions.map(([code, name]) => ({ value: code, label: name, hint: code }))}
+                  onChange={(value) => set('province')(value)}
+                  placeholder={form.country === 'CA' ? 'province or territory' : 'state'}
+                  sheetTitle={form.country === 'CA' ? 'province or territory' : 'state'}
+                />
               </div>}
             </Question>
           )}
@@ -608,9 +568,7 @@ function Welcome({ onStart }) {
       <p className="gs-welcome-sub">
         a few quick questions, then oro texts you and we get to work.
       </p>
-      <button type="button" className="gs-cta" onClick={onStart}>
-        get started.
-      </button>
+      <UiButton label="get started." prominence="hero" invertOnDark onPress={onStart} />
     </div>
   )
 }
@@ -627,15 +585,13 @@ function Question({
       {notice ? <p className="gs-notice" role="status">{notice}</p> : null}
       {error ? <p className="gs-error" role="alert">{error}</p> : null}
       {footer && <div className="gs-consent">{footer}</div>}
-      <button
-        type="button"
-        className="gs-cta"
-        data-loading={loading}
-        onClick={onContinue}
+      <UiButton
+        label={`${cta}${loading ? '…' : '.'}`}
+        prominence="hero"
+        invertOnDark
         disabled={!canContinue || loading}
-      >
-        {cta}{loading ? '…' : '.'}
-      </button>
+        onPress={onContinue}
+      />
     </div>
   )
 }
