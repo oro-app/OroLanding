@@ -59,9 +59,9 @@
 }
 
 .newsletter-icon-button:hover:not(:disabled) {
-  color: var(--purple-deep);
-  background: var(--gold);
-  border-color: var(--gold);
+  color: var(--oro-plum-deep);
+  background: var(--oro-gold);
+  border-color: var(--oro-gold);
 }
 
 .newsletter-icon-button:disabled {
@@ -174,7 +174,7 @@
 
 .newsletter-dot.is-active {
   width: 24px;
-  background: var(--gold);
+  background: var(--oro-gold);
 }
 
 .newsletter-controls-mobile {

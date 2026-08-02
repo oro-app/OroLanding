@@ -34,7 +34,7 @@
   font-size: 1.55rem;
   font-weight: 500;
   line-height: 1.1;
-  color: var(--purple-deep);
+  color: var(--oro-plum-deep);
 }
 
 .newsletter-recs-list {
@@ -112,7 +112,7 @@
   font-size: 1.1rem;
   font-weight: 500;
   line-height: 1.2;
-  color: var(--purple-deep);
+  color: var(--oro-plum-deep);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -131,7 +131,7 @@
   align-self: flex-start;
   margin-top: 0.25rem;
   padding: 0.55rem 0.25rem;
-  color: var(--purple-deep);
+  color: var(--oro-plum-deep);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: normal;

@@ -4,7 +4,7 @@
     radial-gradient(1200px 600px at 80% -10%, rgba(212, 168, 83, 0.18), transparent 60%),
     radial-gradient(900px 500px at -10% 10%, rgba(58, 38, 70, 0.06), transparent 60%),
     var(--oro-ivory);
-  color: var(--ink);
+  color: var(--oro-ink);
 }
 
 .newsletter-page-shell {
@@ -21,7 +21,7 @@
   gap: 0.45rem;
   margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
   padding: 0.45rem 0.7rem 0.45rem 0.5rem;
-  color: var(--purple-deep);
+  color: var(--oro-plum-deep);
   background: rgba(58, 38, 70, 0.05);
   border: 1px solid rgba(58, 38, 70, 0.1);
   border-radius: 999px;
@@ -105,7 +105,7 @@
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.005em;
-  color: var(--ink);
+  color: var(--oro-ink);
 }
 
 .newsletter-article-summary {
@@ -175,14 +175,14 @@
   font-size: 4.2rem;
   font-weight: 500;
   line-height: 0.85;
-  color: var(--purple-deep);
+  color: var(--oro-plum-deep);
 }
 
 .newsletter-mdx h2,
 .newsletter-mdx h3 {
   font-family: var(--font-serif);
   font-weight: 500;
-  color: var(--ink);
+  color: var(--oro-ink);
   line-height: 1.15;
   letter-spacing: -0.005em;
 }
@@ -198,7 +198,7 @@
   width: 36px;
   height: 2px;
   margin-bottom: 1rem;
-  background: var(--gold);
+  background: var(--oro-gold);
   border-radius: 2px;
 }
 
@@ -212,7 +212,7 @@
 }
 
 .newsletter-mdx a {
-  color: var(--purple-deep);
+  color: var(--oro-plum-deep);
   text-decoration-color: rgba(212, 168, 83, 0.7);
   text-decoration-thickness: 1.5px;
   text-underline-offset: 4px;
@@ -221,7 +221,7 @@
 
 .newsletter-mdx a:hover {
   color: #8a6a21;
-  text-decoration-color: var(--gold);
+  text-decoration-color: var(--oro-gold);
 }
 
 .newsletter-mdx ul,
@@ -235,7 +235,7 @@
 }
 
 .newsletter-mdx li::marker {
-  color: var(--gold);
+  color: var(--oro-gold);
 }
 
 .newsletter-mdx blockquote {
@@ -246,7 +246,7 @@
   font-size: 1.4rem;
   font-style: italic;
   line-height: 1.45;
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid var(--oro-gold);
 }
 
 .newsletter-mdx blockquote p {
@@ -297,7 +297,7 @@
 .newsletter-article-cta-text {
   margin: 0 auto 1.1rem;
   max-width: 420px;
-  color: var(--purple-deep);
+  color: var(--oro-plum-deep);
   font-family: var(--font-serif);
   font-size: 1.4rem;
   font-weight: 400;
@@ -311,7 +311,7 @@
   display: inline-block;
   padding: 0.7rem 1.5rem;
   color: var(--oro-ivory);
-  background: var(--purple-deep);
+  background: var(--oro-plum-deep);
   border: 0;
   border-radius: 999px;
   font-family: inherit;
