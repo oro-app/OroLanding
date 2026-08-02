@@ -17,6 +17,12 @@
   --oro-cream-45:   #FFF9ED73;
   --oro-cream-line: #FFF9ED2E;
 
+  /* ── Interaction (hover/focus — web only) ── */
+  --oro-hover:         #33213e;
+  --oro-hover-on-dark: #573969;
+  --oro-hover-tint:    #3A264612;
+  --oro-focus-ring:    #D4A853B3;
+
   /* ── Type ── */
   --font-serif: "Fraunces", "Cormorant Garamond", serif;
   --font-sans:  "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
