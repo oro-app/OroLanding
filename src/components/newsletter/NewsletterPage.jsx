@@ -186,7 +186,7 @@ export default function NewsletterPage({ slug }) {
                 })
               }}
             >
-              Download on the App Store
+              download on the app store
             </a>
             <a
               className="newsletter-article-cta-button"
@@ -203,7 +203,7 @@ export default function NewsletterPage({ slug }) {
                 })
               }}
             >
-              Get it on Google Play
+              get it on google play
             </a>
           </div>
         </article>
