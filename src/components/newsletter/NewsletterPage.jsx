@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Cta } from '@oro/web'
 import { getNewsletterBySlug } from '../../lib/newsletters'
 import NewsletterRecommendations from './NewsletterRecommendations'
 import SiteFooter from '../layout/SiteFooter'
@@ -171,10 +172,10 @@ export default function NewsletterPage({ slug }) {
             <p className="newsletter-article-cta-text">
               Download Oro and start creating outfits from your style with your clothes.
             </p>
-            <a
-              className="newsletter-article-cta-button"
+            <Cta
+              size="pill"
               href={APP_STORE_URL}
-
+              target="_blank"
               rel="noopener noreferrer"
               onClick={() => {
                 trackCtaClick('app_store_click', {
@@ -187,9 +188,9 @@ export default function NewsletterPage({ slug }) {
               }}
             >
               download on the app store
-            </a>
-            <a
-              className="newsletter-article-cta-button"
+            </Cta>
+            <Cta
+              size="pill"
               href={PLAY_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -204,7 +205,7 @@ export default function NewsletterPage({ slug }) {
               }}
             >
               get it on google play
-            </a>
+            </Cta>
           </div>
         </article>
       </div>
