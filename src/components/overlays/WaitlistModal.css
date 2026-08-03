@@ -182,7 +182,7 @@
 .modal-error {
   margin-top: 0.75rem;
   font-size: 0.78rem;
-  color: #e07070;
+  color: var(--oro-danger);
   letter-spacing: 0.01em;
 }
 

@@ -17,6 +17,13 @@
   --oro-cream-45:   #FFF9ED73;
   --oro-cream-line: #FFF9ED2E;
 
+  /* ── Danger / error ──
+   * Sourced from the semantic dangerText role rather than the raw rose hex,
+   * so a future change to what "danger text" means follows through here. */
+  --oro-danger:        #A84E5C;
+  --oro-danger-surface:#A84E5C14;
+  --oro-danger-border: #A84E5C52;
+
   /* ── Interaction (hover/focus — web only) ── */
   --oro-hover:         #33213e;
   --oro-hover-on-dark: #573969;
