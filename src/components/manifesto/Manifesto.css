@@ -138,7 +138,7 @@
 
 /* Polaroid (items 1 + 5) */
 .mn-item--polaroid {
-  background: #FFFDF6;
+  background: var(--oro-paper);
   padding: 14px 14px 44px;
 }
 .mn-polaroid-photo {
@@ -172,7 +172,7 @@
 
 /* Index card (item 2) */
 .mn-item--index {
-  background: #FFFDF6;
+  background: var(--oro-paper);
   padding: 24px 26px;
   border-top: 4px solid var(--oro-plum-deep);
 }
@@ -186,7 +186,7 @@
 
 /* Editorial photo (item 4) */
 .mn-item--photo {
-  background: #FFFDF6;
+  background: var(--oro-paper);
   padding: 14px;
 }
 .mn-photo-inner {
@@ -199,7 +199,7 @@
 
 /* Long taped note (item 6) */
 .mn-item--taped {
-  background: #FFFDF6;
+  background: var(--oro-paper);
   padding: 20px 26px;
 }
 
