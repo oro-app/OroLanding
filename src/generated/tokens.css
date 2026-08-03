@@ -10,6 +10,10 @@
   --oro-plum-soft:  #493058;
   --oro-gold:       #D4A853;
   --oro-gold-dim:   #bd8d2f;
+  /* Small gold text on a light ground. NOT a ramp step: the gold ramp sheds
+   * chroma as it darkens, so no step both clears WCAG AA and still reads gold.
+   * This is solved for contrast in OKLCh upstream (oro-design-system #22). */
+  --oro-accent-text:#8D691D;
   --oro-faint:      #0B0B0B80;
   --oro-faintest:   #0B0B0B1A;
   --oro-faint-line: #0B0B0B29;

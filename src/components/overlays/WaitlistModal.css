@@ -72,7 +72,7 @@
 .modal-eyebrow {
   font-size: 0.65rem;
   letter-spacing: normal;
-  color: #8a6416;
+  color: var(--oro-accent-text);
   opacity: 0.9;
   margin-bottom: 0.75rem;
 }
@@ -228,7 +228,7 @@
 }
 
 .consent-text a {
-  color: #8a6416;
+  color: var(--oro-accent-text);
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color 0.2s ease;
