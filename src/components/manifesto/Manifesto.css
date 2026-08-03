@@ -179,7 +179,7 @@
 
 /* Torn page (item 3) */
 .mn-item--torn {
-  background: #FFF7E0;
+  background: var(--oro-ivory);
   padding: 28px 24px 24px;
   clip-path: polygon(0 4%, 4% 0, 96% 2%, 100% 8%, 100% 96%, 95% 100%, 4% 98%, 2% 92%);
 }
