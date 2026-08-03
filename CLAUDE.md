@@ -29,6 +29,22 @@ CI: `.github/workflows/e2e.yml` triggers on Vercel's `deployment_status` events 
 
 **Lockfile:** `package-lock.json` is the only lockfile — always use `npm`. (A stale `pnpm-lock.yaml` used to coexist and made Vercel resolve the package manager to pnpm, breaking builds on any dependency change; it was removed. Don't reintroduce it or run `pnpm install` here.)
 
+**Design-system deps (`@oro/tokens`, `@oro/ui`, `@oro/web`) — two traps, both hit for real:**
+
+They install from `release/*` **git branches** (`github:oro-app/oro-design-system#release/tokens|ui|web`), which the design system force-pushes on every merge to its `main`.
+
+1. **npm pins git deps.** It resolves a branch to a commit SHA once and never moves it. Merging a design-system PR therefore changes *nothing* here until someone re-runs the install. Confirm a bump actually landed by diffing the `resolved` SHAs in `package-lock.json` — don't assume `npm install` did anything.
+2. **`npm install` rewrites those URLs to SSH.** It silently converts `git+https://github.com/...` to `git+ssh://git@github.com/...`. **Vercel has no SSH key and fails at the install step.** After any bump:
+   ```bash
+   grep -c 'git+ssh' package-lock.json     # must be 0
+   sed -i '' 's|git+ssh://git@github.com/|git+https://github.com/|g' package-lock.json
+   rm -rf node_modules && npm ci           # prove https resolves and the lockfile is stable
+   ```
+
+After any bump, re-run `npm run gen:tokens` and **read the diff to `src/generated/tokens.css`**. It is usually empty; when it isn't, that is a real upstream change reaching production. One bump moved `--oro-focus-ring` and changed the site's global `:focus-visible` outline — which turned out to be a WCAG fix, but it shipped as a surprise.
+
+**Colour vars:** hand-written CSS uses the canonical `--oro-*` variables from `src/generated/tokens.css`. The old unprefixed aliases (`--purple`, `--ink`, `--gold`, `--stone`, …) have been retired — don't reintroduce them. Note the deliberate naming shift: **`--oro-cream` is token `paper` (#FFF9ED), `--oro-paper` is token `white` (#FFFDF8), `--oro-ivory` is token `cream` (#FFF2D7)**. Transposing those is the easiest way to silently restyle the site.
+
 ## Architecture
 
 React 18 + Vite + TailwindCSS marketing site for **buildingoro.ca**, plus Vercel serverless functions for waitlist signup, contact form, and newsletter unsubscribes. Client-rendered SPA with a build-time SSR prerender pass for SEO (see Commands).
