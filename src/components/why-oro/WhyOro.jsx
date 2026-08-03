@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Cta } from '@oro/web'
 import SiteFooter from '../layout/SiteFooter'
 import ProductFaq from '../marketing/ProductFaq'
 import { trackCtaClick } from '../../lib/analytics'
@@ -122,14 +123,14 @@ export default function WhyOroPage() {
         ref={ctaRef}
         data-revealed={ctaRevealed ? 'true' : 'false'}
       >
-        {/* Same as HowItWorks: recipe by class name because this is an <a href>
-            and @oro/web Cta only renders a <button>. Raised upstream. */}
-        <a className="oro-cta oro-cta--statement oro-cta--inverse wy-cta-btn" href="/try-oro" onClick={handleTryOro}>
+        {/* Same as HowItWorks: Cta renders a real <a> when given an href.
+            .wy-cta-btn stays — it is the reveal animation, not styling. */}
+        <Cta size="statement" inverse className="wy-cta-btn" href="/try-oro" onClick={handleTryOro}>
           try oro
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
-        </a>
+        </Cta>
       </section>
 
       <ProductFaq />
