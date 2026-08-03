@@ -1,6 +1,12 @@
 /* AppStoreButtons — two bespoke store buttons (filled App Store + outlined
    Google Play). Theme-aware via --color-* tokens so the pair works on dark
-   plum (default) and would survive a future light surface. */
+   plum (default) and would survive a future light surface.
+
+   KEPT BESPOKE deliberately: a two-line label stack (.-small over a serif-italic
+   .-name) plus a filled/outlined pair. @oro/web has no analogue and this is a
+   platform-badge convention, not site chrome, so it should not track the button
+   system. Note .appstore-btn-small's letter-spacing: 0.4px is the sanctioned
+   `wide` optical nudge with NO uppercase — leave it alone. */
 
 .appstore-buttons {
   display: flex;

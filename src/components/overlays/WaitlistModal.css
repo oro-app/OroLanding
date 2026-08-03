@@ -83,7 +83,7 @@
   font-size: 2rem;
   font-weight: 300;
   line-height: 1.2;
-  color: var(--ink);
+  color: var(--oro-ink);
   margin: 0 0 0.5rem;
   letter-spacing: -0.01em;
 }
@@ -119,7 +119,7 @@
   outline: none;
   padding: 0.95rem 1rem;
   font-size: 0.88rem;
-  color: var(--ink);
+  color: var(--oro-ink);
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   letter-spacing: 0.01em;
 }
@@ -128,12 +128,15 @@
   color: rgba(58, 38, 70, 0.34);
 }
 
+/* KEPT BESPOKE: 38x38 icon-only submit affordance inside the input shell, not
+   a labelled CTA. @oro/web has no icon-button recipe; forcing Btn/Cta would be
+   a visible restyle. */
 .email-submit-btn {
   flex-shrink: 0;
   margin: 5px;
   width: 38px;
   height: 38px;
-  background: var(--purple-deep);
+  background: var(--oro-plum-deep);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -141,7 +144,7 @@
   align-items: center;
   justify-content: center;
   transition: background 0.2s ease, transform 0.15s ease;
-  color: var(--gold);
+  color: var(--oro-gold);
 }
 
 .email-submit-btn:hover:not(:disabled) {
@@ -166,7 +169,7 @@
   width: 16px;
   height: 16px;
   border: 2px solid rgba(238, 186, 43, 0.25);
-  border-top-color: var(--gold);
+  border-top-color: var(--oro-gold);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -210,7 +213,7 @@
 }
 
 .success-check svg {
-  color: var(--gold);
+  color: var(--oro-gold);
 }
 
 /* ── CASL consent — implicit on submit. The checkbox was replaced with a
@@ -232,7 +235,7 @@
 }
 
 .consent-text a:hover {
-  color: var(--purple-deep);
+  color: var(--oro-plum-deep);
 }
 
 @media (max-width: 480px) {

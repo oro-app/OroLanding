@@ -1,4 +1,4 @@
-import { Chip } from '@oro/web'
+import { Chip, Cta } from '@oro/web'
 import { useState } from 'react'
 import SiteFooter from '../layout/SiteFooter'
 import { CONTACT_FAQS } from '../../lib/faqs'
@@ -108,9 +108,9 @@ function VisitorForm() {
         </div>
       </div>
 
-      <button type="submit" className="oro-cta oro-cta--block ct-send" disabled={status === 'submitting'}>
+      <Cta size="block" type="submit" className="ct-send" disabled={status === 'submitting'}>
         {status === 'submitting' ? '…sealing.' : (<>seal &amp; send <Arrow /></>)}
-      </button>
+      </Cta>
 
       {status === 'error' && (
         <p className="ct-error">

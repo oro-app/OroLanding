@@ -198,6 +198,9 @@
   letter-spacing: -2.4px; line-height: 0.9;
 }
 .op-stepper-controls { display: flex; align-items: center; gap: 14px; }
+/* KEPT BESPOKE: everything below renders INSIDE the fake phone mockup. These
+   are an illustration of the product UI, not site chrome, and must not track
+   the landing's button system. */
 .op-stepper-btn {
   width: 46px; height: 46px; border-radius: 50%;
   background: var(--oro-paper);

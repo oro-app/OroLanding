@@ -37,6 +37,9 @@ export default function HowItWorks() {
       <HorizontalSteps steps={STEPS} />
 
       <section className="hiw-cta">
+        {/* Consumes the @oro/web --statement/--inverse recipe by class name, not
+            <Cta>: this is a real crawlable <a href> and Cta renders a hard-coded
+            <button> with no as/href escape hatch. Raised upstream (polymorphic Cta). */}
         <a className="oro-cta oro-cta--statement oro-cta--inverse hiw-cta-btn" href="/try-oro" onClick={handleTryOro}>
           try oro
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
