@@ -63,7 +63,7 @@
   gap: 0.55rem;
   margin: 0 0 1.15rem;
   padding: 0.4rem 0.85rem;
-  color: #8a6a21;
+  color: var(--oro-accent-text);
   background: rgba(212, 168, 83, 0.14);
   border: 1px solid rgba(212, 168, 83, 0.35);
   border-radius: 999px;
@@ -90,7 +90,7 @@
 
 .newsletter-page-eyebrow {
   margin: 0 0 0.75rem;
-  color: #8a6a21;
+  color: var(--oro-accent-text);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: normal;
@@ -220,7 +220,7 @@
 }
 
 .newsletter-mdx a:hover {
-  color: #8a6a21;
+  color: var(--oro-accent-text);
   text-decoration-color: var(--oro-gold);
 }
 
@@ -288,7 +288,7 @@
 
 .newsletter-article-cta-eyebrow {
   margin: 0 0 0.4rem;
-  color: #8a6a21;
+  color: var(--oro-accent-text);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: normal;

@@ -22,7 +22,7 @@
 }
 
 .newsletter-recs-eyebrow {
-  color: #8a6a21;
+  color: var(--oro-accent-text);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: normal;
@@ -96,7 +96,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.3rem;
-  color: #8a6a21;
+  color: var(--oro-accent-text);
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: normal;
@@ -121,7 +121,7 @@
 }
 
 .newsletter-recs-card:hover .newsletter-recs-card-title {
-  color: #8a6a21;
+  color: var(--oro-accent-text);
 }
 
 .newsletter-recs-all {
@@ -143,7 +143,7 @@
 }
 
 .newsletter-recs-all:hover {
-  color: #8a6a21;
+  color: var(--oro-accent-text);
 }
 
 .newsletter-recs-all:hover svg {
