@@ -14,6 +14,13 @@
    * chroma as it darkens, so no step both clears WCAG AA and still reads gold.
    * This is solved for contrast in OKLCh upstream (oro-design-system #22). */
   --oro-accent-text:#8D691D;
+  /* Long-form editorial type. Read from the semantic tier, not the deprecated
+   * colors shim — the shim is frozen at its pre-split key set by design, and
+   * these roles postdate it. Warm on purpose: ink is achromatic and the neutral
+   * ramp floors at C* 1.5, so neither can express an editorial near-black
+   * (oro-design-system #29). */
+  --oro-text-editorial:      #25211C;
+  --oro-text-editorial-muted:#59554D;
   --oro-faint:      #0B0B0B80;
   --oro-faintest:   #0B0B0B1A;
   --oro-faint-line: #0B0B0B29;

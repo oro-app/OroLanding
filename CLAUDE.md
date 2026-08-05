@@ -41,6 +41,8 @@ They install from `release/*` **git branches** (`github:oro-app/oro-design-syste
    rm -rf node_modules && npm ci           # prove https resolves and the lockfile is stable
    ```
 
+**`npm run build` regenerates `src/generated/tokens.css` from whatever is in `node_modules` — even if that is stale.** `gen:tokens` runs as the first build stage, so building in a checkout whose install predates the current lockfile silently *rewrites the committed file with old values* and leaves your tree dirty. It looks like an unrelated regression appearing from nowhere. If `git status` shows `tokens.css` modified after a build you did not intend to change tokens with, run `npm ci` and rebuild — do not commit it.
+
 After any bump, re-run `npm run gen:tokens` and **read the diff to `src/generated/tokens.css`**. It is usually empty; when it isn't, that is a real upstream change reaching production. One bump moved `--oro-focus-ring` and changed the site's global `:focus-visible` outline — which turned out to be a WCAG fix, but it shipped as a surprise.
 
 **Colour vars:** hand-written CSS uses the canonical `--oro-*` variables from `src/generated/tokens.css`. The old unprefixed aliases (`--purple`, `--ink`, `--gold`, `--stone`, …) have been retired — don't reintroduce them. Note the deliberate naming shift: **`--oro-cream` is token `paper` (#FFF9ED), `--oro-paper` is token `white` (#FFFDF8), `--oro-ivory` is token `cream` (#FFF2D7)**. Transposing those is the easiest way to silently restyle the site.
