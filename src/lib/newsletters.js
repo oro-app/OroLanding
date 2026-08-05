@@ -69,7 +69,7 @@ export const newsletters = Object.entries(newsletterModules)
       published: meta.published,
       title: meta.title || titleFromSlug(slug),
       italicTitle: meta.italicTitle || '',
-      tag: meta.tag || 'Oro Insiders',
+      tag: meta.tag || 'oro insiders',
       date: meta.date || '',
       releaseAt: meta.releaseAt || '',
       dateLabel: formatNewsletterDate(meta.date),

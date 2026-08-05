@@ -96,7 +96,7 @@ async function getNewsletterEntries() {
       slug,
       href: `/newsletter/${slug}`,
       title: meta.title || slug.replace(/-/g, ' '),
-      tag: meta.tag || 'Oro Insiders',
+      tag: meta.tag || 'oro insiders',
       date: meta.date || '',
       dateLabel: formatNewsletterDate(meta.date),
       image: meta.image || DEFAULT_IMAGE,
