@@ -358,6 +358,7 @@ export default function GetStarted() {
           {view === 'hear' && (
             <Question
               label="how'd you hear about oro?"
+              hint="select all that apply."
               canContinue={canContinue}
               onContinue={advance}
             >
