@@ -1,4 +1,4 @@
-import { BackButton, Dropdown } from '@oro/ui'
+import { BackButton } from '@oro/ui'
 import { Chip, Cta } from '@oro/web'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { trackEvent } from '../../lib/analytics'
@@ -385,7 +385,7 @@ export default function GetStarted() {
           {view === 'province' && (
             <Question
               label="where are you located?"
-              hint="choose your country, then your region."
+              hint="coming to other countries soon."
               canContinue={canContinue}
               onContinue={advance}
             >
@@ -406,15 +406,14 @@ export default function GetStarted() {
                   </Chip>
                 ))}
               </div>
-              {form.country && <div className="gs-province-select">
-                <Dropdown
+              {form.country && (
+                <Select
                   label={form.country === 'CA' ? 'province or territory' : 'state'}
                   value={form.province}
-                  options={locationOptions.map(([code, name]) => ({ value: code, label: name, hint: code }))}
-                  onChange={(value) => set('province')(value)}
-                  sheetTitle={form.country === 'CA' ? 'province or territory' : 'state'}
+                  options={locationOptions}
+                  onChange={set('province')}
                 />
-              </div>}
+              )}
             </Question>
           )}
 
@@ -640,6 +639,35 @@ function TextField({ value, onChange, onEnter, autoFocus, className = 'gs-input'
       }}
       {...rest}
     />
+  )
+}
+
+// A native <select>: the options popup anchors to the control (not a bottom
+// sheet) and the OS supplies keyboard + screen-reader behaviour. `required`
+// pairs with the :invalid rule so the empty placeholder renders as muted.
+function Select({ label, value, options, onChange }) {
+  return (
+    <label className="gs-select-field">
+      <span className="gs-select-label">{label}</span>
+      <select
+        className="gs-select"
+        value={value}
+        required
+        onChange={(e) => onChange(e.target.value)}
+      >
+        <option value="" disabled>
+          select…
+        </option>
+        {options.map(([code, name]) => (
+          <option key={code} value={code}>
+            {name}
+          </option>
+        ))}
+      </select>
+      <svg className="gs-select-chevron" viewBox="0 0 16 16" aria-hidden="true">
+        <polyline points="3,6 8,11 13,6" />
+      </svg>
+    </label>
   )
 }
 
