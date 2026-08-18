@@ -323,10 +323,14 @@
 .gs-cta { margin-top: 48px; }
 
 /* ── select ───────────────────────────────────────────────────────────── */
-/* A real <select>: the native popup anchors to the control, and the OS gives
-   us keyboard + a11y for free. Styled as an .gs-input sibling (transparent,
-   bottom rule, serif) so it reads as part of the form, not a boxed widget. */
-.gs-select-field { position: relative; width: 100%; }
+/* An anchored listbox, not a native <select>: macOS paints a <select>'s popup
+   in the control's own font, and this trigger is 28px, which turned the option
+   list into a full-page overlay. The trigger keeps the .gs-input treatment
+   (transparent, bottom rule, serif); the panel is ours. */
+.gs-select-field {
+  position: relative;
+  width: 100%;
+}
 .gs-select-label {
   display: block;
   margin-bottom: 2px;
@@ -334,43 +338,78 @@
   letter-spacing: 0.1px;
   color: var(--color-fg-faint);
 }
-.gs-select {
+.gs-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
-  appearance: none;
-  -webkit-appearance: none;
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--color-fg-line);
   border-radius: 0;
-  padding: 14px 38px 14px 2px;
+  padding: 14px 2px;
   color: var(--color-fg);
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: 28px;
   letter-spacing: -0.4px;
+  text-align: left;
   outline: none;
   cursor: pointer;
   transition: border-color 0.25s ease;
 }
-/* The UA focus ring is a full box, which fights the bottom-rule field. Move
-   the affordance onto the rule, matching .gs-input. */
-.gs-select:focus,
-.gs-select:focus-visible {
+/* The UA ring is a full box, which fights the bottom-rule field. The accent
+   rule is the focus affordance, matching .gs-input. */
+.gs-select-trigger:focus,
+.gs-select-trigger:focus-visible,
+.gs-select-trigger[aria-expanded='true'] {
   outline: none;
   border-bottom-color: var(--color-accent);
 }
-.gs-select:invalid { color: var(--color-fg-faint); }
-/* The options list is painted by the OS, which does not inherit the page
-   theme — set both so dark-mode users don't get white-on-white. */
-.gs-select option { background: var(--color-bg); color: var(--color-fg); }
+.gs-select-placeholder { color: var(--color-fg-faint); opacity: 0.55; }
 .gs-select-chevron {
-  position: absolute;
-  right: 4px;
-  bottom: 20px;
+  flex: none;
   width: 16px;
   height: 16px;
-  pointer-events: none;
   stroke: var(--color-fg-faint);
   fill: none;
   stroke-width: 2;
+  transition: transform 0.2s ease;
+}
+.gs-select-trigger[aria-expanded='true'] .gs-select-chevron { transform: rotate(180deg); }
+
+/* The panel: anchored under the rule, full field width, options at a reading
+   size rather than the trigger's display size. */
+.gs-select-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 264px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--color-bg);
+  border: 1px solid var(--color-fg-line);
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.28);
+}
+.gs-select-option {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+}
+.gs-select-option.is-active { background: var(--color-fg-line); }
+.gs-select-option.is-selected { color: var(--color-accent); }
+.gs-select-list.is-above {
+  top: auto;
+  bottom: calc(100% + 6px);
+  box-shadow: 0 -18px 40px rgb(0 0 0 / 0.28);
 }

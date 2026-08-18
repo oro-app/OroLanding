@@ -645,29 +645,144 @@ function TextField({ value, onChange, onEnter, autoFocus, className = 'gs-input'
 // A native <select>: the options popup anchors to the control (not a bottom
 // sheet) and the OS supplies keyboard + screen-reader behaviour. `required`
 // pairs with the :invalid rule so the empty placeholder renders as muted.
+// Kept in sync with .gs-select-list max-height in GetStarted.css — the flip
+// decision needs the panel's height before it is rendered.
+const PANEL_MAX_HEIGHT = 264
+
+// An anchored listbox. A native <select> was tried first and rejected: macOS
+// draws its popup in the *control's* font, so the 28px editorial trigger blew
+// the option list up into a full-page overlay. Owning the panel keeps the
+// trigger large and the options at a sane reading size — and unlike the OS
+// menu, it can actually be seen and tested.
 function Select({ label, value, options, onChange }) {
+  const [open, setOpen] = useState(false)
+  const [dropUp, setDropUp] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const wrapRef = useRef(null)
+  const triggerRef = useRef(null)
+  const listRef = useRef(null)
+
+  const selectedIndex = options.findIndex(([code]) => code === value)
+  const selectedLabel = selectedIndex >= 0 ? options[selectedIndex][1] : 'select…'
+
+  // Pointer-down rather than click: closing on click would swallow the press
+  // that opened a different control.
+  useEffect(() => {
+    if (!open) return undefined
+    const onDown = (e) => {
+      if (!wrapRef.current?.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+  }, [open])
+
+  // Keep the highlighted row in view when arrowing past the scroll edge.
+  useEffect(() => {
+    if (!open || activeIndex < 0) return
+    listRef.current?.children[activeIndex]?.scrollIntoView({ block: 'nearest' })
+  }, [open, activeIndex])
+
+  // This field sits low on the screen, so a panel that always drops down gets
+  // clipped by the viewport. Flip above when there isn't room below and there
+  // is more room above.
+  const openWith = (index) => {
+    const rect = wrapRef.current?.getBoundingClientRect()
+    if (rect) {
+      const below = window.innerHeight - rect.bottom
+      setDropUp(below < PANEL_MAX_HEIGHT + 16 && rect.top > below)
+    }
+    setActiveIndex(index)
+    setOpen(true)
+  }
+
+  const commit = (index) => {
+    onChange(options[index][0])
+    setOpen(false)
+    triggerRef.current?.focus()
+  }
+
+  const onKeyDown = (e) => {
+    if (!open) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        openWith(selectedIndex >= 0 ? selectedIndex : 0)
+      }
+      return
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      setOpen(false)
+      triggerRef.current?.focus()
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setActiveIndex((i) => Math.min(i + 1, options.length - 1))
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActiveIndex((i) => Math.max(i - 1, 0))
+    } else if (e.key === 'Home') {
+      e.preventDefault()
+      setActiveIndex(0)
+    } else if (e.key === 'End') {
+      e.preventDefault()
+      setActiveIndex(options.length - 1)
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      if (activeIndex >= 0) commit(activeIndex)
+    }
+  }
+
   return (
-    <label className="gs-select-field">
-      <span className="gs-select-label">{label}</span>
-      <select
-        className="gs-select"
-        value={value}
-        required
-        onChange={(e) => onChange(e.target.value)}
+    <div className="gs-select-field" ref={wrapRef}>
+      <span className="gs-select-label" id={`gs-select-label-${label}`}>
+        {label}
+      </span>
+      <button
+        type="button"
+        ref={triggerRef}
+        className="gs-select-trigger"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-labelledby={`gs-select-label-${label}`}
+        onClick={() => (open ? setOpen(false) : openWith(selectedIndex >= 0 ? selectedIndex : 0))}
+        onKeyDown={onKeyDown}
       >
-        <option value="" disabled>
-          select…
-        </option>
-        {options.map(([code, name]) => (
-          <option key={code} value={code}>
-            {name}
-          </option>
-        ))}
-      </select>
-      <svg className="gs-select-chevron" viewBox="0 0 16 16" aria-hidden="true">
-        <polyline points="3,6 8,11 13,6" />
-      </svg>
-    </label>
+        <span className={selectedIndex >= 0 ? undefined : 'gs-select-placeholder'}>
+          {selectedLabel}
+        </span>
+        <svg className="gs-select-chevron" viewBox="0 0 16 16" aria-hidden="true">
+          <polyline points="3,6 8,11 13,6" />
+        </svg>
+      </button>
+      {open && (
+        <ul
+          className={`gs-select-list${dropUp ? ' is-above' : ''}`}
+          role="listbox"
+          ref={listRef}
+          tabIndex={-1}
+        >
+          {options.map(([code, name], i) => (
+            <li
+              key={code}
+              role="option"
+              aria-selected={i === selectedIndex}
+              className={[
+                'gs-select-option',
+                i === activeIndex ? 'is-active' : '',
+                i === selectedIndex ? 'is-selected' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              // Move, not enter: a cursor parked over the panel would otherwise
+              // re-claim the highlight on every keyboard-driven re-render.
+              onMouseMove={() => setActiveIndex(i)}
+              onClick={() => commit(i)}
+            >
+              {name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   )
 }
 
