@@ -7,7 +7,7 @@ import './GetStarted.css'
 // Signup flow for the text-first pivot, wired to oro-central's public
 // onboarding endpoints (BUI-415): POST /onboarding/start sends the OTP,
 // POST /onboarding/verify creates the account and triggers the opening text.
-// One question per screen; province + age gates are surfaced client-side only
+// One question per screen; region + age gates are surfaced client-side only
 // (server-side enforcement is BUI-421).
 
 // Ordered question screens. Drives the progress bar + next/back navigation.
@@ -194,9 +194,10 @@ export default function GetStarted() {
       const { status, detail } = await postJSON('/onboarding/start', {
         name: form.name,
         birthday: form.birthday.replaceAll('/', '-'),
-        ...(form.country === 'CA'
-          ? { province: form.province }
-          : { state: form.province }),
+        // The server takes a country + its subdivision. `form.province` holds
+        // whichever list the chosen country showed (provinces or US states).
+        country: form.country,
+        state: form.province,
         heard_about: [
           ...form.hear,
           form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
