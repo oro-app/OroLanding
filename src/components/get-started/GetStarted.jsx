@@ -202,8 +202,10 @@ export default function GetStarted() {
           ...form.hear,
           form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
         ].filter(Boolean).join(', '),
+        // No consent flag: the notice above this screen's submit button is the
+        // disclosure and sending the number is the acceptance, which the server
+        // timestamps on receipt. A hardcoded `true` asserted nothing.
         phone: form.phone.trim(),
-        consent: true,
       })
       if (status === 200) {
         trackEvent('onboarding_start', { resend })
