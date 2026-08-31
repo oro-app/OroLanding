@@ -14,9 +14,10 @@ test('home page loads cleanly @smoke', async ({ page }) => {
 
 test('every home CTA goes to /get-started', async ({ page }) => {
   await page.goto('/')
-  const ctas = page.getByRole('button', { name: 'get started' })
-  await expect(ctas).toHaveCount(3)
+  // Header, hero and closing block; the hero one carries its own label.
+  await expect(page.locator('.site-cta')).toHaveCount(3)
+  await expect(page.locator('.site-cta--hero')).toHaveText('start the conversation')
 
-  await ctas.first().click()
+  await page.locator('.site-cta--hero').click()
   await expect(page).toHaveURL(/\/get-started$/)
 })

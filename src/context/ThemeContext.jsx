@@ -3,7 +3,7 @@ import { colors } from '@oro/tokens'
 
 // Dark/light theme for the redesigned marketing surface.
 // Ported from the design handoff's `shared.jsx` ThemeProvider.
-// - default theme: dark (confirmed in the handoff)
+// - default theme: light
 // - persisted to localStorage['oro_theme']
 // - applies <html data-theme="dark|light"> so the CSS variables in index.css flip
 const STORAGE_KEY = 'oro_theme'
@@ -21,7 +21,7 @@ function readInitialTheme(defaultTheme) {
   return defaultTheme
 }
 
-export function ThemeProvider({ children, defaultTheme = 'dark' }) {
+export function ThemeProvider({ children, defaultTheme = 'light' }) {
   const [theme, setThemeState] = useState(defaultTheme)
   const [initialized, setInitialized] = useState(false)
 

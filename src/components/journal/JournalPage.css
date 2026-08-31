@@ -10,7 +10,7 @@
 
 /* ── HERO ─────────────────────────────────────────────────────────────── */
 .ftc-hero {
-  padding: 128px 56px 64px;
+  padding: var(--space-lg) var(--site-gutter) var(--space-sm);
 }
 .ftc-hero-inner {
   max-width: 1180px;
@@ -38,7 +38,7 @@
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 104px;
+  font-size: var(--type-hero);
   line-height: 0.94;
   letter-spacing: -3px;
   color: var(--color-fg);
@@ -76,7 +76,7 @@
 
 /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .ftc-title { font-size: 84px; letter-spacing: -2.4px; }
+  .ftc-title { font-size: 56px; letter-spacing: -1.6px; }
 }
 @media (max-width: 960px) {
   .ftc-hero        { padding: 80px 20px 40px; }
@@ -84,6 +84,6 @@
   .ftc-hero-right  { max-width: none; }
 }
 @media (max-width: 720px) {
-  .ftc-title { font-size: 64px; line-height: 0.98; letter-spacing: -1.8px; }
+  .ftc-title { font-size: 48px; line-height: 0.98; letter-spacing: -1.4px; }
   .ftc-sub   { font-size: 17px; }
 }

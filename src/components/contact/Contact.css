@@ -8,7 +8,7 @@
 
 /* ── TITLE BLOCK ──────────────────────────────────────────────────────── */
 .ct-title-wrap {
-  padding: 96px 64px 24px;
+  padding: var(--space-md) var(--site-gutter) 24px;
   max-width: 1180px;
   margin: 0 auto;
   text-align: center;
@@ -32,7 +32,7 @@
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 104px;
+  font-size: var(--type-hero);
   line-height: 0.96;
   letter-spacing: -3px;
   color: var(--color-fg);
@@ -51,7 +51,7 @@
 
 /* ── THE TWO LETTERS ──────────────────────────────────────────────────── */
 .ct-letters-wrap {
-  padding: 24px 64px 64px;
+  padding: 24px var(--site-gutter) var(--space-sm);
 }
 .ct-letters {
   max-width: 1240px;
@@ -100,7 +100,8 @@
   margin: 32px 0 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 26px;
+  font-weight: 300;
+  font-size: var(--type-sub);
   letter-spacing: -0.4px;
   color: var(--oro-plum-deep);
 }
@@ -128,10 +129,23 @@
   color: var(--oro-plum-deep);
   line-height: 1.5;
 }
+/* The sheet is warm paper in both themes, so the ink needs no dark-mode
+   treatment. Width is capped so a wide signature never reaches the fold. */
+.ct-signature {
+  display: block;
+  width: 210px;
+  max-width: 62%;
+  margin: 4px 0 6px -6px;
+}
+
 .ct-signoff-name {
+  margin: 0;
+  font-family: var(--font-sans);
   font-style: normal;
-  font-weight: 300;
-  font-size: 28px;
+  font-weight: 400;
+  font-size: var(--text-2xs);
+  letter-spacing: 0.04em;
+  color: var(--oro-text-editorial-muted);
 }
 /* ── VISITOR FORM ─────────────────────────────────────────────────────── */
 .ct-textarea {
@@ -245,7 +259,7 @@
 
 /* ── POSTSCRIPT FAQ ───────────────────────────────────────────────────── */
 .ct-faq-wrap {
-  padding: 40px 64px 96px;
+  padding: var(--space-xs) var(--site-gutter) var(--space-md);
 }
 .ct-faq-inner {
   max-width: 920px;
@@ -306,7 +320,7 @@
 /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
   .ct-title-wrap   { padding: 48px 20px 16px; }
-  .ct-title        { font-size: 64px; line-height: 0.98; letter-spacing: -1.8px; }
+  .ct-title        { font-size: 48px; line-height: 0.98; letter-spacing: -1.4px; }
   .ct-letters-wrap { padding: 16px 20px 48px; }
   .ct-letters      { grid-template-columns: 1fr; gap: 24px; justify-items: center; }
   .ct-sheet        { width: 100%; max-width: 560px; padding: 48px 36px 56px; }

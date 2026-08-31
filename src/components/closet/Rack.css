@@ -15,14 +15,14 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 56px;
+  margin-bottom: var(--space-sm);
   gap: 24px;
 }
 .rack-title-h2 {
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 48px;
+  font-size: var(--type-display);
   line-height: 1;
   letter-spacing: -1.2px;
   color: var(--color-fg);

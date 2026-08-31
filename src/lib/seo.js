@@ -1,5 +1,3 @@
-import { CONTACT_FAQS } from './faqs.js'
-
 export const SITE_URL = 'https://buildingoro.ca'
 export const SITE_NAME = 'Oro'
 export const SITE_TITLE = 'Oro - AI stylist for the clothes you already own'
@@ -40,7 +38,6 @@ export const ROUTE_SEO = {
     summary:
       'A real person at Oro reads support questions, press notes, partnership inquiries, and product feedback.',
     priority: '0.5',
-    faqs: CONTACT_FAQS,
   },
   'get-started': {
     path: '/get-started',

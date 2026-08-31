@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Cta } from '@oro/web'
 import { getNewsletterBySlug } from '../../lib/newsletters'
 import NewsletterRecommendations from './NewsletterRecommendations'
-import SiteFooter from '../layout/SiteFooter'
 import WaitlistModal from '../overlays/WaitlistModal'
 import { hasAnalyticsConsent, trackCtaClick, trackEvent } from '../../lib/analytics'
 import { APP_STORE_URL, PLAY_STORE_URL } from '../../lib/links'
@@ -115,7 +114,6 @@ export default function NewsletterPage({ slug }) {
             back to all notes
           </a>
         </section>
-        <SiteFooter />
       </main>
     )
   }
@@ -209,8 +207,6 @@ export default function NewsletterPage({ slug }) {
           </div>
         </article>
       </div>
-
-      <SiteFooter />
 
       {newsletterSignupOpen && <WaitlistModal onClose={() => setNewsletterSignupOpen(false)} />}
     </main>

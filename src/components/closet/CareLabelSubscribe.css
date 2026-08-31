@@ -6,7 +6,7 @@
    --color-bg so the holes read as cutouts through the tag. */
 
 .cl-wrap {
-  padding: 64px 56px 128px;
+  padding: var(--space-sm) 56px var(--space-lg);
 }
 
 .cl-tag {
@@ -58,7 +58,7 @@
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--type-section);
   line-height: 1.02;
   letter-spacing: -1.2px;
   color: var(--oro-ink);

@@ -23,7 +23,7 @@ async function openModal(page) {
 async function openModalAndSubmit(page, email) {
   await openModal(page)
   await page.locator('.email-input').fill(email)
-  await page.locator('button[aria-label="Subscribe to newsletter"]').click()
+  await page.locator('button[aria-label="subscribe to newsletter"]').click()
 }
 
 test('successful signup shows the subscribed state', async ({ page, mockWaitlist }) => {
@@ -52,7 +52,7 @@ test('duplicate email shows already-on-list state', async ({ page, mockWaitlist 
 test('server error shows the retry message', async ({ page, mockWaitlist }) => {
   await mockWaitlist(500)
   await openModalAndSubmit(page, 'error@example.com')
-  await expect(page.locator('.modal-error')).toContainText('Something went wrong. Try again.')
+  await expect(page.locator('.modal-error')).toContainText('something went wrong. try again.')
   // Form is still there for a retry.
   await expect(page.locator('.email-input')).toBeVisible()
 })

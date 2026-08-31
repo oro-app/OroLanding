@@ -41,7 +41,7 @@ export default function WaitlistModal({ onClose }) {
       }
 
       if (!res.ok) {
-        setError('Something went wrong. Try again.')
+        setError('something went wrong. try again.')
         setLoading(false)
         return
       }
@@ -50,7 +50,7 @@ export default function WaitlistModal({ onClose }) {
       markNewsletterSignedUp()
       setSuccess(true)
     } catch {
-      setError('Something went wrong. Try again.')
+      setError('something went wrong. try again.')
     } finally {
       setLoading(false)
     }
@@ -59,7 +59,7 @@ export default function WaitlistModal({ onClose }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-x" onClick={onClose} aria-label="Close">✕</button>
+        <button className="modal-close-x" onClick={onClose} aria-label="close">✕</button>
 
         {success ? (
           <div className="modal-success">
@@ -69,8 +69,8 @@ export default function WaitlistModal({ onClose }) {
               </svg>
             </div>
             <p className="modal-eyebrow">you're subscribed</p>
-            <h3>Thanks for joining.</h3>
-            <p className="modal-subtitle">We'll send thoughtful style notes and Oro updates to your inbox.</p>
+            <h3>thanks for joining.</h3>
+            <p className="modal-subtitle">we'll send thoughtful style notes and oro updates to your inbox.</p>
             <Btn variant="quiet" className="modal-done-btn" onClick={onClose}>done</Btn>
           </div>
         ) : alreadyOnList ? (
@@ -81,15 +81,15 @@ export default function WaitlistModal({ onClose }) {
               </svg>
             </div>
             <p className="modal-eyebrow">already subscribed</p>
-            <h3>You're already on the list.</h3>
-            <p className="modal-subtitle">No need to sign up again — you're set to receive the Oro newsletter.</p>
+            <h3>you're already on the list.</h3>
+            <p className="modal-subtitle">no need to sign up again — you're set to receive the oro newsletter.</p>
             <Btn variant="quiet" className="modal-done-btn" onClick={onClose}>got it</Btn>
           </div>
         ) : (
           <>
             <p className="modal-eyebrow">newsletter</p>
-            <h3>Get style notes from Oro</h3>
-            <p className="modal-subtitle">Wardrobe ideas, product updates, and notes from our team — a few times a month.</p>
+            <h3>get style notes from oro</h3>
+            <p className="modal-subtitle">wardrobe ideas, product updates, and notes from our team — a few times a month.</p>
 
             <form onSubmit={handleSubmit}>
               <div className="email-form">
@@ -102,7 +102,7 @@ export default function WaitlistModal({ onClose }) {
                   required
                   autoFocus
                 />
-                <button type="submit" className="email-submit-btn" disabled={loading} aria-label="Subscribe to newsletter">
+                <button type="submit" className="email-submit-btn" disabled={loading} aria-label="subscribe to newsletter">
                   {loading ? (
                     <span className="btn-spinner" />
                   ) : (
@@ -114,8 +114,8 @@ export default function WaitlistModal({ onClose }) {
               </div>
 
               <p className="consent-text">
-                By signing up, you agree to receive emails from Oro. Unsubscribe any time. See our{' '}
-                <a href="/privacy" rel="noopener noreferrer">Privacy Policy</a>.
+                by signing up, you agree to receive emails from oro. unsubscribe any time. see our{' '}
+                <a href="/privacy" rel="noopener noreferrer">privacy policy</a>.
               </p>
 
               {error && <p className="modal-error">{error}</p>}

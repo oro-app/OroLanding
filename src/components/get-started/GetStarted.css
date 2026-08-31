@@ -116,7 +116,7 @@
   color: var(--color-fg);
 }
 
-.gs-welcome-title { font-size: 56px; }
+.gs-welcome-title { font-size: var(--type-display); }
 .gs-welcome-sub {
   margin: 28px 0 0;
   max-width: 420px;
@@ -128,7 +128,7 @@
 }
 
 /* ── a question screen ────────────────────────────────────────────────── */
-.gs-q-label { font-size: 40px; letter-spacing: -1.2px; line-height: 1.06; }
+.gs-q-label { font-size: var(--type-section); letter-spacing: -1.2px; line-height: 1.06; }
 .gs-q-hint {
   margin: 16px 0 0;
   font-size: 14px;
@@ -286,7 +286,7 @@
 
 /* ── terminal screens (done / ineligible) ────────────────────────────── */
 .gs-terminal { text-align: left; }
-.gs-terminal-title { font-size: 52px; letter-spacing: -1.5px; }
+.gs-terminal-title { font-size: var(--type-display); letter-spacing: -1.4px; }
 .gs-terminal-sub {
   margin: 28px 0 0;
   max-width: 400px;

@@ -6,24 +6,65 @@
 @tailwind utilities;
 
 :root {
-  --site-header-height: calc(48px + 0.8rem + 1px);
-  --site-footer-height: 56px;
+  /* Measured from the rendered chrome: 18px padding, a 37px CTA, 1px border. */
+  --site-header-height: 73px;
+  --site-footer-height: 68px;
 
-  /* ── Redesign: semantic theme tokens. Default = dark (no flash). ── */
-  --color-bg:       var(--oro-plum-deep);
-  --color-fg:       var(--oro-cream);
-  --color-fg-faint: var(--oro-cream-70);
-  --color-fg-light: var(--oro-cream-45);
-  --color-fg-line:  var(--oro-cream-line);
-  --color-accent:   var(--oro-gold);
+  /* ── Redesign: semantic theme tokens. Default = light, matching
+     ThemeProvider, so first paint before JS runs is not the wrong theme. ── */
+  --color-bg:       var(--oro-cream);
+  --color-fg:       var(--oro-ink);
+  --color-fg-faint: var(--oro-faint);
+  --color-fg-light: var(--oro-faint);
+  --color-fg-line:  var(--oro-faint-line);
+  --color-accent:   var(--oro-plum-deep);
+
+  /* ── Site chrome. The header, the footer and every page's outer padding read
+     from one gutter, so the wordmark lines up with page content everywhere. ── */
+  --site-gutter: 140px;
+
+  /* ── Display type ramp, anchored on the home page. Every page's hero and
+     section headings read from these, so the scale is one decision. ── */
+  --type-hero:    68px;
+  --type-display: 48px;
+  --type-section: 42px;
+  --type-sub:     28px;
+
+  /* Sans body ramp. The phone's iOS type is device chrome and stays off it. */
+  --text-lg: 20.5px;
+  --text-md: 17.5px;
+  --text-sm: 15px;
+  --text-xs: 14px;
+  --text-2xs: 10px;
+
+  /* ── Vertical rhythm. The steps are the home page's own values snapped to an
+     8px grid, so home is the rule and the other pages follow it. ── */
+  --space-xs:  40px;
+  --space-sm:  64px;
+  --space-md:  96px;
+  --space-lg:  152px;
+  --space-xl:  184px;
+  --space-2xl: 264px;
+  --site-header-bg: #fff9ede6;
+  --btn-bg:     var(--oro-plum-deep);
+  --btn-fg:     var(--oro-cream);
+  --btn-hover:  var(--oro-plum-deep);
+  --btn-shadow: #3a26464d;
 }
 
 :root[data-theme="dark"] {
   --color-bg:       var(--oro-plum-deep);
   --color-fg:       var(--oro-cream);
   --color-fg-faint: var(--oro-cream-70);
+  --color-fg-light: var(--oro-cream-45);
   --color-fg-line:  var(--oro-cream-line);
   --color-accent:   var(--oro-gold);
+
+  --site-header-bg: #3a2646e6;
+  --btn-bg:     var(--oro-cream);
+  --btn-fg:     var(--oro-plum-deep);
+  --btn-hover:  var(--oro-ivory);
+  --btn-shadow: #0b0b0b59;
 }
 
 :root[data-theme="light"] {
@@ -32,6 +73,12 @@
   --color-fg-faint: var(--oro-faint);
   --color-fg-line:  var(--oro-faint-line);
   --color-accent:   var(--oro-plum-deep);
+
+  --site-header-bg: #fff9ede6;
+  --btn-bg:     var(--oro-plum-deep);
+  --btn-fg:     var(--oro-cream);
+  --btn-hover:  var(--oro-plum-deep);
+  --btn-shadow: #3a26464d;
 }
 
 ::selection {
@@ -121,7 +168,55 @@ body {
 
 @media (max-width: 700px) {
   :root {
-    --site-header-height: calc(40px + 0.9rem + 1px);
-    --site-footer-height: 94px;
+    --site-footer-height: 132px;
   }
+}
+
+/* @oro/web ships .oro-btn as uppercase + 0.14em tracking, which contradicts the
+   brand rule against all-caps with wide tracking. Overridden here rather than
+   per-component so every Btn on the site reads the same; the variant belongs
+   upstream in @oro/web. The doubled class outranks @oro/web's own rule, which
+   is injected after this stylesheet and would otherwise win on order. */
+.oro-btn.oro-btn {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.82rem;
+}
+
+/* The site CTA. @oro/web's .oro-cta is serif *italic*; the brand wants upright
+   buttons, and the header needs a size smaller than any shipped variant. The
+   doubled class outranks @oro/web's stylesheet, which is injected after this
+   one and would otherwise win on order. */
+.oro-cta.site-cta {
+  font-style: normal;
+  /* Fraunces' ascent is generous, so a `normal` line box centres the em but
+     leaves lowercase text sitting visually low. Pinning the line box to the em
+     and padding a few px heavier on top optically centres the label. */
+  line-height: 1;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-bg);
+  transition: all 0.2s ease;
+}
+
+.oro-cta.site-cta--header { padding: 10px 15px 8px; font-size: 13px; gap: 0; }
+.oro-cta.site-cta--hero { padding: 15px 26px 12px; }
+.oro-cta.site-cta--closer { padding: 16px 28px 13px; }
+
+/* The get-started page's full-width CTA, same treatment. */
+.oro-cta.oro-cta--full {
+  line-height: 1;
+  padding: 23px 24px 19px;
+}
+
+.oro-cta.site-cta:hover:not(:disabled) {
+  background: var(--btn-hover);
+  border-color: var(--btn-hover);
+  color: var(--btn-fg);
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1.5px var(--color-accent), 0 8px 24px var(--btn-shadow);
+}
+
+@media (max-width: 900px) {
+  :root { --site-gutter: 24px; }
 }

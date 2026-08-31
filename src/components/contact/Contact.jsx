@@ -1,15 +1,12 @@
-import { Chip, Cta } from '@oro/web'
+import { Cta } from '@oro/web'
+import signature from '../../assets/contact/signature.png'
 import { useState } from 'react'
-import SiteFooter from '../layout/SiteFooter'
-import { CONTACT_FAQS } from '../../lib/faqs'
 import './Contact.css'
 
 // /contact — "a letter to oro." Two facing sheets of stationery: oro's
-// pre-printed letter on the left, the visitor's blank form on the right,
-// then a postscript FAQ. Theme-aware via --color-* tokens; the stationery
-// sheets are warm paper in both themes.
-
-const TOPICS = ['hello', 'support', 'press', 'partnership', 'careers', 'feedback']
+// pre-printed letter on the left, the visitor's blank form on the right.
+// Theme-aware via --color-* tokens; the stationery sheets are warm paper in
+// both themes.
 
 function Arrow() {
   return (
@@ -23,7 +20,6 @@ function VisitorForm() {
   const [message, setMessage] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [topic, setTopic] = useState('hello')
   const [status, setStatus] = useState('idle') // idle | submitting | sent | error
   const [touched, setTouched] = useState(false)
 
@@ -37,7 +33,7 @@ function VisitorForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), topic, message: message.trim() }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), message: message.trim() }),
       })
       if (!res.ok) { setStatus('error'); return }
       setStatus('sent')
@@ -97,17 +93,6 @@ function VisitorForm() {
         </div>
       </div>
 
-      <div className="ct-chips" role="radiogroup" aria-label="kind of letter">
-        <span className="ct-chips-label">kind of letter</span>
-        <div className="ct-chips-row">
-          {TOPICS.map((t) => (
-            <Chip key={t} selected={topic === t} onClick={() => setTopic(t)}>
-              {t}.
-            </Chip>
-          ))}
-        </div>
-      </div>
-
       <Cta size="block" type="submit" className="ct-send" disabled={status === 'submitting'}>
         {status === 'submitting' ? '…sealing.' : (<>seal &amp; send <Arrow /></>)}
       </Cta>
@@ -137,9 +122,6 @@ export default function Contact() {
           write to <span className="ct-em">us</span>.<br />
           we’ll write <span className="ct-em">back</span>.
         </h1>
-        <p className="ct-sub">
-          a real person reads every letter. it might take a day or two, but you’ll hear back.
-        </p>
       </section>
 
       {/* The two letters */}
@@ -155,36 +137,16 @@ export default function Contact() {
             <div className="ct-body">
               <p>we read everything that comes through this page. it’s a small team, so the reply isn’t always immediate, but it’s always written by a person.</p>
               <p>tell us anything — an idea, a bug, a question, a polite complaint. press inquiries, partnerships, hellos, all welcome at the same address.</p>
-              <p>if you’d like a faster answer, the short list of common questions on the next page might already cover it.</p>
-              <p>otherwise — write us a letter.</p>
             </div>
-            <p className="ct-signoff-oro">
-              yours,<br />
-              <span className="ct-signoff-name">oro.</span>
-            </p>
+            <p className="ct-signoff-oro">yours,</p>
+            <img className="ct-signature" src={signature} alt="Sunny Wu" />
+            <p className="ct-signoff-name">sunny wu &middot; founder &amp; ceo</p>
           </div>
 
           {/* Right — visitor's form */}
           <VisitorForm />
         </div>
       </section>
-
-      {/* Postscript FAQ */}
-      <section className="ct-faq-wrap">
-        <div className="ct-faq-inner">
-          <p className="ct-faq-kicker">postscript — a few things people often ask.</p>
-          <div className="ct-faq-list">
-            {CONTACT_FAQS.map((row) => (
-              <div className="ct-faq-row" key={row.question}>
-                <div className="ct-faq-q">{row.question}</div>
-                <div className="ct-faq-a">{row.answer}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <SiteFooter />
     </main>
   )
 }

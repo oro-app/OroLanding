@@ -57,7 +57,7 @@ function TypingBubble() {
   )
 }
 
-export default function MessageThread() {
+export default function MessageThread({ startDelay = 0 }) {
   // Bumping cycle remounts the thread, which is what restarts the reveal
   // animations: re-rendering the same elements would not replay them.
   const [step, setStep] = useState(-1)
@@ -75,20 +75,22 @@ export default function MessageThread() {
     }
 
     const queue = timers.current
+    // Only the first pass waits for the hero entrance; replays start at once.
+    const offset = cycle === 0 ? startDelay : 0
     setStep(-1)
     setReceipt(false)
 
     STEPS.forEach((item, index) => {
-      queue.push(setTimeout(() => setStep(index), item.at * SLOW))
+      queue.push(setTimeout(() => setStep(index), offset + item.at * SLOW))
     })
-    queue.push(setTimeout(() => setReceipt(true), LAST_AT + RECEIPT_DELAY))
-    queue.push(setTimeout(() => setCycle((value) => value + 1), LAST_AT + REPLAY_GAP))
+    queue.push(setTimeout(() => setReceipt(true), offset + LAST_AT + RECEIPT_DELAY))
+    queue.push(setTimeout(() => setCycle((value) => value + 1), offset + LAST_AT + REPLAY_GAP))
 
     return () => {
       queue.forEach(clearTimeout)
       timers.current = []
     }
-  }, [cycle])
+  }, [cycle, startDelay])
 
   // A typing indicator disappears once the message it stood in for arrives.
   const isVisible = (item, index) => {

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react'
 import Home from './components/home/Home'
 import SiteHeader from './components/layout/SiteHeader'
+import SiteFooter from './components/layout/SiteFooter'
 import CookieConsent from './components/overlays/CookieConsent'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics, trackPageNavigation, trackPageView, trackSocialLinkClick } from './lib/analytics'
@@ -112,10 +113,9 @@ function App({ initialRoute }) {
   }, [])
 
   return (
-    <ThemeProvider defaultTheme="dark">
+    <ThemeProvider defaultTheme="light">
       <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
-        {/* Home carries its own stripped header; every other route gets the site chrome. */}
-        {route.type !== 'home' && <SiteHeader />}
+        <SiteHeader />
         <main id="main">
           {route.type === 'newsletter' ? (
             <Suspense fallback={null}>
@@ -137,6 +137,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
+        <SiteFooter />
         <CookieConsent />
       </div>
     </ThemeProvider>

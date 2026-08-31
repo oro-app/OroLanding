@@ -101,8 +101,8 @@
   margin: 0 auto;
   max-width: 760px;
   font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
-  font-weight: 400;
+  font-size: clamp(2.6rem, 5.4vw, var(--type-hero));
+  font-weight: 300;
   line-height: 1;
   letter-spacing: -0.005em;
   color: var(--oro-ink);
@@ -172,8 +172,8 @@
   margin: 0.35rem 0.55rem 0 0;
   padding: 0;
   font-family: var(--font-serif);
-  font-size: 4.2rem;
-  font-weight: 500;
+  font-size: var(--type-hero);
+  font-weight: 300;
   line-height: 0.85;
   color: var(--oro-plum-deep);
 }
@@ -181,7 +181,9 @@
 .newsletter-mdx h2,
 .newsletter-mdx h3 {
   font-family: var(--font-serif);
-  font-weight: 500;
+  /* Sizes stay on the article's reading measure rather than the display ramp;
+     only the weight joins the site-wide 300. */
+  font-weight: 300;
   color: var(--oro-ink);
   line-height: 1.15;
   letter-spacing: -0.005em;

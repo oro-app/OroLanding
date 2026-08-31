@@ -1,198 +1,64 @@
-/* Site header — sticky, hairline border, theme-aware via --color-* tokens.
-   Nav mirrors the footer: each column is a hover/focus dropdown. */
-
 .site-header {
-  padding: 0 40px;
-  font-family: var(--font-sans);
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-fg-line);
   position: sticky;
   top: 0;
-  z-index: 20;            /* above page content + the dropdown panels */
-}
-
-.site-header-inner {
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 16px 0;
+  padding: 18px var(--site-gutter);
+  background: var(--site-header-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-fg-line);
 }
+
+.site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.site-header-theme {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--color-fg-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-fg-faint);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.site-header-theme:hover {
+  color: var(--color-fg);
+  border-color: var(--color-fg-faint);
+}
+
+.oro-wordmark {
+  display: block;
+  width: auto;
+  object-fit: contain;
+}
+
+.oro-wordmark--header { height: 36px; }
+.oro-wordmark--footer { height: 30px; }
 
 .site-header-logo-link {
   display: inline-flex;
   align-items: center;
-  text-decoration: none;
   line-height: 0;
-}
-
-.site-header-logo {
-  height: 36px;
-  width: auto;
-  display: block;
-  object-fit: contain;
 }
 
 .site-header-nav {
   display: flex;
   align-items: center;
   gap: 22px;
-  font-size: 12.5px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
-}
-
-/* ── dropdown groups ──────────────────────────────────────────────────── */
-.site-header-group {
-  position: relative;
-}
-.site-header-group-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: transparent;
-  border: none;
-  padding: 6px 0;
-  cursor: pointer;
-  font-family: var(--font-sans);
-  font-size: 12.5px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
+  font-size: 13.5px;
   color: var(--color-fg-faint);
-  transition: color 150ms ease;
-}
-.site-header-group:hover .site-header-group-trigger,
-.site-header-group:focus-within .site-header-group-trigger {
-  color: var(--color-fg);
-}
-.site-header-caret {
-  transition: transform 180ms ease;
-}
-.site-header-group:hover .site-header-caret,
-.site-header-group:focus-within .site-header-caret {
-  transform: rotate(180deg);
 }
 
-.site-header-menu {
-  position: absolute;
-  top: 100%;            /* flush under the trigger — no dead gap to cross */
-  left: 50%;
-  transform: translateX(-50%) translateY(-6px);
-  min-width: 180px;
-  margin-top: 10px;
-  padding: 10px 0;
-  background: var(--color-bg);
-  border: 1px solid var(--color-fg-line);
-  border-radius: 4px;
-  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
-  z-index: 30;
-}
-/* invisible bridge so moving from trigger to menu doesn't cross a dead gap */
-.site-header-menu::before {
-  content: '';
-  position: absolute;
-  top: -12px;
-  left: 0;
-  right: 0;
-  height: 12px;
-}
-.site-header-group:hover .site-header-menu,
-.site-header-group:focus-within .site-header-menu {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-
-.site-header-menu-link {
-  padding: 8px 22px;
-  white-space: nowrap;
-  color: var(--color-fg-faint);
-  text-decoration: none;
-  font-size: 12.5px;
-  font-weight: 500;
-  transition: color 150ms ease, background 150ms ease;
-}
-.site-header-menu-link:hover {
-  color: var(--color-fg);
-  background: var(--oro-plum-soft);
-}
-:root[data-theme='light'] .site-header-menu-link:hover {
-  background: rgba(58, 38, 70, 0.06);
-}
-
-/* ── single-icon theme toggle ─────────────────────────────────────────── */
-.site-header-theme {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border: 1px solid var(--color-fg-line);
-  border-radius: 999px;
-  cursor: pointer;
-  color: var(--color-fg-faint);
-  transition: color 150ms ease, border-color 150ms ease;
-}
-.site-header-theme:hover {
-  color: var(--color-fg);
-  border-color: var(--color-fg);
-}
-
-/* ── try oro CTA ──────────────────────────────────────────────────────── */
-.site-header-tryoro {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--color-fg);
-  background: transparent;
-  padding: 8px 14px;
-  border: 1px solid var(--color-fg);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 13px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.site-header-tryoro:hover {
-  opacity: 0.7;
-}
-
-@media (max-width: 860px) {
-  .site-header {
-    padding: 0 20px;
-  }
-  .site-header-inner {
-    padding: 12px 0;
-  }
-  .site-header-nav {
-    gap: 16px;
-  }
-  .site-header-logo {
-    height: 30px;
-  }
-}
-
-/* Phones: drop the dropdown groups (everything's still in the footer) so the
-   essential logo / theme toggle / try-oro fit on one line. */
-@media (max-width: 680px) {
-  .site-header-group {
-    display: none;
-  }
-  .site-header-nav {
-    gap: 12px;
-  }
-  .site-header-tryoro {
-    padding: 7px 12px;
-    font-size: 12px;
-  }
-}
+.site-header-nav a:hover { color: var(--color-accent); }

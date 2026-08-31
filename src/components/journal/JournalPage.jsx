@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { newsletters } from '../../lib/newsletters'
-import SiteFooter from '../layout/SiteFooter'
 import FeaturedLetter from '../closet/FeaturedLetter'
 import Rack from '../closet/Rack'
 import CareLabelSubscribe from '../closet/CareLabelSubscribe'
@@ -93,8 +92,6 @@ export default function JournalPage() {
       <div ref={careRef} data-revealed={careRevealed ? 'true' : 'false'}>
         <CareLabelSubscribe />
       </div>
-
-      <SiteFooter />
     </main>
   )
 }

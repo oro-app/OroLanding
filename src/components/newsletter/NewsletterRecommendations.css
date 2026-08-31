@@ -32,7 +32,7 @@
   margin: 0;
   font-family: var(--font-serif);
   font-size: 1.55rem;
-  font-weight: 500;
+  font-weight: 300;
   line-height: 1.1;
   color: var(--oro-plum-deep);
 }
@@ -110,7 +110,7 @@
   margin: 0;
   font-family: var(--font-serif);
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 300;
   line-height: 1.2;
   color: var(--oro-plum-deep);
   display: -webkit-box;

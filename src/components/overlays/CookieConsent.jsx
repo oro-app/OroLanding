@@ -21,10 +21,10 @@ export default function CookieConsent() {
   }
 
   return (
-    <div className="cookie-consent-wrap" role="dialog" aria-live="polite" aria-label="Cookie consent">
+    <div className="cookie-consent-wrap" role="dialog" aria-live="polite" aria-label="cookie consent">
       <div className="cookie-consent">
         <p className="cookie-consent-copy">
-          We use analytics <a href="/cookies" rel="noopener noreferrer">cookies</a> to understand how people find and use our site.
+          we use analytics <a href="/cookies" rel="noopener noreferrer">cookies</a> to understand how people find and use our site.
         </p>
         <div className="cookie-consent-actions">
           <Btn variant="accent" className="cookie-consent-accept" onClick={() => handleChoice(true)}>
