@@ -1,5 +1,6 @@
-/* The hero phone. iOS chrome colours are fixed device colours, not theme
-   tokens — they must not flip with the site theme. */
+/* The iOS colours below are device chrome rather than theme roles, so they are
+   literals: flipping them with the site theme would stop the phone reading as
+   a phone. */
 
 .mt-device {
   position: relative;
@@ -155,8 +156,8 @@
 .mt-bubble--user { background: #007aff; }
 .mt-bubble--oro { background: #3b3b3d; }
 
-/* Bubble tails — a rounded square in the bubble colour, masked back to the
-   screen colour by a second shape on top. */
+/* Each tail is a rounded square in the bubble colour with a second shape in the
+   screen colour laid over it, which carves out the curve iOS draws. */
 .mt-tail,
 .mt-tail-mask {
   position: absolute;

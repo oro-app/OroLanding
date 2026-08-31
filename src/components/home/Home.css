@@ -314,9 +314,7 @@
   gap: 22px;
 }
 
-/* ── responsive ──
-   Below the grid breakpoint the phone follows the hero copy and stops
-   sticking, and the scale anchors stack around their track. */
+/* ── responsive ── */
 
 @media (max-width: 900px) {
   .home-grid {

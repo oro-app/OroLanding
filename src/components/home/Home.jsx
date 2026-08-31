@@ -3,12 +3,8 @@ import { trackCtaClick } from '../../lib/analytics'
 import { USER_COUNT } from '../../lib/stats'
 import MessageThread from './MessageThread'
 
-// The home page: a single scroll whose only conversion action is /get-started.
-// It carries its own header and footer rather than the site chrome — the
-// design gives the landing a stripped nav with the CTA as its only link.
-
-// The wordmark PNG is 500x500 with the glyph inset, so it renders inside a
-// clipping box sized to the glyph.
+// Home renders its own header and footer instead of SiteHeader/SiteFooter, so
+// the landing's only navigation is the CTA.
 function Wordmark({ className }) {
   return (
     <span className={`home-mark ${className}`}>

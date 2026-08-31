@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import lookDay from '../../assets/home/look-day.png'
 import lookNight from '../../assets/home/look-night.png'
 
-// The sticky hero phone — a dark-mode iOS Messages thread transcribed from
-// Oro-Mobile-Refresh's MigrationDemoThread, replayed on a loop.
-
-// Timings are the shipped MigrationDemoThread values in ms; SLOW stretches them.
+// The thread is transcribed from Oro-Mobile-Refresh's MigrationDemoThread, and
+// the timings below are that component's shipped values in ms. SLOW stretches
+// them so the loop reads at browsing pace rather than texting pace.
 const SLOW = 1.45
 const RECEIPT_DELAY = 260
 const REPLAY_GAP = 4200
@@ -59,8 +58,8 @@ function TypingBubble() {
 }
 
 export default function MessageThread() {
-  // step is the index of the last revealed message; cycle remounts the thread
-  // each replay so the reveal animations run again.
+  // Bumping cycle remounts the thread, which is what restarts the reveal
+  // animations: re-rendering the same elements would not replay them.
   const [step, setStep] = useState(-1)
   const [receipt, setReceipt] = useState(false)
   const [cycle, setCycle] = useState(0)
