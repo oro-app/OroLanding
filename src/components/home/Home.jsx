@@ -72,7 +72,7 @@ export default function Home() {
   return (
     <div className="home-page">
       <div className="home-grid">
-        <div className="home-column">
+        <div className="home-hero">
           <h1 className="home-h1">
             <TypedHeadline />
           </h1>
@@ -84,7 +84,18 @@ export default function Home() {
           <p className="home-proof home-enter" style={{ animationDelay: `${TYPING_ENDS + 260}ms` }}>
             join <span>{USER_COUNT}+ people</span> getting styled by oro.
           </p>
+        </div>
 
+        <div className="home-phone-column">
+          <div
+            className="home-phone-sticky home-enter"
+            style={{ animationDelay: `${TYPING_ENDS + 400}ms` }}
+          >
+            <MessageThread startDelay={TYPING_ENDS + 900} />
+          </div>
+        </div>
+
+        <div className="home-sections">
           <section className={`home-block ${revealClass(valueShown)}`} ref={valueRef}>
             <h2 className="home-h2 home-h2--lead">dressed right, every time it counts.</h2>
             <p className="home-body">
@@ -122,15 +133,6 @@ export default function Home() {
               ))}
             </div>
           </section>
-        </div>
-
-        <div className="home-phone-column">
-          <div
-            className="home-phone-sticky home-enter"
-            style={{ animationDelay: `${TYPING_ENDS + 400}ms` }}
-          >
-            <MessageThread startDelay={TYPING_ENDS + 900} />
-          </div>
         </div>
       </div>
 

@@ -34,23 +34,46 @@
 .home-grid {
   display: grid;
   grid-template-columns: minmax(0, 560px) 1fr;
-  gap: 64px;
+  /* Row gap stays 0 so the sections' own margins own the vertical rhythm. */
+  column-gap: 64px;
+  row-gap: 0;
   padding: 0 var(--site-gutter);
 }
 
-.home-column {
-  padding: var(--space-2xl) 0 var(--space-md);
+/* The hero owns the first screen. Its content is centred rather than pushed
+   down by a fixed offset, so a tall viewport does not leave dead space under
+   the proof line. */
+.home-hero {
+  grid-column: 1;
+  grid-row: 1;
+  min-height: calc(100vh - var(--site-header-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-sm) 0;
 }
 
-/* Padding on the sticky element's containing block, so the phone releases
-   above the closing section's hairline instead of resting on it. */
-.home-phone-column {
+.home-sections {
+  grid-column: 1;
+  grid-row: 2;
   padding-bottom: var(--space-md);
 }
 
+/* Spans both rows so the phone can stay pinned past the hero and the sections.
+   The bottom padding is on the sticky element's containing block, so the phone
+   releases above the closing section's hairline instead of resting on it. */
+.home-phone-column {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding-bottom: var(--space-md);
+}
+
+/* Centred in the viewport on tall screens so it tracks the centred hero, with a
+   floor that keeps it clear of the header on short ones. 320px is half the
+   device's tallest height. */
 .home-phone-sticky {
   position: sticky;
-  top: calc(var(--site-header-height) + 16px);
+  top: max(calc(var(--site-header-height) + 16px), calc(50vh - 320px));
   display: flex;
   justify-content: center;
   padding-top: 24px;
@@ -234,10 +257,30 @@
 @media (max-width: 900px) {
   .home-grid {
     grid-template-columns: 1fr;
-    gap: 0;
   }
 
-  .home-column { padding: 56px 0 24px; }
+  /* Stacked, the phone follows the hero copy rather than the whole page, and a
+     full-height hero would push it a screen further down. */
+  .home-hero {
+    grid-column: 1;
+    grid-row: auto;
+    order: 1;
+    min-height: 0;
+    padding: 56px 0 0;
+  }
+
+  .home-phone-column {
+    grid-column: 1;
+    grid-row: auto;
+    order: 2;
+    padding: 40px 0 0;
+  }
+
+  .home-sections {
+    grid-column: 1;
+    grid-row: auto;
+    order: 3;
+  }
 
   .home-phone-sticky {
     position: static;
