@@ -189,9 +189,8 @@ body {
    one and would otherwise win on order. */
 .oro-cta.site-cta {
   font-style: normal;
-  /* Fraunces' ascent is generous, so a `normal` line box centres the em but
-     leaves lowercase text sitting visually low. Pinning the line box to the em
-     and padding a few px heavier on top optically centres the label. */
+  /* The line box is pinned to the em so the label sits centred in the button
+     rather than low, which is where Fraunces' generous ascent would put it. */
   line-height: 1;
   background: var(--btn-bg);
   color: var(--btn-fg);
@@ -199,14 +198,14 @@ body {
   transition: all 0.2s ease;
 }
 
-.oro-cta.site-cta--header { padding: 10px 15px 8px; font-size: 13px; gap: 0; }
-.oro-cta.site-cta--hero { padding: 15px 26px 12px; }
-.oro-cta.site-cta--closer { padding: 16px 28px 13px; }
+.oro-cta.site-cta--header { padding: 9px 15px; font-size: 13px; gap: 0; }
+.oro-cta.site-cta--hero { padding: 13px 26px; }
+.oro-cta.site-cta--closer { padding: 14px 28px; }
 
 /* The get-started page's full-width CTA, same treatment. */
 .oro-cta.oro-cta--full {
   line-height: 1;
-  padding: 23px 24px 19px;
+  padding: 21px 24px;
 }
 
 .oro-cta.site-cta:hover:not(:disabled) {
