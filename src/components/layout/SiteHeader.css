@@ -18,6 +18,8 @@
   gap: 14px;
 }
 
+/* The toggle wears the theme it switches to: dark on the light site, light on
+   the dark one, so the control previews its own result. */
 .site-header-theme {
   display: flex;
   align-items: center;
@@ -25,17 +27,21 @@
   width: 30px;
   height: 30px;
   padding: 0;
-  border: 1px solid var(--color-fg-line);
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: transparent;
-  color: var(--color-fg-faint);
+  background: var(--oro-plum-deep);
+  color: var(--oro-cream);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+:root[data-theme='dark'] .site-header-theme {
+  background: var(--oro-cream);
+  color: var(--oro-plum-deep);
 }
 
 .site-header-theme:hover {
-  color: var(--color-fg);
-  border-color: var(--color-fg-faint);
+  border-color: var(--color-accent);
 }
 
 .oro-wordmark {
