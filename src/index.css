@@ -51,10 +51,12 @@
   --space-xl:  184px;
   --space-2xl: 264px;
   --site-header-bg: #fff9ede6;
-  --btn-bg:     var(--oro-plum-deep);
-  --btn-fg:     var(--oro-cream);
-  --btn-hover:  var(--oro-plum-deep);
-  --btn-shadow: #3a26464d;
+  --btn-bg:        var(--oro-ivory);
+  --btn-fg:        var(--oro-plum-deep);
+  --btn-border:    var(--oro-plum-deep);
+  --btn-hover:     var(--oro-plum-deep);
+  --btn-hover-fg:  var(--oro-cream);
+  --btn-shadow:    #3a26464d;
 }
 
 :root[data-theme="dark"] {
@@ -66,10 +68,12 @@
   --color-accent:   var(--oro-gold);
 
   --site-header-bg: #3a2646e6;
-  --btn-bg:     var(--oro-cream);
-  --btn-fg:     var(--oro-plum-deep);
-  --btn-hover:  var(--oro-ivory);
-  --btn-shadow: #0b0b0b59;
+  --btn-bg:        var(--oro-plum-soft);
+  --btn-fg:        var(--oro-cream);
+  --btn-border:    var(--oro-cream-45);
+  --btn-hover:     var(--oro-hover-on-dark);
+  --btn-hover-fg:  var(--oro-cream);
+  --btn-shadow:    #0b0b0b59;
 }
 
 :root[data-theme="light"] {
@@ -80,10 +84,12 @@
   --color-accent:   var(--oro-plum-deep);
 
   --site-header-bg: #fff9ede6;
-  --btn-bg:     var(--oro-plum-deep);
-  --btn-fg:     var(--oro-cream);
-  --btn-hover:  var(--oro-plum-deep);
-  --btn-shadow: #3a26464d;
+  --btn-bg:        var(--oro-ivory);
+  --btn-fg:        var(--oro-plum-deep);
+  --btn-border:    var(--oro-plum-deep);
+  --btn-hover:     var(--oro-plum-deep);
+  --btn-hover-fg:  var(--oro-cream);
+  --btn-shadow:    #3a26464d;
 }
 
 ::selection {
@@ -199,7 +205,7 @@ body {
   line-height: 1;
   background: var(--btn-bg);
   color: var(--btn-fg);
-  border: 1px solid var(--btn-bg);
+  border: 1px solid var(--btn-border);
   transition: all 0.2s ease;
 }
 
@@ -216,7 +222,7 @@ body {
 .oro-cta.site-cta:hover:not(:disabled) {
   background: var(--btn-hover);
   border-color: var(--btn-hover);
-  color: var(--btn-fg);
+  color: var(--btn-hover-fg);
   transform: translateY(-1px);
   box-shadow: 0 0 0 1.5px var(--color-accent), 0 8px 24px var(--btn-shadow);
 }
