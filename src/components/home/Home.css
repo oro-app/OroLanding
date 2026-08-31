@@ -10,7 +10,7 @@
      thread reads as continuous with the page bottom. */
   --home-page-bg: radial-gradient(95% 70% at 50% -8%, #fffdf8 0%, #fff9ed 46%, #fff2d7 100%);
 
-  min-height: 100vh;
+  min-height: calc(100vh - var(--site-chrome-height));
   background: var(--home-page-bg);
   color: var(--color-fg);
   font-family: var(--font-sans);
@@ -73,7 +73,10 @@
    device's tallest height. */
 .home-phone-sticky {
   position: sticky;
-  top: max(calc(var(--site-header-height) + 16px), calc(50vh - 320px));
+  top: max(
+    calc(var(--site-header-height) + 16px),
+    calc(50vh + (var(--site-header-height) / 2) - 311px)
+  );
   display: flex;
   justify-content: center;
   padding-top: 24px;

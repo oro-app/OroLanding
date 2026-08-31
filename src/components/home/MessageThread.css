@@ -28,7 +28,7 @@
   border-radius: 35px;
   overflow: hidden;
   background: #1b1221;
-  height: clamp(420px, calc(100vh - 160px), 600px);
+  height: clamp(420px, calc(100vh - var(--site-header-height) - 88px), 600px);
   display: flex;
   flex-direction: column;
 }

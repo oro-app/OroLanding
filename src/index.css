@@ -6,9 +6,14 @@
 @tailwind utilities;
 
 :root {
-  /* Measured from the rendered chrome: 18px padding, a 37px CTA, 1px border. */
+  /* Measured from the rendered chrome: the header is 18px padding + a 37px CTA
+     + a 1px border; the footer is 24px padding + a 30px wordmark + a 1px
+     border. e2e/chrome.spec.js asserts these still match what renders. */
   --site-header-height: 73px;
-  --site-footer-height: 68px;
+  --site-footer-height: 79px;
+  /* A full-bleed page block sits between the sticky header and the footer, so
+     both come off the viewport rather than the header alone. */
+  --site-chrome-height: calc(var(--site-header-height) + var(--site-footer-height));
 
   /* ── Redesign: semantic theme tokens. Default = light, matching
      ThemeProvider, so first paint before JS runs is not the wrong theme. ── */

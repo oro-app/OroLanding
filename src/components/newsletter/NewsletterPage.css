@@ -1,5 +1,5 @@
 .newsletter-page {
-  min-height: 100vh;
+  min-height: calc(100vh - var(--site-chrome-height));
   background:
     radial-gradient(1200px 600px at 80% -10%, rgba(212, 168, 83, 0.18), transparent 60%),
     radial-gradient(900px 500px at -10% 10%, rgba(58, 38, 70, 0.06), transparent 60%),
