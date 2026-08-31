@@ -2,11 +2,26 @@ import { test, expect } from './fixtures'
 
 // All backend responses are mocked (see fixtures.mockWaitlist) — these tests
 // never touch the real Supabase waitlist table.
+//
+// The modal auto-opens once per session on a newsletter article, which is the
+// only surface that still mounts it. seedStorage is off so that session key is
+// absent; cookie consent is seeded here so the banner stays out of the way.
+test.use({ seedStorage: false })
+
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(() => {
+    window.localStorage.setItem('oro_cookie_consent', 'declined')
+  })
+})
+
+async function openModal(page) {
+  await page.goto('/from-the-closet')
+  await page.locator('a[href^="/newsletter/"]').first().click()
+  await expect(page.locator('.modal-backdrop')).toBeVisible()
+}
 
 async function openModalAndSubmit(page, email) {
-  await page.goto('/')
-  await page.locator('.jr-subscribe').click()
-  await expect(page.locator('.modal-backdrop')).toBeVisible()
+  await openModal(page)
   await page.locator('.email-input').fill(email)
   await page.locator('button[aria-label="Subscribe to newsletter"]').click()
 }
@@ -31,7 +46,7 @@ test('successful signup shows the subscribed state', async ({ page, mockWaitlist
 test('duplicate email shows already-on-list state', async ({ page, mockWaitlist }) => {
   await mockWaitlist(409)
   await openModalAndSubmit(page, 'dupe@example.com')
-  await expect(page.locator('.modal-success')).toContainText("already on the list")
+  await expect(page.locator('.modal-success')).toContainText('already on the list')
 })
 
 test('server error shows the retry message', async ({ page, mockWaitlist }) => {
@@ -43,9 +58,7 @@ test('server error shows the retry message', async ({ page, mockWaitlist }) => {
 })
 
 test('close button dismisses the modal', async ({ page }) => {
-  await page.goto('/')
-  await page.locator('.jr-subscribe').click()
-  await expect(page.locator('.modal-backdrop')).toBeVisible()
+  await openModal(page)
   await page.locator('.modal-close-x').click()
   await expect(page.locator('.modal-backdrop')).toHaveCount(0)
 })

@@ -7,16 +7,13 @@ export const NAV_COLUMNS = [
   {
     head: 'product',
     links: [
-      { label: 'try oro',      href: '/try-oro' },
-      { label: 'how it works', href: '/how-it-works' },
-      { label: 'why oro?',     href: '/why-oro' },
+      { label: 'get started', href: '/get-started' },
     ],
   },
   {
     head: 'editorial',
     links: [
       { label: 'from the closet', href: '/from-the-closet' },
-      { label: 'honestly…',       href: '/honestly' },
     ],
   },
   {

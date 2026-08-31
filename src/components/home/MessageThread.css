@@ -1,0 +1,243 @@
+/* The hero phone. iOS chrome colours are fixed device colours, not theme
+   tokens — they must not flip with the site theme. */
+
+.mt-device {
+  position: relative;
+  width: 300px;
+  border-radius: 46px;
+  background: #0b0710;
+  padding: 11px;
+  box-shadow: 0 40px 90px -20px #000000b3, 0 0 0 2px #241a30, inset 0 0 0 2px #322340;
+}
+
+.mt-notch {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 112px;
+  height: 24px;
+  background: #0b0710;
+  border-radius: 0 0 15px 15px;
+  z-index: 3;
+}
+
+.mt-screen {
+  position: relative;
+  border-radius: 36px;
+  overflow: hidden;
+  background: #1b1221;
+  height: 624px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mt-statusbar {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.mt-status-right {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.mt-signal {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5px;
+}
+
+.mt-signal i { width: 3px; background: #fff; }
+.mt-signal i:nth-child(1) { height: 5px; }
+.mt-signal i:nth-child(2) { height: 7px; }
+.mt-signal i:nth-child(3) { height: 9px; }
+.mt-signal i:nth-child(4) { height: 11px; }
+
+.mt-battery {
+  display: block;
+  width: 16px;
+  height: 9px;
+  border: 1px solid #ffffffb3;
+  border-radius: 2px;
+}
+
+.mt-contact {
+  display: grid;
+  grid-template-columns: 30px 1fr 30px;
+  align-items: center;
+  padding: 2px 12px 8px;
+  border-bottom: 1px solid #38383a;
+}
+
+.mt-back {
+  color: #007aff;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.mt-contact-id {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mt-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: #3b3b3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  color: #fff;
+}
+
+.mt-contact-name {
+  font-size: 11.5px;
+  color: #fff;
+  margin-top: 3px;
+}
+
+/* Bottom-aligned so the oldest messages scroll off the top on their own. */
+.mt-thread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 12px 12px 16px;
+  overflow: hidden;
+}
+
+.mt-stamp {
+  margin: 0 auto 6px;
+  font-size: 11px;
+  color: #8e8e93;
+}
+
+.mt-stamp b {
+  color: #fff;
+  font-weight: 600;
+}
+
+.mt-row {
+  position: relative;
+  animation: oroRise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.mt-row--user {
+  align-self: flex-end;
+  max-width: 80%;
+}
+
+.mt-row--oro {
+  align-self: flex-start;
+  max-width: 84%;
+}
+
+.mt-bubble {
+  border-radius: 18px;
+  padding: 8px 13px;
+  font-size: 15px;
+  line-height: 20px;
+  color: #fff;
+}
+
+.mt-bubble--user { background: #007aff; }
+.mt-bubble--oro { background: #3b3b3d; }
+
+/* Bubble tails — a rounded square in the bubble colour, masked back to the
+   screen colour by a second shape on top. */
+.mt-tail,
+.mt-tail-mask {
+  position: absolute;
+  bottom: 0;
+  height: 20px;
+}
+
+.mt-tail { width: 20px; }
+.mt-tail-mask { width: 10px; background: #1b1221; }
+
+.mt-tail--user {
+  right: -8px;
+  background: #007aff;
+  border-bottom-left-radius: 15px;
+}
+
+.mt-tail-mask--user {
+  right: -10px;
+  border-bottom-left-radius: 10px;
+}
+
+.mt-tail--oro {
+  left: -8px;
+  background: #3b3b3d;
+  border-bottom-right-radius: 15px;
+}
+
+.mt-tail-mask--oro {
+  left: -10px;
+  border-bottom-right-radius: 10px;
+}
+
+.mt-typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 11px 14px;
+}
+
+.mt-typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #fff9ed8a;
+  animation: oroBlink 1.4s ease-in-out infinite;
+}
+
+.mt-typing i:nth-child(2) { animation-delay: 0.2s; }
+.mt-typing i:nth-child(3) { animation-delay: 0.4s; }
+
+.mt-look {
+  align-self: flex-start;
+  width: 150px;
+  height: 197px;
+  border-radius: 17px;
+  object-fit: cover;
+  background: #fff9ed;
+  animation: oroRise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.mt-receipt {
+  margin: -2px 0 0;
+  text-align: right;
+  font-size: 11px;
+  color: #8e8e93;
+}
+
+@keyframes oroRise {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes oroBlink {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mt-row,
+  .mt-look,
+  .mt-typing i {
+    animation: none;
+  }
+}

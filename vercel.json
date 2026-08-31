@@ -49,8 +49,12 @@
     }
   ],
   "redirects": [
-    { "source": "/journal",   "destination": "/from-the-closet", "permanent": true },
-    { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
+    { "source": "/journal",      "destination": "/from-the-closet", "permanent": true },
+    { "source": "/try-oro",      "destination": "/get-started",     "permanent": true },
+    { "source": "/how-it-works", "destination": "/",                "permanent": true },
+    { "source": "/why-oro",      "destination": "/",                "permanent": true },
+    { "source": "/honestly",     "destination": "/",                "permanent": true },
+    { "source": "/manifesto",    "destination": "/",                "permanent": true }
   ],
   "rewrites": [
     { "source": "/app", "destination": "/api/app" },

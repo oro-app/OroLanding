@@ -23,17 +23,17 @@ export default function SiteFooter() {
           </p>
           <a
             className="site-footer-tryoro"
-            href="/try-oro"
+            href="/get-started"
            
             rel="noopener noreferrer"
             onClick={() => {
-              trackCtaClick('try_oro_click', {
+              trackCtaClick('get_started_click', {
                 location: 'footer',
-                destination: 'try_oro',
+                destination: 'get_started',
               })
             }}
           >
-            try oro
+            get started
             <Arrow />
           </a>
         </div>

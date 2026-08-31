@@ -86,12 +86,12 @@ export default function SiteHeader() {
         </button>
 
         <a
-          href="/try-oro"
+          href="/get-started"
          
           rel="noopener noreferrer"
           className="site-header-tryoro"
         >
-          try oro
+          get started
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>

@@ -8,7 +8,15 @@ test('home page loads cleanly @smoke', async ({ page }) => {
 
   await page.goto('/')
   await expect(page).toHaveTitle(/oro/i)
-  // TheJournal is the live newsletter section on the home page.
-  await expect(page.locator('.jr-subscribe')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('ai stylist you can text')
   expect(consoleErrors).toEqual([])
+})
+
+test('every home CTA goes to /get-started', async ({ page }) => {
+  await page.goto('/')
+  const ctas = page.getByRole('button', { name: 'get started' })
+  await expect(ctas).toHaveCount(3)
+
+  await ctas.first().click()
+  await expect(page).toHaveURL(/\/get-started$/)
 })

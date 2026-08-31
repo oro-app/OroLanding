@@ -1,4 +1,4 @@
-import { CONTACT_FAQS, PRODUCT_FAQS } from './faqs.js'
+import { CONTACT_FAQS } from './faqs.js'
 
 export const SITE_URL = 'https://buildingoro.ca'
 export const SITE_NAME = 'Oro'
@@ -16,43 +16,10 @@ export const ROUTE_SEO = {
     path: '/',
     title: SITE_TITLE,
     description: DEFAULT_DESCRIPTION,
-    h1: 'Make your wardrobe work for you.',
+    h1: 'the #1 ai stylist you can text',
     summary:
       'Oro helps you get dressed with outfits built from your own closet, not a shopping feed.',
     priority: '1.0',
-  },
-  'try-oro': {
-    path: '/try-oro',
-    title: 'Try Oro - AI outfit planner and virtual stylist app',
-    description:
-      'Download Oro to get outfit ideas from your own clothes, preview looks with virtual try-on, and get dressed faster.',
-    h1: 'Try Oro.',
-    summary:
-      'Oro is free to start and builds outfits from your actual wardrobe in under a minute.',
-    priority: '0.9',
-    faqs: PRODUCT_FAQS,
-  },
-  'how-it-works': {
-    path: '/how-it-works',
-    title: 'How Oro Works - Outfit ideas from your own closet',
-    description:
-      'See how Oro turns your wardrobe, plans, taste, weather, and virtual try-on into outfit recommendations.',
-    h1: 'How Oro works.',
-    summary:
-      'Add your closet, tell Oro where you are going, preview the outfit, and leave with a look made from clothes you own.',
-    priority: '0.8',
-    faqs: PRODUCT_FAQS,
-  },
-  'why-oro': {
-    path: '/why-oro',
-    title: 'Why Oro - Personal styling without buying more clothes',
-    description:
-      'Oro is built around your closet, your taste, your body, and your week, so style recommendations feel personal.',
-    h1: 'Why Oro?',
-    summary:
-      'Oro thinks through color, silhouette, occasion, weather, and taste so your wardrobe is easier to use.',
-    priority: '0.8',
-    faqs: PRODUCT_FAQS,
   },
   journal: {
     path: '/from-the-closet',
@@ -63,16 +30,6 @@ export const ROUTE_SEO = {
     summary:
       'From the Closet is Oro\'s editorial archive on fashion, personal style, wardrobes, and getting dressed.',
     priority: '0.7',
-  },
-  manifesto: {
-    path: '/honestly',
-    title: 'Honestly - What Oro believes about style',
-    description:
-      'Six short beliefs behind Oro: personal style, confidence, better outfits, and making the most of your wardrobe.',
-    h1: 'Honestly.',
-    summary:
-      'Oro believes fashion should work for your life, and that the best outfit may already be in your wardrobe.',
-    priority: '0.6',
   },
   contact: {
     path: '/contact',
@@ -132,11 +89,7 @@ export const ROUTE_SEO = {
 
 export const PUBLIC_ROUTE_TYPES = [
   'home',
-  'try-oro',
-  'how-it-works',
-  'why-oro',
   'journal',
-  'manifesto',
   'contact',
   'get-started',
   'terms',
@@ -301,7 +254,7 @@ export function getSeoForRoute(route, newsletter) {
   const page = ROUTE_SEO[route?.type] || ROUTE_SEO.home
   const extras = []
 
-  if (['try-oro', 'how-it-works', 'why-oro'].includes(route?.type)) {
+  if (route?.type === 'home') {
     extras.push(makeSoftwareJsonLd(page))
   }
   if (page.faqs) {

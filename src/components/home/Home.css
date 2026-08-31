@@ -1,0 +1,360 @@
+/* Home page. Colour roles are declared once here and mapped to the canonical
+   --oro-* tokens; only the values with no token (the brand-ramp page gradient,
+   the translucent header, the button shadows) are literals. */
+
+.home-page {
+  --home-fg: var(--oro-cream);
+  --home-mute: var(--oro-cream-70);
+  --home-faint: var(--oro-cream-45);
+  --home-line: var(--oro-cream-line);
+  --home-accent: var(--oro-gold);
+  --home-btn-bg: var(--oro-cream);
+  --home-btn-fg: var(--oro-plum-deep);
+  --home-btn-hover: var(--oro-ivory);
+  --home-btn-shadow: #0b0b0b59;
+  /* The @oro/tokens brand plum ramp: brandRampTop -> brandRamp -> brandRampBlack. */
+  --home-page-bg: radial-gradient(120% 90% at 50% 0%, #4a315a 0%, #31203b 48%, #1b1221 100%);
+  --home-header-bg: #3a2646e6;
+  --home-header-h: 73px;
+
+  min-height: 100vh;
+  background: var(--home-page-bg);
+  color: var(--home-fg);
+  font-family: var(--font-sans);
+}
+
+:root[data-theme='light'] .home-page {
+  --home-fg: var(--oro-text-editorial);
+  --home-mute: var(--oro-text-editorial-muted);
+  --home-faint: var(--oro-faint);
+  --home-line: var(--oro-faint-line);
+  --home-accent: var(--oro-accent-text);
+  --home-btn-bg: var(--oro-plum-deep);
+  --home-btn-fg: var(--oro-cream);
+  --home-btn-hover: var(--oro-plum-deep);
+  --home-btn-shadow: #3a26464d;
+  --home-page-bg: radial-gradient(120% 90% at 50% 0%, #fffdf8 0%, #fff9ed 48%, #fff2d7 100%);
+  --home-header-bg: #fff9ede6;
+}
+
+.home-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-page a:hover {
+  color: var(--home-accent);
+}
+
+/* ── header ── */
+
+.home-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 56px;
+  background: var(--home-header-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--home-line);
+}
+
+/* The wordmark PNG is 500x500 with the glyph at roughly x 45-465, y 195-355,
+   so the box clips an oversized image down to the glyph. */
+.home-mark {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tailwind preflight caps images at their container width, which would squash
+   the oversized wordmark against its 37px clipping box. */
+.home-mark img {
+  position: absolute;
+  max-width: none;
+}
+
+.home-mark--header { width: 37px; height: 14px; }
+.home-mark--header img { left: -4px; top: -17px; width: 44px; height: 44px; }
+
+.home-mark--footer { width: 42px; height: 16px; }
+.home-mark--footer img { left: -5px; top: -20px; width: 50px; height: 50px; }
+
+/* ── CTAs ──
+   @oro/web's .oro-cta is serif *italic*; the client asked for upright buttons,
+   so these override the style, border and hover locally. The header size is
+   also smaller than any shipped .oro-cta variant. */
+
+.home-page .home-cta {
+  font-style: normal;
+  background: var(--home-btn-bg);
+  color: var(--home-btn-fg);
+  border: 1px solid var(--home-btn-bg);
+  transition: all 0.2s ease;
+}
+
+.home-page .home-cta--header { padding: 7px 15px; font-size: 13px; gap: 0; }
+.home-page .home-cta--hero { margin-top: 36px; }
+.home-page .home-cta--closer { margin-top: 34px; }
+
+.home-page .home-cta:hover:not(:disabled) {
+  background: var(--home-btn-hover);
+  border-color: var(--home-btn-hover);
+  color: var(--home-btn-fg);
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1.5px var(--home-accent), 0 8px 24px var(--home-btn-shadow);
+}
+
+/* ── hero + sticky phone ── */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 0.68fr;
+  gap: 64px;
+  padding: 0 56px;
+}
+
+.home-column {
+  padding: 84px 0 104px;
+}
+
+.home-phone-sticky {
+  position: sticky;
+  top: calc(var(--home-header-h) + 16px);
+  display: flex;
+  justify-content: center;
+  padding-top: 84px;
+}
+
+.home-h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 54px;
+  line-height: 1;
+  letter-spacing: -0.032em;
+  max-width: 430px;
+}
+
+.home-h1 em {
+  font-style: italic;
+  color: var(--home-accent);
+}
+
+.home-proof {
+  margin: 18px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--home-mute);
+  max-width: 440px;
+}
+
+.home-proof span {
+  color: var(--home-fg);
+  font-weight: 500;
+}
+
+/* ── sections ── */
+
+.home-block {
+  margin-top: 150px;
+}
+
+.home-h2 {
+  margin: 0 0 52px;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 42px;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
+  max-width: 420px;
+}
+
+.home-h2--lead {
+  margin: 0;
+  font-size: 48px;
+  line-height: 1.02;
+  max-width: 430px;
+  text-wrap: pretty;
+}
+
+.home-h2--scales { margin-bottom: 36px; }
+
+.home-h2--closer {
+  margin: 0 auto;
+  font-size: 44px;
+  line-height: 1.04;
+  max-width: 500px;
+}
+
+.home-body {
+  margin: 36px 0 0;
+  font-size: 17.5px;
+  line-height: 1.65;
+  color: var(--home-mute);
+  max-width: 490px;
+  text-wrap: pretty;
+}
+
+.home-pull + .home-body { margin-top: 26px; }
+
+.home-pull {
+  margin: 26px 0 0;
+  font-style: italic;
+  font-size: 20.5px;
+  line-height: 1.45;
+  letter-spacing: -0.012em;
+  max-width: 440px;
+}
+
+.home-eyebrow {
+  margin: 0 0 20px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--home-accent);
+}
+
+.home-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 540px;
+}
+
+.home-reason {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.home-reason p {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.home-tick {
+  color: var(--home-accent);
+  font-size: 15px;
+}
+
+.home-reason-note {
+  margin: 2px 0 0;
+  font-size: 19px;
+  line-height: 1.35;
+  font-style: italic;
+  color: var(--home-accent);
+}
+
+/* ── the scales ──
+   The 152px anchor gutters are load-bearing: at 14px Inter "oversized on
+   purpose" is the longest label and wraps below ~150px. */
+
+.home-scales {
+  margin-top: 64px;
+  max-width: 540px;
+}
+
+.home-scale {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 0;
+}
+
+.home-scale-anchor {
+  flex: 0 0 152px;
+  font-size: 14px;
+  color: var(--home-mute);
+}
+
+.home-scale-anchor--left { text-align: right; }
+
+.home-scale-track {
+  flex: 0 0 190px;
+  position: relative;
+  height: 1px;
+  background: var(--home-line);
+}
+
+.home-scale-dot {
+  position: absolute;
+  top: -4.5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--home-accent);
+  box-shadow: 0 0 12px var(--home-accent);
+}
+
+/* ── closing CTA + footer ── */
+
+.home-closer {
+  text-align: center;
+  padding: 104px 56px;
+  border-top: 1px solid var(--home-line);
+}
+
+.home-footer {
+  padding: 24px 56px;
+  border-top: 1px solid var(--home-line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--home-faint);
+}
+
+.home-footer-links {
+  display: flex;
+  gap: 22px;
+}
+
+/* ── responsive ──
+   Below the grid breakpoint the phone follows the hero copy and stops
+   sticking, and the scale anchors stack around their track. */
+
+@media (max-width: 900px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0 24px;
+  }
+
+  .home-header,
+  .home-closer,
+  .home-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .home-column { padding: 56px 0 24px; }
+
+  .home-phone-sticky {
+    position: static;
+    padding: 0 0 72px;
+  }
+
+  .home-h1 { font-size: 40px; }
+  .home-h2 { font-size: 32px; margin-bottom: 36px; }
+  .home-h2--lead { font-size: 34px; }
+  .home-h2--closer { font-size: 32px; }
+  .home-block { margin-top: 96px; }
+
+  .home-scale {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .home-scale-anchor {
+    flex: 0 0 auto;
+    text-align: left;
+  }
+
+  .home-scale-track { flex: 0 0 auto; width: 100%; }
+}

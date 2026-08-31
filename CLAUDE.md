@@ -61,16 +61,15 @@ There is **no** React Router (or any router) dependency. `App.jsx` does its own 
 
 | Path | `route.type` | Component |
 |---|---|---|
-| `/` | `home` | inline home sections (`Hero`, `WhyOro`, `TheFilm`, `FitsByOro`, `Testimonials`, `TheJournal`, `OroInsiders`, `FinalCTA`) |
+| `/` | `home` | `home/Home` (single-scroll landing; `home/MessageThread` is the hero phone) |
 | `/newsletter/:slug` | `newsletter` | `newsletter/NewsletterPage` |
 | `/from-the-closet` | `journal` | `journal/JournalPage` (editorial archive) |
-| `/try-oro` | `try-oro` | `try-oro/TryOro` |
-| `/how-it-works` | `how-it-works` | `how-it-works/HowItWorks` |
-| `/why-oro` | `why-oro` | `why-oro/WhyOro` |
-| `/honestly` | `manifesto` | `manifesto/Manifesto` |
 | `/contact` | `contact` | `contact/Contact` |
+| `/get-started` | `get-started` | `get-started/GetStarted` (the only signup path) |
 
-All non-home pages are `React.lazy` + `Suspense` code-split. `vercel.json` redirects the old `/journal` → `/from-the-closet` and `/manifesto` → `/honestly` (permanent).
+All non-home pages are `React.lazy` + `Suspense` code-split. Home is eager, so its CSS lives in `src/site.css` rather than being imported from the component.
+
+The pre-pivot marketing sub-pages (`/try-oro`, `/how-it-works`, `/why-oro`, `/honestly`) were deleted with the landing redesign; `vercel.json` 301s them alongside `/journal` → `/from-the-closet`. Home also renders its own stripped header and footer — `SiteHeader` is mounted for every route *except* home, and `SiteFooter` is rendered by each sub-page.
 
 **Adding/renaming a route touches two files that must stay in sync:** `getRouteFromPath` in `App.jsx` (runtime routing) **and** `ROUTE_SEO` + `PUBLIC_ROUTE_TYPES` in `src/lib/seo.js` (prerender + sitemap + llms.txt). A route missing from `seo.js` won't be prerendered; one missing from `App.jsx` renders the home page at that URL.
 
@@ -82,8 +81,8 @@ All non-home pages are `React.lazy` + `Suspense` code-split. `vercel.json` redir
 
 - `App.jsx` — routing (above) + analytics wiring. A global `click` listener tracks outbound/internal link navigations and social-link clicks; `popstate`/`hashchange` re-fire page views. Inits Google Analytics only with cookie consent (`localStorage['oro_cookie_consent'] === 'accepted'`). Wraps the tree in `ThemeProvider`.
 - `src/context/ThemeContext.jsx` — dark/light theme provider. Default is dark; persisted to `localStorage['oro_theme']`; toggles `<html data-theme="dark|light">` so the CSS variables in `index.css` flip, and sets `<body>` background to avoid overscroll color flashes.
-- `src/components/` — grouped by feature/page: `layout/` (`SiteHeader`, `SiteFooter` — chrome on every route), `overlays/` (`CookieConsent`, `WaitlistModal`), `home/`, `newsletter/`, `journal/`, `try-oro/`, `how-it-works/`, `why-oro/`, `manifesto/`, `contact/`, plus shared `marketing/`, `closet/`. Each component has a co-located `.css` file for layout/animation that's awkward in Tailwind.
-- `src/components/overlays/WaitlistModal.jsx` — email signup; POSTs to `api/waitlist`, returns 409 if already registered. Mounted lazily from `App.jsx` (the journal/newsletter mailing-list CTAs); most "try Oro" CTAs instead route to `/try-oro`.
+- `src/components/` — grouped by feature/page: `layout/` (`SiteHeader`, `SiteFooter`), `overlays/` (`CookieConsent`, `WaitlistModal`), `home/`, `newsletter/`, `journal/`, `contact/`, `get-started/`, plus shared `closet/`. Each component has a co-located `.css` file for layout/animation that's awkward in Tailwind.
+- `src/components/overlays/WaitlistModal.jsx` — email signup; POSTs to `api/waitlist`, returns 409 if already registered. Its only remaining surface is `NewsletterPage`, which auto-opens it once per session; every other CTA on the site routes to `/get-started`.
 - `src/content/newsletters/*.mdx` — newsletter source. Filename = slug (URL `/newsletter/<filename>`). The `export const meta = {…}` block supplies title/tag/date/image/summary/readTime. **Gating fields the build respects:** only `published === true` entries are prerendered/sitemapped/listed; `comingSoon === true` marks an entry as not-yet-readable (listed but no article prerender); `releaseAt` (full ISO timestamp) time-gates an issue — `src/lib/newsletters.js` filters the `releasedNewsletters` list on `published === true && hasReleased(...)`, so an issue with a future `releaseAt` is hidden until that moment (falls back to date-only at UTC midnight when `releaseAt` is unset). Note the two derived lists in `newsletters.js`: `releasedNewsletters` (published + released, for the public client) vs `readableNewsletters` (just `!comingSoon`). `src/lib/newsletters.js` globs them with `import.meta.glob` for the client; `generate-seo.mjs` re-parses the meta independently at build time.
 - `src/lib/` — `analytics.js` (consent-gated `window.gtag` wrapper + event helpers; has a hardcoded fallback GA ID), `seo.js`, `faqs.js`, `newsletters.js`, `newsletterSignup.js` (sessionStorage/localStorage gating for the signup modal — "seen this session" + "already signed up"), `links.js`/`siteLinks.js` (external + nav URLs), `stats.js`, `placeholderPhotos.js`.
 
