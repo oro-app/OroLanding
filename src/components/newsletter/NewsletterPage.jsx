@@ -164,12 +164,8 @@ export default function NewsletterPage({ slug }) {
           </div>
 
           <div className="newsletter-article-cta">
-            <p className="newsletter-article-cta-eyebrow">try oro</p>
-            <p className="newsletter-article-cta-text">
-              oro is a stylist you text. tell it where you&rsquo;re going and get an outfit back.
-            </p>
             <a
-              className="oro-cta oro-cta--compact site-cta nl-store-link"
+              className="oro-cta oro-cta--statement site-cta site-cta--closer nl-cta-link"
               href="/get-started"
               onClick={() => {
                 trackCtaClick('get_started_click', {

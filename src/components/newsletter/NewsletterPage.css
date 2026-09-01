@@ -285,34 +285,12 @@
 .newsletter-article-cta {
   max-width: 680px;
   margin: clamp(3rem, 6vw, 4.5rem) auto 0;
-  padding: clamp(1.5rem, 3vw, 2rem);
-  background: linear-gradient(135deg, rgba(58, 38, 70, 0.06), rgba(212, 168, 83, 0.12));
-  border: 1px solid rgba(58, 38, 70, 0.1);
-  border-radius: 14px;
   text-align: center;
-}
-
-.newsletter-article-cta-eyebrow {
-  margin: 0 0 0.4rem;
-  color: var(--oro-accent-text);
-  font-size: var(--text-2xs);
-  font-weight: 500;
-  letter-spacing: normal;
-}
-
-.newsletter-article-cta-text {
-  margin: 0 auto 1.1rem;
-  max-width: 420px;
-  color: var(--oro-plum-deep);
-  font-family: var(--font-serif);
-  font-size: var(--type-serif-body);
-  font-weight: 400;
-  line-height: 1.25;
 }
 
 /* A real anchor, not @oro/web's Cta: it renders a <button>, so an href on it
    never navigates. */
-.nl-store-link {
+.nl-cta-link {
   display: inline-flex;
   text-decoration: none;
 }
@@ -402,9 +380,5 @@
   .newsletter-mdx blockquote {
     font-size: 1.2rem;
     padding-left: 1.1rem;
-  }
-
-  .newsletter-article-cta-text {
-    font-size: 1.2rem;
   }
 }
