@@ -32,7 +32,7 @@
   background: var(--oro-plum-deep);
   color: var(--oro-cream);
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 :root[data-theme='dark'] .site-header-theme {
@@ -41,7 +41,7 @@
 }
 
 .site-header-theme:hover {
-  border-color: var(--color-accent);
+  transform: translateY(-1px);
 }
 
 .oro-wordmark {

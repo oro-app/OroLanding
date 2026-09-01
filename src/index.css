@@ -213,12 +213,14 @@ body {
   padding: 21px 24px;
 }
 
-.oro-cta.site-cta:hover:not(:disabled) {
+/* @oro/web's inverse hover draws a 1.5px gold ring, and overrides it for the
+   light theme only, so the selector has to outrank both of its rules. */
+:root .oro-cta.site-cta.site-cta:hover:not(:disabled) {
   background: var(--btn-hover);
   border-color: var(--btn-hover);
   color: var(--btn-fg);
   transform: translateY(-1px);
-  box-shadow: 0 0 0 1.5px var(--color-accent), 0 8px 24px var(--btn-shadow);
+  box-shadow: 0 8px 24px var(--btn-shadow);
 }
 
 @media (max-width: 900px) {
