@@ -139,8 +139,6 @@
   text-wrap: pretty;
 }
 
-.home-h2--scales { margin-bottom: 36px; }
-
 .home-h2--closer {
   margin: 0 auto;
   font-size: var(--type-hero);
@@ -206,47 +204,6 @@
   color: var(--color-accent);
 }
 
-/* ── the scales ──
-   The 152px anchor gutters are load-bearing: at 14px Inter "oversized on
-   purpose" is the longest label and wraps below ~150px. */
-
-.home-scales {
-  margin-top: var(--space-xl);
-  max-width: 540px;
-}
-
-.home-scale {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 10px 0;
-}
-
-.home-scale-anchor {
-  flex: 0 0 152px;
-  font-size: var(--text-xs);
-  color: var(--color-fg-faint);
-}
-
-.home-scale-anchor--left { text-align: right; }
-
-.home-scale-track {
-  flex: 0 0 190px;
-  position: relative;
-  height: 1px;
-  background: var(--color-fg-line);
-}
-
-.home-scale-dot {
-  position: absolute;
-  top: -4.5px;
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--color-accent);
-  box-shadow: 0 0 12px var(--color-accent);
-}
-
 /* ── closing CTA + footer ── */
 
 .home-closer {
@@ -295,19 +252,6 @@
   .home-h2--lead { font-size: 34px; }
   .home-h2--closer { font-size: 32px; }
   .home-block { margin-top: 96px; }
-
-  .home-scale {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .home-scale-anchor {
-    flex: 0 0 auto;
-    text-align: left;
-  }
-
-  .home-scale-track { flex: 0 0 auto; width: 100%; }
 }
 
 /* ── entrance ──

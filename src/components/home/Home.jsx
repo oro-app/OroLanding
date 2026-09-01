@@ -49,14 +49,6 @@ function GetStarted({ size, place, label = 'get started' }) {
   )
 }
 
-const SCALES = [
-  { left: 'casual', at: '52%', right: 'black tie' },
-  { left: 'warm out', at: '74%', right: 'freezing' },
-  { left: 'sitting all night', at: '30%', right: 'on your feet' },
-  { left: 'your neutrals', at: '62%', right: 'your best colour' },
-  { left: 'fitted to you', at: '38%', right: 'oversized on purpose' },
-]
-
 const REASONS = ['it knows your closet', 'it answers in a minute', 'it tells you why']
 
 function revealClass(revealed) {
@@ -66,7 +58,6 @@ function revealClass(revealed) {
 export default function Home() {
   const [valueRef, valueShown] = useRevealOnScroll(0.15)
   const [reasonsRef, reasonsShown] = useRevealOnScroll(0.15)
-  const [scalesRef, scalesShown] = useRevealOnScroll(0.15)
   const [closerRef, closerShown] = useRevealOnScroll(0.2)
 
   return (
@@ -105,32 +96,17 @@ export default function Home() {
             <p className="home-pull">oro makes sure you never show up wrong.</p>
           </section>
 
-          <section className="home-block">
-            <div className={revealClass(reasonsShown)} ref={reasonsRef}>
-              <p className="home-eyebrow">why it works</p>
-              <h2 className="home-h2">it&rsquo;s not guessing. it knows you.</h2>
-              <div className="home-reasons">
-                {REASONS.map((reason) => (
-                  <div className="home-reason" key={reason}>
-                    <span className="home-tick" aria-hidden="true">✓</span>
-                    <p>{reason}</p>
-                  </div>
-                ))}
-                <p className="home-reason-note">it gets more personal every time</p>
-              </div>
-            </div>
-
-            <div className={`home-scales ${revealClass(scalesShown)}`} ref={scalesRef}>
-              <h2 className="home-h2 home-h2--scales">what makes an outfit work.</h2>
-              {SCALES.map((scale) => (
-                <div className="home-scale" key={scale.left}>
-                  <span className="home-scale-anchor home-scale-anchor--left">{scale.left}</span>
-                  <span className="home-scale-track">
-                    <span className="home-scale-dot" style={{ left: scale.at }} />
-                  </span>
-                  <span className="home-scale-anchor">{scale.right}</span>
+          <section className={`home-block ${revealClass(reasonsShown)}`} ref={reasonsRef}>
+            <p className="home-eyebrow">why it works</p>
+            <h2 className="home-h2">it&rsquo;s not guessing. it knows you.</h2>
+            <div className="home-reasons">
+              {REASONS.map((reason) => (
+                <div className="home-reason" key={reason}>
+                  <span className="home-tick" aria-hidden="true">✓</span>
+                  <p>{reason}</p>
                 </div>
               ))}
+              <p className="home-reason-note">it gets more personal every time</p>
             </div>
           </section>
         </div>
