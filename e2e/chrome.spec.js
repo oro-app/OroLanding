@@ -35,15 +35,40 @@ test('a short page fits the viewport without scrolling', async ({ page }) => {
   expect(overflow).toBeLessThanOrEqual(1)
 })
 
-test('the hero fills the screen below the header', async ({ page }) => {
+test('the pinned stage fills the screen below the header', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/')
   const m = await page.evaluate(() => {
-    const hero = document.querySelector('.home-hero').getBoundingClientRect()
-    const next = document.querySelector('.home-block').getBoundingClientRect()
-    return { heroHeight: hero.height, nextTop: next.top, viewport: window.innerHeight }
+    const stage = document.querySelector('.home-stage').getBoundingClientRect()
+    return {
+      stageTop: Math.round(stage.top),
+      stageHeight: Math.round(stage.height),
+      viewport: window.innerHeight,
+      headerHeight: Math.round(document.querySelector('.site-header').getBoundingClientRect().height),
+      activePanels: document.querySelectorAll('.home-panel.is-active').length,
+    }
   })
-  // No part of the following section is on screen at rest.
-  expect(m.nextTop).toBeGreaterThanOrEqual(m.viewport)
-  expect(m.heroHeight).toBeGreaterThanOrEqual(m.viewport - 80)
+  expect(m.stageTop).toBe(m.headerHeight)
+  expect(m.stageHeight).toBe(m.viewport - m.headerHeight)
+  // Exactly one panel is shown at a time.
+  expect(m.activePanels).toBe(1)
+})
+
+test('scrolling swaps the pinned panels', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  const activeText = () =>
+    page.evaluate(() => document.querySelector('.home-panel.is-active')?.textContent?.trim() ?? '')
+
+  const first = await activeText()
+  await page.evaluate(() => window.scrollTo(0, 900))
+  await page.waitForTimeout(700)
+  const second = await activeText()
+
+  expect(first).not.toBe(second)
+  // The phone stays put while the panels change.
+  const pinned = await page.evaluate(() =>
+    Math.round(document.querySelector('.home-stage').getBoundingClientRect().top),
+  )
+  expect(pinned).toBe(73)
 })

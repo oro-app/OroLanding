@@ -40,31 +40,51 @@
   padding: 0 var(--site-gutter);
 }
 
-/* The hero owns the first screen. Its content is centred rather than pushed
-   down by a fixed offset, so a tall viewport does not leave dead space under
-   the proof line. */
-.home-hero {
+/* The left column is a pinned stage: one panel is shown at a time and the next
+   replaces it as the page scrolls, while the phone stays put beside it. The
+   scroller is tall enough to give each panel its own screen of scroll. */
+.home-scroller {
   grid-column: 1;
   grid-row: 1;
-  min-height: calc(100vh - var(--site-header-height));
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: var(--space-sm) 0;
+  height: calc(3 * (100vh - var(--site-header-height)));
 }
 
-.home-sections {
-  grid-column: 1;
-  grid-row: 2;
-  padding-bottom: var(--space-md);
+.home-stage {
+  position: sticky;
+  top: var(--site-header-height);
+  height: calc(100vh - var(--site-header-height));
+  display: grid;
 }
 
-/* Spans both rows so the phone can stay pinned past the hero and the sections.
-   The bottom padding is on the sticky element's containing block, so the phone
+/* Panels stack on one grid cell so they swap in place. */
+.home-panel {
+  grid-area: 1 / 1;
+  align-self: center;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.home-panel.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.home-panel.is-next,
+.home-panel.is-past {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The next panel arrives from the right and the previous one leaves to the
+   left, so the swap follows the direction the copy is read in. */
+.home-panel.is-next { transform: translateX(64px); }
+.home-panel.is-past { transform: translateX(-64px); }
+
+/* The bottom padding is on the sticky element's containing block, so the phone
    releases above the closing section's hairline instead of resting on it. */
 .home-phone-column {
   grid-column: 2;
-  grid-row: 1 / span 2;
+  grid-row: 1;
   padding-bottom: var(--space-md);
 }
 
@@ -221,27 +241,36 @@
     grid-template-columns: 1fr;
   }
 
-  /* Stacked, the phone follows the hero copy rather than the whole page, and a
-     full-height hero would push it a screen further down. */
-  .home-hero {
+  /* Stacked, nothing pins: the panels return to normal flow and the phone
+     follows the first one. */
+  .home-scroller {
     grid-column: 1;
     grid-row: auto;
     order: 1;
-    min-height: 0;
+    height: auto;
+  }
+
+  .home-stage {
+    position: static;
+    height: auto;
+    display: block;
     padding: 56px 0 0;
   }
+
+  .home-panel,
+  .home-panel > * {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .home-panel + .home-panel { margin-top: 96px; }
 
   .home-phone-column {
     grid-column: 1;
     grid-row: auto;
     order: 2;
     padding: 40px 0 0;
-  }
-
-  .home-sections {
-    grid-column: 1;
-    grid-row: auto;
-    order: 3;
   }
 
   .home-phone-sticky {
@@ -324,4 +353,24 @@
     transform: none;
     transition: none;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-scroller { height: auto; }
+
+  .home-stage {
+    position: static;
+    height: auto;
+    display: block;
+  }
+
+  .home-panel,
+  .home-panel > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    pointer-events: auto;
+  }
+
+  .home-panel + .home-panel { margin-top: var(--space-lg); }
 }
