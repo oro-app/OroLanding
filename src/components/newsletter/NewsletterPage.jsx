@@ -175,7 +175,7 @@ export default function NewsletterPage({ slug }) {
                 })
               }}
             >
-              text oro
+              ask oro what to wear
             </a>
           </div>
         </article>
