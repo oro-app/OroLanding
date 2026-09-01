@@ -3,7 +3,6 @@ import { getNewsletterBySlug } from '../../lib/newsletters'
 import NewsletterRecommendations from './NewsletterRecommendations'
 import WaitlistModal from '../overlays/WaitlistModal'
 import { hasAnalyticsConsent, trackCtaClick, trackEvent } from '../../lib/analytics'
-import { APP_STORE_URL, PLAY_STORE_URL } from '../../lib/links'
 import {
   hasSeenNewsletterSignupThisSession,
   hasSignedUpForNewsletter,
@@ -167,44 +166,21 @@ export default function NewsletterPage({ slug }) {
           <div className="newsletter-article-cta">
             <p className="newsletter-article-cta-eyebrow">try oro</p>
             <p className="newsletter-article-cta-text">
-              download oro and start creating outfits from your style with your clothes.
+              oro is a stylist you text. tell it where you&rsquo;re going and get an outfit back.
             </p>
-            <div className="newsletter-article-cta-links">
             <a
               className="oro-cta oro-cta--compact site-cta nl-store-link"
-              href={APP_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/get-started"
               onClick={() => {
-                trackCtaClick('app_store_click', {
+                trackCtaClick('get_started_click', {
                   location: 'newsletter_article',
                   slug: newsletter.slug,
-                  store: 'apple_app_store',
-                  destination: 'app_store',
-                  destination_url: APP_STORE_URL,
+                  destination: 'get_started',
                 })
               }}
             >
-              download on the app store
+              get started
             </a>
-            <a
-              className="oro-cta oro-cta--compact site-cta nl-store-link"
-              href={PLAY_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => {
-                trackCtaClick('google_play_click', {
-                  location: 'newsletter_article',
-                  slug: newsletter.slug,
-                  store: 'google_play',
-                  destination: 'play_store',
-                  destination_url: PLAY_STORE_URL,
-                })
-              }}
-            >
-              get it on google play
-            </a>
-            </div>
           </div>
         </article>
       </div>

@@ -310,16 +310,10 @@
   line-height: 1.25;
 }
 
-/* Real anchors, not @oro/web's Cta: it renders a <button>, so an href on it
-   never navigates. They take the site CTA recipe and sit side by side. */
-.newsletter-article-cta-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-}
-
+/* A real anchor, not @oro/web's Cta: it renders a <button>, so an href on it
+   never navigates. */
 .nl-store-link {
+  display: inline-flex;
   text-decoration: none;
 }
 
