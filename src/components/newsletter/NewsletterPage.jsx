@@ -175,7 +175,7 @@ export default function NewsletterPage({ slug }) {
                 })
               }}
             >
-              get started
+              text oro
             </a>
           </div>
         </article>
