@@ -282,10 +282,14 @@
 
 /* ---------- End-of-article CTA ---------- */
 
+/* Sits in the article column and hangs on the same left margin the prose does,
+   rather than centring on the shell, which straddles the sidebar gutter. */
 .newsletter-article-cta {
   max-width: 680px;
-  margin: clamp(3rem, 6vw, 4.5rem) auto 0;
-  text-align: center;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  padding-top: clamp(1.75rem, 3vw, 2.25rem);
+  border-top: 1px solid var(--oro-faint-line);
+  text-align: left;
 }
 
 /* A real anchor, not @oro/web's Cta: it renders a <button>, so an href on it

@@ -158,26 +158,27 @@ export default function NewsletterPage({ slug }) {
               <div className="newsletter-mdx">
                 <Article components={MDX_COMPONENTS} />
               </div>
+
+            <div className="newsletter-article-cta">
+              <a
+                className="oro-cta oro-cta--statement site-cta site-cta--closer nl-cta-link"
+                href="/get-started"
+                onClick={() => {
+                  trackCtaClick('get_started_click', {
+                    location: 'newsletter_article',
+                    slug: newsletter.slug,
+                    destination: 'get_started',
+                  })
+                }}
+              >
+                ask oro what to wear
+              </a>
+            </div>
             </div>
 
             <NewsletterRecommendations currentSlug={newsletter.slug} />
           </div>
 
-          <div className="newsletter-article-cta">
-            <a
-              className="oro-cta oro-cta--statement site-cta site-cta--closer nl-cta-link"
-              href="/get-started"
-              onClick={() => {
-                trackCtaClick('get_started_click', {
-                  location: 'newsletter_article',
-                  slug: newsletter.slug,
-                  destination: 'get_started',
-                })
-              }}
-            >
-              ask oro what to wear
-            </a>
-          </div>
         </article>
       </div>
 
