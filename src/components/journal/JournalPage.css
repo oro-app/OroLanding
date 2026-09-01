@@ -29,9 +29,9 @@
   margin: 0 0 28px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--type-serif-2xs);
   color: var(--oro-gold);
-  letter-spacing: 0.4px;
+  letter-spacing: normal;
 }
 
 .ftc-title {
@@ -39,8 +39,8 @@
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: var(--type-hero);
-  line-height: 0.94;
-  letter-spacing: -3px;
+  line-height: var(--lh-hero);
+  letter-spacing: var(--tr-hero);
   color: var(--color-fg);
 }
 .ftc-em {
@@ -55,7 +55,7 @@
   font-family: var(--font-serif);
   font-weight: 300;
   font-style: italic;
-  font-size: 21px;
+  font-size: var(--type-serif-body);
   line-height: 1.5;
   letter-spacing: -0.3px;
   color: var(--color-fg-faint);
@@ -85,5 +85,5 @@
 }
 @media (max-width: 720px) {
   .ftc-title { font-size: 48px; line-height: 0.98; letter-spacing: -1.4px; }
-  .ftc-sub   { font-size: 17px; }
+  .ftc-sub   { font-size: var(--type-serif-sm); }
 }

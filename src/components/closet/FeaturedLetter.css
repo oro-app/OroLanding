@@ -19,9 +19,9 @@
 .fl-prerule-label {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--type-serif-2xs);
   color: var(--oro-gold);
-  letter-spacing: 0.3px;
+  letter-spacing: normal;
 }
 .fl-prerule-line {
   flex: 1;
@@ -33,10 +33,10 @@
   align-items: baseline;
   gap: 8px;
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: var(--text-2xs);
   font-weight: 500;
   color: var(--color-fg-faint);
-  letter-spacing: 0.6px;
+  letter-spacing: normal;
   text-transform: lowercase;
 }
 .fl-prerule-dot { opacity: 0.6; }
@@ -66,7 +66,7 @@
   color: var(--oro-ink);
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--type-serif-2xs);
   letter-spacing: -0.2px;
   box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.5);
 }
@@ -76,7 +76,7 @@
   margin-top: 26px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   color: var(--color-fg-faint);
 }
 
@@ -102,8 +102,8 @@
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: var(--type-display);
-  line-height: 1.02;
-  letter-spacing: -1.6px;
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
   color: var(--color-fg);
 }
 .fl-em {
@@ -116,7 +116,7 @@
   max-width: 460px;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 19px;
+  font-size: var(--type-serif-body);
   line-height: 1.5;
   letter-spacing: -0.2px;
   color: var(--color-fg-faint);
@@ -130,7 +130,7 @@
   padding-bottom: 4px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   color: var(--color-fg);
   border-bottom: 1px solid currentColor;
   transition: color 200ms ease;
@@ -186,6 +186,6 @@
   .fl              { padding: 24px 20px 64px; }
   .fl-card         { grid-template-columns: 1fr; gap: 32px; }
   .fl-title        { font-size: 40px; letter-spacing: -1.1px; }
-  .fl-excerpt      { font-size: 17px; }
-  .fl-readlink     { font-size: 16px; }
+  .fl-excerpt      { font-size: var(--type-serif-sm); }
+  .fl-readlink     { font-size: var(--type-serif-xs); }
 }

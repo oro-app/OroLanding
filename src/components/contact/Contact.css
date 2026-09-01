@@ -20,9 +20,9 @@
   gap: 10px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 13.5px;
+  font-size: var(--type-serif-2xs);
   color: var(--color-fg-faint);
-  letter-spacing: 0.3px;
+  letter-spacing: normal;
 }
 .ct-kicker-dot {
   width: 5px; height: 5px; border-radius: 999px;
@@ -33,8 +33,8 @@
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: var(--type-hero);
-  line-height: 0.96;
-  letter-spacing: -3px;
+  line-height: var(--lh-hero);
+  letter-spacing: var(--tr-hero);
   color: var(--color-fg);
 }
 .ct-em { font-style: italic; }
@@ -44,7 +44,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 300;
-  font-size: 19px;
+  font-size: var(--type-serif-body);
   line-height: 1.5;
   color: var(--color-fg-faint);
 }
@@ -87,9 +87,9 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: var(--text-2xs);
   font-weight: 500;
-  letter-spacing: 2.6px;
+  letter-spacing: normal;
   color: rgba(14, 11, 7, 0.55);
   text-transform: lowercase;
 }
@@ -102,7 +102,7 @@
   font-style: italic;
   font-weight: 300;
   font-size: var(--type-sub);
-  letter-spacing: -0.4px;
+  letter-spacing: var(--tr-sub);
   color: var(--oro-plum-deep);
 }
 
@@ -113,7 +113,7 @@
   margin: 0 0 18px;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   line-height: 1.7;
   letter-spacing: -0.1px;
   color: var(--oro-ink);
@@ -125,7 +125,7 @@
   margin: 40px 0 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 22px;
+  font-size: var(--type-serif-body);
   color: var(--oro-plum-deep);
   line-height: 1.5;
 }
@@ -160,7 +160,7 @@
   padding: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   line-height: 1.7;
   letter-spacing: -0.1px;
   color: var(--oro-ink);
@@ -171,7 +171,7 @@
   margin: 28px 0 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 22px;
+  font-size: var(--type-serif-body);
   color: var(--oro-plum-deep);
 }
 
@@ -199,7 +199,7 @@
   margin: 4px 0 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 12px;
+  font-size: var(--text-2xs);
   color: rgba(14, 11, 7, 0.5);
 }
 
@@ -209,9 +209,9 @@
   display: block;
   margin-bottom: 12px;
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: var(--text-2xs);
   font-weight: 500;
-  letter-spacing: 2.6px;
+  letter-spacing: normal;
   color: rgba(14, 11, 7, 0.55);
 }
 .ct-chips-row {
@@ -226,7 +226,7 @@
   margin: 12px 0 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--type-serif-2xs);
   color: rgba(14, 11, 7, 0.6);
 }
 .ct-error a { color: var(--oro-plum-deep); }
@@ -237,7 +237,7 @@
   border-top: 1px dashed rgba(14, 11, 7, 0.2);
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--type-serif-2xs);
   color: rgba(14, 11, 7, 0.5);
 }
 
@@ -252,7 +252,7 @@
   margin: 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 22px;
+  font-size: var(--type-serif-body);
   color: var(--oro-plum-deep);
   text-align: center;
 }
@@ -269,9 +269,9 @@
   margin: 0 0 18px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--type-serif-2xs);
   color: var(--oro-gold);
-  letter-spacing: 0.4px;
+  letter-spacing: normal;
 }
 .ct-faq-list {
   border-top: 1px solid var(--color-fg-line);
@@ -287,14 +287,14 @@
 .ct-faq-q {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 22px;
+  font-size: var(--type-serif-body);
   letter-spacing: -0.4px;
   color: var(--color-fg);
 }
 .ct-faq-a {
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   line-height: 1.55;
   letter-spacing: -0.2px;
   color: var(--color-fg-faint);
@@ -326,8 +326,8 @@
   .ct-sheet        { width: 100%; max-width: 560px; padding: 48px 36px 56px; }
   .ct-faq-wrap     { padding: 24px 20px 64px; }
   .ct-faq-row      { grid-template-columns: 1fr; gap: 4px; }
-  .ct-faq-q        { font-size: 20px; }
-  .ct-faq-a        { font-size: 16px; }
+  .ct-faq-q        { font-size: var(--type-serif-body); }
+  .ct-faq-a        { font-size: var(--type-serif-xs); }
 }
 
 @media (max-width: 600px) {

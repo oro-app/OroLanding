@@ -49,9 +49,9 @@
   margin: 0 0 22px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--type-serif-2xs);
   color: var(--oro-plum-deep);
-  letter-spacing: 0.3px;
+  letter-spacing: normal;
 }
 
 .cl-title {
@@ -59,8 +59,8 @@
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: var(--type-section);
-  line-height: 1.02;
-  letter-spacing: -1.2px;
+  line-height: var(--lh-section);
+  letter-spacing: var(--tr-section);
   color: var(--oro-ink);
 }
 .cl-em {
@@ -73,7 +73,7 @@
   max-width: 440px;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 16px;
+  font-size: var(--type-serif-xs);
   line-height: 1.5;
   letter-spacing: -0.2px;
   color: rgba(14, 11, 7, 0.55);
@@ -99,7 +99,7 @@
   border: none;
   outline: none;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: var(--type-serif-2xs);
   color: var(--oro-ink);
 }
 .cl-input::placeholder { color: rgba(14, 11, 7, 0.4); }
@@ -111,7 +111,7 @@
   padding-bottom: 12px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   color: var(--oro-plum-deep);
 }
 
@@ -128,10 +128,10 @@
   border-top: 1px solid rgba(14, 11, 7, 0.18);
   display: flex;
   justify-content: space-between;
-  font-size: 10.5px;
+  font-size: var(--text-2xs);
   font-weight: 500;
   color: rgba(14, 11, 7, 0.55);
-  letter-spacing: 0.6px;
+  letter-spacing: normal;
 }
 
 /* ── ENTRANCE — scroll-triggered via [data-revealed='true'] on parent.

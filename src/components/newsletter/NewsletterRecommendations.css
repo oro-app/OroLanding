@@ -23,17 +23,17 @@
 
 .newsletter-recs-eyebrow {
   color: var(--oro-accent-text);
-  font-size: 0.68rem;
-  font-weight: 600;
+  font-size: var(--text-2xs);
+  font-weight: 500;
   letter-spacing: normal;
 }
 
 .newsletter-recs-title {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: 1.55rem;
+  font-size: var(--type-sub);
   font-weight: 300;
-  line-height: 1.1;
+  line-height: var(--lh-sub);
   color: var(--oro-plum-deep);
 }
 
@@ -97,8 +97,8 @@
   align-items: center;
   gap: 0.3rem;
   color: var(--oro-accent-text);
-  font-size: 0.62rem;
-  font-weight: 600;
+  font-size: var(--text-2xs);
+  font-weight: 500;
   letter-spacing: normal;
 }
 
@@ -109,7 +109,7 @@
 .newsletter-recs-card-title {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: 1.1rem;
+  font-size: var(--type-serif-sm);
   font-weight: 300;
   line-height: 1.2;
   color: var(--oro-plum-deep);
@@ -132,8 +132,8 @@
   margin-top: 0.25rem;
   padding: 0.55rem 0.25rem;
   color: var(--oro-plum-deep);
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: 500;
   letter-spacing: normal;
   text-decoration: none;
 }

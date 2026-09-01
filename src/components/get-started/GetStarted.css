@@ -28,7 +28,7 @@
   border: none;
   background: none;
   color: var(--color-fg-faint);
-  font-size: 20px;
+  font-size: var(--type-serif-body);
   line-height: 1;
   cursor: pointer;
   padding: 4px 6px;
@@ -54,7 +54,7 @@
   transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .gs-progress-count {
-  font-size: 12px;
+  font-size: var(--text-xs);
   letter-spacing: 0.3px;
   color: var(--color-fg-faint);
   font-variant-numeric: tabular-nums;
@@ -97,7 +97,7 @@
 /* ── shared editorial bits ────────────────────────────────────────────── */
 .gs-eyebrow {
   margin: 0 0 20px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   letter-spacing: normal;
   color: var(--color-accent);
 }
@@ -111,8 +111,8 @@
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  letter-spacing: -1.6px;
-  line-height: 1.02;
+  letter-spacing: var(--tr-display);
+  line-height: var(--lh-display);
   color: var(--color-fg);
 }
 
@@ -122,16 +122,16 @@
   max-width: 420px;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 20px;
+  font-size: var(--type-serif-body);
   line-height: 1.45;
   color: var(--color-fg-faint);
 }
 
 /* ── a question screen ────────────────────────────────────────────────── */
-.gs-q-label { font-size: var(--type-section); letter-spacing: -1.2px; line-height: 1.06; }
+.gs-q-label { font-size: var(--type-section); letter-spacing: var(--tr-section); line-height: var(--lh-section); }
 .gs-q-hint {
   margin: 16px 0 0;
-  font-size: 14px;
+  font-size: var(--type-serif-2xs);
   letter-spacing: 0.1px;
   color: var(--color-fg-faint);
 }
@@ -148,8 +148,8 @@
   color: var(--color-fg);
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 28px;
-  letter-spacing: -0.4px;
+  font-size: var(--type-sub);
+  letter-spacing: var(--tr-sub);
   outline: none;
   transition: border-color 0.25s ease;
 }
@@ -169,7 +169,7 @@
   border-bottom: 1px solid var(--color-fg-line);
   color: var(--color-fg);
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: var(--type-sub);
   font-weight: 300;
   transition: border-color 0.25s ease;
 }
@@ -231,7 +231,7 @@
 }
 .gs-consent-line {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-xs);
   line-height: 1.5;
   letter-spacing: 0.1px;
   color: var(--color-fg-light);
@@ -259,7 +259,7 @@
 .gs-error,
 .gs-notice {
   margin: 16px 0 0;
-  font-size: 13.5px;
+  font-size: var(--type-serif-2xs);
   line-height: 1.5;
   letter-spacing: 0.1px;
 }
@@ -286,13 +286,13 @@
 
 /* ── terminal screens (done / ineligible) ────────────────────────────── */
 .gs-terminal { text-align: left; }
-.gs-terminal-title { font-size: var(--type-display); letter-spacing: -1.4px; }
+.gs-terminal-title { font-size: var(--type-display); letter-spacing: var(--tr-display); }
 .gs-terminal-sub {
   margin: 28px 0 0;
   max-width: 400px;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 20px;
+  font-size: var(--type-serif-body);
   line-height: 1.45;
   color: var(--color-fg-faint);
 }
@@ -312,9 +312,9 @@
 
 /* ── responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 520px) {
-  .gs-welcome-title { font-size: 44px; }
-  .gs-q-label { font-size: 32px; }
-  .gs-terminal-title { font-size: 40px; }
+  .gs-welcome-title { font-size: 34px; }
+  .gs-q-label { font-size: 28px; }
+  .gs-terminal-title { font-size: 34px; }
   .gs-input { font-size: 24px; }
   .gs-date-parts { font-size: 24px; }
 }
@@ -334,7 +334,7 @@
 .gs-select-label {
   display: block;
   margin-bottom: 2px;
-  font-size: 14px;
+  font-size: var(--type-serif-2xs);
   letter-spacing: 0.1px;
   color: var(--color-fg-faint);
 }
@@ -352,8 +352,8 @@
   color: var(--color-fg);
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 28px;
-  letter-spacing: -0.4px;
+  font-size: var(--type-sub);
+  letter-spacing: var(--tr-sub);
   text-align: left;
   outline: none;
   cursor: pointer;
@@ -402,7 +402,7 @@
   border-radius: 8px;
   color: var(--color-fg);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: var(--type-serif-xs);
   letter-spacing: 0.1px;
   cursor: pointer;
 }

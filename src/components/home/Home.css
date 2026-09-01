@@ -125,24 +125,26 @@
   margin: 0 0 28px;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 42px;
-  line-height: 1.05;
-  letter-spacing: -0.028em;
+  font-size: var(--type-section);
+  line-height: var(--lh-section);
+  letter-spacing: var(--tr-section);
   max-width: 420px;
 }
 
 .home-h2--lead {
   margin: 0;
-  font-size: 48px;
-  line-height: 1.02;
+  font-size: var(--type-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
   max-width: 430px;
   text-wrap: pretty;
 }
 
 .home-h2--closer {
   margin: 0 auto;
-  font-size: var(--type-hero);
-  line-height: 1.04;
+  font-size: var(--type-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
   max-width: 760px;
 }
 
@@ -168,7 +170,7 @@
   margin: 0 0 20px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 15px;
+  font-size: var(--type-serif-xs);
   color: var(--color-accent);
 }
 
@@ -193,7 +195,7 @@
 
 .home-tick {
   color: var(--color-accent);
-  font-size: 15px;
+  font-size: var(--text-sm);
 }
 
 .home-reason-note {
@@ -248,9 +250,9 @@
   }
 
   .home-h1 { font-size: 40px; }
-  .home-h2 { font-size: 32px; margin-bottom: 36px; }
+  .home-h2 { font-size: 28px; margin-bottom: 36px; }
   .home-h2--lead { font-size: 34px; }
-  .home-h2--closer { font-size: 32px; }
+  .home-h2--closer { font-size: 34px; }
   .home-block { margin-top: 96px; }
 }
 
