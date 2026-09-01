@@ -157,10 +157,10 @@
   max-width: 680px;
   margin: 0;
   color: var(--oro-text-editorial);
-  font-family: 'Source Serif 4', 'Georgia', serif;
+  font-family: var(--font-sans);
   font-size: var(--text-md);
-  line-height: 1.85;
-  letter-spacing: 0.005em;
+  line-height: 1.65;
+  letter-spacing: normal;
 }
 
 .newsletter-mdx > *:first-child {
@@ -310,9 +310,18 @@
   line-height: 1.25;
 }
 
-/* Now @oro/web's <Cta size="pill"> — the recipe was transcribed 1:1 from the
-   rule that used to live here, hover included, so the swap is pixel-identical.
-   Nothing local remains; edit the recipe in the design system, not here. */
+/* Real anchors, not @oro/web's Cta: it renders a <button>, so an href on it
+   never navigates. They take the site CTA recipe and sit side by side. */
+.newsletter-article-cta-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.nl-store-link {
+  text-decoration: none;
+}
 
 /* ---------- Not found ---------- */
 

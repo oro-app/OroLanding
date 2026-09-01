@@ -76,7 +76,7 @@ function Hanger({ entry }) {
       <h3 className="rack-title">{entry.title}</h3>
       {entry.summary && <p className="rack-excerpt">{entry.summary}</p>}
       <span className="rack-tag">
-        <span>{entry.dateLabel.toLowerCase()}</span>
+        <span>{entry.dateLabel}</span>
         {entry.readTime && (
           <>
             <span className="rack-tag-dot" aria-hidden="true">·</span>

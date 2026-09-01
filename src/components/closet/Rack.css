@@ -29,7 +29,7 @@
 }
 .rack-title-h2 em { font-style: italic; }
 .rack-sub {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
   font-size: var(--type-serif-xs);
   color: var(--color-fg-faint);
@@ -129,7 +129,7 @@
 
 .rack-excerpt {
   margin: 8px 0 12px;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
   font-style: italic;
   font-size: var(--type-serif-2xs);
@@ -157,7 +157,7 @@
 /* empty-state */
 .rack-empty {
   margin: 40px 0 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
   font-size: var(--type-serif-sm);
   text-align: center;

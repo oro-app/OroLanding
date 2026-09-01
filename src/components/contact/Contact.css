@@ -111,7 +111,7 @@
 }
 .ct-body p {
   margin: 0 0 18px;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
   font-size: var(--type-serif-sm);
   line-height: 1.7;
@@ -197,7 +197,7 @@
 
 .ct-help {
   margin: 4px 0 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
   font-size: var(--text-2xs);
   color: rgba(14, 11, 7, 0.5);
@@ -224,7 +224,7 @@
 
 .ct-error {
   margin: 12px 0 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
   font-size: var(--type-serif-2xs);
   color: rgba(14, 11, 7, 0.6);
@@ -250,7 +250,7 @@
 }
 .ct-sent-line {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
   font-size: var(--type-serif-body);
   color: var(--oro-plum-deep);

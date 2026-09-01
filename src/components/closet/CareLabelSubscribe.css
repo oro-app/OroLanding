@@ -71,7 +71,7 @@
 .cl-body {
   margin: 24px 0 0;
   max-width: 440px;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
   font-size: var(--type-serif-xs);
   line-height: 1.5;

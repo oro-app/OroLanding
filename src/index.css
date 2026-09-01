@@ -118,9 +118,11 @@
 html, body {
   margin: 0;
   overflow-x: clip;
-  /* Dark is the default theme — paint plum immediately to avoid a flash before React mounts. */
+  /* Paint the theme ground immediately, before React mounts. */
   background: var(--color-bg);
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', sans-serif;
+  /* The default is a brand family, so anything that does not set one of its
+     own inherits Inter rather than falling through to the OS font. */
+  font-family: var(--font-sans);
 }
 
 a, button, input {

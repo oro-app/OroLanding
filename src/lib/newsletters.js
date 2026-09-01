@@ -32,12 +32,14 @@ export function formatNewsletterDate(value) {
 
   if (Number.isNaN(date.getTime())) return value
 
+  // Lowercase at the source: the site's copy is lowercase throughout, and
+  // call sites were each deciding for themselves.
   return new Intl.DateTimeFormat('en', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
     timeZone: 'UTC',
-  }).format(date)
+  }).format(date).toLowerCase()
 }
 
 // Release gating. By default an issue releases at UTC-midnight of meta.date

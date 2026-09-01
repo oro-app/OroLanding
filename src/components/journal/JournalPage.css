@@ -52,7 +52,7 @@
 
 .ftc-sub {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
   font-style: italic;
   font-size: var(--type-serif-body);

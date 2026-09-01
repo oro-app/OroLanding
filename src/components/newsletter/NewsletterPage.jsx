@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Cta } from '@oro/web'
 import { getNewsletterBySlug } from '../../lib/newsletters'
 import NewsletterRecommendations from './NewsletterRecommendations'
 import WaitlistModal from '../overlays/WaitlistModal'
@@ -168,10 +167,11 @@ export default function NewsletterPage({ slug }) {
           <div className="newsletter-article-cta">
             <p className="newsletter-article-cta-eyebrow">try oro</p>
             <p className="newsletter-article-cta-text">
-              Download Oro and start creating outfits from your style with your clothes.
+              download oro and start creating outfits from your style with your clothes.
             </p>
-            <Cta
-              size="pill"
+            <div className="newsletter-article-cta-links">
+            <a
+              className="oro-cta oro-cta--compact site-cta nl-store-link"
               href={APP_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -186,9 +186,9 @@ export default function NewsletterPage({ slug }) {
               }}
             >
               download on the app store
-            </Cta>
-            <Cta
-              size="pill"
+            </a>
+            <a
+              className="oro-cta oro-cta--compact site-cta nl-store-link"
               href={PLAY_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -203,7 +203,8 @@ export default function NewsletterPage({ slug }) {
               }}
             >
               get it on google play
-            </Cta>
+            </a>
+            </div>
           </div>
         </article>
       </div>

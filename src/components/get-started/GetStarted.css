@@ -120,7 +120,7 @@
 .gs-welcome-sub {
   margin: 28px 0 0;
   max-width: 420px;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
   font-size: var(--type-serif-body);
   line-height: 1.45;
