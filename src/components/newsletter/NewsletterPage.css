@@ -8,7 +8,7 @@
 }
 
 .newsletter-page-shell {
-  width: min(100% - 2.5rem, 1080px);
+  width: min(100% - 2 * var(--site-gutter), 1080px);
   margin: 0 auto;
   padding: clamp(1.5rem, 4vw, 2.5rem) 0 clamp(3.5rem, 8vw, 6rem);
 }
@@ -90,10 +90,10 @@
   margin: 0 auto;
   max-width: 760px;
   font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 5.4vw, var(--type-hero));
+  font-size: var(--type-hero);
   font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.005em;
+  line-height: var(--lh-hero);
+  letter-spacing: var(--tr-hero);
   color: var(--oro-ink);
 }
 
@@ -291,7 +291,7 @@
 /* ---------- Not found ---------- */
 
 .newsletter-not-found {
-  width: min(100% - 2.5rem, 720px);
+  width: min(100% - 2 * var(--site-gutter), 720px);
   margin: 0 auto;
   min-height: 65vh;
   display: flex;
@@ -316,11 +316,15 @@
   }
 }
 
-@media (max-width: 700px) {
-  .newsletter-page-shell {
-    width: min(100% - 3rem, 1080px);
-  }
+/* Steps with the home hero, at the same width and to the same size. */
+@media (max-width: 900px) {
+  .newsletter-article-header h1,
+  .newsletter-not-found h1 { font-size: 40px; }
 
+  .newsletter-mdx h2 { font-size: 28px; }
+}
+
+@media (max-width: 700px) {
   .newsletter-back-link {
     font-size: var(--text-2xs);
   }
@@ -333,15 +337,11 @@
     margin-bottom: 0.95rem;
   }
 
-  .newsletter-article-header h1,
-  .newsletter-not-found h1 {
-    font-size: clamp(2.2rem, 9vw, 2.9rem);
-    line-height: 1.02;
-  }
-
   .newsletter-article-summary {
-    margin-top: 1.05rem;
-    font-size: 1.15rem;
+    /* The header reads left here, so the summary drops its centring cap and
+       hangs on the same edge as the title instead of sitting indented. */
+    max-width: none;
+    margin: 1.05rem 0 0;
     line-height: 1.45;
     text-align: left;
   }
@@ -352,7 +352,6 @@
   }
 
   .newsletter-mdx {
-    font-size: 1rem;
     line-height: 1.75;
   }
 
@@ -362,12 +361,7 @@
   }
 
   .newsletter-mdx h2 {
-    font-size: 1.85rem;
     margin-top: 2.3rem;
-  }
-
-  .newsletter-mdx h3 {
-    font-size: 1.45rem;
   }
 
   .newsletter-mdx blockquote {
