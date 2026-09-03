@@ -126,6 +126,16 @@ html, body {
   font-family: var(--font-sans);
 }
 
+html,
+body,
+.theme-shell,
+.site-header,
+.ftc,
+.ct,
+.gs {
+  transition: background-color 0.4s ease;
+}
+
 a, button, input {
   transition: all 0.25s ease;
 }
@@ -160,6 +170,16 @@ textarea:focus-visible,
 
 @media (prefers-reduced-motion: reduce) {
   .section-reveal { opacity: 1; transform: none; transition: none; }
+
+  html,
+  body,
+  .theme-shell,
+  .site-header,
+  .ftc,
+  .ct,
+  .gs {
+    transition: none;
+  }
 }
 
 /* Animations */

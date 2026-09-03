@@ -114,7 +114,7 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="light">
-      <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
+      <div className="theme-shell min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
         <SiteHeader />
         <main id="main">
           {route.type === 'newsletter' ? (

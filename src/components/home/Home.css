@@ -10,14 +10,31 @@
      thread reads as continuous with the page bottom. */
   --home-page-bg: radial-gradient(95% 70% at 50% -8%, #fffdf8 0%, #fff9ed 46%, #fff2d7 100%);
 
+  position: relative;
+  isolation: isolate;
   min-height: calc(100vh - var(--site-chrome-height));
   background: var(--home-page-bg);
   color: var(--color-fg);
   font-family: var(--font-sans);
 }
 
-:root[data-theme='dark'] .home-page {
-  --home-page-bg: radial-gradient(95% 70% at 50% -8%, #6a4880 0%, #3a2646 46%, #1b1221 100%);
+.home-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(95% 70% at 50% -8%, #6a4880 0%, #3a2646 46%, #1b1221 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+:root[data-theme='dark'] .home-page::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page::before { transition: none; }
 }
 
 .home-page a {
@@ -80,26 +97,19 @@
 .home-panel.is-next { transform: translateX(64px); }
 .home-panel.is-past { transform: translateX(-64px); }
 
-/* The bottom padding is on the sticky element's containing block, so the phone
-   releases above the closing section's hairline instead of resting on it. */
 .home-phone-column {
   grid-column: 2;
   grid-row: 1;
-  padding-bottom: var(--space-md);
 }
 
-/* Centred in the viewport on tall screens so it tracks the centred hero, with a
-   floor that keeps it clear of the header on short ones. 320px is half the
-   device's tallest height. */
+/* Centre the phone in the viewport space left below the sticky header. */
 .home-phone-sticky {
   position: sticky;
-  top: max(
-    calc(var(--site-header-height) + 16px),
-    calc(50vh + (var(--site-header-height) / 2) - 311px)
-  );
+  top: var(--site-header-height);
+  height: calc(100vh - var(--site-header-height));
   display: flex;
   justify-content: center;
-  padding-top: 24px;
+  align-items: center;
 }
 
 .home-h1 {
@@ -275,6 +285,7 @@
 
   .home-phone-sticky {
     position: static;
+    height: auto;
     padding: 0 0 72px;
   }
 
@@ -362,6 +373,11 @@
     position: static;
     height: auto;
     display: block;
+  }
+
+  .home-phone-sticky {
+    position: static;
+    height: auto;
   }
 
   .home-panel,

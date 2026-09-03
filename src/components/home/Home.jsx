@@ -56,7 +56,7 @@ const REASONS = ['it knows your closet', 'it answers in a minute', 'it tells you
 const PANEL_COUNT = 3
 
 export default function Home() {
-  const [scrollerRef, active] = usePinnedPanels(PANEL_COUNT)
+  const [scrollerRef, active] = usePinnedPanels(PANEL_COUNT, 0.05, 0.35)
   const [closerRef, closerShown] = useRevealOnScroll(0.2)
 
   // active is null when pinning is off, and every panel renders in normal flow.

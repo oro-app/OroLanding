@@ -11,7 +11,11 @@ function canPin() {
 // Drives a pinned "stage" whose panels swap as the page scrolls past a tall
 // scroller. Returns the active panel index, or null when pinning is off, in
 // which case the caller should render the panels stacked as normal flow.
-export function usePinnedPanels(count) {
+export function usePinnedPanels(
+  count,
+  firstPanelShare = 1 / count,
+  secondPanelShare = (1 - firstPanelShare) / (count - 1),
+) {
   const ref = useRef(null)
   const [active, setActive] = useState(0)
   const [pinned, setPinned] = useState(false)
@@ -33,12 +37,18 @@ export function usePinnedPanels(count) {
       const rect = el.getBoundingClientRect()
       const stage = el.firstElementChild
       if (!stage) return
-      // Travel is measured against the pinned stage, not the viewport, so every
-      // panel gets an equal share and the last one holds until the stage
-      // releases rather than flicking past at the end.
+      // Travel is measured against the pinned stage, not the viewport, so the
+      // configured first shares and the evenly split remainder fill the scroll.
       const travel = rect.height - stage.getBoundingClientRect().height
       const progress = travel > 0 ? -rect.top / travel : 0
-      const index = Math.floor(progress * count)
+      const index = count === 1 || progress < firstPanelShare
+        ? 0
+        : count === 2 || progress < firstPanelShare + secondPanelShare
+          ? 1
+          : 2 + Math.floor(
+            ((progress - firstPanelShare - secondPanelShare)
+              / (1 - firstPanelShare - secondPanelShare)) * (count - 2),
+          )
       setActive(Math.min(count - 1, Math.max(0, index)))
     }
 
@@ -55,7 +65,7 @@ export function usePinnedPanels(count) {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
-  }, [pinned, count])
+  }, [pinned, count, firstPanelShare, secondPanelShare])
 
   return [ref, pinned ? active : null]
 }

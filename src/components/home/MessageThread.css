@@ -4,7 +4,8 @@
 
 .mt-device {
   position: relative;
-  width: 296px;
+  height: clamp(442px, calc(100vh - var(--site-header-height) - 66px), 622px);
+  aspect-ratio: 296 / 622;
   border-radius: 45px;
   background: #0b0710;
   padding: 11px;
@@ -28,7 +29,7 @@
   border-radius: 35px;
   overflow: hidden;
   background: #1b1221;
-  height: clamp(420px, calc(100vh - var(--site-header-height) - 88px), 600px);
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
