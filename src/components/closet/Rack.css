@@ -3,7 +3,7 @@
    slightly stronger than the standard --color-fg-line for presence. */
 
 .rack {
-  padding: 24px 56px 96px;
+  padding: 24px var(--site-gutter) var(--space-md);
 }
 .rack-inner {
   max-width: 1180px;
@@ -38,7 +38,7 @@
 
 /* each row = one rod + a flex of hangers below */
 .rack-row {
-  margin-bottom: 96px;
+  margin-bottom: var(--space-md);
 }
 .rack-row:last-child { margin-bottom: 0; }
 
@@ -55,7 +55,7 @@
 
 .rack-row-items {
   display: flex;
-  gap: 64px;
+  gap: var(--space-sm);
   justify-content: center;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -155,7 +155,7 @@
 
 /* empty-state */
 .rack-empty {
-  margin: 40px 0 0;
+  margin: var(--space-xs) 0 0;
   font-family: var(--font-sans);
   font-style: italic;
   font-size: var(--type-serif-sm);
@@ -217,11 +217,14 @@
 
 /* responsive */
 @media (max-width: 960px) {
-  .rack             { padding: 16px 20px 64px; }
-  .rack-header      { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 40px; }
-  .rack-title-h2    { font-size: 36px; letter-spacing: -0.9px; }
+  .rack             { padding: 16px var(--site-gutter) var(--space-sm); }
+  .rack-header      { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: var(--space-xs); }
   .rack-sub         { font-size: var(--type-serif-2xs); }
   .rack-row         { margin-bottom: 72px; }
-  .rack-row-items   { gap: 40px; }
+  .rack-row-items   { gap: var(--space-xs); }
   .rack-hanger      { width: min(280px, 80vw) !important; }
+}
+/* Same step and width as the home page's display-rank headings. */
+@media (max-width: 900px) {
+  .rack-title-h2 { font-size: 34px; }
 }

@@ -6,7 +6,7 @@
    --color-bg so the holes read as cutouts through the tag. */
 
 .cl-wrap {
-  padding: var(--space-sm) 56px var(--space-lg);
+  padding: var(--space-sm) var(--site-gutter) var(--space-lg);
 }
 
 .cl-tag {
@@ -35,7 +35,7 @@
   right: 0;
   display: flex;
   justify-content: center;
-  gap: 64px;
+  gap: var(--space-sm);
   pointer-events: none;
 }
 .cl-hole {
@@ -117,7 +117,7 @@
 
 .cl-error {
   margin: 8px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-xs);
   color: var(--oro-danger);
 }
 
@@ -151,10 +151,13 @@
 }
 
 /* responsive */
+/* Same step and width as the home page's section-rank headings. */
+@media (max-width: 900px) {
+  .cl-title { font-size: 28px; }
+}
 @media (max-width: 720px) {
-  .cl-wrap      { padding: 40px 20px 80px; }
+  .cl-wrap      { padding: var(--space-xs) var(--site-gutter) 80px; }
   .cl-tag       { padding: 40px 28px 32px; }
-  .cl-title     { font-size: 34px; letter-spacing: -1px; }
   .cl-symbols   { gap: 16px; margin: 28px 0; }
   .cl-fibre     { flex-direction: column; gap: 6px; }
 }

@@ -17,7 +17,7 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.3fr 1fr;
-  gap: 64px;
+  gap: var(--space-sm);
   /* end-aligned so the subhead's last line sits at the same baseline as
      the headline's last line — intentional per the handoff. */
   align-items: end;
@@ -75,15 +75,17 @@
 }
 
 /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .ftc-title { font-size: 56px; letter-spacing: -1.6px; }
-}
 @media (max-width: 960px) {
-  .ftc-hero        { padding: 80px 20px 40px; }
+  .ftc-hero        { padding: 80px var(--site-gutter) var(--space-xs); }
   .ftc-hero-inner  { grid-template-columns: 1fr; gap: 24px; align-items: start; }
   .ftc-hero-right  { max-width: none; }
 }
+/* The home hero drops to 40px at this width, and this is the same rank of
+   heading, so it steps at the same place and to the same size. Tracking stays
+   on the em-based token rather than a px override, so it scales with the size. */
+@media (max-width: 900px) {
+  .ftc-title { font-size: 40px; }
+}
 @media (max-width: 720px) {
-  .ftc-title { font-size: 48px; line-height: 0.98; letter-spacing: -1.4px; }
-  .ftc-sub   { font-size: var(--type-serif-sm); }
+  .ftc-sub { font-size: var(--type-serif-sm); }
 }
