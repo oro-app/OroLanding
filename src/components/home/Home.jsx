@@ -6,8 +6,10 @@ import { useRevealOnScroll } from '../../lib/useRevealOnScroll'
 import MessageThread from './MessageThread'
 
 // Entrance choreography, in ms. The headline types itself, then the rest of the
-// hero arrives in the order you read it.
-const TYPE_STEP = 34
+// hero arrives in the order you read it, after a beat that lets the finished
+// headline land before anything else moves.
+const TYPE_STEP = 46
+const AFTER_TYPING = 420
 const HEADLINE = [
   { text: 'the #1 ai stylist you can ' },
   { text: 'text', accent: true },
@@ -70,15 +72,15 @@ export default function Home() {
         <div className="home-scroller" ref={scrollerRef}>
           <div className="home-stage">
             <section className={panelClass(0)}>
-              <h1 className="home-h1">
+              <h1 className="home-h1" style={{ '--tw-step': `${TYPE_STEP}ms` }}>
                 <TypedHeadline />
               </h1>
 
-              <div className="home-enter" style={{ animationDelay: `${TYPING_ENDS + 120}ms` }}>
+              <div className="home-enter" style={{ animationDelay: `${TYPING_ENDS + AFTER_TYPING}ms` }}>
                 <GetStarted size="hero" place="hero" label="start the conversation" />
               </div>
 
-              <p className="home-proof home-enter" style={{ animationDelay: `${TYPING_ENDS + 260}ms` }}>
+              <p className="home-proof home-enter" style={{ animationDelay: `${TYPING_ENDS + AFTER_TYPING + 140}ms` }}>
                 join <span>{USER_COUNT}+ people</span> getting styled by oro.
               </p>
             </section>
@@ -111,9 +113,9 @@ export default function Home() {
         <div className="home-phone-column">
           <div
             className="home-phone-sticky home-enter"
-            style={{ animationDelay: `${TYPING_ENDS + 400}ms` }}
+            style={{ animationDelay: `${TYPING_ENDS + AFTER_TYPING + 280}ms` }}
           >
-            <MessageThread startDelay={TYPING_ENDS + 900} />
+            <MessageThread startDelay={TYPING_ENDS + AFTER_TYPING + 780} />
           </div>
         </div>
       </div>

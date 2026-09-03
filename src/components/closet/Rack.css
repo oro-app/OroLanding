@@ -144,8 +144,7 @@
   align-items: center;
   gap: 8px;
   align-self: flex-start;
-  padding: 4px 10px;
-  border: 1px solid var(--color-fg-line);
+  padding: 4px 0;
   font-family: var(--font-serif);
   font-style: italic;
   font-size: var(--type-serif-2xs);
