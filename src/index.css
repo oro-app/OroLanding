@@ -1,3 +1,4 @@
+@import './fonts.css';
 /* Palette + type primitives are generated from @oro/tokens — see scripts/generate-tokens.mjs. */
 @import './generated/tokens.css';
 

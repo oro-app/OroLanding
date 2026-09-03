@@ -1,0 +1,39 @@
+/* Self-hosted faces for the two families generated/tokens.css names in
+   --font-serif and --font-sans. These are imported from the bundled stylesheet
+   rather than fetched from fonts.googleapis.com so that the faces are
+   discovered while the render-blocking CSS is parsed, which matters because
+   generate-seo.mjs prerenders real markup into #root and a font sheet applied
+   asynchronously paints that markup in the fallback stack first.
+
+   Only the latin subset is wired up; the site has no non-latin copy. */
+
+/* Inter has no optical-size axis, so the static per-weight files render
+   identically to what Google Fonts served. */
+@import '@fontsource/inter/latin-300.css';
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+
+/* Fraunces carries an optical-size axis, and the Google Fonts URL this
+   replaced requested opsz 9..144, so the browser's default
+   font-optical-sizing:auto narrowed the display sizes. A static instance
+   renders the 68px hero about 11% wider, so the variable file is required to
+   preserve the type. @fontsource-variable ships this as 'Fraunces Variable';
+   it is redeclared here under the 'Fraunces' family that the generated tokens
+   ask for. */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2) format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(@fontsource-variable/fraunces/files/fraunces-latin-opsz-italic.woff2) format('woff2-variations');
+}

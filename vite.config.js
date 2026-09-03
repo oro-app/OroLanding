@@ -63,6 +63,13 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    // scripts/generate-seo.mjs prerenders each route's markup from one template
+    // that only carries the entry bundle's links, so a per-route CSS chunk
+    // would have no <link> and the route would paint unstyled until its lazy
+    // chunk loaded. One stylesheet keeps every prerendered route styled at
+    // first paint; the whole site's CSS is small enough that the extra bytes
+    // cost less than the reflow did.
+    cssCodeSplit: false,
   },
   server: {
     proxy: {
