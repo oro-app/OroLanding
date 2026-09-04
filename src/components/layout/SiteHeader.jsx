@@ -41,7 +41,9 @@ export default function SiteHeader() {
 
       <div className="site-header-actions">
         <nav className="site-header-nav" aria-label="oro">
-          <a href="/from-the-closet">from the closet</a>
+          <Cta size="compact" className="site-header-editorial" href="/from-the-closet">
+            from the closet
+          </Cta>
         </nav>
 
         <button

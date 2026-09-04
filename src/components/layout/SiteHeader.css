@@ -62,9 +62,17 @@
 .site-header-nav {
   display: flex;
   align-items: center;
-  gap: 22px;
   font-size: 13.5px;
-  color: var(--color-fg-faint);
 }
 
-.site-header-nav a:hover { color: var(--color-accent); }
+.oro-cta.site-header-editorial {
+  padding: 8px 0;
+  background: transparent;
+  font-size: 15px;
+  line-height: 1;
+}
+
+@media (max-width: 520px) {
+  .site-header { padding-inline: 16px; }
+  .site-header-actions { gap: 8px; }
+}
