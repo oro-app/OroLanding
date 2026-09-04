@@ -1,15 +1,25 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
   background: rgba(28, 20, 36, 0.62);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
   animation: backdropIn 0.3s ease;
 }
+
+.modal-backdrop:not([open]) { display: none; }
+.modal-backdrop[open] { display: flex; }
+.modal-backdrop::backdrop { background: transparent; }
 
 @keyframes backdropIn {
   from { opacity: 0; }
@@ -26,7 +36,9 @@
   border-radius: 18px;
   box-shadow: 0 24px 80px rgba(28, 20, 36, 0.34);
   animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: hidden;
+  max-height: calc(100dvh - 2rem);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .modal::before {
@@ -47,17 +59,17 @@
 /* ── Close button ── */
 .modal-close-x {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 32px;
-  height: 32px;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
-  color: rgba(58, 38, 70, 0.45);
+  color: var(--oro-accent-text);
   font-size: 1.2rem;
   line-height: 1;
   transition: color 0.2s ease;
@@ -73,12 +85,11 @@
   font-size: 0.65rem;
   letter-spacing: normal;
   color: var(--oro-accent-text);
-  opacity: 0.9;
   margin-bottom: 0.75rem;
 }
 
 /* ── Heading ── */
-.modal h3 {
+.modal h2 {
   font-family: var(--font-serif);
   font-size: 2rem;
   font-weight: 300;
@@ -90,7 +101,7 @@
 
 .modal-subtitle {
   font-size: 0.86rem;
-  color: rgba(58, 38, 70, 0.62);
+  color: var(--oro-text-editorial-muted);
   margin: 0 0 2rem;
   line-height: 1.55;
 }
@@ -101,13 +112,13 @@
   display: flex;
   align-items: center;
   background: rgba(58, 38, 70, 0.06);
-  border: 1px solid rgba(58, 38, 70, 0.16);
+  border: 1px solid var(--oro-text-editorial-muted);
   border-radius: 10px;
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .email-form:focus-within {
-  border-color: rgba(238, 186, 43, 0.85);
+  border-color: var(--oro-accent-text);
   background: rgba(255, 255, 255, 0.42);
   box-shadow: 0 0 0 3px rgba(238, 186, 43, 0.14);
 }
@@ -125,7 +136,15 @@
 }
 
 .email-input::placeholder {
-  color: rgba(58, 38, 70, 0.34);
+  color: var(--oro-text-editorial-muted);
+}
+
+.modal-form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--oro-plum-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
 /* KEPT BESPOKE: 38x38 icon-only submit affordance inside the input shell, not
@@ -134,8 +153,8 @@
 .email-submit-btn {
   flex-shrink: 0;
   margin: 5px;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   background: var(--oro-plum-deep);
   border: none;
   border-radius: 6px;
@@ -186,6 +205,16 @@
   letter-spacing: 0.01em;
 }
 
+.modal-error:empty { margin-top: 0; }
+
+.modal-form-status {
+  margin-top: 0.75rem;
+  color: var(--oro-text-editorial-muted);
+  font-size: 0.78rem;
+}
+
+.modal-form-status:empty { margin-top: 0; }
+
 /* ── Success / Already state ── */
 .modal-success {
   display: flex;
@@ -223,7 +252,7 @@
   margin: 0.9rem 0 0;
   font-size: 0.72rem;
   line-height: 1.55;
-  color: rgba(58, 38, 70, 0.58);
+  color: var(--oro-text-editorial-muted);
   letter-spacing: 0.01em;
 }
 
@@ -240,10 +269,24 @@
 
 @media (max-width: 480px) {
   .modal {
+    width: calc(100% - 2rem);
     margin: 1rem;
     padding: 2.5rem 1.75rem 2rem;
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal,
+  .success-check,
+  .btn-spinner {
+    animation: none;
+  }
+}
+
 /* layout leftover for the @oro/web Btn (recipe lives in @oro/web) */
-.modal-done-btn { margin-top: 2rem; }
+.oro-btn.modal-done-btn {
+  min-height: 44px;
+  margin-top: 2rem;
+  border-color: var(--oro-text-editorial-muted);
+}

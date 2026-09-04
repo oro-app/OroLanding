@@ -70,5 +70,5 @@ test('scrolling swaps the pinned panels', async ({ page }) => {
   const pinned = await page.evaluate(() =>
     Math.round(document.querySelector('.home-stage').getBoundingClientRect().top),
   )
-  expect(pinned).toBe(73)
+  expect(pinned).toBe(65)
 })

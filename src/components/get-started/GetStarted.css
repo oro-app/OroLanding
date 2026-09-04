@@ -27,7 +27,7 @@
 .gs-back {
   border: none;
   background: none;
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
   font-size: var(--type-serif-body);
   line-height: 1;
   cursor: pointer;
@@ -40,23 +40,26 @@
 .gs-back:hover { color: var(--color-fg); }
 
 .gs-progress {
-  flex: 1;
-  height: 1px;
-  background: var(--color-fg-line);
-  position: relative;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border: 1px solid var(--color-fg);
+  background: var(--color-bg);
   overflow: hidden;
 }
-.gs-progress-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  height: 100%;
+.gs-progress::-webkit-progress-bar { background: var(--color-bg); }
+.gs-progress::-webkit-progress-value {
+  background: var(--color-accent);
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gs-progress::-moz-progress-bar {
   background: var(--color-accent);
   transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .gs-progress-count {
   font-size: var(--text-xs);
   letter-spacing: 0.3px;
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
   font-variant-numeric: tabular-nums;
   justify-self: end;
 }
@@ -91,7 +94,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .gs-screen { animation: none; }
-  .gs-progress-fill { transition: none; }
+  .gs-progress::-webkit-progress-value { transition: none; }
+  .gs-progress::-moz-progress-bar { transition: none; }
 }
 
 /* ── shared editorial bits ────────────────────────────────────────────── */
@@ -124,7 +128,7 @@
   font-weight: 300;
   font-size: var(--type-serif-body);
   line-height: 1.45;
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
 }
 
 /* ── a question screen ────────────────────────────────────────────────── */
@@ -133,16 +137,39 @@
   margin: 16px 0 0;
   font-size: var(--type-serif-2xs);
   letter-spacing: 0.1px;
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
 }
 .gs-q-field { margin-top: 40px; }
+
+.gs-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.gs-field-label {
+  display: block;
+  margin: 0 0 8px;
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: var(--type-serif-2xs);
+  letter-spacing: 0.1px;
+}
+.gs-field-label span { font-weight: 400; }
+.gs-other-field { margin-top: 24px; }
+
+.gs .oro-chip {
+  min-height: 44px;
+  border-color: var(--color-fg);
+}
+.gs .oro-chip[aria-pressed='true'] { border-color: var(--color-accent); }
 
 /* ── input ────────────────────────────────────────────────────────────── */
 .gs-input {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--color-fg-line);
+  border-bottom: 1px solid var(--color-fg);
   border-radius: 0;
   padding: 14px 2px;
   color: var(--color-fg);
@@ -150,23 +177,28 @@
   font-weight: 300;
   font-size: var(--type-sub);
   letter-spacing: var(--tr-sub);
-  outline: none;
   transition: border-color 0.25s ease;
 }
-.gs-input::placeholder { color: var(--color-fg-faint); opacity: 0.55; }
+.gs-input::placeholder { color: var(--color-fg); opacity: 1; }
 .gs-input:focus { border-bottom-color: var(--color-accent); }
 .gs-country-options {
   display: flex;
   gap: 12px;
   margin-bottom: 24px;
 }
-.gs-date-field { position: relative; }
+.gs-date-field {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 .gs-date-parts {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 38px 14px 2px;
-  border-bottom: 1px solid var(--color-fg-line);
+  gap: 4px;
+  padding: 14px 44px 14px 0;
+  border-bottom: 1px solid var(--color-fg);
   color: var(--color-fg);
   font-family: var(--font-serif);
   font-size: var(--type-sub);
@@ -175,25 +207,33 @@
 }
 .gs-date-parts:focus-within { border-bottom-color: var(--color-accent); }
 .gs-date-parts input {
-  min-width: 0;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
   border: 0;
-  outline: 0;
   background: transparent;
   color: var(--color-fg);
   font: inherit;
   text-align: center;
 }
-.gs-date-parts input:first-child { width: 76px; }
-.gs-date-parts input:not(:first-child) { width: 40px; }
-.gs-date-parts input:nth-of-type(2) { width: 52px; }
-.gs-date-parts input::placeholder { color: var(--color-fg-faint); opacity: 0.55; }
+.gs-date-part {
+  display: grid;
+  justify-items: center;
+}
+.gs-date-part label {
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+}
+.gs-date-part:first-child input { width: 76px; }
+.gs-date-part:not(:first-child) input { width: 52px; }
+.gs-date-parts input::placeholder { color: var(--color-fg); opacity: 1; }
 .gs-date-picker {
   position: absolute;
   right: 0;
   top: 50%;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   transform: translateY(-50%);
   opacity: 0;
   cursor: pointer;
@@ -212,6 +252,11 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   pointer-events: none;
+}
+.gs-date-picker:focus-visible + svg {
+  outline: 3px solid var(--color-bg);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--color-fg);
 }
 
 /* ── chips (how'd you hear) ───────────────────────────────────────────── */
@@ -234,18 +279,16 @@
   font-size: var(--text-xs);
   line-height: 1.5;
   letter-spacing: 0.1px;
-  color: var(--color-fg-light);
+  color: var(--color-fg);
 }
 .gs[data-view='phone'] .gs-consent-line { font-size: 11px; }
-:root[data-theme='light'] .gs-consent-line { color: var(--color-fg-faint); }
 .gs-consent-line a {
-  color: var(--color-fg-faint);
-  text-decoration: none;
-  border-bottom: 1px solid var(--color-fg-line);
-  transition: border-color 0.2s ease;
+  color: var(--color-fg);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
-:root[data-theme='light'] .gs-consent-line a { color: var(--color-fg); }
-.gs-consent-line a:hover { border-bottom-color: var(--color-accent); }
+.gs-consent-line a:hover { text-decoration-thickness: 2px; }
 
 /* ── otp code input ───────────────────────────────────────────────────── */
 .gs-input-otp {
@@ -258,30 +301,33 @@
 /* ── inline error / notice under the field ────────────────────────────── */
 .gs-error,
 .gs-notice {
-  margin: 16px 0 0;
+  margin: 0;
   font-size: var(--type-serif-2xs);
   line-height: 1.5;
   letter-spacing: 0.1px;
 }
+.gs-error:not(:empty),
+.gs-notice:not(:empty) { margin-top: 16px; }
 .gs-error { color: var(--color-accent); }
-.gs-notice { color: var(--color-fg-faint); }
+.gs-notice { color: var(--color-fg); }
 
 /* ── resend link (otp footer) ─────────────────────────────────────────── */
 .gs-resend {
   border: none;
   background: none;
-  padding: 0;
+  min-height: 44px;
+  padding: 0 4px;
   color: var(--color-fg);
   font: inherit;
   cursor: pointer;
-  border-bottom: 1px solid var(--color-fg-line);
-  transition: border-color 0.2s ease;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
-.gs-resend:hover:not(:disabled) { border-bottom-color: var(--color-accent); }
+.gs-resend:hover:not(:disabled) { text-decoration-thickness: 2px; }
 .gs-resend:disabled {
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
   cursor: default;
-  border-bottom-color: transparent;
+  text-decoration: none;
 }
 
 /* ── terminal screens (done / ineligible) ────────────────────────────── */
@@ -294,9 +340,12 @@
   font-weight: 300;
   font-size: var(--type-serif-body);
   line-height: 1.45;
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
 }
 .gs-textlink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   margin-top: 36px;
   border: none;
   background: none;
@@ -305,10 +354,11 @@
   font-style: italic;
   font-size: 18px;
   cursor: pointer;
-  padding: 0;
-  border-bottom: 1px solid var(--color-fg-line);
+  padding: 0 4px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
-.gs-textlink:hover { border-bottom-color: var(--color-accent); }
+.gs-textlink:hover { text-decoration-thickness: 2px; }
 
 /* ── responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 520px) {
@@ -336,7 +386,7 @@
   margin-bottom: 2px;
   font-size: var(--type-serif-2xs);
   letter-spacing: 0.1px;
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
 }
 .gs-select-trigger {
   display: flex;
@@ -346,7 +396,7 @@
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--color-fg-line);
+  border-bottom: 1px solid var(--color-fg);
   border-radius: 0;
   padding: 14px 2px;
   color: var(--color-fg);
@@ -355,29 +405,28 @@
   font-size: var(--type-sub);
   letter-spacing: var(--tr-sub);
   text-align: left;
-  outline: none;
   cursor: pointer;
   transition: border-color 0.25s ease;
 }
-/* The UA ring is a full box, which fights the bottom-rule field. The accent
-   rule is the focus affordance, matching .gs-input. */
 .gs-select-trigger:focus,
-.gs-select-trigger:focus-visible,
 .gs-select-trigger[aria-expanded='true'] {
-  outline: none;
   border-bottom-color: var(--color-accent);
 }
-.gs-select-placeholder { color: var(--color-fg-faint); opacity: 0.55; }
+.gs-select-placeholder { color: var(--color-fg); }
 .gs-select-chevron {
   flex: none;
   width: 16px;
   height: 16px;
-  stroke: var(--color-fg-faint);
+  stroke: currentColor;
   fill: none;
   stroke-width: 2;
   transition: transform 0.2s ease;
 }
 .gs-select-trigger[aria-expanded='true'] .gs-select-chevron { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .gs-select-chevron { transition: none; }
+}
 
 /* The panel: anchored under the rule, full field width, options at a reading
    size rather than the trigger's display size. */
@@ -393,11 +442,16 @@
   padding: 6px;
   list-style: none;
   background: var(--color-bg);
-  border: 1px solid var(--color-fg-line);
+  border: 1px solid var(--color-fg);
   border-radius: 12px;
   box-shadow: 0 18px 40px rgb(0 0 0 / 0.28);
 }
 .gs-select-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
   padding: 10px 12px;
   border-radius: 8px;
   color: var(--color-fg);
@@ -406,10 +460,55 @@
   letter-spacing: 0.1px;
   cursor: pointer;
 }
-.gs-select-option.is-active { background: var(--color-fg-line); }
-.gs-select-option.is-selected { color: var(--color-accent); }
+.gs-select-option.is-active {
+  outline: 2px solid var(--color-fg);
+  outline-offset: -2px;
+}
+.gs-select-option.is-selected {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.gs-select-check { color: currentColor; }
 .gs-select-list.is-above {
   top: auto;
   bottom: calc(100% + 6px);
   box-shadow: 0 -18px 40px rgb(0 0 0 / 0.28);
+}
+
+.gs [aria-invalid='true'] {
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--color-accent);
+}
+
+.gs :focus-visible {
+  outline: 3px solid var(--color-bg);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--color-fg);
+}
+
+.gs-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (forced-colors: active) {
+  .gs :focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+
+  .gs [aria-invalid='true'] { border-color: Mark; }
+  .gs-date-picker:focus-visible + svg {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+  .gs-select-option.is-active { outline-color: Highlight; }
 }

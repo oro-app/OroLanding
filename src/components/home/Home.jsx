@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Cta } from '@oro/web'
 import { trackCtaClick } from '../../lib/analytics'
 import { USER_COUNT } from '../../lib/stats'
@@ -17,20 +18,22 @@ const HEADLINE = [
 const TYPED_CHARS = HEADLINE.reduce((n, part) => n + part.text.length, 0)
 const TYPING_ENDS = TYPED_CHARS * TYPE_STEP
 
-// Each character carries its own delay, so the reveal is CSS-driven and the
-// whole headline still sits in the prerendered HTML for crawlers.
-function TypedHeadline() {
+// The full headline stays in the prerendered HTML for crawlers while React
+// advances one visible character and one shared caret at a time.
+function TypedHeadline({ typedChars }) {
   let index = -1
   return HEADLINE.map((part, partIndex) => {
     const chars = [...part.text].map((char, charIndex) => {
       index += 1
+      const visible = index < typedChars
+      const hasCaret = index === typedChars - 1 && typedChars < TYPED_CHARS
       return (
         <span
-          className="tw-char"
+          className={`tw-char${visible ? ' is-visible' : ''}`}
           key={`${partIndex}-${charIndex}`}
-          style={{ animationDelay: `${index * TYPE_STEP}ms` }}
         >
           {char}
+          {hasCaret ? <span className="tw-caret" aria-hidden="true" /> : null}
         </span>
       )
     })
@@ -39,13 +42,12 @@ function TypedHeadline() {
 }
 
 function GetStarted({ size, place, label = 'get started' }) {
-  const go = () => {
+  const handleClick = () => {
     trackCtaClick('get_started_click', { location: place, destination: 'get_started' })
-    window.location.assign('/get-started')
   }
 
   return (
-    <Cta size={size} inverse className={`site-cta site-cta--${place}`} onClick={go}>
+    <Cta size={size} inverse className={`site-cta site-cta--${place}`} href="/get-started" onClick={handleClick}>
       {label}
     </Cta>
   )
@@ -58,10 +60,25 @@ const PANEL_COUNT = 3
 export default function Home() {
   const [scrollerRef, active] = usePinnedPanels(PANEL_COUNT, 0.05, 0.35)
   const [closerRef, closerShown] = useRevealOnScroll(0.2)
+  const [typedChars, setTypedChars] = useState(1)
 
-  // active is null when pinning is off, and every panel renders in normal flow.
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setTypedChars((current) => {
+        const next = Math.min(current + 1, TYPED_CHARS)
+        if (next === TYPED_CHARS) window.clearInterval(interval)
+        return next
+      })
+    }, TYPE_STEP)
+    return () => window.clearInterval(interval)
+  }, [])
+
+  const typingComplete = typedChars === TYPED_CHARS
+
+  // Hide later panels until pinning is measured; the non-pinned CSS overrides
+  // these states so mobile and reduced-motion layouts still show every panel.
   const panelClass = (index) => {
-    if (active === null) return 'home-panel'
+    if (active === null) return index === 0 ? 'home-panel is-active' : 'home-panel is-next'
     if (index === active) return 'home-panel is-active'
     return `home-panel ${index < active ? 'is-past' : 'is-next'}`
   }
@@ -72,8 +89,8 @@ export default function Home() {
         <div className="home-scroller" ref={scrollerRef}>
           <div className="home-stage">
             <section className={panelClass(0)}>
-              <h1 className="home-h1" style={{ '--tw-step': `${TYPE_STEP}ms` }}>
-                <TypedHeadline />
+              <h1 className={`home-h1${typingComplete ? ' is-typed' : ''}`}>
+                <TypedHeadline typedChars={typedChars} />
               </h1>
 
               <div className="home-enter" style={{ animationDelay: `${TYPING_ENDS + AFTER_TYPING}ms` }}>
@@ -86,16 +103,16 @@ export default function Home() {
             </section>
 
             <section className={panelClass(1)}>
-              <h2 className="home-h2 home-h2--panel">dressed right, every time it counts.</h2>
+              <h2 className="home-h2 home-h2--panel">dressed right,<br />every time it counts.</h2>
               <p className="home-body">
-                nobody teaches you how to dress, so you dread the moments where it suddenly matters -
+                nobody teaches you how to dress, so you dread the moments where it suddenly matters:
                 the first date, the interview, the meeting that could change everything.
               </p>
               <p className="home-pull">oro makes sure you never show up wrong.</p>
             </section>
 
             <section className={panelClass(2)}>
-              <h2 className="home-h2 home-h2--panel">it&rsquo;s not guessing. it knows you.</h2>
+              <h2 className="home-h2 home-h2--panel">it&rsquo;s not guessing,<br />it knows you.</h2>
               <div className="home-reasons">
                 {REASONS.map((reason) => (
                   <div className="home-reason" key={reason}>
@@ -112,7 +129,7 @@ export default function Home() {
         <div className="home-phone-column">
           <div
             className="home-phone-sticky home-enter"
-            style={{ animationDelay: `${TYPING_ENDS + AFTER_TYPING + 280}ms` }}
+            style={{ animationDelay: `${TYPING_ENDS + AFTER_TYPING}ms` }}
           >
             <MessageThread startDelay={TYPING_ENDS + AFTER_TYPING + 780} />
           </div>

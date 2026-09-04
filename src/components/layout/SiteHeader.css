@@ -5,8 +5,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px var(--site-gutter);
-  background: var(--site-header-bg);
+  padding: 10px var(--site-gutter);
+  background: var(--color-bg);
+  background: color-mix(in srgb, var(--color-bg) 90%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--color-fg-line);
@@ -18,30 +19,27 @@
   gap: 14px;
 }
 
-/* The toggle wears the theme it switches to: dark on the light site, light on
-   the dark one, so the control previews its own result. */
+.site-header-conversion {
+  display: flex;
+}
+
 .site-header-theme {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-:root[data-theme='dark'] .site-header-theme {
-  background: var(--oro-cream);
-  color: var(--oro-plum-deep);
+.site-header-theme > [role='button'] {
+  position: relative;
+  background: transparent !important;
 }
 
-.site-header-theme:hover {
-  transform: translateY(-1px);
+.site-header-theme > [role='button']:hover {
+  background: var(--site-header-theme-hover) !important;
+}
+
+.site-header-theme > [role='button']::after {
+  position: absolute;
+  inset: -5px;
+  content: '';
 }
 
 .oro-wordmark {
@@ -56,6 +54,9 @@
 .site-header-logo-link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   line-height: 0;
 }
 
@@ -66,13 +67,30 @@
 }
 
 .oro-cta.site-header-editorial {
-  padding: 8px 0;
-  background: transparent;
-  font-size: 15px;
+  min-height: 44px;
+  padding: 6px 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 13px;
+  font-style: normal;
   line-height: 1;
+}
+
+.site-header [aria-current='page'] {
+  font-weight: 700;
+}
+
+.site-header .site-header-editorial[aria-current='page'] {
+  font-weight: normal;
 }
 
 @media (max-width: 520px) {
   .site-header { padding-inline: 16px; }
-  .site-header-actions { gap: 8px; }
+  .site-header-actions { gap: 12px; }
+}
+
+@media (max-width: 380px) {
+  .oro-cta.site-cta--header {
+    font-size: 11px;
+  }
 }

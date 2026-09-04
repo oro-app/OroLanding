@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Cta } from '@oro/web'
 import { trackCtaClick } from '../../lib/analytics'
 import './CareLabelSubscribe.css'
@@ -28,16 +28,41 @@ export default function CareLabelSubscribe() {
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [emailError, setEmailError] = useState(null)
+  const [validationAttempt, setValidationAttempt] = useState(0)
+  const emailInputRef = useRef(null)
+  const resultRef = useRef(null)
+
+  useEffect(() => {
+    if (validationAttempt) emailInputRef.current?.focus()
+  }, [validationAttempt])
+
+  useEffect(() => {
+    if (done) resultRef.current?.focus()
+  }, [done])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     const cleanEmail = email.trim().toLowerCase()
-    if (!cleanEmail) return
+    const emailInput = e.currentTarget.elements.email
+
+    if (!cleanEmail) {
+      setEmailError('Enter your email address.')
+      setValidationAttempt((attempt) => attempt + 1)
+      return
+    }
+
+    if (!emailInput.validity.valid) {
+      setEmailError('Enter an email address in the format name@example.com.')
+      setValidationAttempt((attempt) => attempt + 1)
+      return
+    }
 
     trackCtaClick('join_mailing_list_click', { location: 'journal_archive' })
 
     setLoading(true)
     setError(null)
+    setEmailError(null)
     try {
       const res = await fetch('/api/waitlist', {
         method: 'POST',
@@ -49,13 +74,13 @@ export default function CareLabelSubscribe() {
         }),
       })
       if (!res.ok && res.status !== 409) {
-        setError('something went wrong. try again.')
+        setError('We could not sign you up. Try again.')
         setLoading(false)
         return
       }
       setDone(true)
     } catch {
-      setError('something went wrong. try again.')
+      setError('We could not sign you up. Try again.')
     } finally {
       setLoading(false)
     }
@@ -86,36 +111,53 @@ export default function CareLabelSubscribe() {
 
         <div className="cl-symbols" aria-hidden="true">
           {CARE_SYMBOLS.map((sym, i) => (
-            <svg key={i} width="22" height="22" viewBox="0 0 22 22">
+            <svg key={i} width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
               {sym}
             </svg>
           ))}
         </div>
 
-        {done ? (
-          <p className="cl-success">
-            ✓ you’re on the list. first letter lands this week.
-          </p>
-        ) : (
-          <form className="cl-form" onSubmit={handleSubmit}>
-            <input
-              type="email"
-              className="cl-input"
-              placeholder="your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading}
-            />
-            <Cta size="inline" type="submit" disabled={loading}>
-              sign me up
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M5 12h14M13 5l7 7-7 7" />
-              </svg>
-            </Cta>
-          </form>
+        {!done && (
+          <>
+            <label className="cl-label" htmlFor="care-label-email">Email address (required)</label>
+            <form className="cl-form" onSubmit={handleSubmit} noValidate aria-busy={loading}>
+              <input
+                ref={emailInputRef}
+                id="care-label-email"
+                name="email"
+                type="email"
+                className="cl-input"
+                placeholder="your email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setEmailError(null)
+                  setError(null)
+                }}
+                autoComplete="email"
+                aria-invalid={emailError ? 'true' : undefined}
+                aria-describedby={emailError ? 'care-label-email-error' : undefined}
+                required
+                disabled={loading}
+              />
+              <Cta size="inline" type="submit" className="cl-submit" disabled={loading}>
+                sign me up
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+              </Cta>
+            </form>
+            {emailError && <p id="care-label-email-error" className="cl-field-error">{emailError}</p>}
+          </>
         )}
-        {error && <p className="cl-error">{error}</p>}
+        <p
+          ref={resultRef}
+          className={`cl-form-status${done ? ' cl-success' : error ? ' cl-error' : ''}`}
+          role={done ? undefined : 'status'}
+          tabIndex={done ? -1 : undefined}
+        >
+          {done ? <><span aria-hidden="true">✓ </span>you’re on the list. first letter lands this week.</> : loading ? 'Signing you up…' : error || ''}
+        </p>
 
         <div className="cl-fibre">
           <span>100% words. 0% spam.</span>

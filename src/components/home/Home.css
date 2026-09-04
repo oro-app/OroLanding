@@ -92,6 +92,11 @@
   pointer-events: none;
 }
 
+.home-panel.is-next a,
+.home-panel.is-past a {
+  visibility: hidden;
+}
+
 /* The next panel arrives from the right and the previous one leaves to the
    left, so the swap follows the direction the copy is read in. */
 .home-panel.is-next { transform: translateX(64px); }
@@ -259,29 +264,58 @@
     position: static;
     height: auto;
     display: block;
-    padding: 56px 0 0;
   }
 
-  .home-panel,
+  .home-stage .home-panel {
+    display: flex;
+    min-height: calc(100svh - var(--site-header-height));
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .home-stage .home-panel,
   .home-panel > * {
     opacity: 1;
     transform: none;
     pointer-events: auto;
+    visibility: visible;
   }
 
-  .home-panel + .home-panel { margin-top: 96px; }
+  .home-stage .home-panel a { visibility: visible; }
+
+  .home-stage .home-panel + .home-panel { margin-top: 0; }
+
+  .home-stage .home-panel:nth-child(2) {
+    text-align: right;
+  }
+
+  .home-stage .home-panel:nth-child(2) > * {
+    margin-left: auto;
+  }
 
   .home-phone-column {
     grid-column: 1;
     grid-row: auto;
     order: 2;
-    padding: 40px 0 0;
+    padding: 0;
   }
 
   .home-phone-sticky {
     position: static;
     height: auto;
-    padding: 0 0 72px;
+    min-height: calc(100svh - var(--site-header-height));
+    padding: 0;
+  }
+
+  .home-closer {
+    display: flex;
+    min-height: calc(100svh - var(--site-header-height));
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .home-page .site-cta--closer {
+    align-self: center;
   }
 
   .home-h1 { font-size: 40px; }
@@ -292,36 +326,34 @@
 }
 
 /* ── entrance ──
-   The headline types itself a character at a time; the caret is a pseudo-element
-   on whichever character is currently arriving, so it steps along with the text.
-   Delays come from inline styles in Home.jsx. */
+   React reveals one character at a time and moves a single caret with it. */
 
 .tw-char {
   position: relative;
   opacity: 0;
-  animation: twChar 1ms linear forwards;
 }
 
-.tw-char::after {
-  content: '';
+.tw-char.is-visible { opacity: 1; }
+
+.tw-caret {
   position: absolute;
   right: -0.04em;
   top: 0.1em;
   bottom: 0.14em;
   width: 2px;
   background: var(--color-accent);
-  opacity: 0;
-  animation: twCaret var(--tw-step, 46ms) linear forwards;
-  animation-delay: inherit;
+  pointer-events: none;
 }
 
-@keyframes twChar {
-  to { opacity: 1; }
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .home-h1:not(.is-typed) {
+    pointer-events: none;
+    user-select: none;
+  }
 }
 
-@keyframes twCaret {
-  0%, 92% { opacity: 1; }
-  100% { opacity: 0; }
+.home-h1.is-typed .tw-char {
+  opacity: 1;
 }
 
 .home-enter {
@@ -345,14 +377,14 @@
   transform: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
   .tw-char,
   .home-enter {
     animation: none;
     opacity: 1;
   }
 
-  .tw-char::after { content: none; }
+  .tw-caret { display: none; }
 
   .home-reveal {
     opacity: 1;
@@ -375,13 +407,16 @@
     height: auto;
   }
 
-  .home-panel,
+  .home-stage .home-panel,
   .home-panel > * {
     opacity: 1;
     transform: none;
     transition: none;
     pointer-events: auto;
+    visibility: visible;
   }
+
+  .home-stage .home-panel a { visibility: visible; }
 
   .home-panel + .home-panel { margin-top: var(--space-lg); }
 }

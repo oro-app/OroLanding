@@ -17,9 +17,28 @@
       background: #ffffff;
     }
 
+    .skip-link {
+      position: fixed;
+      z-index: 1000;
+      top: 8px;
+      left: 8px;
+      padding: 10px 14px;
+      color: #ffffff;
+      background: #1a1a1a;
+      font-weight: 600;
+      transform: translateY(-200%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: 3px solid #ffffff;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 5px #1a1a1a;
+    }
+
     header {
       border-bottom: 1px solid #e5e5e5;
-      padding: 16px 24px;
+      padding: 5px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -35,11 +54,21 @@
     }
     header nav a:hover { color: #1a1a1a; }
 
+    header > a, header nav a, footer nav a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+    }
+
+    header > a { min-width: 44px; }
+
     .page {
       max-width: 720px;
       margin: 0 auto;
       padding: 56px 24px 96px;
     }
+
+    .page:focus { outline: 3px solid #005fcc; outline-offset: -3px; }
 
     .page-header {
       margin-bottom: 40px;
@@ -57,7 +86,7 @@
 
     .page-header .updated {
       font-size: 13px;
-      color: #888;
+      color: #555;
     }
 
     .intro-box {
@@ -117,6 +146,14 @@
 
     a:hover { color: #555; }
 
+    a:focus-visible { outline: 3px solid #005fcc; outline-offset: 3px; }
+
+    nav a[aria-current="page"] {
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .caps-block {
       font-size: 13px;
       color: #444;
@@ -151,16 +188,22 @@
 
     footer {
       border-top: 1px solid #e5e5e5;
-      padding: 20px 24px;
+      padding: 8px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
-      color: #888;
+      color: #555;
     }
 
-    footer a { color: #888; text-decoration: none; }
+    footer a { color: #555; text-decoration: none; }
     footer a:hover { color: #1a1a1a; }
+
+    @media (forced-colors: active) {
+      a:focus-visible, .page:focus { outline-color: Highlight; }
+      .skip-link:focus { outline-color: Highlight; box-shadow: none; }
+      nav a[aria-current="page"] { border-bottom: 2px solid currentColor; }
+    }
 
     @media (max-width: 600px) {
       .page { padding: 32px 16px 64px; }
@@ -170,17 +213,19 @@
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
 <header>
   <a href="https://buildingoro.ca">
-    <img src="/static/oro-logo.png" alt="Oro" />
+    <img src="/oro-logo.webp" alt="Oro home" />
   </a>
-  <nav>
+  <nav aria-label="Legal">
     <a href="/privacy">Privacy Policy</a>
     <a href="/cookies">Cookie Policy</a>
   </nav>
 </header>
 
-<div class="page">
+<main id="main-content" class="page" tabindex="-1">
 
   <div class="page-header">
     <h1>Terms of Service</h1>
@@ -364,18 +409,18 @@
     <p><strong>Oro Digital Inc.</strong></p>
     <p>Email: <a href="mailto:admin@buildingoro.ca">admin@buildingoro.ca</a></p>
     <p>Website: <a href="https://buildingoro.ca">buildingoro.ca</a></p>
-    <p style="margin-top:12px; font-size:12px; color:#aaa;">Corporation No. 1780273-1 — Incorporated under the Canada Business Corporations Act</p>
+    <p style="margin-top:12px; font-size:12px; color:#555;">Corporation No. 1780273-1 — Incorporated under the Canada Business Corporations Act</p>
   </div>
 
-</div>
+</main>
 
 <footer>
   <span>&copy; 2026 Oro Digital Inc.</span>
-  <span>
+  <nav aria-label="Footer">
     <a href="/privacy">Privacy Policy</a> &nbsp;·&nbsp;
     <a href="/cookies">Cookie Policy</a> &nbsp;·&nbsp;
-    <a href="/terms">Terms of Service</a>
-  </span>
+    <a href="/terms" aria-current="page">Terms of Service</a>
+  </nav>
 </footer>
 
 </body>

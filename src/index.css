@@ -7,23 +7,23 @@
 @tailwind utilities;
 
 :root {
-  /* Measured from the rendered chrome: the header is 18px padding + a 37px CTA
-     + a 1px border; the footer is 24px padding + a 30px wordmark + a 1px
-     border. e2e/chrome.spec.js asserts these still match what renders. */
-  --site-header-height: 73px;
-  --site-footer-height: 79px;
+  /* Measured from the rendered chrome: the header is 10px padding + a 44px button
+     + a 1px border; the footer uses a fixed border-box height.
+     e2e/chrome.spec.js asserts these still match what renders. */
+  --site-header-height: 65px;
+  --site-footer-height: 55px;
   /* A full-bleed page block sits between the sticky header and the footer, so
      both come off the viewport rather than the header alone. */
   --site-chrome-height: calc(var(--site-header-height) + var(--site-footer-height));
 
   /* ── Redesign: semantic theme tokens. Default = light, matching
      ThemeProvider, so first paint before JS runs is not the wrong theme. ── */
-  --color-bg:       var(--oro-cream);
-  --color-fg:       var(--oro-ink);
-  --color-fg-faint: var(--oro-faint);
-  --color-fg-light: var(--oro-faint);
-  --color-fg-line:  var(--oro-faint-line);
-  --color-accent:   var(--oro-plum-deep);
+  --color-bg: var(--oro-cream);
+  --color-fg: var(--oro-ink);
+  --color-fg-faint: var(--oro-text-editorial-muted);
+  --color-fg-light: var(--oro-text-editorial-muted);
+  --color-fg-line: var(--oro-faint-line);
+  --color-accent: var(--oro-plum-deep);
 
   /* ── Site chrome. The header, the footer and every page's outer padding read
      from one gutter, so the wordmark lines up with page content everywhere. ── */
@@ -31,76 +31,73 @@
 
   /* ── Display type ramp, anchored on the home page. Every page's hero and
      section headings read from these, so the scale is one decision. ── */
-  --type-hero:    68px;
+  --type-hero: 68px;
   --type-display: 48px;
   --type-section: 34px;
-  --type-sub:     24px;
+  --type-sub: 24px;
   /* Serif still carries body copy on the editorial pages, so the ramp runs
      below the display steps until that role moves to the sans family. */
   --type-serif-body: 19px;
-  --type-serif-sm:   17px;
-  --type-serif-xs:   15px;
-  --type-serif-2xs:  13px;
+  --type-serif-sm: 17px;
+  --type-serif-xs: 15px;
+  --type-serif-2xs: 13px;
 
   /* Paired with the steps above so a size cannot pick up different metrics on
      different pages. */
-  --lh-hero:    1;
-  --tr-hero:    -0.032em;
+  --lh-hero: 1;
+  --tr-hero: -0.032em;
   --lh-display: 1.05;
   --tr-display: -0.028em;
   --lh-section: 1.1;
   --tr-section: -0.022em;
-  --lh-sub:     1.25;
-  --tr-sub:     -0.015em;
+  --lh-sub: 1.25;
+  --tr-sub: -0.015em;
 
   /* Sans body ramp. The phone's iOS type is device chrome and stays off it. */
-  --text-lg:  21px;
-  --text-md:  17px;
-  --text-sm:  15px;
-  --text-xs:  13px;
+  --text-lg: 21px;
+  --text-md: 17px;
+  --text-sm: 15px;
+  --text-xs: 13px;
   --text-2xs: 11px;
 
   /* ── Vertical rhythm. The steps are the home page's own values snapped to an
      8px grid, so home is the rule and the other pages follow it. ── */
-  --space-xs:  40px;
-  --space-sm:  64px;
-  --space-md:  96px;
-  --space-lg:  152px;
-  --space-xl:  184px;
+  --space-xs: 40px;
+  --space-sm: 64px;
+  --space-md: 96px;
+  --space-lg: 152px;
+  --space-xl: 184px;
   --space-2xl: 264px;
-  --site-header-bg: #fff9ede6;
-  --btn-bg:     var(--oro-plum-deep);
-  --btn-fg:     var(--oro-cream);
-  --btn-hover:  var(--oro-plum-deep);
+  --btn-bg: var(--oro-plum-deep);
+  --btn-fg: var(--oro-cream);
+  --btn-hover: var(--oro-plum-deep);
   --btn-shadow: #3a26464d;
 }
 
 :root[data-theme="dark"] {
-  --color-bg:       var(--oro-plum-deep);
-  --color-fg:       var(--oro-cream);
+  --color-bg: var(--oro-plum-deep);
+  --color-fg: var(--oro-cream);
   --color-fg-faint: var(--oro-cream-70);
-  --color-fg-light: var(--oro-cream-45);
-  --color-fg-line:  var(--oro-cream-line);
-  --color-accent:   var(--oro-gold);
+  --color-fg-light: var(--oro-cream-70);
+  --color-fg-line: var(--oro-cream-line);
+  --color-accent: var(--oro-gold);
 
-  --site-header-bg: #3a2646e6;
-  --btn-bg:     var(--oro-cream);
-  --btn-fg:     var(--oro-plum-deep);
-  --btn-hover:  var(--oro-ivory);
+  --btn-bg: var(--oro-cream);
+  --btn-fg: var(--oro-plum-deep);
+  --btn-hover: var(--oro-ivory);
   --btn-shadow: #0b0b0b59;
 }
 
 :root[data-theme="light"] {
-  --color-bg:       var(--oro-cream);
-  --color-fg:       var(--oro-ink);
-  --color-fg-faint: var(--oro-faint);
-  --color-fg-line:  var(--oro-faint-line);
-  --color-accent:   var(--oro-plum-deep);
+  --color-bg: var(--oro-cream);
+  --color-fg: var(--oro-ink);
+  --color-fg-faint: var(--oro-text-editorial-muted);
+  --color-fg-line: var(--oro-faint-line);
+  --color-accent: var(--oro-plum-deep);
 
-  --site-header-bg: #fff9ede6;
-  --btn-bg:     var(--oro-plum-deep);
-  --btn-fg:     var(--oro-cream);
-  --btn-hover:  var(--oro-plum-deep);
+  --btn-bg: var(--oro-plum-deep);
+  --btn-fg: var(--oro-cream);
+  --btn-hover: var(--oro-plum-deep);
   --btn-shadow: #3a26464d;
 }
 
@@ -114,9 +111,12 @@
   color: inherit;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   margin: 0;
   overflow-x: clip;
   /* Paint the theme ground immediately, before React mounts. */
@@ -124,6 +124,49 @@ html, body {
   /* The default is a brand family, so anything that does not set one of its
      own inherits Inter rather than falling through to the OS font. */
   font-family: var(--font-sans);
+}
+
+html {
+  color-scheme: light dark;
+  scroll-padding-block-start: var(--site-header-height);
+  scroll-padding-block-end: 9rem;
+}
+
+.theme-shell {
+  padding-block-end: var(--cookie-consent-height, 0px);
+}
+
+#main {
+  scroll-margin-block-start: var(--site-header-height);
+}
+
+#main [id] {
+  scroll-margin-block-start: calc(var(--site-header-height) + 1rem);
+}
+
+.route-loading {
+  min-height: calc(100vh - var(--site-header-height) - var(--site-footer-height));
+  margin: 0;
+  padding: var(--space-lg) var(--site-gutter);
+  color: var(--color-fg-light);
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 12px 16px;
+  transform: translateY(-150%);
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
 }
 
 html,
@@ -136,7 +179,9 @@ body,
   transition: background-color 0.4s ease;
 }
 
-a, button, input {
+a,
+button,
+input {
   transition: all 0.25s ease;
 }
 
@@ -169,7 +214,11 @@ textarea:focus-visible,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .section-reveal { opacity: 1; transform: none; transition: none; }
+  .section-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 
   html,
   body,
@@ -180,31 +229,63 @@ textarea:focus-visible,
   .gs {
     transition: none;
   }
+
+  a,
+  button,
+  input {
+    transition: none;
+  }
+
+  .animate-spin {
+    animation: none;
+  }
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.animate-spin { animation: spin 1s linear infinite; }
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
 
-button:active, .btn:active {
+button:active,
+.btn:active {
   transform: scale(0.98);
 }
 
-/* Smooth scroll */
-html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
 
 body {
   -webkit-font-smoothing: antialiased;
@@ -213,7 +294,19 @@ body {
 
 @media (max-width: 700px) {
   :root {
-    --site-footer-height: 132px;
+    --site-footer-height: 110px;
+  }
+}
+
+@media (forced-colors: active) {
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline-color: Highlight;
   }
 }
 
@@ -243,9 +336,29 @@ body {
   transition: all 0.2s ease;
 }
 
-.oro-cta.site-cta--header { padding: 9px 15px; font-size: 13px; gap: 0; }
-.oro-cta.site-cta--hero { padding: 13px 26px; }
-.oro-cta.site-cta--closer { padding: 14px 28px; }
+.oro-cta.site-cta--header {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  gap: 0;
+}
+
+.site-header-cta-label {
+  padding: 10px 15px;
+  border: 1px solid var(--btn-bg);
+  background: var(--btn-bg);
+  transition: all 0.2s ease;
+}
+
+.oro-cta.site-cta--hero {
+  padding: 13px 26px;
+}
+
+.oro-cta.site-cta--closer {
+  padding: 14px 28px;
+}
 
 /* The get-started page's full-width CTA is the same action as the site CTA, so
    it takes the same treatment and the same button roles. @oro/web's inverse
@@ -267,6 +380,23 @@ body {
   box-shadow: 0 8px 24px var(--btn-shadow);
 }
 
+:root .oro-cta.site-cta.site-cta--header:hover:not(:disabled) {
+  padding: 0 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+:root .oro-cta.site-cta.site-cta--header:hover:not(:disabled) .site-header-cta-label {
+  padding: 10px 15px !important;
+  border-color: var(--btn-hover);
+  background: var(--btn-hover);
+  box-shadow: 0 8px 24px var(--btn-shadow);
+}
+
 @media (max-width: 900px) {
-  :root { --site-gutter: 24px; }
+  :root {
+    --site-gutter: 24px;
+  }
 }

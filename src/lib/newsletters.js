@@ -75,7 +75,7 @@ export const newsletters = Object.entries(newsletterModules)
       date: meta.date || '',
       releaseAt: meta.releaseAt || '',
       dateLabel: formatNewsletterDate(meta.date),
-      image: meta.image || '/static/oro-logo.png',
+      image: meta.image || '/oro-logo.webp',
       summary: meta.summary || '',
       readTime: meta.readTime || '',
       comingSoon: meta.comingSoon,

@@ -14,7 +14,7 @@ function readInitialTheme(defaultTheme) {
   if (typeof window === 'undefined') return defaultTheme
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored === 'dark' || stored === 'light') return stored
+    if (stored === 'system' || stored === 'dark' || stored === 'light') return stored
   } catch {
     /* localStorage unavailable (private mode / blocked) — fall back to default */
   }
@@ -22,41 +22,47 @@ function readInitialTheme(defaultTheme) {
 }
 
 export function ThemeProvider({ children, defaultTheme = 'light' }) {
-  const [theme, setThemeState] = useState(defaultTheme)
+  const [mode, setModeState] = useState(defaultTheme)
+  const [theme, setResolvedTheme] = useState(defaultTheme === 'dark' ? 'dark' : 'light')
   const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
     const storedTheme = readInitialTheme(defaultTheme)
-    if (storedTheme !== theme) setThemeState(storedTheme)
+    if (storedTheme !== mode) setModeState(storedTheme)
     setInitialized(true)
   }, [])
 
   useEffect(() => {
     if (!initialized) return
     try {
-      localStorage.setItem(STORAGE_KEY, theme)
+      localStorage.setItem(STORAGE_KEY, mode)
     } catch {
       /* ignore persistence failures */
     }
-    if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', theme)
-      // Keep <body> in sync so overscroll / scroll gutters don't flash the wrong color.
-      document.body.style.background = theme === 'dark' ? colors.plum : colors.paper
+
+    const preference = window.matchMedia('(prefers-color-scheme: dark)')
+    const applyTheme = () => {
+      const resolved = mode === 'system' ? (preference.matches ? 'dark' : 'light') : mode
+      setResolvedTheme(resolved)
+      document.documentElement.setAttribute('data-theme-mode', mode)
+      document.documentElement.setAttribute('data-theme', resolved)
+      document.documentElement.style.colorScheme = resolved
+      document.body.style.background = resolved === 'dark' ? colors.plum : colors.paper
     }
-  }, [initialized, theme])
+
+    applyTheme()
+    if (mode !== 'system') return undefined
+    preference.addEventListener('change', applyTheme)
+    return () => preference.removeEventListener('change', applyTheme)
+  }, [initialized, mode])
 
   const setTheme = useCallback((next) => {
-    if (next === 'dark' || next === 'light') setThemeState(next)
+    if (next === 'system' || next === 'dark' || next === 'light') setModeState(next)
   }, [])
 
-  const toggleTheme = useCallback(
-    () => setThemeState((t) => (t === 'dark' ? 'light' : 'dark')),
-    [],
-  )
-
   const value = useMemo(
-    () => ({ theme, setTheme, toggleTheme }),
-    [theme, setTheme, toggleTheme],
+    () => ({ theme, mode, setTheme }),
+    [theme, mode, setTheme],
   )
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

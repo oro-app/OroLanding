@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme-mode="system" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,10 +14,30 @@
     <meta name="twitter:title" content="Oro - Style Starts Here">
     <meta name="twitter:description" content="oro — an ai stylist that builds outfits from the clothes you already own.">
     <meta name="twitter:image" content="https://buildingoro.ca/thumbnail.webp">
-    <meta name="theme-color" content="#000000">
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="preload" as="image" href="/static/oro-logo.png" fetchpriority="high">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#fff9ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#130c17" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/webp" href="/favicon.webp">
+    <link rel="preload" as="image" href="/oro-logo.webp" fetchpriority="high">
     <title>Oro - Style Starts Here</title>
+    <script>
+      (() => {
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+        scrollTo(0, 0)
+
+        let mode = 'system'
+        try {
+          const storedMode = localStorage.getItem('oro_theme')
+          if (['system', 'light', 'dark'].includes(storedMode)) mode = storedMode
+        } catch {}
+        const theme = mode === 'system'
+          ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : mode
+        document.documentElement.dataset.themeMode = mode
+        document.documentElement.dataset.theme = theme
+        document.documentElement.style.colorScheme = theme
+      })()
+    </script>
     <link rel="stylesheet" href="/src/site.css">
   </head>
   <body>

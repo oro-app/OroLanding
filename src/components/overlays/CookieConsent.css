@@ -45,7 +45,11 @@
 }
 
 .cookie-consent-copy a:hover {
-  color: var(--gold-light);
+  color: var(--oro-gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookie-consent { animation: none; }
 }
 
 .cookie-consent-actions {
@@ -53,6 +57,15 @@
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
+}
+
+.cookie-consent-accept,
+.cookie-consent-decline {
+  min-height: 44px;
+}
+
+.oro-btn.cookie-consent-decline {
+  border-color: rgba(245, 240, 232, 0.72);
 }
 
 @media (max-width: 700px) {

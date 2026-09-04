@@ -32,9 +32,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@newsletter-images': fileURLToPath(new URL('./src/assets/newsletters', import.meta.url)),
-      // @oro/ui (used only on /get-started: Dropdown + BackButton) is React
-      // Native; react-native-web provides the DOM renderer. The route is
-      // code-split, so RNW lands only in that chunk.
+      // @oro/ui is React Native; react-native-web provides the DOM renderer
+      // for the home demo control and the /get-started controls.
       'react-native': 'react-native-web',
     },
     dedupe: ['react', 'react-dom', 'react-native-web'],

@@ -6,27 +6,38 @@
   position: relative;
   height: clamp(442px, calc(100vh - var(--site-header-height) - 66px), 622px);
   aspect-ratio: 296 / 622;
-  border-radius: 45px;
+  container-type: size;
+}
+
+/* The 622px full-size device is the container-query baseline, so every visible
+   dimension below scales with the same height ratio. */
+.mt-device-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 7.235cqh;
   background: #0b0710;
-  padding: 11px;
-  box-shadow: 0 12px 32px -20px #000000e6, 0 0 0 2px #241a30, inset 0 0 0 2px #322340;
+  padding: 1.768cqh;
+  box-shadow: 0 1.929cqh 5.145cqh -3.215cqh #000000e6,
+    0 0 0 0.322cqh #241a30,
+    inset 0 0 0 0.322cqh #322340;
 }
 
 .mt-notch {
   position: absolute;
-  top: 11px;
+  top: 1.768cqh;
   left: 50%;
   transform: translateX(-50%);
-  width: 110px;
-  height: 23px;
+  width: 17.685cqh;
+  height: 3.698cqh;
   background: #0b0710;
-  border-radius: 0 0 15px 15px;
+  border-radius: 0 0 2.412cqh 2.412cqh;
   z-index: 3;
 }
 
 .mt-screen {
   position: relative;
-  border-radius: 35px;
+  border-radius: 5.627cqh;
   overflow: hidden;
   background: #1b1221;
   height: 100%;
@@ -35,12 +46,12 @@
 }
 
 .mt-statusbar {
-  height: 40px;
+  height: 6.431cqh;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 22px;
-  font-size: 12px;
+  padding: 0 3.537cqh;
+  font-size: 1.929cqh;
   font-weight: 500;
   color: #ffffff;
 }
@@ -48,40 +59,52 @@
 .mt-status-right {
   display: flex;
   align-items: flex-end;
-  gap: 4px;
+  gap: 0.643cqh;
 }
 
 .mt-signal {
   display: flex;
   align-items: flex-end;
-  gap: 1.5px;
+  gap: 0.241cqh;
 }
 
-.mt-signal i { width: 3px; background: #fff; }
-.mt-signal i:nth-child(1) { height: 5px; }
-.mt-signal i:nth-child(2) { height: 7px; }
-.mt-signal i:nth-child(3) { height: 9px; }
-.mt-signal i:nth-child(4) { height: 11px; }
+.mt-signal i { width: 0.482cqh; background: #fff; }
+.mt-signal i:nth-child(1) { height: 0.804cqh; }
+.mt-signal i:nth-child(2) { height: 1.125cqh; }
+.mt-signal i:nth-child(3) { height: 1.447cqh; }
+.mt-signal i:nth-child(4) { height: 1.768cqh; }
 
 .mt-battery {
   display: block;
-  width: 16px;
-  height: 9px;
-  border: 1px solid #ffffffb3;
-  border-radius: 2px;
+  width: 2.572cqh;
+  height: 1.447cqh;
+  border: 0.161cqh solid #ffffffb3;
+  border-radius: 0.322cqh;
 }
 
 .mt-contact {
   display: grid;
-  grid-template-columns: 30px 1fr 30px;
+  grid-template-columns: 44px 1fr 44px;
   align-items: center;
-  padding: 2px 12px 8px;
-  border-bottom: 1px solid #38383a;
+  padding: 0.322cqh 1.929cqh 1.286cqh;
+  border-bottom: 0.161cqh solid #38383a;
+}
+
+.mt-transcript {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: normal;
+  border: 0;
 }
 
 .mt-back {
-  color: #007aff;
-  font-size: 26px;
+  color: #006ee6;
+  font-size: 4.18cqh;
   line-height: 1;
 }
 
@@ -92,21 +115,21 @@
 }
 
 .mt-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
+  width: 7.074cqh;
+  height: 7.074cqh;
+  border-radius: 50%;
   background: #3b3b3d;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 21px;
+  font-size: 3.376cqh;
   color: #fff;
 }
 
 .mt-contact-name {
-  font-size: 11.5px;
+  font-size: 1.849cqh;
   color: #fff;
-  margin-top: 3px;
+  margin-top: 0.482cqh;
 }
 
 /* Bottom-aligned so the oldest messages scroll off the top on their own. */
@@ -115,14 +138,14 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 6px;
-  padding: 12px 12px 16px;
+  gap: 0.965cqh;
+  padding: 1.929cqh 1.929cqh 2.572cqh;
   overflow: hidden;
 }
 
 .mt-stamp {
-  margin: 0 auto 6px;
-  font-size: 11px;
+  margin: 0 auto 0.965cqh;
+  font-size: 1.768cqh;
   color: #8e8e93;
 }
 
@@ -147,14 +170,14 @@
 }
 
 .mt-bubble {
-  border-radius: 18px;
-  padding: 8px 13px;
-  font-size: 15px;
-  line-height: 20px;
+  border-radius: 2.894cqh;
+  padding: 1.286cqh 2.09cqh;
+  font-size: 2.412cqh;
+  line-height: 3.215cqh;
   color: #fff;
 }
 
-.mt-bubble--user { background: #007aff; }
+.mt-bubble--user { background: #006ee6; }
 .mt-bubble--oro { background: #3b3b3d; }
 
 /* Each tail is a rounded square in the bubble colour with a second shape in the
@@ -163,45 +186,45 @@
 .mt-tail-mask {
   position: absolute;
   bottom: 0;
-  height: 20px;
+  height: 3.215cqh;
 }
 
-.mt-tail { width: 20px; }
-.mt-tail-mask { width: 10px; background: #1b1221; }
+.mt-tail { width: 3.215cqh; }
+.mt-tail-mask { width: 1.608cqh; background: #1b1221; }
 
 .mt-tail--user {
-  right: -8px;
-  background: #007aff;
-  border-bottom-left-radius: 15px;
+  right: -1.286cqh;
+  background: #006ee6;
+  border-bottom-left-radius: 2.412cqh;
 }
 
 .mt-tail-mask--user {
-  right: -10px;
-  border-bottom-left-radius: 10px;
+  right: -1.608cqh;
+  border-bottom-left-radius: 1.608cqh;
 }
 
 .mt-tail--oro {
-  left: -8px;
+  left: -1.286cqh;
   background: #3b3b3d;
-  border-bottom-right-radius: 15px;
+  border-bottom-right-radius: 2.412cqh;
 }
 
 .mt-tail-mask--oro {
-  left: -10px;
-  border-bottom-right-radius: 10px;
+  left: -1.608cqh;
+  border-bottom-right-radius: 1.608cqh;
 }
 
 .mt-typing {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 11px 14px;
+  gap: 0.643cqh;
+  padding: 1.768cqh 2.251cqh;
 }
 
 .mt-typing i {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
+  width: 1.125cqh;
+  height: 1.125cqh;
+  border-radius: 50%;
   background: #fff9ed8a;
   animation: oroBlink 1.4s ease-in-out infinite;
 }
@@ -211,23 +234,23 @@
 
 .mt-look {
   align-self: flex-start;
-  width: 150px;
-  height: 197px;
-  border-radius: 17px;
+  width: 24.116cqh;
+  height: 31.672cqh;
+  border-radius: 2.733cqh;
   object-fit: cover;
   background: #fff9ed;
   animation: oroRise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .mt-receipt {
-  margin: -2px 0 0;
+  margin: -0.322cqh 0 0;
   text-align: right;
-  font-size: 11px;
+  font-size: 1.768cqh;
   color: #8e8e93;
 }
 
 @keyframes oroRise {
-  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  from { opacity: 0; transform: translateY(1.608cqh) scale(0.96); }
   to { opacity: 1; transform: none; }
 }
 
@@ -236,7 +259,7 @@
   50% { opacity: 0.9; }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
   .mt-row,
   .mt-look,
   .mt-typing i {

@@ -18,6 +18,7 @@
 .newsletter-back-link {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.45rem;
   margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
   padding: 0.45rem 0;
@@ -230,7 +231,19 @@
 }
 
 .newsletter-mdx li::marker {
-  color: var(--oro-gold);
+  color: var(--oro-accent-text);
+}
+
+.newsletter-new-tab-note {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .newsletter-mdx blockquote {
@@ -367,5 +380,73 @@
   .newsletter-mdx blockquote {
     font-size: 1.2rem;
     padding-left: 1.1rem;
+  }
+}
+
+:root[data-theme='dark'] .newsletter-page {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(212, 168, 83, 0.18), transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, rgba(255, 249, 237, 0.08), transparent 60%),
+    var(--color-bg);
+  color: var(--color-fg);
+}
+
+:root[data-theme='dark'] .newsletter-back-link,
+:root[data-theme='dark'] .newsletter-article-meta,
+:root[data-theme='dark'] .newsletter-page-eyebrow,
+:root[data-theme='dark'] .newsletter-mdx > p:first-of-type::first-letter,
+:root[data-theme='dark'] .newsletter-mdx a,
+:root[data-theme='dark'] .newsletter-mdx li::marker {
+  color: var(--color-accent);
+}
+
+:root[data-theme='dark'] .newsletter-article-header h1,
+:root[data-theme='dark'] .newsletter-not-found h1,
+:root[data-theme='dark'] .newsletter-mdx,
+:root[data-theme='dark'] .newsletter-mdx h2,
+:root[data-theme='dark'] .newsletter-mdx h3,
+:root[data-theme='dark'] .newsletter-mdx a:hover {
+  color: var(--color-fg);
+}
+
+:root[data-theme='dark'] .newsletter-article-summary,
+:root[data-theme='dark'] .newsletter-mdx blockquote {
+  color: var(--color-fg-light);
+}
+
+:root[data-theme='dark'] .newsletter-article-image {
+  border-color: var(--color-accent);
+  box-shadow: 0 30px 60px -30px rgba(11, 11, 11, 0.7);
+}
+
+:root[data-theme='dark'] .newsletter-mdx h2::before,
+:root[data-theme='dark'] .newsletter-mdx blockquote {
+  border-color: var(--color-accent);
+}
+
+:root[data-theme='dark'] .newsletter-mdx h2::before {
+  background: var(--color-accent);
+}
+
+:root[data-theme='dark'] .newsletter-mdx a {
+  text-decoration-color: var(--color-accent);
+}
+
+:root[data-theme='dark'] .newsletter-mdx hr,
+:root[data-theme='dark'] .newsletter-article-cta {
+  border-color: var(--color-accent);
+}
+
+:root[data-theme='dark'] .newsletter-mdx code {
+  background: rgba(255, 249, 237, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .newsletter-back-link svg {
+    transition: none;
+  }
+
+  .newsletter-back-link:hover svg {
+    transform: none;
   }
 }

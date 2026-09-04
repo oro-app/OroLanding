@@ -27,6 +27,7 @@ function MdxLink({ href = '', children, ...rest }) {
       {...rest}
     >
       {children}
+      {opensNewTab && <span className="newsletter-new-tab-note"> (opens in a new tab)</span>}
     </a>
   )
 }
@@ -40,13 +41,15 @@ export default function NewsletterPage({ slug }) {
   const [newsletterSignupOpen, setNewsletterSignupOpen] = useState(false)
 
   useEffect(() => {
-    if (!newsletter) return
+    document.title = newsletter ? `${newsletter.title} | Oro` : 'Newsletter not found | Oro'
+    if (!newsletter) return undefined
 
     trackEvent('newsletter_open', {
       newsletter_slug: newsletter.slug,
       newsletter_title: newsletter.title,
       newsletter_date: newsletter.date,
     })
+    return undefined
   }, [newsletter])
 
   useEffect(() => {
@@ -101,28 +104,28 @@ export default function NewsletterPage({ slug }) {
 
   if (!newsletter) {
     return (
-      <main className="newsletter-page">
+      <div className="newsletter-page">
         <section className="newsletter-not-found">
           <p className="newsletter-page-eyebrow">newsletter</p>
           <h1>We could not find that note.</h1>
           <a className="newsletter-back-link" href="/from-the-closet">
-            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false">
               <path d="M14 9H4M9 4L4 9l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             back to all notes
           </a>
         </section>
-      </main>
+      </div>
     )
   }
 
   const Article = newsletter.Component
 
   return (
-    <main className="newsletter-page">
+    <div className="newsletter-page">
       <div className="newsletter-page-shell">
         <a className="newsletter-back-link" href="/from-the-closet">
-          <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false">
             <path d="M14 9H4M9 4L4 9l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           all notes
@@ -183,6 +186,6 @@ export default function NewsletterPage({ slug }) {
       </div>
 
       {newsletterSignupOpen && <WaitlistModal onClose={() => setNewsletterSignupOpen(false)} />}
-    </main>
+    </div>
   )
 }

@@ -4,7 +4,7 @@ export const SITE_TITLE = 'Oro - AI stylist for the clothes you already own'
 export const DEFAULT_DESCRIPTION =
   'Oro is an AI stylist that builds outfits from the clothes you already own, tuned to your closet, taste, plans, weather, and body.'
 export const DEFAULT_IMAGE = '/thumbnail.webp'
-export const LOGO_IMAGE = '/static/oro-logo.png'
+export const LOGO_IMAGE = '/oro-logo.webp'
 
 const ORGANIZATION_ID = `${SITE_URL}/#organization`
 const WEBSITE_ID = `${SITE_URL}/#website`

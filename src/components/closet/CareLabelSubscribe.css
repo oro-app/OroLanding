@@ -76,7 +76,7 @@
   font-size: var(--type-serif-xs);
   line-height: 1.5;
   letter-spacing: -0.2px;
-  color: rgba(14, 11, 7, 0.55);
+  color: var(--oro-text-editorial-muted);
 }
 
 .cl-symbols {
@@ -94,6 +94,8 @@
 }
 .cl-input {
   flex: 1;
+  min-width: 0;
+  min-height: 44px;
   padding: 10px 0;
   background: transparent;
   border: none;
@@ -102,9 +104,36 @@
   font-size: var(--type-serif-2xs);
   color: var(--oro-ink);
 }
-.cl-input::placeholder { color: rgba(14, 11, 7, 0.4); }
+.cl-input::placeholder { color: var(--oro-text-editorial-muted); }
+
+.cl-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--oro-plum-deep);
+  font-size: var(--text-2xs);
+  font-weight: 600;
+}
+
+.cl-input[aria-invalid="true"] { border-bottom: 2px solid var(--oro-danger); }
+
+.cl-field-error {
+  margin: 8px 0 0;
+  color: var(--oro-danger);
+  font-size: var(--text-xs);
+}
+
+.cl-submit { min-height: 44px; }
 
 
+
+.cl-form-status {
+  min-height: 1.5em;
+  margin: 8px 0 0;
+  color: var(--oro-text-editorial-muted);
+  font-size: var(--text-xs);
+}
+
+.cl-form-status:empty { min-height: 0; margin: 0; }
 
 .cl-success {
   margin: 0;
@@ -130,7 +159,7 @@
   justify-content: space-between;
   font-size: var(--text-2xs);
   font-weight: 500;
-  color: rgba(14, 11, 7, 0.55);
+  color: var(--oro-text-editorial-muted);
   letter-spacing: normal;
 }
 

@@ -15,9 +15,26 @@
       color: #1a1a1a;
       background: #ffffff;
     }
+    .skip-link {
+      position: fixed;
+      z-index: 1000;
+      top: 8px;
+      left: 8px;
+      padding: 10px 14px;
+      color: #ffffff;
+      background: #1a1a1a;
+      font-weight: 600;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: 3px solid #ffffff;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 5px #1a1a1a;
+    }
     header {
       border-bottom: 1px solid #e5e5e5;
-      padding: 16px 24px;
+      padding: 5px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -26,10 +43,17 @@
     header nav { display: flex; gap: 24px; }
     header nav a { font-size: 13px; color: #555; text-decoration: none; }
     header nav a:hover { color: #1a1a1a; }
+    header > a, header nav a, footer nav a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+    }
+    header > a { min-width: 44px; }
     .page { max-width: 720px; margin: 0 auto; padding: 56px 24px 96px; }
+    .page:focus { outline: 3px solid #005fcc; outline-offset: -3px; }
     .page-header { margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid #e5e5e5; }
     .page-header h1 { font-size: 28px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; letter-spacing: -0.01em; }
-    .page-header .updated { font-size: 13px; color: #888; }
+    .page-header .updated { font-size: 13px; color: #555; }
     .intro-box {
       background: #f9f9f9;
       border: 1px solid #e5e5e5;
@@ -49,13 +73,26 @@
     li { font-size: 14px; color: #333; margin-bottom: 6px; }
     a { color: #1a1a1a; text-decoration: underline; text-underline-offset: 2px; }
     a:hover { color: #555; }
+    a:focus-visible { outline: 3px solid #005fcc; outline-offset: 3px; }
+    nav a[aria-current="page"] { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
     .cookie-table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 16px;
       font-size: 13px;
     }
-    .cookie-table th {
+    .cookie-table thead th {
       background: #f9f9f9;
       text-align: left;
       padding: 10px 14px;
@@ -65,13 +102,14 @@
       font-size: 12px;
       letter-spacing: 0.02em;
     }
-    .cookie-table td {
+    .cookie-table tbody th, .cookie-table td {
       padding: 10px 14px;
       border: 1px solid #e5e5e5;
       color: #444;
       vertical-align: top;
     }
-    .cookie-table tr:nth-child(even) td { background: #fafafa; }
+    .cookie-table tbody th { text-align: left; font-size: 13px; font-weight: 600; }
+    .cookie-table tbody tr:nth-child(odd) > * { background: #fafafa; }
     .status-badge {
       display: inline-block;
       font-size: 11px;
@@ -81,7 +119,7 @@
       letter-spacing: 0.04em;
     }
     .status-essential { background: #e8f5e9; color: #2e7d32; }
-    .status-none { background: #f5f5f5; color: #888; }
+    .status-none { background: #f5f5f5; color: #555; }
     .contact-section {
       background: #f9f9f9;
       border: 1px solid #e5e5e5;
@@ -93,15 +131,20 @@
     .contact-section p { font-size: 13px; color: #555; margin-bottom: 4px; }
     footer {
       border-top: 1px solid #e5e5e5;
-      padding: 20px 24px;
+      padding: 8px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
-      color: #888;
+      color: #555;
     }
-    footer a { color: #888; text-decoration: none; }
+    footer a { color: #555; text-decoration: none; }
     footer a:hover { color: #1a1a1a; }
+    @media (forced-colors: active) {
+      a:focus-visible, .page:focus { outline-color: Highlight; }
+      .skip-link:focus { outline-color: Highlight; box-shadow: none; }
+      nav a[aria-current="page"] { border-bottom: 2px solid currentColor; }
+    }
     @media (max-width: 600px) {
       .page { padding: 32px 16px 64px; }
       footer { flex-direction: column; gap: 8px; text-align: center; }
@@ -110,17 +153,19 @@
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
 <header>
   <a href="https://buildingoro.ca">
-    <img src="/static/oro-logo.png" alt="Oro" />
+    <img src="/oro-logo.webp" alt="Oro home" />
   </a>
-  <nav>
+  <nav aria-label="Legal">
     <a href="/terms">Terms of Service</a>
     <a href="/privacy">Privacy Policy</a>
   </nav>
 </header>
 
-<div class="page">
+<main id="main-content" class="page" tabindex="-1">
 
   <div class="page-header">
     <h1>Cookie Policy</h1>
@@ -142,31 +187,36 @@
     <p>Our website currently uses only essential cookies necessary for the website to function. We do not use analytics, advertising, or tracking cookies.</p>
 
     <table class="cookie-table">
+      <caption class="visually-hidden">Cookie categories, purposes, and current use</caption>
+      <thead>
       <tr>
-        <th>Category</th>
-        <th>Purpose</th>
-        <th>Status</th>
+        <th scope="col">Category</th>
+        <th scope="col">Purpose</th>
+        <th scope="col">Status</th>
       </tr>
+      </thead>
+      <tbody>
       <tr>
-        <td><strong>Essential cookies</strong></td>
+        <th scope="row">Essential cookies</th>
         <td>These cookies are necessary for the website to function and cannot be disabled. They are typically set in response to actions you take, such as submitting a form or setting your preferences. They do not store any personally identifiable information.</td>
         <td><span class="status-badge status-essential">In use</span></td>
       </tr>
       <tr>
-        <td><strong>Analytics cookies</strong></td>
+        <th scope="row">Analytics cookies</th>
         <td>Cookies that help us understand how visitors interact with our website, such as which pages are visited most often. We do not currently use these.</td>
         <td><span class="status-badge status-none">Not in use</span></td>
       </tr>
       <tr>
-        <td><strong>Marketing &amp; advertising cookies</strong></td>
+        <th scope="row">Marketing &amp; advertising cookies</th>
         <td>Cookies used to track visitors across websites for advertising purposes. We do not currently use these.</td>
         <td><span class="status-badge status-none">Not in use</span></td>
       </tr>
       <tr>
-        <td><strong>Preference cookies</strong></td>
+        <th scope="row">Preference cookies</th>
         <td>Cookies that remember your settings and preferences to personalize your experience. We do not currently use these.</td>
         <td><span class="status-badge status-none">Not in use</span></td>
       </tr>
+      </tbody>
     </table>
   </section>
 
@@ -215,18 +265,18 @@
     <p>Email: <a href="mailto:admin@buildingoro.ca">admin@buildingoro.ca</a></p>
     <p>Website: <a href="https://buildingoro.ca">buildingoro.ca</a></p>
     <p style="margin-top:16px; font-size:13px; color:#555;">This Cookie Policy is governed by the laws of the Province of Ontario and the federal laws of Canada.</p>
-    <p style="margin-top:8px; font-size:12px; color:#aaa;">Corporation No. 1780273-1 — Incorporated under the Canada Business Corporations Act</p>
+    <p style="margin-top:8px; font-size:12px; color:#555;">Corporation No. 1780273-1 — Incorporated under the Canada Business Corporations Act</p>
   </div>
 
-</div>
+</main>
 
 <footer>
   <span>&copy; 2026 Oro Digital Inc.</span>
-  <span>
+  <nav aria-label="Footer">
     <a href="/terms">Terms of Service</a> &nbsp;·&nbsp;
     <a href="/privacy">Privacy Policy</a> &nbsp;·&nbsp;
-    <a href="/cookies">Cookie Policy</a>
-  </span>
+    <a href="/cookies" aria-current="page">Cookie Policy</a>
+  </nav>
 </footer>
 
 </body>

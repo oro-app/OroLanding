@@ -40,6 +40,17 @@ function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
 
   useEffect(() => {
+    if (route.type === 'newsletter') return
+    document.title = route.type === 'journal'
+      ? 'From the Closet | Oro'
+      : route.type === 'contact'
+        ? 'Contact | Oro'
+        : route.type === 'get-started'
+          ? 'Get Started | Oro'
+          : 'Oro - Style Starts Here'
+  }, [route.type])
+
+  useEffect(() => {
     if (hasAnalyticsConsent()) {
       initAnalytics()
       trackPageView({
@@ -107,37 +118,34 @@ function App({ initialRoute }) {
     if (hash) {
       const element = document.getElementById(hash.substring(1))
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
+        element.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: no-preference)').matches ? 'smooth' : 'auto',
+        })
       }
     }
   }, [])
 
   return (
-    <ThemeProvider defaultTheme="light">
+    <ThemeProvider defaultTheme="system">
       <div className="theme-shell min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
-        <SiteHeader />
-        <main id="main">
-          {route.type === 'newsletter' ? (
-            <Suspense fallback={null}>
+        <a className="skip-link" href="#main">skip to main content</a>
+        <SiteHeader currentRoute={route.type} />
+        <main id="main" tabIndex={-1}>
+          <Suspense fallback={<p className="route-loading" role="status">loading page...</p>}>
+            {route.type === 'newsletter' ? (
               <NewsletterPage slug={route.slug} />
-            </Suspense>
-          ) : route.type === 'journal' ? (
-            <Suspense fallback={null}>
+            ) : route.type === 'journal' ? (
               <JournalPage />
-            </Suspense>
-          ) : route.type === 'contact' ? (
-            <Suspense fallback={null}>
+            ) : route.type === 'contact' ? (
               <ContactPage />
-            </Suspense>
-          ) : route.type === 'get-started' ? (
-            <Suspense fallback={null}>
+            ) : route.type === 'get-started' ? (
               <GetStartedPage />
-            </Suspense>
-          ) : (
-            <Home />
-          )}
+            ) : (
+              <Home />
+            )}
+          </Suspense>
         </main>
-        <SiteFooter />
+        <SiteFooter currentRoute={route.type} />
         <CookieConsent />
       </div>
     </ThemeProvider>
