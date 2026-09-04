@@ -1,0 +1,422 @@
+/* Home page. Colour roles are declared once here and mapped to the canonical
+   --oro-* tokens; only the values with no token (the brand-ramp page gradient,
+   the translucent header, the button shadows) are literals. */
+
+.home-page {
+  /* The @oro/tokens brand plum ramp: brandRampTop -> brandRamp -> brandRampBlack.
+     The origin sits above the page and the pool is narrower than the handoff's
+     120%/90%, which was wide enough that the ramp read as flat plum for the
+     whole first viewport. #1b1221 is also the phone screen colour, so the
+     thread reads as continuous with the page bottom. */
+  --home-page-bg: radial-gradient(95% 70% at 50% -8%, #fffdf8 0%, #fff9ed 46%, #fff2d7 100%);
+
+  position: relative;
+  isolation: isolate;
+  min-height: calc(100vh - var(--site-chrome-height));
+  background: var(--home-page-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+}
+
+.home-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(95% 70% at 50% -8%, #6a4880 0%, #3a2646 46%, #1b1221 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+:root[data-theme='dark'] .home-page::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page::before { transition: none; }
+}
+
+.home-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-page a:hover {
+  color: var(--color-accent);
+}
+
+/* ── hero + sticky phone ── */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 560px) 1fr;
+  /* Row gap stays 0 so the sections' own margins own the vertical rhythm. */
+  column-gap: 64px;
+  row-gap: 0;
+  padding: 0 var(--site-gutter);
+}
+
+/* The left column is a pinned stage: one panel is shown at a time and the next
+   replaces it as the page scrolls, while the phone stays put beside it. The
+   scroller is tall enough to give each panel its own screen of scroll. */
+.home-scroller {
+  grid-column: 1;
+  grid-row: 1;
+  height: calc(3 * (100vh - var(--site-header-height)));
+}
+
+.home-stage {
+  position: sticky;
+  top: var(--site-header-height);
+  height: calc(100vh - var(--site-header-height));
+  display: grid;
+}
+
+/* Panels stack on one grid cell so they swap in place. */
+.home-panel {
+  grid-area: 1 / 1;
+  align-self: center;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.home-panel.is-active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.home-panel.is-next,
+.home-panel.is-past {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home-panel.is-next a,
+.home-panel.is-past a {
+  visibility: hidden;
+}
+
+/* The next panel arrives from the right and the previous one leaves to the
+   left, so the swap follows the direction the copy is read in. */
+.home-panel.is-next { transform: translateX(64px); }
+.home-panel.is-past { transform: translateX(-64px); }
+
+.home-phone-column {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* Centre the phone in the viewport space left below the sticky header. */
+.home-phone-sticky {
+  position: sticky;
+  top: var(--site-header-height);
+  height: calc(100vh - var(--site-header-height));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 68px;
+  line-height: 1;
+  letter-spacing: -0.032em;
+  max-width: 545px;
+}
+
+.home-h1 em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+/* The h1 and closing h2 run at line-height 1, so their descenders overflow the
+   element box; these gaps are set against the ink, not the box. */
+.home-page .site-cta--hero { margin-top: 38px; }
+.home-page .site-cta--closer { margin-top: 40px; }
+
+.home-proof {
+  margin: 18px 0 0;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-fg-faint);
+  max-width: 440px;
+}
+
+.home-proof span {
+  color: var(--color-fg);
+  font-weight: 500;
+}
+
+/* ── sections ── */
+
+.home-block {
+  margin-top: var(--space-lg);
+}
+
+.home-h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: var(--type-section);
+  line-height: var(--lh-section);
+  letter-spacing: var(--tr-section);
+  max-width: 420px;
+}
+
+.home-h2--panel {
+  font-size: var(--type-display);
+  line-height: var(--lh-hero);
+  letter-spacing: var(--tr-display);
+}
+
+.home-h2--closer {
+  margin: 0 auto;
+  font-size: var(--type-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
+  max-width: 760px;
+}
+
+.home-body {
+  margin: 24px 0 0;
+  font-size: var(--text-md);
+  line-height: 1.6;
+  color: var(--color-fg-faint);
+  max-width: 440px;
+  text-wrap: pretty;
+}
+
+.home-pull,
+.home-reason-note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--type-serif-sm);
+  line-height: 1.5;
+  color: var(--color-fg);
+}
+
+.home-pull {
+  margin: 18px 0 0;
+  max-width: 440px;
+}
+
+.home-reasons {
+  display: flex;
+  flex-direction: column;
+  margin: 24px 0 0;
+  max-width: 440px;
+}
+
+.home-reason {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.home-reason + .home-reason {
+  margin-top: 4px;
+}
+
+.home-reason p {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: 1.5;
+  color: var(--color-fg-faint);
+}
+
+.home-tick {
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+}
+
+.home-reason-note {
+  margin: 18px 0 0;
+}
+
+/* ── closing CTA + footer ── */
+
+.home-closer {
+  text-align: center;
+  padding: var(--space-md) var(--site-gutter);
+  border-top: 1px solid var(--color-fg-line);
+}
+
+/* ── responsive ── */
+
+@media (max-width: 900px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stacked, nothing pins: the panels return to normal flow and the phone
+     follows the first one. */
+  .home-scroller {
+    grid-column: 1;
+    grid-row: auto;
+    order: 1;
+    height: auto;
+  }
+
+  .home-stage {
+    position: static;
+    height: auto;
+    display: block;
+  }
+
+  .home-stage .home-panel {
+    display: flex;
+    min-height: calc(100svh - var(--site-header-height));
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .home-stage .home-panel,
+  .home-panel > * {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .home-stage .home-panel a { visibility: visible; }
+
+  .home-stage .home-panel + .home-panel { margin-top: 0; }
+
+  .home-stage .home-panel:nth-child(2) {
+    text-align: right;
+  }
+
+  .home-stage .home-panel:nth-child(2) > * {
+    margin-left: auto;
+  }
+
+  .home-phone-column {
+    grid-column: 1;
+    grid-row: auto;
+    order: 2;
+    padding: 0;
+  }
+
+  .home-phone-sticky {
+    position: static;
+    height: auto;
+    min-height: calc(100svh - var(--site-header-height));
+    padding: 0;
+  }
+
+  .home-closer {
+    display: flex;
+    min-height: calc(100svh - var(--site-header-height));
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .home-page .site-cta--closer {
+    align-self: center;
+  }
+
+  .home-h1 { font-size: 40px; }
+  .home-h2 { font-size: 28px; }
+  .home-h2--panel { font-size: 34px; }
+  .home-h2--closer { font-size: 34px; }
+  .home-block { margin-top: 96px; }
+}
+
+/* ── entrance ──
+   React reveals one character at a time and moves a single caret with it. */
+
+.tw-char {
+  position: relative;
+  opacity: 0;
+}
+
+.tw-char.is-visible { opacity: 1; }
+
+.tw-caret {
+  position: absolute;
+  right: -0.04em;
+  top: 0.1em;
+  bottom: 0.14em;
+  width: 2px;
+  background: var(--color-accent);
+  pointer-events: none;
+}
+
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .home-h1:not(.is-typed) {
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+.home-h1.is-typed .tw-char {
+  opacity: 1;
+}
+
+.home-enter {
+  animation: homeEnter 0.62s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes homeEnter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Below the fold: nothing moves until it is scrolled into view. */
+.home-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.72s ease, transform 0.72s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.home-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .tw-char,
+  .home-enter {
+    animation: none;
+    opacity: 1;
+  }
+
+  .tw-caret { display: none; }
+
+  .home-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-scroller { height: auto; }
+
+  .home-stage {
+    position: static;
+    height: auto;
+    display: block;
+  }
+
+  .home-phone-sticky {
+    position: static;
+    height: auto;
+  }
+
+  .home-stage .home-panel,
+  .home-panel > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .home-stage .home-panel a { visibility: visible; }
+
+  .home-panel + .home-panel { margin-top: var(--space-lg); }
+}

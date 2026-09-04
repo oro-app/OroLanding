@@ -53,7 +53,7 @@ export const meta = {
   tag: 'From the Closet · Issue 008',  // from the draft's eyebrow line
   date: '2026-05-26',              // YYYY-MM-DD; cadence is Tuesdays & Saturdays; gates visibility (above)
   readTime: '3 min',               // ~200 words/min, rounded
-  image: '/newsletter-images/breakfast-at-tiffanys.webp',  // card art; omit -> /static/oro-logo.png fallback
+  image: '/newsletter-images/breakfast-at-tiffanys.webp',  // card art; omit -> /oro-logo.webp fallback
   summary: "One line — the draft's preheader.",
 }
 

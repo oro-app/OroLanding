@@ -22,3 +22,5 @@ public/film/*.mp4
 playwright-report/
 test-results/
 .claude/
+.agents/
+ 

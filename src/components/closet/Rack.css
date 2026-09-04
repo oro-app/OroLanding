@@ -3,7 +3,7 @@
    slightly stronger than the standard --color-fg-line for presence. */
 
 .rack {
-  padding: 24px 56px 96px;
+  padding: 24px var(--site-gutter) var(--space-md);
 }
 .rack-inner {
   max-width: 1180px;
@@ -15,30 +15,30 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 56px;
+  margin-bottom: var(--space-sm);
   gap: 24px;
 }
 .rack-title-h2 {
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 48px;
-  line-height: 1;
-  letter-spacing: -1.2px;
+  font-size: var(--type-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
   color: var(--color-fg);
 }
 .rack-title-h2 em { font-style: italic; }
 .rack-sub {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
-  font-size: 15px;
+  font-size: var(--type-serif-xs);
   color: var(--color-fg-faint);
   letter-spacing: -0.2px;
 }
 
 /* each row = one rod + a flex of hangers below */
 .rack-row {
-  margin-bottom: 96px;
+  margin-bottom: var(--space-md);
 }
 .rack-row:last-child { margin-bottom: 0; }
 
@@ -55,7 +55,7 @@
 
 .rack-row-items {
   display: flex;
-  gap: 64px;
+  gap: var(--space-sm);
   justify-content: center;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -74,6 +74,7 @@
      --rot is set inline per-card; --swing defaults to a calm idle. */
   --swing: 0.9deg;
   animation: rack-sway 7.6s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  animation-play-state: paused;
 }
 
 /* Desync — each card's period AND start phase differ so the rack never
@@ -83,12 +84,15 @@
 .rack-hanger:nth-child(3n)   { animation-duration:  6.4s; animation-delay: -4.1s; }
 .rack-hanger:nth-child(4n+1) { animation-duration:  8.4s; animation-delay: -1.3s; }
 
-.rack-hanger:hover {
+.rack-hanger:hover,
+.rack-hanger:focus-visible {
   /* Hover used to snap from 7s -> 1.6s, which read as a jolt. The new
      gentler step keeps the same lazy easing, just wider amplitude and a
      mildly shorter period. */
   --swing: 1.6deg;
   animation-duration: 3s;
+  animation-iteration-count: 1;
+  animation-play-state: running;
 }
 
 .rack-hook {
@@ -121,7 +125,7 @@
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--type-serif-body);
   line-height: 1.2;
   letter-spacing: -0.4px;
   color: var(--color-fg);
@@ -129,10 +133,10 @@
 
 .rack-excerpt {
   margin: 8px 0 12px;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
   font-style: italic;
-  font-size: 13.5px;
+  font-size: var(--type-serif-2xs);
   line-height: 1.45;
   letter-spacing: -0.1px;
   color: var(--color-fg-faint);
@@ -144,11 +148,10 @@
   align-items: center;
   gap: 8px;
   align-self: flex-start;
-  padding: 4px 10px;
-  border: 1px solid var(--color-fg-line);
+  padding: 4px 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 11.5px;
+  font-size: var(--type-serif-2xs);
   color: var(--color-fg-faint);
   letter-spacing: 0.1px;
 }
@@ -156,10 +159,10 @@
 
 /* empty-state */
 .rack-empty {
-  margin: 40px 0 0;
-  font-family: var(--font-serif);
+  margin: var(--space-xs) 0 0;
+  font-family: var(--font-sans);
   font-style: italic;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   text-align: center;
   color: var(--color-fg-faint);
 }
@@ -218,11 +221,14 @@
 
 /* responsive */
 @media (max-width: 960px) {
-  .rack             { padding: 16px 20px 64px; }
-  .rack-header      { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 40px; }
-  .rack-title-h2    { font-size: 36px; letter-spacing: -0.9px; }
-  .rack-sub         { font-size: 13px; }
+  .rack             { padding: 16px var(--site-gutter) var(--space-sm); }
+  .rack-header      { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: var(--space-xs); }
+  .rack-sub         { font-size: var(--type-serif-2xs); }
   .rack-row         { margin-bottom: 72px; }
-  .rack-row-items   { gap: 40px; }
+  .rack-row-items   { gap: var(--space-xs); }
   .rack-hanger      { width: min(280px, 80vw) !important; }
+}
+/* Same step and width as the home page's display-rank headings. */
+@media (max-width: 900px) {
+  .rack-title-h2 { font-size: 34px; }
 }

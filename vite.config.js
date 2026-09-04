@@ -32,9 +32,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@newsletter-images': fileURLToPath(new URL('./src/assets/newsletters', import.meta.url)),
-      // @oro/ui (used only on /get-started: Dropdown + BackButton) is React
-      // Native; react-native-web provides the DOM renderer. The route is
-      // code-split, so RNW lands only in that chunk.
+      // @oro/ui is React Native; react-native-web provides the DOM renderer
+      // for the home demo control and the /get-started controls.
       'react-native': 'react-native-web',
     },
     dedupe: ['react', 'react-dom', 'react-native-web'],
@@ -63,6 +62,13 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    // scripts/generate-seo.mjs prerenders each route's markup from one template
+    // that only carries the entry bundle's links, so a per-route CSS chunk
+    // would have no <link> and the route would paint unstyled until its lazy
+    // chunk loaded. One stylesheet keeps every prerendered route styled at
+    // first paint; the whole site's CSS is small enough that the extra bytes
+    // cost less than the reflow did.
+    cssCodeSplit: false,
   },
   server: {
     proxy: {

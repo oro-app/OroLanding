@@ -1,3 +1,4 @@
+@import './fonts.css';
 /* Palette + type primitives are generated from @oro/tokens — see scripts/generate-tokens.mjs. */
 @import './generated/tokens.css';
 
@@ -6,32 +7,98 @@
 @tailwind utilities;
 
 :root {
-  --site-header-height: calc(48px + 0.8rem + 1px);
-  --site-footer-height: 56px;
+  /* Measured from the rendered chrome: the header is 10px padding + a 44px button
+     + a 1px border; the footer uses a fixed border-box height.
+     e2e/chrome.spec.js asserts these still match what renders. */
+  --site-header-height: 65px;
+  --site-footer-height: 55px;
+  /* A full-bleed page block sits between the sticky header and the footer, so
+     both come off the viewport rather than the header alone. */
+  --site-chrome-height: calc(var(--site-header-height) + var(--site-footer-height));
 
-  /* ── Redesign: semantic theme tokens. Default = dark (no flash). ── */
-  --color-bg:       var(--oro-plum-deep);
-  --color-fg:       var(--oro-cream);
-  --color-fg-faint: var(--oro-cream-70);
-  --color-fg-light: var(--oro-cream-45);
-  --color-fg-line:  var(--oro-cream-line);
-  --color-accent:   var(--oro-gold);
+  /* ── Redesign: semantic theme tokens. Default = light, matching
+     ThemeProvider, so first paint before JS runs is not the wrong theme. ── */
+  --color-bg: var(--oro-cream);
+  --color-fg: var(--oro-ink);
+  --color-fg-faint: var(--oro-text-editorial-muted);
+  --color-fg-light: var(--oro-text-editorial-muted);
+  --color-fg-line: var(--oro-faint-line);
+  --color-accent: var(--oro-plum-deep);
+
+  /* ── Site chrome. The header, the footer and every page's outer padding read
+     from one gutter, so the wordmark lines up with page content everywhere. ── */
+  --site-gutter: 140px;
+
+  /* ── Display type ramp, anchored on the home page. Every page's hero and
+     section headings read from these, so the scale is one decision. ── */
+  --type-hero: 68px;
+  --type-display: 48px;
+  --type-section: 34px;
+  --type-sub: 24px;
+  /* Serif still carries body copy on the editorial pages, so the ramp runs
+     below the display steps until that role moves to the sans family. */
+  --type-serif-body: 19px;
+  --type-serif-sm: 17px;
+  --type-serif-xs: 15px;
+  --type-serif-2xs: 13px;
+
+  /* Paired with the steps above so a size cannot pick up different metrics on
+     different pages. */
+  --lh-hero: 1;
+  --tr-hero: -0.032em;
+  --lh-display: 1.05;
+  --tr-display: -0.028em;
+  --lh-section: 1.1;
+  --tr-section: -0.022em;
+  --lh-sub: 1.25;
+  --tr-sub: -0.015em;
+
+  /* Sans body ramp. The phone's iOS type is device chrome and stays off it. */
+  --text-lg: 21px;
+  --text-md: 17px;
+  --text-sm: 15px;
+  --text-xs: 13px;
+  --text-2xs: 11px;
+
+  /* ── Vertical rhythm. The steps are the home page's own values snapped to an
+     8px grid, so home is the rule and the other pages follow it. ── */
+  --space-xs: 40px;
+  --space-sm: 64px;
+  --space-md: 96px;
+  --space-lg: 152px;
+  --space-xl: 184px;
+  --space-2xl: 264px;
+  --btn-bg: var(--oro-plum-deep);
+  --btn-fg: var(--oro-cream);
+  --btn-hover: var(--oro-plum-deep);
+  --btn-shadow: #3a26464d;
 }
 
 :root[data-theme="dark"] {
-  --color-bg:       var(--oro-plum-deep);
-  --color-fg:       var(--oro-cream);
+  --color-bg: var(--oro-plum-deep);
+  --color-fg: var(--oro-cream);
   --color-fg-faint: var(--oro-cream-70);
-  --color-fg-line:  var(--oro-cream-line);
-  --color-accent:   var(--oro-gold);
+  --color-fg-light: var(--oro-cream-70);
+  --color-fg-line: var(--oro-cream-line);
+  --color-accent: var(--oro-gold);
+
+  --btn-bg: var(--oro-cream);
+  --btn-fg: var(--oro-plum-deep);
+  --btn-hover: var(--oro-ivory);
+  --btn-shadow: #0b0b0b59;
 }
 
 :root[data-theme="light"] {
-  --color-bg:       var(--oro-cream);
-  --color-fg:       var(--oro-ink);
-  --color-fg-faint: var(--oro-faint);
-  --color-fg-line:  var(--oro-faint-line);
-  --color-accent:   var(--oro-plum-deep);
+  --color-bg: var(--oro-cream);
+  --color-fg: var(--oro-ink);
+  --color-fg-faint: var(--oro-text-editorial-muted);
+  --color-fg-line: var(--oro-faint-line);
+  --color-accent: var(--oro-plum-deep);
+
+  --btn-bg: var(--oro-plum-deep);
+  --btn-fg: var(--oro-cream);
+  --btn-hover: var(--oro-plum-deep);
+  --btn-shadow: #3a26464d;
 }
 
 ::selection {
@@ -44,17 +111,77 @@
   color: inherit;
 }
 
-* { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  overflow-x: clip;
-  /* Dark is the default theme — paint plum immediately to avoid a flash before React mounts. */
-  background: var(--color-bg);
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', sans-serif;
+* {
+  box-sizing: border-box;
 }
 
-a, button, input {
+html,
+body {
+  margin: 0;
+  overflow-x: clip;
+  /* Paint the theme ground immediately, before React mounts. */
+  background: var(--color-bg);
+  /* The default is a brand family, so anything that does not set one of its
+     own inherits Inter rather than falling through to the OS font. */
+  font-family: var(--font-sans);
+}
+
+html {
+  color-scheme: light dark;
+  scroll-padding-block-start: var(--site-header-height);
+  scroll-padding-block-end: 9rem;
+}
+
+.theme-shell {
+  padding-block-end: var(--cookie-consent-height, 0px);
+}
+
+#main {
+  scroll-margin-block-start: var(--site-header-height);
+}
+
+#main [id] {
+  scroll-margin-block-start: calc(var(--site-header-height) + 1rem);
+}
+
+.route-loading {
+  min-height: calc(100vh - var(--site-header-height) - var(--site-footer-height));
+  margin: 0;
+  padding: var(--space-lg) var(--site-gutter);
+  color: var(--color-fg-light);
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 12px 16px;
+  transform: translateY(-150%);
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+html,
+body,
+.theme-shell,
+.site-header,
+.ftc,
+.ct,
+.gs {
+  transition: background-color 0.4s ease;
+}
+
+a,
+button,
+input {
   transition: all 0.25s ease;
 }
 
@@ -87,32 +214,78 @@ textarea:focus-visible,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .section-reveal { opacity: 1; transform: none; transition: none; }
+  .section-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html,
+  body,
+  .theme-shell,
+  .site-header,
+  .ftc,
+  .ct,
+  .gs {
+    transition: none;
+  }
+
+  a,
+  button,
+  input {
+    transition: none;
+  }
+
+  .animate-spin {
+    animation: none;
+  }
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.animate-spin { animation: spin 1s linear infinite; }
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
 
-button:active, .btn:active {
+button:active,
+.btn:active {
   transform: scale(0.98);
 }
 
-/* Smooth scroll */
-html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
 
 body {
   -webkit-font-smoothing: antialiased;
@@ -121,7 +294,109 @@ body {
 
 @media (max-width: 700px) {
   :root {
-    --site-header-height: calc(40px + 0.9rem + 1px);
-    --site-footer-height: 94px;
+    --site-footer-height: 110px;
+  }
+}
+
+@media (forced-colors: active) {
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+/* @oro/web ships .oro-btn as uppercase + 0.14em tracking, which contradicts the
+   brand rule against all-caps with wide tracking. Overridden here rather than
+   per-component so every Btn on the site reads the same; the variant belongs
+   upstream in @oro/web. The doubled class outranks @oro/web's own rule, which
+   is injected after this stylesheet and would otherwise win on order. */
+.oro-btn.oro-btn {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.82rem;
+}
+
+/* The site CTA. @oro/web's .oro-cta is serif *italic*; the brand wants upright
+   buttons, and the header needs a size smaller than any shipped variant. The
+   doubled class outranks @oro/web's stylesheet, which is injected after this
+   one and would otherwise win on order. */
+.oro-cta.site-cta {
+  font-style: normal;
+  /* The line box is pinned to the em so the label sits centred in the button
+     rather than low, which is where Fraunces' generous ascent would put it. */
+  line-height: 1;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-bg);
+  transition: all 0.2s ease;
+}
+
+.oro-cta.site-cta--header {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  gap: 0;
+}
+
+.site-header-cta-label {
+  padding: 10px 15px;
+  border: 1px solid var(--btn-bg);
+  background: var(--btn-bg);
+  transition: all 0.2s ease;
+}
+
+.oro-cta.site-cta--hero {
+  padding: 13px 26px;
+}
+
+.oro-cta.site-cta--closer {
+  padding: 14px 28px;
+}
+
+/* The get-started page's full-width CTA is the same action as the site CTA, so
+   it takes the same treatment and the same button roles. @oro/web's inverse
+   recipe reads raw --color-fg, which is ink rather than plum in light mode. */
+:root .oro-cta.oro-cta--full {
+  line-height: 1;
+  padding: 21px 24px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+}
+
+/* @oro/web's inverse hover draws a 1.5px gold ring, and overrides it for the
+   light theme only, so the selector has to outrank both of its rules. */
+:root .oro-cta.site-cta.site-cta:hover:not(:disabled) {
+  background: var(--btn-hover);
+  border-color: var(--btn-hover);
+  color: var(--btn-fg);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px var(--btn-shadow);
+}
+
+:root .oro-cta.site-cta.site-cta--header:hover:not(:disabled) {
+  padding: 0 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+:root .oro-cta.site-cta.site-cta--header:hover:not(:disabled) .site-header-cta-label {
+  padding: 10px 15px !important;
+  border-color: var(--btn-hover);
+  background: var(--btn-hover);
+  box-shadow: 0 8px 24px var(--btn-shadow);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --site-gutter: 24px;
   }
 }

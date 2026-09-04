@@ -6,7 +6,7 @@
    --color-bg so the holes read as cutouts through the tag. */
 
 .cl-wrap {
-  padding: 64px 56px 128px;
+  padding: var(--space-sm) var(--site-gutter) var(--space-lg);
 }
 
 .cl-tag {
@@ -35,7 +35,7 @@
   right: 0;
   display: flex;
   justify-content: center;
-  gap: 64px;
+  gap: var(--space-sm);
   pointer-events: none;
 }
 .cl-hole {
@@ -49,18 +49,18 @@
   margin: 0 0 22px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--type-serif-2xs);
   color: var(--oro-plum-deep);
-  letter-spacing: 0.3px;
+  letter-spacing: normal;
 }
 
 .cl-title {
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 42px;
-  line-height: 1.02;
-  letter-spacing: -1.2px;
+  font-size: var(--type-section);
+  line-height: var(--lh-section);
+  letter-spacing: var(--tr-section);
   color: var(--oro-ink);
 }
 .cl-em {
@@ -71,12 +71,12 @@
 .cl-body {
   margin: 24px 0 0;
   max-width: 440px;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 16px;
+  font-size: var(--type-serif-xs);
   line-height: 1.5;
   letter-spacing: -0.2px;
-  color: rgba(14, 11, 7, 0.55);
+  color: var(--oro-text-editorial-muted);
 }
 
 .cl-symbols {
@@ -94,30 +94,59 @@
 }
 .cl-input {
   flex: 1;
+  min-width: 0;
+  min-height: 44px;
   padding: 10px 0;
   background: transparent;
   border: none;
   outline: none;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: var(--type-serif-2xs);
   color: var(--oro-ink);
 }
-.cl-input::placeholder { color: rgba(14, 11, 7, 0.4); }
+.cl-input::placeholder { color: var(--oro-text-editorial-muted); }
+
+.cl-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--oro-plum-deep);
+  font-size: var(--text-2xs);
+  font-weight: 600;
+}
+
+.cl-input[aria-invalid="true"] { border-bottom: 2px solid var(--oro-danger); }
+
+.cl-field-error {
+  margin: 8px 0 0;
+  color: var(--oro-danger);
+  font-size: var(--text-xs);
+}
+
+.cl-submit { min-height: 44px; }
 
 
+
+.cl-form-status {
+  min-height: 1.5em;
+  margin: 8px 0 0;
+  color: var(--oro-text-editorial-muted);
+  font-size: var(--text-xs);
+}
+
+.cl-form-status:empty { min-height: 0; margin: 0; }
 
 .cl-success {
   margin: 0;
   padding-bottom: 12px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   color: var(--oro-plum-deep);
 }
 
 .cl-error {
   margin: 8px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-xs);
   color: var(--oro-danger);
 }
 
@@ -128,10 +157,10 @@
   border-top: 1px solid rgba(14, 11, 7, 0.18);
   display: flex;
   justify-content: space-between;
-  font-size: 10.5px;
+  font-size: var(--text-2xs);
   font-weight: 500;
-  color: rgba(14, 11, 7, 0.55);
-  letter-spacing: 0.6px;
+  color: var(--oro-text-editorial-muted);
+  letter-spacing: normal;
 }
 
 /* ── ENTRANCE — scroll-triggered via [data-revealed='true'] on parent.
@@ -151,10 +180,13 @@
 }
 
 /* responsive */
+/* Same step and width as the home page's section-rank headings. */
+@media (max-width: 900px) {
+  .cl-title { font-size: 28px; }
+}
 @media (max-width: 720px) {
-  .cl-wrap      { padding: 40px 20px 80px; }
+  .cl-wrap      { padding: var(--space-xs) var(--site-gutter) 80px; }
   .cl-tag       { padding: 40px 28px 32px; }
-  .cl-title     { font-size: 34px; letter-spacing: -1px; }
   .cl-symbols   { gap: 16px; margin: 28px 0; }
   .cl-fibre     { flex-direction: column; gap: 6px; }
 }

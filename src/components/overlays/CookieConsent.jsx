@@ -1,9 +1,10 @@
 import { Btn } from '@oro/web'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { setAnalyticsConsent } from '../../lib/analytics.js'
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false)
+  const bannerRef = useRef(null)
 
   useEffect(() => {
     try {
@@ -13,6 +14,21 @@ export default function CookieConsent() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!visible || !bannerRef.current) return undefined
+    const banner = bannerRef.current
+    const updateReservedSpace = () => {
+      document.documentElement.style.setProperty('--cookie-consent-height', `${Math.ceil(banner.getBoundingClientRect().height)}px`)
+    }
+    const observer = new ResizeObserver(updateReservedSpace)
+    updateReservedSpace()
+    observer.observe(banner)
+    return () => {
+      observer.disconnect()
+      document.documentElement.style.removeProperty('--cookie-consent-height')
+    }
+  }, [visible])
+
   if (!visible) return null
 
   const handleChoice = (accepted) => {
@@ -21,10 +37,10 @@ export default function CookieConsent() {
   }
 
   return (
-    <div className="cookie-consent-wrap" role="dialog" aria-live="polite" aria-label="Cookie consent">
+    <section ref={bannerRef} className="cookie-consent-wrap" aria-label="cookie consent">
       <div className="cookie-consent">
         <p className="cookie-consent-copy">
-          We use analytics <a href="/cookies" rel="noopener noreferrer">cookies</a> to understand how people find and use our site.
+          we use analytics <a href="/cookies" rel="noopener noreferrer">cookies</a> to understand how people find and use our site.
         </p>
         <div className="cookie-consent-actions">
           <Btn variant="accent" className="cookie-consent-accept" onClick={() => handleChoice(true)}>
@@ -35,6 +51,6 @@ export default function CookieConsent() {
           </Btn>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

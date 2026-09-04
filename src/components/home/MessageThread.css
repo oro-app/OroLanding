@@ -1,0 +1,268 @@
+/* The iOS colours below are device chrome rather than theme roles, so they are
+   literals: flipping them with the site theme would stop the phone reading as
+   a phone. */
+
+.mt-device {
+  position: relative;
+  height: clamp(442px, calc(100vh - var(--site-header-height) - 66px), 622px);
+  aspect-ratio: 296 / 622;
+  container-type: size;
+}
+
+/* The 622px full-size device is the container-query baseline, so every visible
+   dimension below scales with the same height ratio. */
+.mt-device-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 7.235cqh;
+  background: #0b0710;
+  padding: 1.768cqh;
+  box-shadow: 0 1.929cqh 5.145cqh -3.215cqh #000000e6,
+    0 0 0 0.322cqh #241a30,
+    inset 0 0 0 0.322cqh #322340;
+}
+
+.mt-notch {
+  position: absolute;
+  top: 1.768cqh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 17.685cqh;
+  height: 3.698cqh;
+  background: #0b0710;
+  border-radius: 0 0 2.412cqh 2.412cqh;
+  z-index: 3;
+}
+
+.mt-screen {
+  position: relative;
+  border-radius: 5.627cqh;
+  overflow: hidden;
+  background: #1b1221;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mt-statusbar {
+  height: 6.431cqh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3.537cqh;
+  font-size: 1.929cqh;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.mt-status-right {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.643cqh;
+}
+
+.mt-signal {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.241cqh;
+}
+
+.mt-signal i { width: 0.482cqh; background: #fff; }
+.mt-signal i:nth-child(1) { height: 0.804cqh; }
+.mt-signal i:nth-child(2) { height: 1.125cqh; }
+.mt-signal i:nth-child(3) { height: 1.447cqh; }
+.mt-signal i:nth-child(4) { height: 1.768cqh; }
+
+.mt-battery {
+  display: block;
+  width: 2.572cqh;
+  height: 1.447cqh;
+  border: 0.161cqh solid #ffffffb3;
+  border-radius: 0.322cqh;
+}
+
+.mt-contact {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  padding: 0.322cqh 1.929cqh 1.286cqh;
+  border-bottom: 0.161cqh solid #38383a;
+}
+
+.mt-transcript {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: normal;
+  border: 0;
+}
+
+.mt-back {
+  color: #006ee6;
+  font-size: 4.18cqh;
+  line-height: 1;
+}
+
+.mt-contact-id {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mt-avatar {
+  width: 7.074cqh;
+  height: 7.074cqh;
+  border-radius: 50%;
+  background: #3b3b3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.376cqh;
+  color: #fff;
+}
+
+.mt-contact-name {
+  font-size: 1.849cqh;
+  color: #fff;
+  margin-top: 0.482cqh;
+}
+
+/* Bottom-aligned so the oldest messages scroll off the top on their own. */
+.mt-thread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.965cqh;
+  padding: 1.929cqh 1.929cqh 2.572cqh;
+  overflow: hidden;
+}
+
+.mt-stamp {
+  margin: 0 auto 0.965cqh;
+  font-size: 1.768cqh;
+  color: #8e8e93;
+}
+
+.mt-stamp b {
+  color: #fff;
+  font-weight: 500;
+}
+
+.mt-row {
+  position: relative;
+  animation: oroRise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.mt-row--user {
+  align-self: flex-end;
+  max-width: 80%;
+}
+
+.mt-row--oro {
+  align-self: flex-start;
+  max-width: 84%;
+}
+
+.mt-bubble {
+  border-radius: 2.894cqh;
+  padding: 1.286cqh 2.09cqh;
+  font-size: 2.412cqh;
+  line-height: 3.215cqh;
+  color: #fff;
+}
+
+.mt-bubble--user { background: #006ee6; }
+.mt-bubble--oro { background: #3b3b3d; }
+
+/* Each tail is a rounded square in the bubble colour with a second shape in the
+   screen colour laid over it, which carves out the curve iOS draws. */
+.mt-tail,
+.mt-tail-mask {
+  position: absolute;
+  bottom: 0;
+  height: 3.215cqh;
+}
+
+.mt-tail { width: 3.215cqh; }
+.mt-tail-mask { width: 1.608cqh; background: #1b1221; }
+
+.mt-tail--user {
+  right: -1.286cqh;
+  background: #006ee6;
+  border-bottom-left-radius: 2.412cqh;
+}
+
+.mt-tail-mask--user {
+  right: -1.608cqh;
+  border-bottom-left-radius: 1.608cqh;
+}
+
+.mt-tail--oro {
+  left: -1.286cqh;
+  background: #3b3b3d;
+  border-bottom-right-radius: 2.412cqh;
+}
+
+.mt-tail-mask--oro {
+  left: -1.608cqh;
+  border-bottom-right-radius: 1.608cqh;
+}
+
+.mt-typing {
+  display: flex;
+  align-items: center;
+  gap: 0.643cqh;
+  padding: 1.768cqh 2.251cqh;
+}
+
+.mt-typing i {
+  width: 1.125cqh;
+  height: 1.125cqh;
+  border-radius: 50%;
+  background: #fff9ed8a;
+  animation: oroBlink 1.4s ease-in-out infinite;
+}
+
+.mt-typing i:nth-child(2) { animation-delay: 0.2s; }
+.mt-typing i:nth-child(3) { animation-delay: 0.4s; }
+
+.mt-look {
+  align-self: flex-start;
+  width: 24.116cqh;
+  height: 31.672cqh;
+  border-radius: 2.733cqh;
+  object-fit: cover;
+  background: #fff9ed;
+  animation: oroRise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.mt-receipt {
+  margin: -0.322cqh 0 0;
+  text-align: right;
+  font-size: 1.768cqh;
+  color: #8e8e93;
+}
+
+@keyframes oroRise {
+  from { opacity: 0; transform: translateY(1.608cqh) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes oroBlink {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .mt-row,
+  .mt-look,
+  .mt-typing i {
+    animation: none;
+  }
+}

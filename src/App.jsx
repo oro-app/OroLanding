@@ -1,29 +1,16 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
-import Hero from './components/home/Hero'
-import WhyOro from './components/home/WhyOro'
-import TheFilm from './components/home/TheFilm'
-import FitsByOro from './components/home/FitsByOro'
-import Testimonials from './components/home/Testimonials'
-import TheJournal from './components/home/TheJournal'
-import OroInsiders from './components/home/OroInsiders'
-import FinalCTA from './components/home/FinalCTA'
+import { lazy, Suspense, useEffect } from 'react'
+import Home from './components/home/Home'
 import SiteHeader from './components/layout/SiteHeader'
 import SiteFooter from './components/layout/SiteFooter'
 import CookieConsent from './components/overlays/CookieConsent'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics, trackPageNavigation, trackPageView, trackSocialLinkClick } from './lib/analytics'
-import { DISCORD_URL } from './lib/links'
 
-// Code-split the article + archive + product-subpage routes.
+// Code-split the article + archive + signup routes.
 const NewsletterPage = lazy(() => import('./components/newsletter/NewsletterPage'))
 const JournalPage = lazy(() => import('./components/journal/JournalPage'))
-const TryOroPage = lazy(() => import('./components/try-oro/TryOro'))
-const HowItWorksPage = lazy(() => import('./components/how-it-works/HowItWorks'))
-const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
-const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
 const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
-const WaitlistModal = lazy(() => import('./components/overlays/WaitlistModal'))
 
 export function getRouteFromPath(pathname = '/') {
   const path = pathname.replace(/\/+$/, '') || '/'
@@ -38,10 +25,6 @@ export function getRouteFromPath(pathname = '/') {
 
   // Route slugs match the labels shown in the header/footer.
   if (path === '/from-the-closet') return { type: 'journal' }
-  if (path === '/try-oro')         return { type: 'try-oro' }
-  if (path === '/how-it-works')    return { type: 'how-it-works' }
-  if (path === '/why-oro')         return { type: 'why-oro' }
-  if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/get-started')     return { type: 'get-started' }
 
@@ -55,24 +38,17 @@ function getBrowserRoute() {
 
 function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
-  const [waitlistOpen, setWaitlistOpen] = useState(false)
 
-  // Every "try oro" CTA now funnels to /try-oro - the page
-  // pitches the perks and offers both stores. OroInsiders "join our
-  // community" opens the Discord invite directly. WaitlistModal stays
-  // mounted for the periodic newsletter-page signup popup and the
-  // TheJournal mailing-list CTA, the two remaining email-collection
-  // surfaces on the home flow.
-  const openTryOro = () => {
-    trackPageNavigation({
-      to_path: '/try-oro',
-      navigation_type: 'programmatic',
-    })
-    window.location.assign('/try-oro')
-  }
-  const openDiscord = () => {
-    window.open(DISCORD_URL, '_blank', 'noopener,noreferrer')
-  }
+  useEffect(() => {
+    if (route.type === 'newsletter') return
+    document.title = route.type === 'journal'
+      ? 'From the Closet | Oro'
+      : route.type === 'contact'
+        ? 'Contact | Oro'
+        : route.type === 'get-started'
+          ? 'Get Started | Oro'
+          : 'Oro - Style Starts Here'
+  }, [route.type])
 
   useEffect(() => {
     if (hasAnalyticsConsent()) {
@@ -142,68 +118,35 @@ function App({ initialRoute }) {
     if (hash) {
       const element = document.getElementById(hash.substring(1))
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
+        element.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: no-preference)').matches ? 'smooth' : 'auto',
+        })
       }
     }
   }, [])
 
   return (
-    <ThemeProvider defaultTheme="dark">
-      <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
-        <SiteHeader />
-        <main id="main">
-          {route.type === 'newsletter' ? (
-            <Suspense fallback={null}>
+    <ThemeProvider defaultTheme="system">
+      <div className="theme-shell min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
+        <a className="skip-link" href="#main">skip to main content</a>
+        <SiteHeader currentRoute={route.type} />
+        <main id="main" tabIndex={-1}>
+          <Suspense fallback={<p className="route-loading" role="status">loading page...</p>}>
+            {route.type === 'newsletter' ? (
               <NewsletterPage slug={route.slug} />
-            </Suspense>
-          ) : route.type === 'journal' ? (
-            <Suspense fallback={null}>
+            ) : route.type === 'journal' ? (
               <JournalPage />
-            </Suspense>
-          ) : route.type === 'try-oro' ? (
-            <Suspense fallback={null}>
-              <TryOroPage />
-            </Suspense>
-          ) : route.type === 'how-it-works' ? (
-            <Suspense fallback={null}>
-              <HowItWorksPage />
-            </Suspense>
-          ) : route.type === 'why-oro' ? (
-            <Suspense fallback={null}>
-              <WhyOroPage />
-            </Suspense>
-          ) : route.type === 'manifesto' ? (
-            <Suspense fallback={null}>
-              <ManifestoPage />
-            </Suspense>
-          ) : route.type === 'contact' ? (
-            <Suspense fallback={null}>
+            ) : route.type === 'contact' ? (
               <ContactPage />
-            </Suspense>
-          ) : route.type === 'get-started' ? (
-            <Suspense fallback={null}>
+            ) : route.type === 'get-started' ? (
               <GetStartedPage />
-            </Suspense>
-          ) : (
-            <>
-              <Hero onTryOro={openTryOro} />
-              <WhyOro />
-              <TheFilm />
-              <FitsByOro />
-              <Testimonials />
-              <TheJournal onSubscribe={() => setWaitlistOpen(true)} />
-              <OroInsiders onApply={openDiscord} />
-              <FinalCTA onTryOro={openTryOro} />
-              <SiteFooter />
-            </>
-          )}
-        </main>
-        <CookieConsent />
-        {waitlistOpen && (
-          <Suspense fallback={null}>
-            <WaitlistModal onClose={() => setWaitlistOpen(false)} />
+            ) : (
+              <Home />
+            )}
           </Suspense>
-        )}
+        </main>
+        <SiteFooter currentRoute={route.type} />
+        <CookieConsent />
       </div>
     </ThemeProvider>
   )

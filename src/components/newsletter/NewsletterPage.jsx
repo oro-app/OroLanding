@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Cta } from '@oro/web'
 import { getNewsletterBySlug } from '../../lib/newsletters'
 import NewsletterRecommendations from './NewsletterRecommendations'
-import SiteFooter from '../layout/SiteFooter'
 import WaitlistModal from '../overlays/WaitlistModal'
 import { hasAnalyticsConsent, trackCtaClick, trackEvent } from '../../lib/analytics'
-import { APP_STORE_URL, PLAY_STORE_URL } from '../../lib/links'
 import {
   hasSeenNewsletterSignupThisSession,
   hasSignedUpForNewsletter,
@@ -30,6 +27,7 @@ function MdxLink({ href = '', children, ...rest }) {
       {...rest}
     >
       {children}
+      {opensNewTab && <span className="newsletter-new-tab-note"> (opens in a new tab)</span>}
     </a>
   )
 }
@@ -43,13 +41,15 @@ export default function NewsletterPage({ slug }) {
   const [newsletterSignupOpen, setNewsletterSignupOpen] = useState(false)
 
   useEffect(() => {
-    if (!newsletter) return
+    document.title = newsletter ? `${newsletter.title} | Oro` : 'Newsletter not found | Oro'
+    if (!newsletter) return undefined
 
     trackEvent('newsletter_open', {
       newsletter_slug: newsletter.slug,
       newsletter_title: newsletter.title,
       newsletter_date: newsletter.date,
     })
+    return undefined
   }, [newsletter])
 
   useEffect(() => {
@@ -104,29 +104,28 @@ export default function NewsletterPage({ slug }) {
 
   if (!newsletter) {
     return (
-      <main className="newsletter-page">
+      <div className="newsletter-page">
         <section className="newsletter-not-found">
           <p className="newsletter-page-eyebrow">newsletter</p>
           <h1>We could not find that note.</h1>
           <a className="newsletter-back-link" href="/from-the-closet">
-            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false">
               <path d="M14 9H4M9 4L4 9l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             back to all notes
           </a>
         </section>
-        <SiteFooter />
-      </main>
+      </div>
     )
   }
 
   const Article = newsletter.Component
 
   return (
-    <main className="newsletter-page">
+    <div className="newsletter-page">
       <div className="newsletter-page-shell">
         <a className="newsletter-back-link" href="/from-the-closet">
-          <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false">
             <path d="M14 9H4M9 4L4 9l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           all notes
@@ -162,57 +161,31 @@ export default function NewsletterPage({ slug }) {
               <div className="newsletter-mdx">
                 <Article components={MDX_COMPONENTS} />
               </div>
+
+            <div className="newsletter-article-cta">
+              <a
+                className="oro-cta oro-cta--statement site-cta site-cta--closer nl-cta-link"
+                href="/get-started"
+                onClick={() => {
+                  trackCtaClick('get_started_click', {
+                    location: 'newsletter_article',
+                    slug: newsletter.slug,
+                    destination: 'get_started',
+                  })
+                }}
+              >
+                ask oro what to wear
+              </a>
+            </div>
             </div>
 
             <NewsletterRecommendations currentSlug={newsletter.slug} />
           </div>
 
-          <div className="newsletter-article-cta">
-            <p className="newsletter-article-cta-eyebrow">try oro</p>
-            <p className="newsletter-article-cta-text">
-              Download Oro and start creating outfits from your style with your clothes.
-            </p>
-            <Cta
-              size="pill"
-              href={APP_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => {
-                trackCtaClick('app_store_click', {
-                  location: 'newsletter_article',
-                  slug: newsletter.slug,
-                  store: 'apple_app_store',
-                  destination: 'app_store',
-                  destination_url: APP_STORE_URL,
-                })
-              }}
-            >
-              download on the app store
-            </Cta>
-            <Cta
-              size="pill"
-              href={PLAY_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => {
-                trackCtaClick('google_play_click', {
-                  location: 'newsletter_article',
-                  slug: newsletter.slug,
-                  store: 'google_play',
-                  destination: 'play_store',
-                  destination_url: PLAY_STORE_URL,
-                })
-              }}
-            >
-              get it on google play
-            </Cta>
-          </div>
         </article>
       </div>
 
-      <SiteFooter />
-
       {newsletterSignupOpen && <WaitlistModal onClose={() => setNewsletterSignupOpen(false)} />}
-    </main>
+    </div>
   )
 }

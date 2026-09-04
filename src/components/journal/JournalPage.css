@@ -10,14 +10,14 @@
 
 /* ── HERO ─────────────────────────────────────────────────────────────── */
 .ftc-hero {
-  padding: 128px 56px 64px;
+  padding: var(--space-lg) var(--site-gutter) var(--space-sm);
 }
 .ftc-hero-inner {
   max-width: 1180px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.3fr 1fr;
-  gap: 64px;
+  gap: var(--space-sm);
   /* end-aligned so the subhead's last line sits at the same baseline as
      the headline's last line — intentional per the handoff. */
   align-items: end;
@@ -29,18 +29,18 @@
   margin: 0 0 28px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 14px;
-  color: var(--oro-gold);
-  letter-spacing: 0.4px;
+  font-size: var(--type-serif-2xs);
+  color: var(--color-accent);
+  letter-spacing: normal;
 }
 
 .ftc-title {
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 104px;
-  line-height: 0.94;
-  letter-spacing: -3px;
+  font-size: var(--type-hero);
+  line-height: var(--lh-hero);
+  letter-spacing: var(--tr-hero);
   color: var(--color-fg);
 }
 .ftc-em {
@@ -52,10 +52,10 @@
 
 .ftc-sub {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
   font-style: italic;
-  font-size: 21px;
+  font-size: var(--type-serif-body);
   line-height: 1.5;
   letter-spacing: -0.3px;
   color: var(--color-fg-faint);
@@ -75,15 +75,17 @@
 }
 
 /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .ftc-title { font-size: 84px; letter-spacing: -2.4px; }
-}
 @media (max-width: 960px) {
-  .ftc-hero        { padding: 80px 20px 40px; }
+  .ftc-hero        { padding: 80px var(--site-gutter) var(--space-xs); }
   .ftc-hero-inner  { grid-template-columns: 1fr; gap: 24px; align-items: start; }
   .ftc-hero-right  { max-width: none; }
 }
+/* The home hero drops to 40px at this width, and this is the same rank of
+   heading, so it steps at the same place and to the same size. Tracking stays
+   on the em-based token rather than a px override, so it scales with the size. */
+@media (max-width: 900px) {
+  .ftc-title { font-size: 40px; }
+}
 @media (max-width: 720px) {
-  .ftc-title { font-size: 64px; line-height: 0.98; letter-spacing: -1.8px; }
-  .ftc-sub   { font-size: 17px; }
+  .ftc-sub { font-size: var(--type-serif-sm); }
 }

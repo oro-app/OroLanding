@@ -3,6 +3,21 @@
   "outputDirectory": "dist",
   "headers": [
     {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<preview>.*\\.vercel\\.app)"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
       "source": "/(terms|privacy|cookies|google-play)",
       "headers": [
         {
@@ -49,15 +64,61 @@
     }
   ],
   "redirects": [
-    { "source": "/journal",   "destination": "/from-the-closet", "permanent": true },
-    { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
+    {
+      "source": "/journal",
+      "destination": "/from-the-closet",
+      "permanent": true
+    },
+    {
+      "source": "/try-oro",
+      "destination": "/get-started",
+      "permanent": true
+    },
+    {
+      "source": "/how-it-works",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/why-oro",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/honestly",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/manifesto",
+      "destination": "/",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/app", "destination": "/api/app" },
-    { "source": "/terms",   "destination": "/terms.html" },
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/cookies", "destination": "/cookies.html" },
-    { "source": "/google-play", "destination": "/google-play.html" },
-    { "source": "/((?!api/)(?!.*\\.).*)", "destination": "/index.html" }
+    {
+      "source": "/app",
+      "destination": "/api/app"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/cookies",
+      "destination": "/cookies.html"
+    },
+    {
+      "source": "/google-play",
+      "destination": "/google-play.html"
+    },
+    {
+      "source": "/((?!api/)(?!.*\\.).*)",
+      "destination": "/index.html"
+    }
   ]
 }

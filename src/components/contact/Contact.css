@@ -8,7 +8,7 @@
 
 /* ── TITLE BLOCK ──────────────────────────────────────────────────────── */
 .ct-title-wrap {
-  padding: 96px 64px 24px;
+  padding: var(--space-md) var(--site-gutter) 24px;
   max-width: 1180px;
   margin: 0 auto;
   text-align: center;
@@ -20,9 +20,9 @@
   gap: 10px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 13.5px;
-  color: var(--color-fg-faint);
-  letter-spacing: 0.3px;
+  font-size: var(--type-serif-2xs);
+  color: var(--color-fg);
+  letter-spacing: normal;
 }
 .ct-kicker-dot {
   width: 5px; height: 5px; border-radius: 999px;
@@ -32,9 +32,9 @@
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 104px;
-  line-height: 0.96;
-  letter-spacing: -3px;
+  font-size: var(--type-hero);
+  line-height: var(--lh-hero);
+  letter-spacing: var(--tr-hero);
   color: var(--color-fg);
 }
 .ct-em { font-style: italic; }
@@ -44,14 +44,14 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 300;
-  font-size: 19px;
+  font-size: var(--type-serif-body);
   line-height: 1.5;
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
 }
 
 /* ── THE TWO LETTERS ──────────────────────────────────────────────────── */
 .ct-letters-wrap {
-  padding: 24px 64px 64px;
+  padding: 24px var(--site-gutter) var(--space-sm);
 }
 .ct-letters {
   max-width: 1240px;
@@ -87,21 +87,22 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: var(--text-2xs);
   font-weight: 500;
-  letter-spacing: 2.6px;
-  color: rgba(14, 11, 7, 0.55);
+  letter-spacing: normal;
+  color: var(--oro-text-editorial-muted);
   text-transform: lowercase;
 }
 .ct-meta-plum { color: var(--oro-plum-deep); }
-.ct-meta-gold { color: var(--oro-gold-dim); }
+.ct-meta-gold { color: var(--oro-accent-text); }
 
 .ct-salutation {
   margin: 32px 0 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 26px;
-  letter-spacing: -0.4px;
+  font-weight: 300;
+  font-size: var(--type-sub);
+  letter-spacing: var(--tr-sub);
   color: var(--oro-plum-deep);
 }
 
@@ -110,9 +111,9 @@
 }
 .ct-body p {
   margin: 0 0 18px;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 300;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   line-height: 1.7;
   letter-spacing: -0.1px;
   color: var(--oro-ink);
@@ -124,14 +125,27 @@
   margin: 40px 0 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 22px;
+  font-size: var(--type-serif-body);
   color: var(--oro-plum-deep);
   line-height: 1.5;
 }
+/* The sheet is warm paper in both themes, so the ink needs no dark-mode
+   treatment. Width is capped so a wide signature never reaches the fold. */
+.ct-signature {
+  display: block;
+  width: 210px;
+  max-width: 62%;
+  margin: 4px 0 6px -6px;
+}
+
 .ct-signoff-name {
+  margin: 0;
+  font-family: var(--font-sans);
   font-style: normal;
-  font-weight: 300;
-  font-size: 28px;
+  font-weight: 400;
+  font-size: var(--text-2xs);
+  letter-spacing: 0.04em;
+  color: var(--oro-text-editorial-muted);
 }
 /* ── VISITOR FORM ─────────────────────────────────────────────────────── */
 .ct-textarea {
@@ -146,18 +160,29 @@
   padding: 0;
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   line-height: 1.7;
   letter-spacing: -0.1px;
   color: var(--oro-ink);
 }
-.ct-textarea::placeholder { color: rgba(14, 11, 7, 0.4); font-style: italic; }
+.ct-textarea::placeholder { color: var(--oro-text-editorial-muted); font-style: italic; }
+
+.ct-label {
+  display: block;
+  color: var(--oro-plum-deep);
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+  font-weight: 600;
+}
+
+.ct-label--message { margin-top: 18px; }
+.ct-label--message + .ct-textarea { margin-top: 6px; }
 
 .ct-signoff {
   margin: 28px 0 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 22px;
+  font-size: var(--type-serif-body);
   color: var(--oro-plum-deep);
 }
 
@@ -169,9 +194,10 @@
 }
 .ct-input {
   width: 100%;
+  min-height: 44px;
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(14, 11, 7, 0.16);
+  border-bottom: 1px solid var(--oro-text-editorial-muted);
   padding: 6px 0;
   outline: none;
   font-family: var(--font-serif);
@@ -179,14 +205,39 @@
   font-size: 18px;
   color: var(--oro-ink);
 }
-.ct-input::placeholder { color: rgba(14, 11, 7, 0.4); }
+.ct-input::placeholder { color: var(--oro-text-editorial-muted); }
+
+.ct-input[aria-invalid="true"] { border-bottom: 2px solid var(--oro-danger); }
+.ct-textarea[aria-invalid="true"] { border: 2px solid var(--oro-danger); padding: 6px; }
 
 .ct-help {
   margin: 4px 0 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
-  font-size: 12px;
-  color: rgba(14, 11, 7, 0.5);
+  font-size: var(--text-2xs);
+  color: var(--oro-danger);
+}
+
+.ct-error-summary {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border: 2px solid var(--oro-danger);
+  color: var(--oro-ink);
+}
+
+.ct-error-summary h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+}
+
+.ct-error-summary ul { margin: 0; padding-left: 20px; }
+.ct-error-summary a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--oro-plum-deep);
+  text-decoration: underline;
 }
 
 /* chips */
@@ -195,10 +246,10 @@
   display: block;
   margin-bottom: 12px;
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: var(--text-2xs);
   font-weight: 500;
-  letter-spacing: 2.6px;
-  color: rgba(14, 11, 7, 0.55);
+  letter-spacing: normal;
+  color: var(--oro-text-editorial-muted);
 }
 .ct-chips-row {
   display: flex;
@@ -210,12 +261,12 @@
 
 .ct-error {
   margin: 12px 0 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
-  font-size: 14px;
-  color: rgba(14, 11, 7, 0.6);
+  font-size: var(--type-serif-2xs);
+  color: var(--oro-danger);
 }
-.ct-error a { color: var(--oro-plum-deep); }
+.ct-error a { color: var(--oro-plum-deep); text-decoration: underline; }
 
 .ct-reassure {
   margin: 18px 0 0;
@@ -223,8 +274,20 @@
   border-top: 1px dashed rgba(14, 11, 7, 0.2);
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 13px;
-  color: rgba(14, 11, 7, 0.5);
+  font-size: var(--type-serif-2xs);
+  color: var(--oro-text-editorial-muted);
+}
+
+.ct-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* sent state */
@@ -236,16 +299,17 @@
 }
 .ct-sent-line {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-style: italic;
-  font-size: 22px;
+  font-weight: 300;
+  font-size: var(--type-serif-body);
   color: var(--oro-plum-deep);
   text-align: center;
 }
 
 /* ── POSTSCRIPT FAQ ───────────────────────────────────────────────────── */
 .ct-faq-wrap {
-  padding: 40px 64px 96px;
+  padding: var(--space-xs) var(--site-gutter) var(--space-md);
 }
 .ct-faq-inner {
   max-width: 920px;
@@ -255,9 +319,9 @@
   margin: 0 0 18px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 14px;
-  color: var(--oro-gold);
-  letter-spacing: 0.4px;
+  font-size: var(--type-serif-2xs);
+  color: var(--color-accent);
+  letter-spacing: normal;
 }
 .ct-faq-list {
   border-top: 1px solid var(--color-fg-line);
@@ -273,17 +337,17 @@
 .ct-faq-q {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 22px;
+  font-size: var(--type-serif-body);
   letter-spacing: -0.4px;
   color: var(--color-fg);
 }
 .ct-faq-a {
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: 17px;
+  font-size: var(--type-serif-sm);
   line-height: 1.55;
   letter-spacing: -0.2px;
-  color: var(--color-fg-faint);
+  color: var(--color-fg);
 }
 
 /* ── ENTRANCE ANIMATION ──────────────────────────────────────────────── */
@@ -306,14 +370,14 @@
 /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
   .ct-title-wrap   { padding: 48px 20px 16px; }
-  .ct-title        { font-size: 64px; line-height: 0.98; letter-spacing: -1.8px; }
+  .ct-title        { font-size: 48px; line-height: 0.98; letter-spacing: -1.4px; }
   .ct-letters-wrap { padding: 16px 20px 48px; }
   .ct-letters      { grid-template-columns: 1fr; gap: 24px; justify-items: center; }
   .ct-sheet        { width: 100%; max-width: 560px; padding: 48px 36px 56px; }
   .ct-faq-wrap     { padding: 24px 20px 64px; }
   .ct-faq-row      { grid-template-columns: 1fr; gap: 4px; }
-  .ct-faq-q        { font-size: 20px; }
-  .ct-faq-a        { font-size: 16px; }
+  .ct-faq-q        { font-size: var(--type-serif-body); }
+  .ct-faq-a        { font-size: var(--type-serif-xs); }
 }
 
 @media (max-width: 600px) {
@@ -321,4 +385,4 @@
 }
 
 /* layout only — the CTA recipe lives in @oro/web (.oro-cta--block) */
-.ct-send { margin-top: 36px; }
+.ct-send { min-height: 44px; margin-top: 36px; }

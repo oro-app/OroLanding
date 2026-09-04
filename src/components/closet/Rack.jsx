@@ -36,7 +36,7 @@ function variantsFor(slug) {
 
 function SHook() {
   return (
-    <svg width="14" height="22" viewBox="0 0 14 22" aria-hidden="true" className="rack-hook">
+    <svg width="14" height="22" viewBox="0 0 14 22" aria-hidden="true" focusable="false" className="rack-hook">
       <path
         d="M7 0 V8 M2 11 A5 5 0 0 1 12 11 A5 5 0 0 1 7 16 V22"
         stroke="currentColor"
@@ -76,7 +76,7 @@ function Hanger({ entry }) {
       <h3 className="rack-title">{entry.title}</h3>
       {entry.summary && <p className="rack-excerpt">{entry.summary}</p>}
       <span className="rack-tag">
-        <span>{entry.dateLabel.toLowerCase()}</span>
+        <span>{entry.dateLabel}</span>
         {entry.readTime && (
           <>
             <span className="rack-tag-dot" aria-hidden="true">·</span>

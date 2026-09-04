@@ -1,6 +1,6 @@
 import { BackButton } from '@oro/ui'
 import { Chip, Cta } from '@oro/web'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { trackEvent } from '../../lib/analytics'
 import './GetStarted.css'
 
@@ -135,6 +135,8 @@ export default function GetStarted() {
 
   // Direction the last transition moved, so the content can slide the right way.
   const [dir, setDir] = useState('fwd')
+  const screenRef = useRef(null)
+  const validationFocusRef = useRef('')
 
   useEffect(() => {
     if (resendLeft <= 0) return undefined
@@ -150,24 +152,33 @@ export default function GetStarted() {
     }
   }, [form])
 
-  const set = (key) => (value) => setForm((f) => ({ ...f, [key]: value }))
+  useEffect(() => {
+    const target = screenRef.current?.querySelector('[data-initial-focus="true"]')
+      || screenRef.current?.querySelector('h1')
+    target?.focus()
+  }, [view])
+
+  useEffect(() => {
+    if (!error || !validationFocusRef.current) return
+    document.getElementById(validationFocusRef.current)?.focus()
+    validationFocusRef.current = ''
+  }, [error])
+
+  const set = (key) => (value) => {
+    setNotice('')
+    if (
+      (key === 'name' && value.trim())
+      || (key === 'birthday' && ageFromISO(value) !== null && ageFromISO(value) >= 0)
+      || (key === 'province' && (form.country === 'CA' ? PROVINCES : US_STATES)
+        .some(([province]) => province === value))
+      || (key === 'phone' && /^(?:\d{10}|1\d{10})$/.test(value.trim()))
+      || key === 'hearOther'
+    ) setError('')
+    setForm((f) => ({ ...f, [key]: value }))
+  }
 
   const qIndex = QUESTIONS.indexOf(view)
   const onQuestion = qIndex !== -1
-
-  // Whether the current question is answered well enough to continue.
-  const canContinue = useMemo(() => {
-    switch (view) {
-      case 'name': return form.name.trim().length > 0
-      case 'birthday': return ageFromISO(form.birthday) !== null
-      case 'province': return (form.country === 'CA' ? PROVINCES : form.country === 'US' ? US_STATES : [])
-        .some(([code]) => code === form.province)
-      case 'hear': return form.hear.length > 0
-      case 'phone': return form.phone.length > 0
-      case 'otp': return code.length === 6
-      default: return true
-    }
-  }, [view, form, code])
 
   const goTo = (next, direction = 'fwd') => {
     setDir(direction)
@@ -189,7 +200,7 @@ export default function GetStarted() {
     if (loading) return
     setLoading(true)
     setError('')
-    setNotice('')
+    setNotice(resend ? 'sending a new code…' : 'sending your verification code…')
     try {
       const { status, detail } = await postJSON('/onboarding/start', {
         name: form.name,
@@ -220,13 +231,17 @@ export default function GetStarted() {
         if (resend) setNotice('a code was already sent — give it a minute.')
         else { goTo('otp'); setNotice('we already texted you a code — use that one.') }
       } else if (status === 400) {
+        setNotice('')
         setError(detail.toLowerCase() || 'that doesn’t look quite right — check it and try again.')
       } else if (status === 429) {
+        setNotice('')
         setError('too many tries — wait a moment and try again.')
       } else {
+        setNotice('')
         setError('couldn’t send the code — try again in a bit.')
       }
     } catch {
+      setNotice('')
       setError('couldn’t reach oro — check your connection and try again.')
     } finally {
       setLoading(false)
@@ -238,7 +253,7 @@ export default function GetStarted() {
     if (loading) return
     setLoading(true)
     setError('')
-    setNotice('')
+    setNotice('checking your code…')
     try {
       const { status, detail } = await postJSON('/onboarding/verify', {
         phone: form.phone.trim(),
@@ -250,11 +265,14 @@ export default function GetStarted() {
       } else if (status === 410) {
         goTo('expired')
       } else if (status === 400) {
+        setNotice('')
         setError(/phone/i.test(detail) ? 'invalid phone number.' : 'that code didn’t match — double-check and try again.')
       } else {
+        setNotice('')
         setError('couldn’t check the code — try again in a bit.')
       }
     } catch {
+      setNotice('')
       setError('couldn’t reach oro — check your connection and try again.')
     } finally {
       setLoading(false)
@@ -262,7 +280,38 @@ export default function GetStarted() {
   }
 
   const advance = () => {
-    if (!canContinue || loading) return
+    if (loading) return
+    const fail = (message, fieldId) => {
+      setNotice('')
+      validationFocusRef.current = fieldId
+      setError(message)
+      if (error === message) document.getElementById(fieldId)?.focus()
+      return true
+    }
+
+    if (view === 'name' && !form.name.trim()) {
+      if (fail('Enter your first name.', 'gs-name')) return
+    }
+    if (view === 'birthday' && (ageFromISO(form.birthday) === null || ageFromISO(form.birthday) < 0)) {
+      if (fail('Enter a valid birthday in the past using year, month, and day.', 'gs-birthday-year')) return
+    }
+    if (view === 'province' && !form.country) {
+      if (fail('Choose Canada or United States.', 'gs-country-ca')) return
+    }
+    if (view === 'province' && !(form.country === 'CA' ? PROVINCES : US_STATES)
+      .some(([province]) => province === form.province)) {
+      if (fail(`Choose your ${form.country === 'CA' ? 'province or territory' : 'state'}.`, 'gs-location')) return
+    }
+    if (view === 'hear' && form.hear.length === 0) {
+      if (fail('Choose at least one option.', 'gs-hear-instagram')) return
+    }
+    if (view === 'phone' && !/^(?:\d{10}|1\d{10})$/.test(form.phone.trim())) {
+      if (fail('Enter a 10-digit phone number, or 11 digits starting with 1.', 'gs-phone')) return
+    }
+    if (view === 'otp' && !/^\d{6}$/.test(code.trim())) {
+      if (fail('Enter the 6-digit code we texted you.', 'gs-otp')) return
+    }
+
     // Birthday gate: under-16 diverts to the ineligible dead-end.
     if (view === 'birthday' && ageFromISO(form.birthday) < MIN_AGE) {
       goTo('ineligible')
@@ -288,6 +337,8 @@ export default function GetStarted() {
   const locationOptions = form.country === 'US' ? US_STATES : PROVINCES
 
   const toggleHear = (option) => {
+    setError('')
+    setNotice('')
     setForm((current) => ({
       ...current,
       hear: current.hear.includes(option)
@@ -300,18 +351,19 @@ export default function GetStarted() {
   }
 
   return (
-    <main className="gs" data-view={view}>
+    <div className="gs" data-view={view}>
       {/* Top bar: back + progress. Only shown on the question screens. */}
       {onQuestion && (
         <div className="gs-bar">
           <BackButton onPress={back} accessibilityLabel="go back" />
-          <div className="gs-progress" aria-hidden="true">
-            <span
-              className="gs-progress-fill"
-              style={{ width: `${((qIndex + 1) / QUESTIONS.length) * 100}%` }}
-            />
-          </div>
-          <span className="gs-progress-count">
+          <progress
+            className="gs-progress"
+            value={qIndex + 1}
+            max={QUESTIONS.length}
+            aria-label="Signup progress"
+            aria-valuetext={`Step ${qIndex + 1} of ${QUESTIONS.length}`}
+          />
+          <span className="gs-progress-count" aria-hidden="true">
             <span className="gs-progress-current">{qIndex + 1}</span>
             <span className="gs-progress-of"> / <span className="gs-progress-total">{QUESTIONS.length}</span></span>
           </span>
@@ -319,102 +371,147 @@ export default function GetStarted() {
       )}
 
       <div className="gs-stage">
-        <div className="gs-screen" key={view} data-dir={dir}>
+        <div className="gs-screen" key={view} data-dir={dir} ref={screenRef}>
           {view === 'welcome' && (
             <Welcome onStart={advance} />
           )}
 
           {view === 'name' && (
             <Question
+              id="name"
               label="first — what should I call you?"
               hint="just your first name is perfect."
-              canContinue={canContinue}
               onContinue={advance}
+              error={error}
             >
+              <label className="gs-field-label" htmlFor="gs-name">
+                first name <span>(required)</span>
+              </label>
               <TextField
+                id="gs-name"
+                name="given-name"
                 value={form.name}
                 onChange={set('name')}
-                onEnter={advance}
                 placeholder="your name"
                 autoComplete="given-name"
                 maxLength={50}
-                autoFocus
+                required
+                aria-invalid={Boolean(error)}
+                aria-describedby={`gs-name-hint${error ? ' gs-name-error' : ''}`}
+                data-initial-focus="true"
               />
             </Question>
           )}
 
           {view === 'birthday' && (
             <Question
+              id="birthday"
               label="when's your birthday?"
               hint="oro is 16+."
-              canContinue={canContinue}
               onContinue={advance}
+              error={error}
             >
               <DateField
                 value={form.birthday}
                 onChange={set('birthday')}
-                onEnter={advance}
+                invalid={Boolean(error)}
+                describedBy={`gs-birthday-hint${error ? ' gs-birthday-error' : ''}`}
               />
             </Question>
           )}
 
           {view === 'hear' && (
             <Question
+              id="hear"
               label="how'd you hear about oro?"
               hint="select all that apply."
-              canContinue={canContinue}
               onContinue={advance}
+              error={error}
             >
-              <div className="gs-chips">
-                {HEAR_OPTIONS.map((opt) => (
-                  <Chip key={opt} pill selected={form.hear.includes(opt)} onClick={() => toggleHear(opt)}>
-                    {opt}
-                  </Chip>
-                ))}
-              </div>
+              <fieldset
+                className="gs-fieldset"
+                aria-describedby={`gs-hear-hint${error ? ' gs-hear-error' : ''}`}
+              >
+                <legend className="gs-field-label">where you heard about oro <span>(required)</span></legend>
+                <div className="gs-chips">
+                  {HEAR_OPTIONS.map((opt, index) => (
+                    <Chip
+                      key={opt}
+                      id={`gs-hear-${opt.replaceAll(' ', '-')}`}
+                      pill
+                      selected={form.hear.includes(opt)}
+                      aria-invalid={Boolean(error && form.hear.length === 0)}
+                      aria-describedby={error ? 'gs-hear-error' : undefined}
+                      data-initial-focus={index === 0 ? 'true' : undefined}
+                      onClick={() => toggleHear(opt)}
+                    >
+                      {opt}
+                    </Chip>
+                  ))}
+                </div>
+              </fieldset>
               {form.hear.includes('somewhere else') && (
-                <TextField
-                  value={form.hearOther}
-                  onChange={set('hearOther')}
-                  onEnter={advance}
-                  placeholder="tell us more (optional)"
-                  maxLength={100}
-                  aria-label="tell us where you heard about oro"
-                />
+                <div className="gs-other-field">
+                  <label className="gs-field-label" htmlFor="gs-hear-other">tell us more <span>(optional)</span></label>
+                  <TextField
+                    id="gs-hear-other"
+                    name="heard-about-other"
+                    value={form.hearOther}
+                    onChange={set('hearOther')}
+                    placeholder="where did you hear about oro?"
+                    maxLength={100}
+                  />
+                </div>
               )}
             </Question>
           )}
 
           {view === 'province' && (
             <Question
+              id="province"
               label="where are you located?"
               hint="coming to other countries soon."
-              canContinue={canContinue}
               onContinue={advance}
+              error={error}
             >
-              <div className="gs-country-options">
-                {[
-                  ['CA', 'canada'],
-                  ['US', 'united states'],
-                ].map(([code, name]) => (
-                  <Chip
-                    key={code}
-                    pill
-                    selected={form.country === code}
-                    onClick={() => {
-                      setForm((current) => ({ ...current, country: code, province: '' }))
-                    }}
-                  >
-                    {name}
-                  </Chip>
-                ))}
-              </div>
+              <fieldset
+                className="gs-fieldset"
+                aria-describedby={`gs-province-hint${error ? ' gs-province-error' : ''}`}
+              >
+                <legend className="gs-field-label">country <span>(required)</span></legend>
+                <div className="gs-country-options">
+                  {[
+                    ['CA', 'canada'],
+                    ['US', 'united states'],
+                  ].map(([countryCode, name], index) => (
+                    <Chip
+                      key={countryCode}
+                      id={`gs-country-${countryCode.toLowerCase()}`}
+                      pill
+                      selected={form.country === countryCode}
+                      aria-invalid={Boolean(error && !form.country)}
+                      aria-describedby={error && !form.country ? 'gs-province-error' : undefined}
+                      data-initial-focus={index === 0 ? 'true' : undefined}
+                      onClick={() => {
+                        setError('')
+                        setNotice('')
+                        setForm((current) => ({ ...current, country: countryCode, province: '' }))
+                      }}
+                    >
+                      {name}
+                    </Chip>
+                  ))}
+                </div>
+              </fieldset>
               {form.country && (
                 <Select
+                  id="gs-location"
                   label={form.country === 'CA' ? 'province or territory' : 'state'}
                   value={form.province}
                   options={locationOptions}
                   onChange={set('province')}
+                  invalid={Boolean(error && form.country && !form.province)}
+                  describedBy={error ? 'gs-province-error' : undefined}
                 />
               )}
             </Question>
@@ -422,35 +519,42 @@ export default function GetStarted() {
 
           {view === 'phone' && (
             <Question
+              id="phone"
               label={displayName ? `last thing, ${displayName}.` : 'last thing.'}
               hint="your number"
-              canContinue={canContinue}
               onContinue={advance}
               cta={loading ? 'sending' : 'text me'}
               loading={loading}
               error={error}
+              notice={notice}
               footer={<ConsentNote />}
             >
+              <label className="gs-field-label" htmlFor="gs-phone">
+                mobile phone number <span>(required)</span>
+              </label>
               <TextField
+                id="gs-phone"
+                name="phone"
                 type="tel"
                 value={form.phone}
                 onChange={(value) => set('phone')(value.replace(/\D/g, '').slice(0, 11))}
-                onEnter={advance}
                 placeholder="15550000000"
-                inputMode="numeric"
-                pattern="[0-9]*"
+                inputMode="tel"
                 maxLength={11}
                 autoComplete="tel"
-                autoFocus
+                required
+                aria-invalid={Boolean(error)}
+                aria-describedby={`gs-phone-hint${error ? ' gs-phone-error' : ''}`}
+                data-initial-focus="true"
               />
             </Question>
           )}
 
           {view === 'otp' && (
             <Question
+              id="otp"
               label="we just texted you."
               hint={`enter the code we sent to ${form.phone.trim()}.`}
-              canContinue={canContinue}
               onContinue={advance}
               cta={loading ? 'checking' : 'verify'}
               loading={loading}
@@ -470,16 +574,28 @@ export default function GetStarted() {
                 </p>
               }
             >
+              <label className="gs-field-label" htmlFor="gs-otp">
+                6-digit verification code <span>(required)</span>
+              </label>
               <TextField
+                id="gs-otp"
+                name="one-time-code"
                 value={code}
-                onChange={(value) => setCode(value.replace(/\D/g, '').slice(0, 6))}
-                onEnter={advance}
+                onChange={(value) => {
+                  setNotice('')
+                  const nextCode = value.replace(/\D/g, '').slice(0, 6)
+                  if (/^\d{6}$/.test(nextCode)) setError('')
+                  setCode(nextCode)
+                }}
                 placeholder="000000"
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 maxLength={6}
                 className="gs-input gs-input-otp"
-                autoFocus
+                required
+                aria-invalid={Boolean(error)}
+                aria-describedby={`gs-otp-hint${error ? ' gs-otp-error' : ''}`}
+                data-initial-focus="true"
               />
             </Question>
           )}
@@ -487,7 +603,7 @@ export default function GetStarted() {
           {view === 'done' && (
             <div className="gs-terminal">
               <p className="gs-eyebrow">you're in.</p>
-              <h1 className="gs-terminal-title">
+              <h1 className="gs-terminal-title" tabIndex={-1}>
                 check your <span className="gs-em">phone</span>.
               </h1>
               <p className="gs-terminal-sub">
@@ -499,7 +615,7 @@ export default function GetStarted() {
           {view === 'already' && (
             <div className="gs-terminal">
               <p className="gs-eyebrow">welcome back.</p>
-              <h1 className="gs-terminal-title">
+              <h1 className="gs-terminal-title" tabIndex={-1}>
                 you're <span className="gs-em">already</span> signed up.
               </h1>
               <p className="gs-terminal-sub">
@@ -515,7 +631,7 @@ export default function GetStarted() {
           {view === 'expired' && (
             <div className="gs-terminal">
               <p className="gs-eyebrow">took a breather?</p>
-              <h1 className="gs-terminal-title">
+              <h1 className="gs-terminal-title" tabIndex={-1}>
                 that code <span className="gs-em">expired</span>.
               </h1>
               <p className="gs-terminal-sub">
@@ -531,7 +647,7 @@ export default function GetStarted() {
           {view === 'ineligible' && (
             <div className="gs-terminal">
               <p className="gs-eyebrow">so close.</p>
-              <h1 className="gs-terminal-title">
+              <h1 className="gs-terminal-title" tabIndex={-1}>
                 oro is <span className="gs-em">16+</span> for now.
               </h1>
               <p className="gs-terminal-sub">
@@ -546,7 +662,7 @@ export default function GetStarted() {
           {view === 'region-ineligible' && (
             <div className="gs-terminal">
               <p className="gs-eyebrow">not there just yet.</p>
-              <h1 className="gs-terminal-title">
+              <h1 className="gs-terminal-title" tabIndex={-1}>
                 oro isn't available in <span className="gs-em">quebec</span> yet.
               </h1>
               <p className="gs-terminal-sub">
@@ -559,7 +675,7 @@ export default function GetStarted() {
           )}
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 
@@ -567,7 +683,7 @@ function Welcome({ onStart }) {
   return (
     <div className="gs-welcome">
       <p className="gs-eyebrow">your stylist, on demand.</p>
-      <h1 className="gs-welcome-title">
+      <h1 className="gs-welcome-title" tabIndex={-1}>
         your stylist is <span className="gs-em">2 minutes</span> away.
       </h1>
       <p className="gs-welcome-sub">
@@ -581,28 +697,37 @@ function Welcome({ onStart }) {
 }
 
 function Question({
-  label, hint, children, canContinue, onContinue, cta = 'continue', footer,
+  id, label, hint, children, onContinue, cta = 'continue', footer,
   loading = false, error = '', notice = '',
 }) {
   return (
-    <div className="gs-question">
-      <h1 className="gs-q-label">{label}</h1>
-      {hint && <p className="gs-q-hint">{hint}</p>}
+    <form
+      className="gs-question"
+      noValidate
+      aria-labelledby={`gs-${id}-title`}
+      aria-busy={loading}
+      onSubmit={(event) => {
+        event.preventDefault()
+        onContinue()
+      }}
+    >
+      <h1 className="gs-q-label" id={`gs-${id}-title`} tabIndex={-1}>{label}</h1>
+      {hint && <p className="gs-q-hint" id={`gs-${id}-hint`}>{hint}</p>}
       <div className="gs-q-field">{children}</div>
-      {notice ? <p className="gs-notice" role="status">{notice}</p> : null}
-      {error ? <p className="gs-error" role="alert">{error}</p> : null}
+      <p className="gs-notice" role="status">{notice}</p>
+      <p className="gs-error" id={`gs-${id}-error`} role="status">{error}</p>
       {footer && <div className="gs-consent">{footer}</div>}
       <Cta
+        type="submit"
         size="full"
         inverse
         className="gs-cta"
         data-loading={loading}
-        disabled={!canContinue || loading}
-        onClick={onContinue}
+        disabled={loading}
       >
         {cta}{loading ? '…' : '.'}
       </Cta>
-    </div>
+    </form>
   )
 }
 
@@ -615,8 +740,12 @@ function ConsentNote() {
     <>
       <p className="gs-consent-line">
         by entering your number, you agree to oro's{' '}
-        <a href="/terms" target="_blank" rel="noopener noreferrer">terms of service</a> and{' '}
-        <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>, and
+        <a href="/terms" target="_blank" rel="noopener noreferrer">
+          terms of service<span className="gs-visually-hidden"> (opens in a new tab)</span>
+        </a> and{' '}
+        <a href="/privacy" target="_blank" rel="noopener noreferrer">
+          privacy policy<span className="gs-visually-hidden"> (opens in a new tab)</span>
+        </a>, and
         confirm that you are not a resident of quebec.
       </p>
       <p className="gs-consent-line">
@@ -628,18 +757,12 @@ function ConsentNote() {
   )
 }
 
-function TextField({ value, onChange, onEnter, autoFocus, className = 'gs-input', ...rest }) {
-  const ref = useRef(null)
+function TextField({ value, onChange, className = 'gs-input', ...rest }) {
   return (
     <input
-      ref={ref}
       className={className}
       value={value}
-      autoFocus={autoFocus}
       onChange={(e) => onChange(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') onEnter?.()
-      }}
       {...rest}
     />
   )
@@ -657,7 +780,7 @@ const PANEL_MAX_HEIGHT = 264
 // the option list up into a full-page overlay. Owning the panel keeps the
 // trigger large and the options at a sane reading size — and unlike the OS
 // menu, it can actually be seen and tested.
-function Select({ label, value, options, onChange }) {
+function Select({ id, label, value, options, onChange, invalid = false, describedBy }) {
   const [open, setOpen] = useState(false)
   const [dropUp, setDropUp] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
@@ -667,6 +790,10 @@ function Select({ label, value, options, onChange }) {
 
   const selectedIndex = options.findIndex(([code]) => code === value)
   const selectedLabel = selectedIndex >= 0 ? options[selectedIndex][1] : 'select…'
+  const labelId = `${id}-label`
+  const valueId = `${id}-value`
+  const listId = `${id}-list`
+  const optionId = (code) => `${id}-option-${code.toLowerCase()}`
 
   // Pointer-down rather than click: closing on click would swallow the press
   // that opened a different control.
@@ -675,8 +802,15 @@ function Select({ label, value, options, onChange }) {
     const onDown = (e) => {
       if (!wrapRef.current?.contains(e.target)) setOpen(false)
     }
-    document.addEventListener('mousedown', onDown)
-    return () => document.removeEventListener('mousedown', onDown)
+    const onFocusIn = (e) => {
+      if (!wrapRef.current?.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('pointerdown', onDown)
+    document.addEventListener('focusin', onFocusIn)
+    return () => {
+      document.removeEventListener('pointerdown', onDown)
+      document.removeEventListener('focusin', onFocusIn)
+    }
   }, [open])
 
   // Keep the highlighted row in view when arrowing past the scroll edge.
@@ -709,10 +843,18 @@ function Select({ label, value, options, onChange }) {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
         e.preventDefault()
         openWith(selectedIndex >= 0 ? selectedIndex : 0)
+      } else if (e.key.length === 1 && /\S/.test(e.key)) {
+        const match = options.findIndex((option) => option[1].toLowerCase().startsWith(e.key.toLowerCase()))
+        if (match >= 0) {
+          e.preventDefault()
+          openWith(match)
+        }
       }
       return
     }
-    if (e.key === 'Escape') {
+    if (e.key === 'Tab') {
+      setOpen(false)
+    } else if (e.key === 'Escape') {
       e.preventDefault()
       setOpen(false)
       triggerRef.current?.focus()
@@ -731,41 +873,61 @@ function Select({ label, value, options, onChange }) {
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
       if (activeIndex >= 0) commit(activeIndex)
+    } else if (e.key.length === 1 && /\S/.test(e.key)) {
+      const start = Math.max(activeIndex, -1)
+      const match = options.findIndex((option, index) => (
+        index > start && option[1].toLowerCase().startsWith(e.key.toLowerCase())
+      ))
+      const wrappedMatch = match >= 0
+        ? match
+        : options.findIndex((option) => option[1].toLowerCase().startsWith(e.key.toLowerCase()))
+      if (wrappedMatch >= 0) {
+        e.preventDefault()
+        setActiveIndex(wrappedMatch)
+      }
     }
   }
 
   return (
     <div className="gs-select-field" ref={wrapRef}>
-      <span className="gs-select-label" id={`gs-select-label-${label}`}>
-        {label}
-      </span>
+      <label className="gs-select-label" id={labelId} htmlFor={id}>{label} <span>(required)</span></label>
       <button
+        id={id}
         type="button"
         ref={triggerRef}
         className="gs-select-trigger"
+        role="combobox"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-labelledby={`gs-select-label-${label}`}
+        aria-controls={open ? listId : undefined}
+        aria-activedescendant={open && activeIndex >= 0 ? optionId(options[activeIndex][0]) : undefined}
+        aria-labelledby={`${labelId} ${valueId}`}
+        aria-required="true"
+        aria-invalid={invalid}
+        aria-describedby={describedBy}
         onClick={() => (open ? setOpen(false) : openWith(selectedIndex >= 0 ? selectedIndex : 0))}
         onKeyDown={onKeyDown}
       >
-        <span className={selectedIndex >= 0 ? undefined : 'gs-select-placeholder'}>
+        <span id={valueId} className={selectedIndex >= 0 ? undefined : 'gs-select-placeholder'}>
           {selectedLabel}
         </span>
-        <svg className="gs-select-chevron" viewBox="0 0 16 16" aria-hidden="true">
+        <svg className="gs-select-chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
           <polyline points="3,6 8,11 13,6" />
         </svg>
       </button>
       {open && (
         <ul
+          id={listId}
           className={`gs-select-list${dropUp ? ' is-above' : ''}`}
           role="listbox"
+          aria-labelledby={labelId}
           ref={listRef}
           tabIndex={-1}
         >
           {options.map(([code, name], i) => (
             <li
               key={code}
+              id={optionId(code)}
               role="option"
               aria-selected={i === selectedIndex}
               className={[
@@ -780,7 +942,8 @@ function Select({ label, value, options, onChange }) {
               onMouseMove={() => setActiveIndex(i)}
               onClick={() => commit(i)}
             >
-              {name}
+              <span>{name}</span>
+              {i === selectedIndex ? <span className="gs-select-check" aria-hidden="true">✓</span> : null}
             </li>
           ))}
         </ul>
@@ -789,7 +952,7 @@ function Select({ label, value, options, onChange }) {
   )
 }
 
-function DateField({ value, onChange, onEnter }) {
+function DateField({ value, onChange, invalid = false, describedBy }) {
   const yearRef = useRef(null)
   const monthRef = useRef(null)
   const dayRef = useRef(null)
@@ -815,61 +978,82 @@ function DateField({ value, onChange, onEnter }) {
   }
 
   return (
-    <div className="gs-date-field">
+    <fieldset className="gs-date-field" aria-describedby={describedBy}>
+      <legend className="gs-field-label">birthday <span>(required)</span></legend>
       <div className="gs-date-parts" onPaste={handlePaste}>
-        <input
-          ref={yearRef}
-          value={year}
-          onChange={(event) => updatePart(0, event.target.value)}
-          onKeyDown={(event) => { if (event.key === 'Enter') onEnter?.() }}
-          placeholder="yyyy"
-          inputMode="numeric"
-          autoComplete="bday-year"
-          maxLength={4}
-          aria-label="birth year"
-        />
-        <span>/</span>
-        <input
-          ref={monthRef}
-          value={month}
-          onChange={(event) => updatePart(1, event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Backspace' && !month) yearRef.current?.focus()
-            if (event.key === 'Enter') onEnter?.()
-          }}
-          placeholder="mm"
-          inputMode="numeric"
-          autoComplete="bday-month"
-          maxLength={2}
-          aria-label="birth month"
-        />
-        <span>/</span>
-        <input
-          ref={dayRef}
-          value={day}
-          onChange={(event) => updatePart(2, event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Backspace' && !day) monthRef.current?.focus()
-            if (event.key === 'Enter') onEnter?.()
-          }}
-          placeholder="dd"
-          inputMode="numeric"
-          autoComplete="bday-day"
-          maxLength={2}
-          aria-label="birth day"
-        />
+        <div className="gs-date-part">
+          <label htmlFor="gs-birthday-year">year</label>
+          <input
+            id="gs-birthday-year"
+            name="birthday-year"
+            ref={yearRef}
+            value={year}
+            onChange={(event) => updatePart(0, event.target.value)}
+            placeholder="yyyy"
+            inputMode="numeric"
+            autoComplete="bday-year"
+            maxLength={4}
+            required
+            aria-invalid={invalid}
+            aria-describedby={describedBy}
+            data-initial-focus="true"
+          />
+        </div>
+        <span aria-hidden="true">/</span>
+        <div className="gs-date-part">
+          <label htmlFor="gs-birthday-month">month</label>
+          <input
+            id="gs-birthday-month"
+            name="birthday-month"
+            ref={monthRef}
+            value={month}
+            onChange={(event) => updatePart(1, event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Backspace' && !month) yearRef.current?.focus()
+            }}
+            placeholder="mm"
+            inputMode="numeric"
+            autoComplete="bday-month"
+            maxLength={2}
+            required
+            aria-invalid={invalid}
+            aria-describedby={describedBy}
+          />
+        </div>
+        <span aria-hidden="true">/</span>
+        <div className="gs-date-part">
+          <label htmlFor="gs-birthday-day">day</label>
+          <input
+            id="gs-birthday-day"
+            name="birthday-day"
+            ref={dayRef}
+            value={day}
+            onChange={(event) => updatePart(2, event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Backspace' && !day) monthRef.current?.focus()
+            }}
+            placeholder="dd"
+            inputMode="numeric"
+            autoComplete="bday-day"
+            maxLength={2}
+            required
+            aria-invalid={invalid}
+            aria-describedby={describedBy}
+          />
+        </div>
       </div>
       <input
         className="gs-date-picker"
         type="date"
         value={/^\d{4}\/\d{2}\/\d{2}$/.test(value) ? value.replaceAll('/', '-') : ''}
         onChange={(event) => onChange(event.target.value.replaceAll('-', '/'))}
-        aria-label="open birthday date picker"
-        tabIndex={-1}
+        aria-label="choose birthday from calendar"
+        aria-invalid={invalid}
+        aria-describedby={describedBy}
       />
-      <svg viewBox="0 0 24 24" aria-hidden="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" />
       </svg>
-    </div>
+    </fieldset>
   )
 }
