@@ -152,7 +152,7 @@
 }
 
 .home-h2 {
-  margin: 0 0 28px;
+  margin: 0;
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: var(--type-section);
@@ -161,13 +161,10 @@
   max-width: 420px;
 }
 
-.home-h2--lead {
-  margin: 0;
+.home-h2--panel {
   font-size: var(--type-display);
-  line-height: var(--lh-display);
+  line-height: var(--lh-hero);
   letter-spacing: var(--tr-display);
-  max-width: 430px;
-  text-wrap: pretty;
 }
 
 .home-h2--closer {
@@ -179,36 +176,33 @@
 }
 
 .home-body {
-  margin: 36px 0 0;
+  margin: 24px 0 0;
   font-size: var(--text-md);
-  line-height: 1.65;
+  line-height: 1.6;
   color: var(--color-fg-faint);
-  max-width: 490px;
+  max-width: 440px;
   text-wrap: pretty;
 }
 
-.home-pull {
-  margin: 26px 0 0;
-  font-style: italic;
-  font-size: var(--text-lg);
-  line-height: 1.45;
-  letter-spacing: -0.012em;
-  max-width: 440px;
-}
-
-.home-eyebrow {
-  margin: 0 0 20px;
+.home-pull,
+.home-reason-note {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: var(--type-serif-xs);
-  color: var(--color-accent);
+  font-size: var(--type-serif-sm);
+  line-height: 1.5;
+  color: var(--color-fg);
+}
+
+.home-pull {
+  margin: 18px 0 0;
+  max-width: 440px;
 }
 
 .home-reasons {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-width: 540px;
+  margin: 24px 0 0;
+  max-width: 440px;
 }
 
 .home-reason {
@@ -217,10 +211,15 @@
   gap: 16px;
 }
 
+.home-reason + .home-reason {
+  margin-top: 4px;
+}
+
 .home-reason p {
   margin: 0;
   font-size: var(--text-md);
-  line-height: 1.35;
+  line-height: 1.5;
+  color: var(--color-fg-faint);
 }
 
 .home-tick {
@@ -229,11 +228,7 @@
 }
 
 .home-reason-note {
-  margin: 2px 0 0;
-  font-size: var(--text-md);
-  line-height: 1.35;
-  font-style: italic;
-  color: var(--color-accent);
+  margin: 18px 0 0;
 }
 
 /* ── closing CTA + footer ── */
@@ -290,8 +285,8 @@
   }
 
   .home-h1 { font-size: 40px; }
-  .home-h2 { font-size: 28px; margin-bottom: 36px; }
-  .home-h2--lead { font-size: 34px; }
+  .home-h2 { font-size: 28px; }
+  .home-h2--panel { font-size: 34px; }
   .home-h2--closer { font-size: 34px; }
   .home-block { margin-top: 96px; }
 }

@@ -86,7 +86,7 @@ export default function Home() {
             </section>
 
             <section className={panelClass(1)}>
-              <h2 className="home-h2 home-h2--lead">dressed right, every time it counts.</h2>
+              <h2 className="home-h2 home-h2--panel">dressed right, every time it counts.</h2>
               <p className="home-body">
                 nobody teaches you how to dress, so you dread the moments where it suddenly matters -
                 the first date, the interview, the meeting that could change everything.
@@ -95,8 +95,7 @@ export default function Home() {
             </section>
 
             <section className={panelClass(2)}>
-              <p className="home-eyebrow">why it works</p>
-              <h2 className="home-h2">it&rsquo;s not guessing. it knows you.</h2>
+              <h2 className="home-h2 home-h2--panel">it&rsquo;s not guessing. it knows you.</h2>
               <div className="home-reasons">
                 {REASONS.map((reason) => (
                   <div className="home-reason" key={reason}>
