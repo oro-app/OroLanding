@@ -61,6 +61,9 @@ const HEAR_OPTIONS = [
 // Minimum age — oro is 16+ (hard gate on the Figma flow).
 const MIN_AGE = 16
 
+// Draft answers, so an abandoned signup can be resumed; cleared once signup completes.
+const DRAFT_KEY = 'oro_get_started_responses'
+
 // Matches the server's resend cooldown on /onboarding/start.
 const RESEND_COOLDOWN_SECONDS = 60
 
@@ -106,7 +109,7 @@ export default function GetStarted() {
     }
 
     try {
-      const saved = JSON.parse(localStorage.getItem('oro_get_started_responses'))
+      const saved = JSON.parse(localStorage.getItem(DRAFT_KEY))
       const country = saved?.country === 'CA' || saved?.country === 'US'
         ? saved.country
         : PROVINCES.some(([code]) => code === saved?.province) ? 'CA' : ''
@@ -144,7 +147,7 @@ export default function GetStarted() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('oro_get_started_responses', JSON.stringify(form))
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(form))
     } catch {
       // Signup still works when storage is unavailable or full.
     }
@@ -246,6 +249,12 @@ export default function GetStarted() {
       })
       if (status === 200) {
         trackEvent('onboarding_verified')
+        try {
+          // The draft has served its purpose; leaving it would prefill the next visit.
+          localStorage.removeItem(DRAFT_KEY)
+        } catch {
+          // Storage unavailable — there was nothing persisted to clear.
+        }
         goTo('done')
       } else if (status === 410) {
         goTo('expired')
