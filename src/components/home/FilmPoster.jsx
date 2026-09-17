@@ -82,14 +82,18 @@ export default function FilmPoster({
       style={{
         aspectRatio: ratio,
         borderRadius: rounded,
-        background: poster
-          ? `${overlay}, url(${poster}) center/cover no-repeat`
-          : `${overlay}, url(${photo}) center/cover no-repeat`,
-        backgroundBlendMode: 'multiply',
         cursor: canPlay ? 'pointer' : 'default',
       }}
       onClick={play}
     >
+      <img
+        className="film-poster-image"
+        src={poster || photo}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+      <span className="film-poster-overlay" style={{ background: overlay }} aria-hidden="true" />
       <button
         type="button"
         className="film-poster-play"

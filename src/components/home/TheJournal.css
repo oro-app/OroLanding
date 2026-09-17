@@ -211,10 +211,9 @@
 .jr-lead-photo {
   aspect-ratio: 3 / 2;
   width: 100%;
+  display: block;
   margin-bottom: 20px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  object-fit: cover;
 }
 .jr-lead-title {
   margin: 0;
@@ -253,9 +252,8 @@
 .jr-mini-photo {
   aspect-ratio: 1 / 1;
   width: 96px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: block;
+  object-fit: cover;
 }
 .jr-mini .jr-date {
   margin-bottom: 6px;

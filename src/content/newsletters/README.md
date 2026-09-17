@@ -22,6 +22,8 @@ Source copy comes from the `oro-newsletter` repo's `drafts/NNN-*.md`. Those draf
    `{{UNSUBSCRIBE_URL}}` block.
 4. **Add images.** Copy every referenced asset into `public/newsletter-images/` and reference
    it as `/newsletter-images/<name>` — **never `/static/...`** (see the image trap below).
+   Use WebP for stills and animated WebP for motion; do not ship GIFs, which made past issues
+   several megabytes each.
 5. **Verify:** `npm run build` (the only real check — catches MDX errors) and eyeball it on
    `npm run dev` at `/journal` and `/newsletter/<slug>`.
 

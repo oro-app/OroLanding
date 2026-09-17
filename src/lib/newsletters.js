@@ -2,12 +2,14 @@ import { lazy } from 'react'
 
 // Each article is self-contained: its `export const meta` is the single source
 // of truth for listing + release. The component stays lazy (one chunk per
-// article); `meta` is pulled eagerly (tiny object, tree-shakes away the body).
+// article); the Vite `newsletter-meta-only` transform pulls just the metadata
+// for listings without bundling every article body into the initial app chunk.
 // No central registry — adding or releasing an article touches only its .mdx.
 const newsletterModules = import.meta.glob('../content/newsletters/*.mdx')
 const newsletterMetas = import.meta.glob('../content/newsletters/*.mdx', {
   eager: true,
-  import: 'meta',
+  import: 'default',
+  query: '?newsletter-meta',
 })
 
 function slugFromPath(path) {

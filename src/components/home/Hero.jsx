@@ -5,7 +5,7 @@ import FakePhone from './FakePhone'
 // Real hero conversation photo (replaces the Unsplash placeholder). Imported
 // so Vite bundles it — note /static is dev-proxied to the backend, so a
 // public/static path would not resolve locally.
-import heroFitPhoto from '../../assets/hero/hero-fit.jpg'
+import heroFitPhoto from '../../assets/hero/hero-fit.webp'
 
 // Hero — the "conversation" hero. Single theme-aware component collapsing the
 // handoff's two prototype files (hero/v4-conversation.jsx + ...-dark.jsx). The
@@ -106,13 +106,15 @@ function HeroDark({ onTryOro }) {
                 alt=""
                 fetchpriority="high"
                 decoding="async"
+                width="420"
+                height="561"
               />
             </div>
           </div>
         </div>
 
         <aside className="hero-d-rail">
-          <img className="hero-d-logo" src="/static/oro-logo.png" alt="oro" />
+          <img className="hero-d-logo" src="/static/oro-logo.png" alt="oro" width="500" height="500" fetchpriority="high" />
           <h1 className="hero-d-title">make your wardrobe <span className="hero-d-title-accent">work</span> for you.</h1>
           <div className="hero-d-ctacol">
             <Cta size="hero" inverse onClick={onTryOro}>

@@ -34,7 +34,11 @@ function MdxLink({ href = '', children, ...rest }) {
   )
 }
 
-const MDX_COMPONENTS = { a: MdxLink }
+function MdxImage(props) {
+  return <img loading="lazy" decoding="async" {...props} />
+}
+
+const MDX_COMPONENTS = { a: MdxLink, img: MdxImage }
 
 export default function NewsletterPage({ slug }) {
   const newsletter = getNewsletterBySlug(slug)
@@ -153,7 +157,13 @@ export default function NewsletterPage({ slug }) {
 
           {newsletter.image && (
             <figure className="newsletter-article-figure">
-              <img className="newsletter-article-image" src={newsletter.image} alt="" />
+              <img
+                className="newsletter-article-image"
+                src={newsletter.image}
+                alt=""
+                fetchpriority="high"
+                decoding="async"
+              />
             </figure>
           )}
 
