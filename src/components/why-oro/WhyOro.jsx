@@ -3,7 +3,7 @@ import { Cta } from '@oro/web'
 import SiteFooter from '../layout/SiteFooter'
 import ProductFaq from '../marketing/ProductFaq'
 import { trackCtaClick } from '../../lib/analytics'
-import heroPhoto from '../../assets/why-oro/wardrobe-day.jpg'
+import heroPhoto from '../../assets/why-oro/wardrobe-day.webp'
 import './WhyOro.css'
 
 // /why-oro — short editorial subpage. Three beats: hero, principles, CTA.

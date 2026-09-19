@@ -44,7 +44,13 @@ function TheJournalDark({ onSubscribe }) {
       <div className="jr-feature">
         {lead && (
           <a className="jr-lead" href={lead.href} rel="noopener noreferrer">
-            <div className="jr-lead-photo" style={{ backgroundImage: `url(${lead.image})` }} />
+            <img
+              className="jr-lead-photo"
+              src={lead.image}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
             <div className="jr-lead-meta">
               <div className="jr-date">{lead.dateLabel.toLowerCase()}</div>
               <h3 className="jr-lead-title">{lead.title}</h3>
@@ -56,7 +62,13 @@ function TheJournalDark({ onSubscribe }) {
         <div className="jr-rest">
           {rest.map((e) => (
             <a className="jr-mini" href={e.href} key={e.slug} rel="noopener noreferrer">
-              <div className="jr-mini-photo" style={{ backgroundImage: `url(${e.image})` }} />
+              <img
+                className="jr-mini-photo"
+                src={e.image}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
               <div className="jr-mini-meta">
                 <div className="jr-date">{e.dateLabel.toLowerCase()}</div>
                 <h3 className="jr-mini-title">{e.title}</h3>

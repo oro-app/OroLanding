@@ -5,7 +5,7 @@ import FilmPoster from './FilmPoster'
 //
 // The launch film is hosted on YouTube (no self-hosting / git binary / env).
 // Set FILM_YOUTUBE_ID to the real video id (the part after `v=` or
-// youtu.be/<id>). The committed 88 KB poster.jpg is the thumbnail until then;
+// youtu.be/<id>). The optimized poster is the thumbnail until then;
 // the play button is inert while the id is the placeholder.
 //
 // https://youtu.be/XI7XrQElqE0
@@ -24,7 +24,7 @@ export default function TheFilm() {
           size="lg"
           showMeta={false}
           youtubeId={FILM_YOUTUBE_ID || null}
-          poster="/film/poster.jpg"
+          poster="/film/poster.webp"
         />
         <p className="film-sub">a forty-nine-second film. press play.</p>
       </div>

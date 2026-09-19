@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
-import wardrobeDay from '../../assets/why-oro/wardrobe-day.jpg'
-import wardrobeNight from '../../assets/why-oro/wardrobe-night.jpg'
+import wardrobeDay from '../../assets/why-oro/wardrobe-day.webp'
+import wardrobeNight from '../../assets/why-oro/wardrobe-night.webp'
 
 // Day / night photo swap in the dark "why oro" section. Daytime = the soft,
 // candid hand-lifting-a-hanger shot (mauve / ivory / sage); evening + early
@@ -84,7 +84,15 @@ function WhyOroDark() {
             thinking for you, so you just bring the taste.
           </p>
         </div>
-        <div className="why-d-photo" style={{ backgroundImage: `url(${photo})` }} />
+        <img
+          className="why-d-photo"
+          src={photo}
+          alt="A wardrobe of clothes selected by Oro"
+          loading="lazy"
+          decoding="async"
+          width="768"
+          height="1024"
+        />
       </div>
     </section>
   )

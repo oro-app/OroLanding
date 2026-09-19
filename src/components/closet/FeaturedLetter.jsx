@@ -41,7 +41,13 @@ export default function FeaturedLetter({ letter }) {
 
         <a className="fl-card" href={letter.href} rel="noopener noreferrer">
           <div className="fl-photo-wrap">
-            <div className="fl-photo" style={{ backgroundImage: `url(${letter.image})` }} aria-hidden="true" />
+            <img
+              className="fl-photo"
+              src={letter.image}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <div className="fl-text">
             <h2 className="fl-title">

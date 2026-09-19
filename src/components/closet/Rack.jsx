@@ -65,11 +65,13 @@ function Hanger({ entry }) {
     >
       <SHook />
       <span className="rack-string" aria-hidden="true" />
-      <span
+      <img
         className="rack-photo"
-        aria-hidden="true"
+        src={entry.image}
+        alt=""
+        loading="lazy"
+        decoding="async"
         style={{
-          backgroundImage: `url(${entry.image})`,
           aspectRatio: v.aspect,
         }}
       />

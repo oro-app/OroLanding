@@ -46,8 +46,9 @@ export default function SiteHeader() {
           src="/static/oro-logo.png"
           alt="oro"
           className="site-header-logo"
-          fetchpriority="high"
           decoding="async"
+          width="500"
+          height="500"
         />
         </a>
 

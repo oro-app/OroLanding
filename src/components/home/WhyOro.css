@@ -159,9 +159,8 @@
 .why-d-photo {
   aspect-ratio: 4 / 5;
   width: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  display: block;
+  object-fit: cover;
 }
 
 /* ──────────── responsive (desktop-first; coarse stack < 960px) ──────────── */

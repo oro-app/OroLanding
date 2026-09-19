@@ -31,7 +31,7 @@ export function injectOroFonts() {
   if (document.querySelector('style[data-oro-fonts]')) return
   const css = FACES.map(
     ([family, url, style]) =>
-      `@font-face { font-family: '${family}'; src: url('${url}') format('woff2'); font-style: ${style}; font-display: block; }`,
+      `@font-face { font-family: '${family}'; src: url('${url}') format('woff2'); font-style: ${style}; font-display: swap; }`,
   ).join('\n')
   const tag = document.createElement('style')
   tag.setAttribute('data-oro-fonts', '')

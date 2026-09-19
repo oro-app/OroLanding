@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
+import fs from 'node:fs/promises'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import mdx from '@mdx-js/rollup'
@@ -23,8 +24,29 @@ const legalPagePlugin = {
   },
 }
 
+// MDX modules contain both article copy and a small exported `meta` object.
+// Loading `meta` with an eager glob normally makes Rollup pull every article
+// into the shared app chunk. This query exposes only the metadata so article
+// bodies remain one lazy chunk per route.
+const newsletterMetaPlugin = {
+  name: 'newsletter-meta-only',
+  // Run after MDX so this final transform replaces the generated article
+  // component with a tiny metadata-only module.
+  enforce: 'post',
+  async transform(_code, id) {
+    const [filename, query = ''] = id.split('?')
+    if (!filename.endsWith('.mdx') || !query.split('&').includes('newsletter-meta')) return null
+
+    const source = await fs.readFile(filename, 'utf8')
+    const match = source.match(/export\s+const\s+meta\s*=\s*(\{[\s\S]*?\n\})\s*;?/)
+    if (!match) throw new Error(`Missing newsletter metadata in ${id}`)
+    return `export default ${match[1]}`
+  },
+}
+
 export default defineConfig({
   plugins: [
+    newsletterMetaPlugin,
     mdx(),
     react(),
     legalPagePlugin,

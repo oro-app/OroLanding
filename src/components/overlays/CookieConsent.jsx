@@ -3,11 +3,14 @@ import { useEffect, useState } from 'react'
 import { setAnalyticsConsent } from '../../lib/analytics.js'
 
 export default function CookieConsent() {
-  const [visible, setVisible] = useState(false)
+  // Render first-time consent in the prerendered HTML. Waiting for hydration
+  // made the late-arriving banner the homepage LCP element on mobile.
+  const [visible, setVisible] = useState(true)
 
   useEffect(() => {
     try {
-      setVisible(localStorage.getItem('oro_cookie_consent') === null)
+      const hasChoice = localStorage.getItem('oro_cookie_consent') !== null
+      if (hasChoice) setVisible(false)
     } catch {
       setVisible(false)
     }
@@ -17,6 +20,7 @@ export default function CookieConsent() {
 
   const handleChoice = (accepted) => {
     setAnalyticsConsent(accepted)
+    document.documentElement.dataset.cookieConsent = 'set'
     setVisible(false)
   }
 

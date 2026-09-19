@@ -1,9 +1,9 @@
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
-import monPhoto from '../../assets/fits/mon.jpg'
-import tuePhoto from '../../assets/fits/tue.jpg'
-import wedPhoto from '../../assets/fits/wed.jpg'
-import thuPhoto from '../../assets/fits/thu.jpg'
-import friPhoto from '../../assets/fits/fri.jpg'
+import monPhoto from '../../assets/fits/mon.webp'
+import tuePhoto from '../../assets/fits/tue.webp'
+import wedPhoto from '../../assets/fits/wed.webp'
+import thuPhoto from '../../assets/fits/thu.webp'
+import friPhoto from '../../assets/fits/fri.webp'
 
 // Fits by oro — faithful to the handoff (sections/fits-by-oro.jsx +
 // sections/dark/fits-by-oro.jsx). Light: staggered photo wall, gradient
@@ -84,7 +84,13 @@ function FitsByOroDark() {
       <div className="fits-d-grid">
         {DAYS_DARK.map((d) => (
           <div className="fits-d-card" key={d.day}>
-            <div className="fits-d-photo" style={{ backgroundImage: `url(${d.photo})` }} />
+            <img
+              className="fits-d-photo"
+              src={d.photo}
+              alt={`An Oro outfit for ${d.day}`}
+              loading="lazy"
+              decoding="async"
+            />
             <div className="fits-d-day">{d.day}</div>
           </div>
         ))}
