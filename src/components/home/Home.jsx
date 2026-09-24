@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
 import MessageThread from './MessageThread'
 import { HomeCta } from './HomeChrome'
@@ -31,6 +32,7 @@ export default function Home() {
 
   return (
     <div className="halo-home" ref={motionRef}>
+      <GoldBackground />
       <div className="home-grid halo-container">
         <div className="home-copy">
           <section className="home-panel" aria-labelledby="home-title">
