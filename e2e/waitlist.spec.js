@@ -2,11 +2,22 @@ import { test, expect } from './fixtures'
 
 // All backend responses are mocked (see fixtures.mockWaitlist) — these tests
 // never touch the real Supabase waitlist table.
+test.use({ seedStorage: false })
+
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(() => {
+    window.localStorage.setItem('oro_cookie_consent', 'declined')
+  })
+})
+
+async function openModal(page) {
+  await page.goto('/from-the-closet', { waitUntil: 'domcontentloaded' })
+  await page.locator('a[href^="/newsletter/"]').first().click()
+  await expect(page.locator('.modal-backdrop')).toBeVisible()
+}
 
 async function openModalAndSubmit(page, email) {
-  await page.goto('/')
-  await page.locator('.jr-subscribe').click()
-  await expect(page.locator('.modal-backdrop')).toBeVisible()
+  await openModal(page)
   await page.locator('.email-input').fill(email)
   await page.locator('button[aria-label="Subscribe to newsletter"]').click()
 }
@@ -43,9 +54,7 @@ test('server error shows the retry message', async ({ page, mockWaitlist }) => {
 })
 
 test('close button dismisses the modal', async ({ page }) => {
-  await page.goto('/')
-  await page.locator('.jr-subscribe').click()
-  await expect(page.locator('.modal-backdrop')).toBeVisible()
+  await openModal(page)
   await page.locator('.modal-close-x').click()
   await expect(page.locator('.modal-backdrop')).toHaveCount(0)
 })

@@ -14,11 +14,11 @@ const WEBSITE_ID = `${SITE_URL}/#website`
 export const ROUTE_SEO = {
   home: {
     path: '/',
-    title: SITE_TITLE,
-    description: DEFAULT_DESCRIPTION,
-    h1: 'Make your wardrobe work for you.',
+    title: 'Oro - The AI stylist you can text',
+    description: 'Ask Oro what to wear, what to buy, or how to style what you have. Your personal AI stylist, one text away.',
+    h1: 'The #1 AI stylist you can text',
     summary:
-      'Oro helps you get dressed with outfits built from your own closet, not a shopping feed.',
+      'Oro helps you find your look, whatever your plans. Ask Oro, and head out feeling good about what you’re wearing.',
     priority: '1.0',
   },
   'try-oro': {

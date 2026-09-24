@@ -74,6 +74,12 @@ All non-home pages are `React.lazy` + `Suspense` code-split. `vercel.json` redir
 
 **Adding/renaming a route touches two files that must stay in sync:** `getRouteFromPath` in `App.jsx` (runtime routing) **and** `ROUTE_SEO` + `PUBLIC_ROUTE_TYPES` in `src/lib/seo.js` (prerender + sitemap + llms.txt). A route missing from `seo.js` won't be prerendered; one missing from `App.jsx` renders the home page at that URL.
 
+### Homepage design system
+
+The homepage uses the published `oro-kit` package for Halo colors, DM Sans and Outfit fonts, typography, and controls. Its layout and motion live in `home/Home.css`; the left column scrolls normally and the conversation demo stays sticky on desktop. Mobile places the demo after the hero. Reduced motion and keyboard focus must keep all content accessible.
+
+Only the homepage uses Halo. `postcss.config.js` scopes kit recipes to `.halo-site` and excludes legacy `@oro/web` recipes from that surface because both packages define `.oro-chip`. Preserve this isolation and the existing theme behavior on other routes. Homepage CTAs link to `/get-started` with the existing analytics event.
+
 ### SEO pipeline (`src/lib/seo.js` + `scripts/generate-seo.mjs`)
 
 `src/lib/seo.js` is the single source of truth for per-route titles/descriptions/JSON-LD. `getSeoForRoute()` builds the `<head>` tags and a JSON-LD `@graph` (Organization + WebSite + WebPage + Breadcrumb, plus `SoftwareApplication` on the product pages and `FAQPage` where a route declares `faqs`). `scripts/generate-seo.mjs` consumes it at build time to write per-route HTML, `sitemap.xml`, and `llms.txt` (an LLM-facing site summary built from `src/lib/faqs.js` + recent newsletters). It is also imported by `src/entry-server.jsx`.
