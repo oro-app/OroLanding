@@ -8,7 +8,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-header { position: sticky; top: 0; z-index: 20; background: var(--oro-color-canvas); border-bottom: var(--oro-border-width) solid var(--oro-color-border); }
 .halo-header-inner { min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: var(--oro-space-6); }
 .halo-logo-link { display: inline-flex; padding-block: var(--oro-space-2); }
-.halo-wordmark-dot { color: var(--oro-color-champagne); }
+.halo-logo { display: block; width: 80px; height: 32px; object-fit: cover; object-position: center 60%; }
 .halo-nav { display: flex; align-items: center; gap: var(--oro-space-8); font-size: var(--oro-type-label-size); }
 .halo-nav > a:not(.halo-cta) { color: var(--oro-color-muted); }
 .halo-nav > a:not(.halo-cta):hover, .halo-footer-links a:hover { color: var(--oro-color-accent); }
