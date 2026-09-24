@@ -1,401 +1,160 @@
 .newsletter-page {
-  min-height: 100vh;
+  color: var(--oro-color-ink);
   background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(212, 168, 83, 0.18), transparent 60%),
-    radial-gradient(900px 500px at -10% 10%, rgba(58, 38, 70, 0.06), transparent 60%),
-    var(--oro-ivory);
-  color: var(--oro-ink);
+    radial-gradient(ellipse 900px 520px at 90% 0, var(--oro-color-soft), transparent 70%),
+    radial-gradient(ellipse 600px 420px at 0 0, var(--oro-color-warm-glow), transparent 70%);
 }
 
 .newsletter-page-shell {
-  width: min(100% - 2.5rem, 1080px);
-  margin: 0 auto;
-  padding: clamp(1.5rem, 4vw, 2.5rem) 0 clamp(3.5rem, 8vw, 6rem);
+  width: min(100% - 96px, 1080px);
+  margin-inline: auto;
+  padding-block: var(--oro-space-10) var(--oro-space-20);
 }
-
-/* ---------- Back link ---------- */
 
 .newsletter-back-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
-  padding: 0.45rem 0.7rem 0.45rem 0.5rem;
-  color: var(--oro-plum-deep);
-  background: rgba(58, 38, 70, 0.05);
-  border: 1px solid rgba(58, 38, 70, 0.1);
-  border-radius: 999px;
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: normal;
-  text-decoration: none;
+  gap: var(--oro-space-2);
+  min-height: var(--oro-control-min-height);
+  margin-bottom: var(--oro-space-10);
+  color: var(--oro-color-accent);
+  font-size: var(--oro-type-label-size);
 }
 
-.newsletter-back-link svg {
-  transition: transform 0.25s ease;
-}
-
-.newsletter-back-link:hover {
-  background: rgba(58, 38, 70, 0.1);
-  border-color: rgba(58, 38, 70, 0.2);
-}
-
-.newsletter-back-link:hover svg {
-  transform: translateX(-3px);
-}
-
-/* ---------- Article header ---------- */
-
-.newsletter-article {
-  display: block;
-}
+.newsletter-back-link:hover { color: var(--oro-color-accent-hover); }
 
 .newsletter-article-header {
+  max-width: 820px;
+  margin: 0 auto var(--oro-space-12);
   text-align: center;
-  max-width: 780px;
-  margin: 0 auto clamp(1.75rem, 4vw, 2.75rem);
 }
 
 .newsletter-article-meta {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.55rem;
-  margin: 0 0 1.15rem;
-  padding: 0.4rem 0.85rem;
-  color: var(--oro-accent-text);
-  background: rgba(212, 168, 83, 0.14);
-  border: 1px solid rgba(212, 168, 83, 0.35);
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: normal;
+  align-items: center;
+  gap: var(--oro-space-2);
+  margin-bottom: var(--oro-space-6);
+  color: var(--oro-color-muted);
+  font-size: var(--oro-type-support-size);
 }
 
-.newsletter-article-meta-dot {
-  opacity: 0.6;
+.newsletter-article-meta-dot { color: var(--oro-color-champagne); }
+
+.newsletter-article-header .oro-heading {
+  font-size: clamp(var(--oro-type-section-size), 5.5vw, var(--oro-type-display-size));
+  text-wrap: balance;
 }
 
-.newsletter-page-date,
-.newsletter-page-tag,
-.newsletter-page-eyebrow {
-  display: inline-block;
-  margin: 0;
-  color: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
+.newsletter-article-header .newsletter-article-summary {
+  max-width: 600px;
+  margin: var(--oro-space-6) auto 0;
+  font-size: var(--oro-type-subheading-size);
+  text-wrap: pretty;
 }
 
-.newsletter-page-eyebrow {
-  margin: 0 0 0.75rem;
-  color: var(--oro-accent-text);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: normal;
-}
-
-.newsletter-article-header h1,
-.newsletter-not-found h1 {
-  margin: 0 auto;
-  max-width: 760px;
-  font-family: var(--font-serif);
-  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.005em;
-  color: var(--oro-ink);
-}
-
-.newsletter-article-summary {
-  max-width: 620px;
-  margin: 1.4rem auto 0;
-  color: var(--oro-text-editorial-muted);
-  font-family: var(--font-serif);
-  font-size: clamp(1.15rem, 1.6vw, 1.35rem);
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-/* ---------- Hero figure ---------- */
-
-.newsletter-article-figure {
-  margin: 0 auto clamp(2rem, 5vw, 3.25rem);
-  max-width: 1080px;
-}
+.newsletter-article-figure { margin: 0 0 var(--oro-space-16); }
 
 .newsletter-article-image {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 14px;
-  border: 1px solid rgba(58, 38, 70, 0.08);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.5) inset,
-    0 30px 60px -30px rgba(58, 38, 70, 0.35);
+  border: var(--oro-border-width) solid var(--oro-color-border);
+  border-radius: var(--oro-radius-card);
 }
-
-/* ---------- Body grid ---------- */
 
 .newsletter-article-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
-  gap: clamp(2rem, 4.5vw, 3.5rem);
+  gap: var(--oro-space-16);
   align-items: start;
 }
 
-.newsletter-article-body {
-  min-width: 0;
-}
-
-/* ---------- MDX article ---------- */
+.newsletter-article-body { min-width: 0; }
 
 .newsletter-mdx {
   max-width: 680px;
-  margin: 0;
-  color: var(--oro-text-editorial);
-  font-family: 'Source Serif 4', 'Georgia', serif;
-  font-size: 1.08rem;
-  line-height: 1.85;
-  letter-spacing: 0.005em;
+  font-family: var(--oro-font-family-body);
+  font-size: var(--oro-type-subheading-size);
+  line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
-.newsletter-mdx > *:first-child {
-  margin-top: 0;
-}
-
-.newsletter-mdx > p:first-of-type::first-letter {
-  float: left;
-  margin: 0.35rem 0.55rem 0 0;
-  padding: 0;
-  font-family: var(--font-serif);
-  font-size: 4.2rem;
-  font-weight: 500;
-  line-height: 0.85;
-  color: var(--oro-plum-deep);
-}
-
-.newsletter-mdx h2,
-.newsletter-mdx h3 {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  color: var(--oro-ink);
-  line-height: 1.15;
-  letter-spacing: -0.005em;
-}
-
-.newsletter-mdx h2 {
-  margin: 3rem 0 0.85rem;
-  font-size: 2.2rem;
-}
-
-.newsletter-mdx h2::before {
-  content: '';
-  display: block;
-  width: 36px;
-  height: 2px;
-  margin-bottom: 1rem;
-  background: var(--oro-gold);
-  border-radius: 2px;
-}
-
-.newsletter-mdx h3 {
-  margin: 2.4rem 0 0.65rem;
-  font-size: 1.65rem;
-}
-
-.newsletter-mdx p {
-  margin: 1.15rem 0;
-}
+.newsletter-mdx > :first-child { margin-top: 0; }
+.newsletter-mdx p { margin-block: var(--oro-space-5); }
+.newsletter-mdx strong { font-weight: var(--oro-font-weight-control); }
+.newsletter-mdx :is(h2, h3) { margin: var(--oro-space-12) 0 var(--oro-space-4); text-wrap: pretty; }
+.newsletter-mdx h3 { font-size: var(--oro-type-subheading-size); }
 
 .newsletter-mdx a {
-  color: var(--oro-plum-deep);
-  text-decoration-color: rgba(212, 168, 83, 0.7);
-  text-decoration-thickness: 1.5px;
+  color: var(--oro-color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
   text-underline-offset: 4px;
-  transition: text-decoration-color 0.2s ease, color 0.2s ease;
 }
 
-.newsletter-mdx a:hover {
-  color: var(--oro-accent-text);
-  text-decoration-color: var(--oro-gold);
-}
-
-.newsletter-mdx ul,
-.newsletter-mdx ol {
-  padding-left: 1.4rem;
-  margin: 1.3rem 0;
-}
-
-.newsletter-mdx li {
-  margin: 0.55rem 0;
-}
-
-.newsletter-mdx li::marker {
-  color: var(--oro-gold);
-}
+.newsletter-mdx a:hover { color: var(--oro-color-accent-hover); }
+.newsletter-mdx :is(ul, ol) { padding-left: var(--oro-space-6); margin-block: var(--oro-space-6); }
+.newsletter-mdx li { margin-block: var(--oro-space-2); }
+.newsletter-mdx li::marker { color: var(--oro-color-accent); }
 
 .newsletter-mdx blockquote {
-  margin: 2.25rem 0;
-  padding: 0.5rem 0 0.5rem 1.5rem;
-  color: var(--oro-text-editorial-muted);
-  font-family: var(--font-serif);
-  font-size: 1.4rem;
-  font-style: italic;
-  line-height: 1.45;
-  border-left: 3px solid var(--oro-gold);
+  margin: var(--oro-space-8) 0;
+  padding: var(--oro-space-2) 0 var(--oro-space-2) var(--oro-space-6);
+  color: var(--oro-color-muted);
+  border-left: 2px solid var(--oro-color-champagne);
 }
 
-.newsletter-mdx blockquote p {
-  margin: 0.4rem 0;
-}
-
-.newsletter-mdx hr {
-  margin: 2.5rem auto;
-  width: 60px;
-  border: 0;
-  border-top: 1px solid rgba(58, 38, 70, 0.25);
-}
-
-.newsletter-mdx code {
-  padding: 0.1rem 0.35rem;
-  background: rgba(58, 38, 70, 0.06);
-  border-radius: 4px;
-  font-size: 0.92em;
-}
-
-.newsletter-mdx img {
-  display: block;
-  width: 100%;
-  margin: 1.75rem 0;
-  border-radius: 8px;
-}
-
-/* ---------- End-of-article CTA ---------- */
+.newsletter-mdx blockquote p { margin-block: var(--oro-space-2); }
+.newsletter-mdx hr { margin-block: var(--oro-space-10); border: 0; border-top: var(--oro-border-width) solid var(--oro-color-border); }
+.newsletter-mdx code { padding: 2px var(--oro-space-1); background: var(--oro-color-soft); border-radius: 4px; font-size: 0.9em; }
+.newsletter-mdx pre { overflow-x: auto; padding: var(--oro-space-4); background: var(--oro-color-soft); border-radius: var(--oro-radius-field); }
+.newsletter-mdx img { display: block; max-width: 100%; height: auto; margin-block: var(--oro-space-8); border-radius: var(--oro-radius-field); }
 
 .newsletter-article-cta {
-  max-width: 680px;
-  margin: clamp(3rem, 6vw, 4.5rem) auto 0;
-  padding: clamp(1.5rem, 3vw, 2rem);
-  background: linear-gradient(135deg, rgba(58, 38, 70, 0.06), rgba(212, 168, 83, 0.12));
-  border: 1px solid rgba(58, 38, 70, 0.1);
-  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--oro-space-6);
+  margin-top: var(--oro-space-20);
+  padding: var(--oro-space-16) var(--oro-space-6) 0;
+  border-top: var(--oro-border-width) solid var(--oro-color-champagne);
   text-align: center;
 }
 
-.newsletter-article-cta-eyebrow {
-  margin: 0 0 0.4rem;
-  color: var(--oro-accent-text);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: normal;
-}
-
-.newsletter-article-cta-text {
-  margin: 0 auto 1.1rem;
-  max-width: 420px;
-  color: var(--oro-plum-deep);
-  font-family: var(--font-serif);
-  font-size: 1.4rem;
-  font-weight: 400;
-  line-height: 1.25;
-}
-
-/* Now @oro/web's <Cta size="pill"> — the recipe was transcribed 1:1 from the
-   rule that used to live here, hover included, so the swap is pixel-identical.
-   Nothing local remains; edit the recipe in the design system, not here. */
-
-/* ---------- Not found ---------- */
-
 .newsletter-not-found {
-  width: min(100% - 2.5rem, 720px);
-  margin: 0 auto;
+  width: min(100% - 48px, 680px);
+  margin-inline: auto;
   min-height: 65vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  gap: var(--oro-space-6);
+  padding-block: var(--oro-space-16);
   text-align: center;
-  padding: clamp(2.5rem, 7vw, 5rem) 0;
 }
 
-/* ---------- Responsive ---------- */
+.newsletter-not-found .newsletter-back-link { margin: 0; }
 
 @media (max-width: 960px) {
-  .newsletter-article-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 3rem);
-  }
-
-  .newsletter-mdx {
-    max-width: none;
-  }
+  .newsletter-page-shell { width: calc(100% - 48px); }
+  .newsletter-article-grid { grid-template-columns: minmax(0, 1fr); gap: var(--oro-space-12); }
+  .newsletter-article-body { width: 100%; max-width: 680px; margin-inline: auto; }
 }
 
-@media (max-width: 700px) {
-  .newsletter-page-shell {
-    width: min(100% - 3rem, 1080px);
-  }
-
-  .newsletter-back-link {
-    font-size: 0.7rem;
-  }
-
-  .newsletter-article-header {
-    text-align: left;
-  }
-
-  .newsletter-article-meta {
-    margin-bottom: 0.95rem;
-  }
-
-  .newsletter-article-header h1,
-  .newsletter-not-found h1 {
-    font-size: clamp(2.2rem, 9vw, 2.9rem);
-    line-height: 1.02;
-  }
-
-  .newsletter-article-summary {
-    margin-top: 1.05rem;
-    font-size: 1.15rem;
-    line-height: 1.45;
-    text-align: left;
-  }
-
-  .newsletter-article-image {
-    aspect-ratio: 4 / 3;
-    border-radius: 10px;
-  }
-
-  .newsletter-mdx {
-    font-size: 1rem;
-    line-height: 1.75;
-  }
-
-  .newsletter-mdx > p:first-of-type::first-letter {
-    font-size: 3.4rem;
-    margin-right: 0.4rem;
-  }
-
-  .newsletter-mdx h2 {
-    font-size: 1.85rem;
-    margin-top: 2.3rem;
-  }
-
-  .newsletter-mdx h3 {
-    font-size: 1.45rem;
-  }
-
-  .newsletter-mdx blockquote {
-    font-size: 1.2rem;
-    padding-left: 1.1rem;
-  }
-
-  .newsletter-article-cta-text {
-    font-size: 1.2rem;
-  }
+@media (max-width: 650px) {
+  .newsletter-page-shell { padding-block: var(--oro-space-6) var(--oro-space-12); }
+  .newsletter-back-link { margin-bottom: var(--oro-space-6); }
+  .newsletter-article-header { text-align: left; margin-bottom: var(--oro-space-8); }
+  .newsletter-article-header .oro-heading { text-wrap: pretty; }
+  .newsletter-article-meta { justify-content: flex-start; }
+  .newsletter-article-header .newsletter-article-summary { font-size: var(--oro-type-body-size); }
+  .newsletter-article-figure { margin-bottom: var(--oro-space-10); }
+  .newsletter-article-image { aspect-ratio: 4 / 3; }
+  .newsletter-mdx { font-size: var(--oro-type-body-size); }
+  .newsletter-mdx h2 { font-size: var(--oro-type-card-size); }
+  .newsletter-article-cta { margin-top: var(--oro-space-12); padding: var(--oro-space-10) 0 0; }
 }

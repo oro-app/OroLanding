@@ -1,249 +1,72 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(28, 20, 36, 0.62);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  animation: backdropIn 0.3s ease;
-}
-
-@keyframes backdropIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  z-index: 130;
+  display: grid;
+  place-items: center;
+  padding: var(--oro-space-4);
+  background: color-mix(in srgb, var(--oro-color-ink) 36%, transparent);
+  backdrop-filter: blur(8px);
 }
 
 .modal {
   position: relative;
-  background: linear-gradient(180deg, var(--oro-cream) 0%, var(--oro-ivory) 100%);
-  border: 1px solid rgba(58, 38, 70, 0.14);
-  padding: 3rem 2.5rem 2.5rem;
   width: 100%;
-  max-width: 440px;
-  border-radius: 18px;
-  box-shadow: 0 24px 80px rgba(28, 20, 36, 0.34);
-  animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: hidden;
+  max-width: 460px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: var(--oro-space-10) var(--oro-space-8) var(--oro-space-8);
+  background: radial-gradient(ellipse at 0 0, var(--oro-color-warm-glow), transparent 55%), var(--oro-color-canvas);
+  border: var(--oro-border-width) solid var(--oro-color-border);
+  border-radius: var(--oro-radius-card);
+  color: var(--oro-color-ink);
 }
 
-.modal::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 20% 0%, rgba(238, 186, 43, 0.18) 0%, transparent 55%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.35), transparent 52%);
-  pointer-events: none;
-}
-
-@keyframes modalIn {
-  from { opacity: 0; transform: translateY(16px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* ── Close button ── */
 .modal-close-x {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
+  top: var(--oro-space-2);
+  right: var(--oro-space-2);
+  display: grid;
+  place-items: center;
+  width: var(--oro-control-min-height);
+  height: var(--oro-control-min-height);
+  border: 0;
+  border-radius: var(--oro-radius-pill);
+  background: transparent;
+  color: var(--oro-color-muted);
   cursor: pointer;
-  color: rgba(58, 38, 70, 0.45);
-  font-size: 1.2rem;
-  line-height: 1;
-  transition: color 0.2s ease;
-  padding: 0;
 }
 
-.modal-close-x:hover {
-  color: rgba(58, 38, 70, 0.85);
-}
-
-/* ── Eyebrow ── */
-.modal-eyebrow {
-  font-size: 0.65rem;
-  letter-spacing: normal;
-  color: var(--oro-accent-text);
-  opacity: 0.9;
-  margin-bottom: 0.75rem;
-}
-
-/* ── Heading ── */
-.modal h3 {
-  font-family: var(--font-serif);
-  font-size: 2rem;
-  font-weight: 300;
-  line-height: 1.2;
-  color: var(--oro-ink);
-  margin: 0 0 0.5rem;
-  letter-spacing: -0.01em;
-}
-
-.modal-subtitle {
-  font-size: 0.86rem;
-  color: rgba(58, 38, 70, 0.62);
-  margin: 0 0 2rem;
-  line-height: 1.55;
-}
-
-/* ── Email form ── */
-.email-form {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: rgba(58, 38, 70, 0.06);
-  border: 1px solid rgba(58, 38, 70, 0.16);
-  border-radius: 10px;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-}
-
-.email-form:focus-within {
-  border-color: rgba(238, 186, 43, 0.85);
-  background: rgba(255, 255, 255, 0.42);
-  box-shadow: 0 0 0 3px rgba(238, 186, 43, 0.14);
-}
-
-.email-input {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  padding: 0.95rem 1rem;
-  font-size: 0.88rem;
-  color: var(--oro-ink);
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-  letter-spacing: 0.01em;
-}
-
-.email-input::placeholder {
-  color: rgba(58, 38, 70, 0.34);
-}
-
-/* KEPT BESPOKE: 38x38 icon-only submit affordance inside the input shell, not
-   a labelled CTA. @oro/web has no icon-button recipe; forcing Btn/Cta would be
-   a visible restyle. */
-.email-submit-btn {
-  flex-shrink: 0;
-  margin: 5px;
-  width: 38px;
-  height: 38px;
-  background: var(--oro-plum-deep);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease, transform 0.15s ease;
-  color: var(--oro-gold);
-}
-
-.email-submit-btn:hover:not(:disabled) {
-  background: var(--oro-plum-soft);
-}
-
-.email-submit-btn:active:not(:disabled) {
-  transform: scale(0.93);
-}
-
-.email-submit-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.email-submit-btn svg {
-  display: block;
-}
-
-/* spinner inside button */
-.btn-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(238, 186, 43, 0.25);
-  border-top-color: var(--oro-gold);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ── Error ── */
-.modal-error {
-  margin-top: 0.75rem;
-  font-size: 0.78rem;
-  color: var(--oro-danger);
-  letter-spacing: 0.01em;
-}
-
-/* ── Success / Already state ── */
-.modal-success {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-}
+.modal-close-x:hover { color: var(--oro-color-accent); background: var(--oro-color-soft); }
+.modal-eyebrow { margin: 0 0 var(--oro-space-3); font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }
+.modal-subtitle { margin: var(--oro-space-4) 0 var(--oro-space-6); color: var(--oro-color-muted); font-size: var(--oro-type-label-size); }
+.email-form { display: grid; gap: var(--oro-space-4); }
+.modal .oro-input:focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
+.consent-text { margin-top: var(--oro-space-4); font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }
+.consent-text a { color: var(--oro-color-accent); text-decoration: underline; text-underline-offset: 3px; }
+.modal-error { margin-top: var(--oro-space-4); font-size: var(--oro-type-label-size); color: var(--oro-color-error); }
+.modal-done-btn { margin-top: var(--oro-space-4); }
 
 .success-check {
+  display: grid;
+  place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  background: rgba(212, 168, 83, 0.12);
-  border: 1px solid rgba(212, 168, 83, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.25rem;
-  animation: popIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  margin-bottom: var(--oro-space-5);
+  border-radius: var(--oro-radius-pill);
+  background: var(--oro-color-success-surface);
+  color: var(--oro-color-success);
 }
 
-@keyframes popIn {
-  from { transform: scale(0.6); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .modal { animation: newsletter-modal-in 240ms ease-out; }
 }
 
-.success-check svg {
-  color: var(--oro-gold);
-}
-
-/* ── CASL consent — implicit on submit. The checkbox was replaced with a
-   short inline blurb beneath the email field. Submitting the form counts as
-   consent; the form still sends consent: true + consent_timestamp to the API. */
-.consent-text {
-  margin: 0.9rem 0 0;
-  font-size: 0.72rem;
-  line-height: 1.55;
-  color: rgba(58, 38, 70, 0.58);
-  letter-spacing: 0.01em;
-}
-
-.consent-text a {
-  color: var(--oro-accent-text);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  transition: color 0.2s ease;
-}
-
-.consent-text a:hover {
-  color: var(--oro-plum-deep);
+@keyframes newsletter-modal-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (max-width: 480px) {
-  .modal {
-    margin: 1rem;
-    padding: 2.5rem 1.75rem 2rem;
-  }
+  .modal { padding: var(--oro-space-10) var(--oro-space-6) var(--oro-space-6); }
 }
-
-/* layout leftover for the @oro/web Btn (recipe lives in @oro/web) */
-.modal-done-btn { margin-top: 2rem; }

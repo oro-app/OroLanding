@@ -51,7 +51,7 @@ function App({ initialRoute }) {
   const isHome = route.type === 'home'
   const isBeta = route.type === 'beta'
   const isPrivateForm = isBeta || route.type === 'get-started'
-  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact'
+  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'newsletter'
 
   useEffect(() => {
     if (isPrivateForm) return

@@ -15,7 +15,28 @@ test('nonexistent slug shows the not-found view', async ({ page }) => {
   await expect(page.locator('.newsletter-not-found')).toContainText(
     /could not find that note/i
   )
+  await expect(page.locator('.halo-header')).toBeVisible()
+  await expect(page.locator('footer')).toHaveCount(1)
 })
+
+for (const width of [320, 390, 1440]) {
+  test(`article uses the current design and fits at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.addInitScript(() => localStorage.setItem('oro_theme', 'dark'))
+    await page.goto(`/newsletter/${RELEASED_SLUG}`)
+    await page.evaluate(() => document.fonts.ready)
+    await expect(page.locator('.halo-header')).toBeVisible()
+    await expect(page.locator('main')).toHaveCount(1)
+    await expect(page.locator('footer')).toHaveCount(1)
+    await expect(page.locator('.oro-theme')).toHaveCSS('background-color', 'rgb(252, 251, 255)')
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', 'Fraunces, Georgia, serif')
+    await expect(page.locator('.newsletter-mdx > p').first()).toHaveCSS('font-family', '"DM Sans", sans-serif')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1)
+    await page.locator('.halo-cta--newsletter_article').click()
+    await expect(page).toHaveURL(/\/beta$/)
+    await expect(page.getByRole('heading', { name: 'Help us make Oro yours.' })).toBeVisible()
+  })
+}
 
 test.describe('auto-open waitlist modal', () => {
   // Opt out of storage seeding so the once-per-session auto-open fires.
