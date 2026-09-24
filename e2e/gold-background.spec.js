@@ -19,11 +19,13 @@ for (const route of ['/', '/beta', '/get-started']) {
   })
 }
 
-test('touch devices keep a still background', async ({ browser }) => {
-  const page = await browser.newPage({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } })
-  await page.goto('/')
-  await page.touchscreen.tap(80, 250)
-  await expect(page.locator('.gold-background')).toBeHidden()
-  expect(await painted(page)).toBe(false)
-  await page.close()
+test.describe('touch devices', () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 844 } })
+  test('keep a still background', async ({ page }) => {
+    await page.goto('/')
+    await page.touchscreen.tap(80, 250)
+    await expect(page.locator('.gold-background')).toBeAttached()
+    await expect(page.locator('.gold-background')).toBeHidden()
+    expect(await painted(page)).toBe(false)
+  })
 })
