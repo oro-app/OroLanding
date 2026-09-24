@@ -38,14 +38,14 @@ const US_STATES = [
 ]
 
 const HEAR_OPTIONS = [
-  'instagram',
-  'tiktok',
-  'facebook',
-  'a friend',
-  'google',
-  'app store',
-  'play store',
-  'somewhere else',
+  ['instagram', 'Instagram'],
+  ['tiktok', 'TikTok'],
+  ['facebook', 'Facebook'],
+  ['a friend', 'A friend'],
+  ['google', 'Google'],
+  ['app store', 'App Store'],
+  ['play store', 'Play Store'],
+  ['somewhere else', 'Somewhere else'],
 ]
 
 // Minimum age — oro is 16+ (hard gate on the Figma flow).
@@ -334,8 +334,8 @@ export default function GetStarted() {
 
           {view === 'name' && (
             <Question
-              label="first — what should I call you?"
-              hint="just your first name is perfect."
+              label="First — what should I call you?"
+              hint="Just your first name is perfect."
               canContinue={canContinue}
               onContinue={advance}
             >
@@ -344,8 +344,9 @@ export default function GetStarted() {
                 value={form.name}
                 onChange={set('name')}
                 onEnter={advance}
-                placeholder="your name"
+                placeholder="Your name"
                 autoComplete="given-name"
+                autoCapitalize="words"
                 maxLength={50}
               />
             </Question>
@@ -353,8 +354,8 @@ export default function GetStarted() {
 
           {view === 'birthday' && (
             <Question
-              label="when's your birthday?"
-              hint="oro is 16+."
+              label="When's your birthday?"
+              hint="Oro is 16+."
               canContinue={canContinue}
               onContinue={advance}
             >
@@ -368,15 +369,15 @@ export default function GetStarted() {
 
           {view === 'hear' && (
             <Question
-              label="how'd you hear about oro?"
-              hint="select all that apply."
+              label="How'd you hear about Oro?"
+              hint="Select all that apply."
               canContinue={canContinue}
               onContinue={advance}
             >
               <div className="gs-chips">
-                {HEAR_OPTIONS.map((opt) => (
+                {HEAR_OPTIONS.map(([opt, label]) => (
                   <Chip key={opt} selected={form.hear.includes(opt)} onClick={() => toggleHear(opt)}>
-                    {opt}
+                    {label}
                   </Chip>
                 ))}
               </div>
@@ -386,9 +387,10 @@ export default function GetStarted() {
                   value={form.hearOther}
                   onChange={set('hearOther')}
                   onEnter={advance}
-                  placeholder="tell us more (optional)"
+                  placeholder="Tell us more (optional)"
+                  autoCapitalize="sentences"
                   maxLength={100}
-                  aria-label="tell us where you heard about oro"
+                  aria-label="Tell us where you heard about Oro"
                 />
               )}
             </Question>
@@ -396,15 +398,15 @@ export default function GetStarted() {
 
           {view === 'province' && (
             <Question
-              label="where are you located?"
-              hint="coming to other countries soon."
+              label="Where are you located?"
+              hint="Coming to other countries soon."
               canContinue={canContinue}
               onContinue={advance}
             >
               <div className="gs-country-options">
                 {[
-                  ['CA', 'canada'],
-                  ['US', 'united states'],
+                  ['CA', 'Canada'],
+                  ['US', 'United States'],
                 ].map(([code, name]) => (
                   <Chip
                     key={code}
@@ -419,7 +421,7 @@ export default function GetStarted() {
               </div>
               {form.country && (
                 <Select
-                  label={form.country === 'CA' ? 'province or territory' : 'state'}
+                  label={form.country === 'CA' ? 'Province or territory' : 'State'}
                   value={form.province}
                   options={locationOptions}
                   onChange={set('province')}
@@ -430,7 +432,7 @@ export default function GetStarted() {
 
           {view === 'phone' && (
             <Question
-              label={displayName ? `last thing, ${displayName}.` : 'last thing.'}
+              label={displayName ? `Last thing, ${displayName}.` : 'Last thing.'}
               hint="Use the phone number on your approved beta invitation."
               canContinue={canContinue && resendLeft === 0}
               onContinue={advance}
@@ -452,14 +454,15 @@ export default function GetStarted() {
                 inputMode="tel"
                 maxLength={32}
                 autoComplete="tel"
+                autoCapitalize="none"
               />
             </Question>
           )}
 
           {view === 'otp' && (
             <Question
-              label="we just texted you."
-              hint={`enter the code we sent to ${form.phone.trim()}.`}
+              label="We just texted you."
+              hint={`Enter the code we sent to ${form.phone.trim()}.`}
               canContinue={canContinue}
               onContinue={advance}
               cta={loading ? 'Checking' : verifyLeft > 0 ? `Try again in ${verifyLeft}s` : 'Verify'}
@@ -468,14 +471,14 @@ export default function GetStarted() {
               notice={notice}
               footer={
                 <p className="gs-consent-line">
-                  didn&rsquo;t get it?{' '}
+                  Didn&rsquo;t get it?{' '}
                   <button
                     type="button"
                     className="gs-resend"
                     disabled={resendLeft > 0 || loading}
                     onClick={() => startSignup({ resend: true })}
                   >
-                    {resendLeft > 0 ? `resend in ${resendLeft}s` : 'resend code'}
+                    {resendLeft > 0 ? `Resend in ${resendLeft}s` : 'Resend code'}
                   </button>
                   <button type="button" className="gs-change-phone" disabled={loading} onClick={() => { setCode(''); goTo('phone', 'back') }}>
                     Change phone number
@@ -494,6 +497,7 @@ export default function GetStarted() {
                 placeholder="000000"
                 inputMode="numeric"
                 autoComplete="one-time-code"
+                autoCapitalize="none"
                 maxLength={6}
                 className="gs-input-otp"
               />
@@ -523,30 +527,30 @@ export default function GetStarted() {
 
           {view === 'ineligible' && (
             <div className="gs-terminal">
-              <p className="gs-eyebrow">so close.</p>
+              <p className="gs-eyebrow">So close.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">
-                oro is <span className="gs-em">16+</span> for now.
+                Oro is <span className="gs-em">16+</span> for now.
               </Heading>
               <p className="gs-terminal-sub">
-                come back in a bit — we'll be here, and we'll have a fit waiting.
+                Come back in a bit — we'll be here, and we'll have a fit waiting.
               </p>
               <button type="button" className="gs-textlink" onClick={restart}>
-                start over
+                Start over
               </button>
             </div>
           )}
 
           {view === 'region-ineligible' && (
             <div className="gs-terminal">
-              <p className="gs-eyebrow">not there just yet.</p>
+              <p className="gs-eyebrow">Not there just yet.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">
-                oro isn't available in <span className="gs-em">quebec</span> yet.
+                Oro isn't available in <span className="gs-em">Quebec</span> yet.
               </Heading>
               <p className="gs-terminal-sub">
-                we're working on it — check back soon.
+                We're working on it — check back soon.
               </p>
               <button type="button" className="gs-textlink" onClick={restart}>
-                start over
+                Start over
               </button>
             </div>
           )}
@@ -567,14 +571,14 @@ function Welcome({ onStart }) {
         A few quick questions, then we’ll verify the phone number on your approved invitation.
       </p>
       <Button className="gs-cta" onClick={onStart}>
-        get started.
+        Get started.
       </Button>
     </div>
   )
 }
 
 function Question({
-  label, hint, children, canContinue, onContinue, cta = 'continue', footer,
+  label, hint, children, canContinue, onContinue, cta = 'Continue', footer,
   loading = false, error = '', notice = '',
 }) {
   return (
@@ -601,14 +605,14 @@ function ConsentNote() {
   return (
     <>
       <p className="gs-consent-line">
-        by entering your number, you agree to oro's{' '}
-        <a href="/terms" target="_blank" rel="noopener noreferrer">terms of service</a> and{' '}
-        <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>, and
-        confirm that you are not a resident of quebec.
+        By entering your number, you agree to Oro's{' '}
+        <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and{' '}
+        <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and
+        confirm that you are not a resident of Quebec.
       </p>
       <p className="gs-consent-line">
-        you're also opting in to recurring automated texts from oro at this number — it's how oro
-        styles you. msg &amp; data rates may apply, frequency varies. reply STOP to opt out, HELP for
+        You're also opting in to recurring automated texts from Oro at this number — it's how Oro
+        styles you. Msg &amp; data rates may apply, frequency varies. Reply STOP to opt out, HELP for
         help.
       </p>
     </>
@@ -641,7 +645,7 @@ function Select({ label, value, options, onChange }) {
   const listRef = useRef(null)
 
   const selectedIndex = options.findIndex(([code]) => code === value)
-  const selectedLabel = selectedIndex >= 0 ? options[selectedIndex][1] : 'select…'
+  const selectedLabel = selectedIndex >= 0 ? options[selectedIndex][1] : 'Select…'
 
   // Pointer-down rather than click: closing on click would swallow the press
   // that opened a different control.
@@ -805,11 +809,11 @@ function DateField({ value, onChange, onEnter }) {
           value={year}
           onChange={(event) => updatePart(0, event.target.value)}
           onKeyDown={(event) => { if (event.key === 'Enter') onEnter?.() }}
-          placeholder="yyyy"
+          placeholder="YYYY"
           inputMode="numeric"
           autoComplete="bday-year"
           maxLength={4}
-          aria-label="birth year"
+          aria-label="Birth year"
         />
         <span>/</span>
         <input
@@ -820,11 +824,11 @@ function DateField({ value, onChange, onEnter }) {
             if (event.key === 'Backspace' && !month) yearRef.current?.focus()
             if (event.key === 'Enter') onEnter?.()
           }}
-          placeholder="mm"
+          placeholder="MM"
           inputMode="numeric"
           autoComplete="bday-month"
           maxLength={2}
-          aria-label="birth month"
+          aria-label="Birth month"
         />
         <span>/</span>
         <input
@@ -835,11 +839,11 @@ function DateField({ value, onChange, onEnter }) {
             if (event.key === 'Backspace' && !day) monthRef.current?.focus()
             if (event.key === 'Enter') onEnter?.()
           }}
-          placeholder="dd"
+          placeholder="DD"
           inputMode="numeric"
           autoComplete="bday-day"
           maxLength={2}
-          aria-label="birth day"
+          aria-label="Birth day"
         />
       </div>
       <input
@@ -847,7 +851,7 @@ function DateField({ value, onChange, onEnter }) {
         type="date"
         value={/^\d{4}\/\d{2}\/\d{2}$/.test(value) ? value.replaceAll('/', '-') : ''}
         onChange={(event) => onChange(event.target.value.replaceAll('-', '/'))}
-        aria-label="open birthday date picker"
+        aria-label="Open birthday date picker"
         tabIndex={-1}
       />
       <svg viewBox="0 0 24 24" aria-hidden="true">

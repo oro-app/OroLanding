@@ -19,15 +19,15 @@ const test = base.extend({
 async function phoneStep(page) {
   await page.addInitScript((answers) => localStorage.setItem('oro_get_started_responses', JSON.stringify(answers)), draft)
   await page.goto('/get-started')
-  await page.getByRole('button', { name: 'get started.' }).click()
-  for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'continue.', exact: true }).click()
+  await page.getByRole('button', { name: 'Get started.' }).click()
+  for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByLabel('Phone number', { exact: true })).toHaveValue(draft.phone)
 }
 
 async function codeStep(page) {
   await phoneStep(page)
   await page.getByRole('button', { name: 'Send verification code.' }).click()
-  await expect(page.getByRole('heading', { name: 'we just texted you.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'We just texted you.' })).toBeVisible()
 }
 
 async function verify(page, code = '123456') {
@@ -38,26 +38,26 @@ async function verify(page, code = '123456') {
 test('approved setup completes by keyboard with oro-kit controls and clears the draft', async ({ page, api }) => {
   await page.goto('/get-started')
   await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
-  await page.getByRole('button', { name: 'get started.' }).click()
+  await page.getByRole('button', { name: 'Get started.' }).click()
   await page.keyboard.press('Tab')
   await expect(page.getByLabel('First name')).toBeFocused()
   await page.keyboard.type('Test Oronaut')
   await page.keyboard.press('Enter')
-  await page.getByLabel('birth year', { exact: true }).fill('1998')
-  await page.getByLabel('birth month', { exact: true }).fill('01')
-  await page.getByLabel('birth day', { exact: true }).fill('02')
+  await page.getByLabel('Birth year', { exact: true }).fill('1998')
+  await page.getByLabel('Birth month', { exact: true }).fill('01')
+  await page.getByLabel('Birth day', { exact: true }).fill('02')
   await page.keyboard.press('Enter')
-  await page.getByRole('button', { name: 'canada', exact: true }).click()
-  const region = page.getByRole('combobox', { name: 'province or territory' })
+  await page.getByRole('button', { name: 'Canada', exact: true }).click()
+  const region = page.getByRole('combobox', { name: 'Province or territory' })
   await region.focus()
   await page.keyboard.press('Enter')
   for (let i = 0; i < 8; i += 1) await page.keyboard.press('ArrowDown')
   await expect(region).toHaveAttribute('aria-activedescendant', /-8$/)
   await page.keyboard.press('Enter')
   await expect(region).toContainText('Ontario')
-  await page.getByRole('button', { name: 'continue.', exact: true }).click()
-  await page.getByRole('button', { name: 'a friend', exact: true }).click()
-  await page.getByRole('button', { name: 'continue.', exact: true }).click()
+  await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+  await page.getByRole('button', { name: 'A friend', exact: true }).click()
+  await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await page.getByLabel('Phone number', { exact: true }).fill('+1 (416) 555-0123')
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await verify(page)
@@ -102,7 +102,7 @@ test('an existing code is usable during the resend cooldown', async ({ page, api
   api.start = { status: 429, json: { code: 'otp_cooldown', detail: 'Code already sent — try again in a minute' } }
   await codeStep(page)
   await expect(page.getByRole('status')).toContainText('A code was already sent')
-  await expect(page.getByRole('button', { name: /resend in/ })).toBeDisabled()
+  await expect(page.getByRole('button', { name: /Resend in/ })).toBeDisabled()
   await verify(page)
   await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeVisible()
 })
