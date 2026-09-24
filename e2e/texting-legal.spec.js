@@ -12,8 +12,8 @@ test.describe('separate texting and app policies', () => {
   test.beforeEach(deploymentOnly)
 
   for (const [path, heading, otherPolicy] of [
-    ['/terms', 'Texting terms of service', '/privacy'],
-    ['/privacy', 'Texting privacy policy', '/terms'],
+    ['/terms', 'Terms of service', '/privacy'],
+    ['/privacy', 'Privacy policy', '/terms'],
   ]) {
     test(`${path} serves its own styled legal document @smoke`, async ({ page }) => {
       const response = await page.goto(path)
