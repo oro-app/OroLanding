@@ -1,13 +1,7 @@
-import { Chip, Cta } from '@oro/web'
+import { Button, Chip, Heading, Text } from 'oro-kit'
 import { useState } from 'react'
-import SiteFooter from '../layout/SiteFooter'
 import { CONTACT_FAQS } from '../../lib/faqs'
 import './Contact.css'
-
-// /contact — "a letter to oro." Two facing sheets of stationery: oro's
-// pre-printed letter on the left, the visitor's blank form on the right,
-// then a postscript FAQ. Theme-aware via --color-* tokens; the stationery
-// sheets are warm paper in both themes.
 
 const TOPICS = ['hello', 'support', 'press', 'partnership', 'careers', 'feedback']
 
@@ -48,119 +42,133 @@ function VisitorForm() {
 
   if (status === 'sent') {
     return (
-      <div className="ct-sheet ct-sheet--you ct-sheet--sent">
-        <p className="ct-sent-line">✓ on its way. we’ll write back.</p>
+      <div className="oro-card ct-sheet ct-sheet--you ct-sheet--sent">
+        <p className="ct-sent-line" role="status">✓ On its way. We’ll write back.</p>
       </div>
     )
   }
 
   return (
-    <form className="ct-sheet ct-sheet--you" onSubmit={handleSubmit} noValidate>
+    <form className="oro-card ct-sheet ct-sheet--you" onSubmit={handleSubmit} noValidate>
       <div className="ct-meta">
-        <span className="ct-meta-plum">your letter</span>
-        <span className="ct-meta-gold">not yet sent</span>
+        <span className="ct-meta-plum">Your letter</span>
+        <span className="ct-meta-gold">Not yet sent</span>
       </div>
 
-      <p className="ct-salutation">dear oro,</p>
+      <p className="ct-salutation">Dear Oro,</p>
 
       <textarea
-        className="ct-textarea"
-        placeholder="(write anything… we read everything.)"
+        className="oro-input ct-textarea"
+        placeholder="(Write anything… we read everything.)"
+        aria-label="Your letter"
+        aria-required="true"
+        aria-invalid={touched && !message.trim() ? true : undefined}
+        aria-describedby={touched && !message.trim() ? 'contact-message-help' : undefined}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         rows={9}
       />
-      {touched && !message.trim() && <p className="ct-help">a few words?</p>}
+      {touched && !message.trim() && <p className="ct-help" id="contact-message-help">A few words?</p>}
 
-      <p className="ct-signoff">yours,</p>
+      <p className="ct-signoff">Yours,</p>
 
       <div className="ct-sender">
         <div className="ct-field">
           <input
             type="text"
-            className="ct-input"
-            placeholder="your name"
+            className="oro-input ct-input"
+            placeholder="Your name"
+            aria-label="Your name"
+            autoComplete="name"
+            aria-required="true"
+            aria-invalid={touched && !name.trim() ? true : undefined}
+            aria-describedby={touched && !name.trim() ? 'contact-name-help' : undefined}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          {touched && !name.trim() && <p className="ct-help">your name?</p>}
+          {touched && !name.trim() && <p className="ct-help" id="contact-name-help">Your name?</p>}
         </div>
         <div className="ct-field">
           <input
             type="email"
-            className="ct-input"
-            placeholder="where to reach you (email)"
+            className="oro-input ct-input"
+            placeholder="Where to reach you (email)"
+            aria-label="Where to reach you (email)"
+            autoComplete="email"
+            aria-required="true"
+            aria-invalid={touched && !email.trim() ? true : undefined}
+            aria-describedby={touched && !email.trim() ? 'contact-email-help' : undefined}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {touched && !email.trim() && <p className="ct-help">where to reach you?</p>}
+          {touched && !email.trim() && <p className="ct-help" id="contact-email-help">Where to reach you?</p>}
         </div>
       </div>
 
-      <div className="ct-chips" role="radiogroup" aria-label="kind of letter">
-        <span className="ct-chips-label">kind of letter</span>
+      <div className="ct-chips" role="group" aria-label="Kind of letter">
+        <span className="ct-chips-label">Kind of letter</span>
         <div className="ct-chips-row">
           {TOPICS.map((t) => (
             <Chip key={t} selected={topic === t} onClick={() => setTopic(t)}>
-              {t}.
+              {t[0].toUpperCase() + t.slice(1)}.
             </Chip>
           ))}
         </div>
       </div>
 
-      <Cta size="block" type="submit" className="ct-send" disabled={status === 'submitting'}>
-        {status === 'submitting' ? '…sealing.' : (<>seal &amp; send <Arrow /></>)}
-      </Cta>
+      <Button type="submit" className="ct-send" disabled={status === 'submitting'}>
+        {status === 'submitting' ? '…Sealing.' : (<>Seal &amp; send <Arrow /></>)}
+      </Button>
 
       {status === 'error' && (
-        <p className="ct-error">
-          couldn’t send — try again, or email us directly at{' '}
+        <p className="ct-error" role="alert">
+          Couldn’t send — try again, or email us directly at{' '}
           <a href="mailto:hello@buildingoro.ca">hello@buildingoro.ca</a>.
         </p>
       )}
 
-      <p className="ct-reassure">we reply within a day or two, in writing. no auto-responder.</p>
+      <p className="ct-reassure">We reply within a day or two, in writing. No auto-responder.</p>
     </form>
   )
 }
 
 export default function Contact() {
   return (
-    <main className="ct">
+    <div className="ct halo-container">
       {/* Title block */}
       <section className="ct-title-wrap">
-        <p className="ct-kicker">
+        <Text variant="label" muted className="ct-kicker">
           <span className="ct-kicker-dot" aria-hidden="true" />
-          contact &amp; help.
-        </p>
-        <h1 className="ct-title">
-          write to <span className="ct-em">us</span>.<br />
-          we’ll write <span className="ct-em">back</span>.
-        </h1>
-        <p className="ct-sub">
-          a real person reads every letter. it might take a day or two, but you’ll hear back.
-        </p>
+          Contact &amp; help.
+        </Text>
+        <Heading as="h1" variant="display" className="ct-title">
+          Write to <span className="ct-em">us</span>.<br />
+          We’ll write <span className="ct-em">back</span>.
+        </Heading>
+        <Text muted className="ct-sub">
+          A real person reads every letter. It might take a day or two, but you’ll hear back.
+        </Text>
       </section>
 
       {/* The two letters */}
       <section className="ct-letters-wrap">
         <div className="ct-letters">
           {/* Left — oro's pre-printed letter */}
-          <div className="ct-sheet ct-sheet--oro">
+          <div className="oro-card ct-sheet ct-sheet--oro">
             <div className="ct-meta">
-              <span>from oro</span>
-              <span>any day</span>
+              <span>From Oro</span>
+              <span>Any day</span>
             </div>
-            <p className="ct-salutation">dear reader,</p>
+            <p className="ct-salutation">Dear reader,</p>
             <div className="ct-body">
-              <p>we read everything that comes through this page. it’s a small team, so the reply isn’t always immediate, but it’s always written by a person.</p>
-              <p>tell us anything — an idea, a bug, a question, a polite complaint. press inquiries, partnerships, hellos, all welcome at the same address.</p>
-              <p>if you’d like a faster answer, the short list of common questions on the next page might already cover it.</p>
-              <p>otherwise — write us a letter.</p>
+              <p>We read everything that comes through this page. It’s a small team, so the reply isn’t always immediate, but it’s always written by a person.</p>
+              <p>Tell us anything — an idea, a bug, a question, a polite complaint. Press inquiries, partnerships, hellos, all welcome at the same address.</p>
+              <p>If you’d like a faster answer, the short list of common questions on the next page might already cover it.</p>
+              <p>Otherwise — write us a letter.</p>
             </div>
             <p className="ct-signoff-oro">
-              yours,<br />
-              <span className="ct-signoff-name">oro.</span>
+              Yours,
+              <img className="halo-logo ct-signoff-logo" src="/static/oro-logo.png" alt="Oro" width="80" height="32" decoding="async" />
             </p>
           </div>
 
@@ -172,11 +180,11 @@ export default function Contact() {
       {/* Postscript FAQ */}
       <section className="ct-faq-wrap">
         <div className="ct-faq-inner">
-          <p className="ct-faq-kicker">postscript — a few things people often ask.</p>
+          <p className="ct-faq-kicker">Postscript — a few things people often ask.</p>
           <div className="ct-faq-list">
             {CONTACT_FAQS.map((row) => (
               <div className="ct-faq-row" key={row.question}>
-                <div className="ct-faq-q">{row.question}</div>
+                <Heading variant="subheading" className="ct-faq-q">{row.question}</Heading>
                 <div className="ct-faq-a">{row.answer}</div>
               </div>
             ))}
@@ -184,7 +192,6 @@ export default function Contact() {
         </div>
       </section>
 
-      <SiteFooter />
-    </main>
+    </div>
   )
 }

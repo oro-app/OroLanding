@@ -47,7 +47,7 @@ function getBrowserRoute() {
 function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
   const isHome = route.type === 'home'
-  const isHalo = isHome || route.type === 'journal'
+  const isHalo = isHome || route.type === 'journal' || route.type === 'contact'
 
   useEffect(() => {
     if (hasAnalyticsConsent()) {

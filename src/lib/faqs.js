@@ -1,19 +1,19 @@
 export const CONTACT_FAQS = [
   {
-    question: 'is oro free?',
-    answer: 'yes. completely free to use.',
+    question: 'Is Oro free?',
+    answer: 'Yes. Completely free to use.',
   },
   {
-    question: 'do you sell my closet data?',
-    answer: 'no. never. it stays on your account.',
+    question: 'Do you sell my closet data?',
+    answer: 'No. Never. It stays on your account.',
   },
   {
-    question: 'when does the app launch?',
-    answer: 'ios and android are both live now.',
+    question: 'When does the app launch?',
+    answer: 'iOS and Android are both live now.',
   },
   {
-    question: 'can i write about oro?',
-    answer: 'yes, please. write us and someone on the team will get back to you.',
+    question: 'Can I write about Oro?',
+    answer: 'Yes, please. Write us and someone on the team will get back to you.',
   },
 ]
 
