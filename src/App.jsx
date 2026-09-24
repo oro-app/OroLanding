@@ -15,6 +15,7 @@ const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
 const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
+const BetaPage = lazy(() => import('./components/beta/Beta'))
 
 export function getRouteFromPath(pathname = '/') {
   const path = pathname.replace(/\/+$/, '') || '/'
@@ -35,6 +36,7 @@ export function getRouteFromPath(pathname = '/') {
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/get-started')     return { type: 'get-started' }
+  if (path === '/beta')            return { type: 'beta' }
 
   return { type: 'home' }
 }
@@ -47,9 +49,11 @@ function getBrowserRoute() {
 function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
   const isHome = route.type === 'home'
-  const isHalo = isHome || route.type === 'journal' || route.type === 'contact'
+  const isBeta = route.type === 'beta'
+  const isHalo = isHome || isBeta || route.type === 'journal' || route.type === 'contact'
 
   useEffect(() => {
+    if (isBeta) return
     if (hasAnalyticsConsent()) {
       initAnalytics()
       trackPageView({
@@ -57,9 +61,10 @@ function App({ initialRoute }) {
         ...(route.slug ? { newsletter_slug: route.slug } : {}),
       })
     }
-  }, [route.slug, route.type])
+  }, [route.slug, route.type, isBeta])
 
   useEffect(() => {
+    if (isBeta) return
     const handleLinkClick = (event) => {
       const link = event.target.closest?.('a[href]')
       if (!link) return
@@ -110,7 +115,7 @@ function App({ initialRoute }) {
       window.removeEventListener('popstate', handleLocationChange)
       window.removeEventListener('hashchange', handleLocationChange)
     }
-  }, [])
+  }, [isBeta])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -126,9 +131,13 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {isHalo ? <HomeHeader /> : <SiteHeader />}
+        {!isBeta && (isHalo ? <HomeHeader /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
-          {route.type === 'newsletter' ? (
+          {isBeta ? (
+            <Suspense fallback={null}>
+              <BetaPage />
+            </Suspense>
+          ) : route.type === 'newsletter' ? (
             <Suspense fallback={null}>
               <NewsletterPage slug={route.slug} />
             </Suspense>
@@ -165,7 +174,7 @@ function App({ initialRoute }) {
           )}
         </main>
         {isHalo && <HomeFooter />}
-        <CookieConsent halo={isHalo} />
+        {!isBeta && <CookieConsent halo={isHalo} />}
       </div>
     </ThemeProvider>
   )
