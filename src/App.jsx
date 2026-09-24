@@ -47,6 +47,7 @@ function getBrowserRoute() {
 function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
   const isHome = route.type === 'home'
+  const isHalo = isHome || route.type === 'journal'
 
   useEffect(() => {
     if (hasAnalyticsConsent()) {
@@ -123,9 +124,9 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className={isHome ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'} style={isHome ? undefined : { background: 'var(--color-bg)' }}>
-        {isHome && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {isHome ? <HomeHeader /> : <SiteHeader />}
+      <div className={isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
+        {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
+        {isHalo ? <HomeHeader /> : <SiteHeader />}
         <main id="main" tabIndex={-1}>
           {route.type === 'newsletter' ? (
             <Suspense fallback={null}>
@@ -163,8 +164,8 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHome && <HomeFooter />}
-        <CookieConsent halo={isHome} />
+        {isHalo && <HomeFooter />}
+        <CookieConsent halo={isHalo} />
       </div>
     </ThemeProvider>
   )

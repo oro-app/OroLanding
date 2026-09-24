@@ -1,9 +1,7 @@
+import { Heading, Text } from 'oro-kit'
 import './FeaturedLetter.css'
 
-// "This week" featured letter — labelled hairline pre-rule + asymmetric
-// 2-column card (photo left, title/excerpt/read-link right). Title supports
-// italic-on-the-key-word via the newsletter's `italicTitle` frontmatter
-// field; if set and present in the title, that substring renders inside <em>.
+// Preserve the emphasis selected by the article's italicTitle frontmatter.
 
 function TitleWithItalic({ title, italic }) {
   if (!italic) return <>{title}</>
@@ -26,10 +24,10 @@ export default function FeaturedLetter({ letter }) {
       <div className="fl-inner">
         {/* Labelled hairline pre-rule */}
         <div className="fl-prerule">
-          <span className="fl-prerule-label">this week.</span>
+          <span className="fl-prerule-label">This week.</span>
           <span className="fl-prerule-line" aria-hidden="true" />
           <span className="fl-prerule-meta">
-            {letter.dateLabel.toLowerCase()}
+            {letter.dateLabel}
             {letter.readTime && (
               <>
                 <span className="fl-prerule-dot" aria-hidden="true">·</span>
@@ -50,12 +48,12 @@ export default function FeaturedLetter({ letter }) {
             />
           </div>
           <div className="fl-text">
-            <h2 className="fl-title">
+            <Heading variant="title" className="fl-title">
               <TitleWithItalic title={letter.title} italic={letter.italicTitle} />
-            </h2>
-            {letter.summary && <p className="fl-excerpt">{letter.summary}</p>}
+            </Heading>
+            {letter.summary && <Text muted className="fl-excerpt">{letter.summary}</Text>}
             <span className="fl-readlink">
-              read the letter
+              Read the letter
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>

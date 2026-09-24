@@ -1,89 +1,30 @@
-/* /journal — "from the closet." Page shell. The four section components
-   own their own CSS (FeaturedLetter, Rack, CareLabelSubscribe); only the
-   page-wide background + the hero section live here. */
-
-.ftc {
-  background: var(--color-bg);
-  color: var(--color-fg);
-  font-family: var(--font-sans);
-}
-
-/* ── HERO ─────────────────────────────────────────────────────────────── */
-.ftc-hero {
-  padding: 128px 56px 64px;
-}
-.ftc-hero-inner {
-  max-width: 1180px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 64px;
-  /* end-aligned so the subhead's last line sits at the same baseline as
-     the headline's last line — intentional per the handoff. */
-  align-items: end;
-}
-
+.ftc { padding-bottom: var(--oro-space-24); }
+.ftc-hero { padding-block: var(--oro-space-24) var(--oro-space-20); }
+.ftc-hero-inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--oro-space-16); align-items: end; }
 .ftc-hero-left { min-width: 0; }
+.ftc .ftc-kicker { margin-bottom: var(--oro-space-6); }
+.ftc-em { color: var(--oro-color-display); }
+.ftc-hero-right { max-width: 380px; padding-bottom: var(--oro-space-2); }
+.ftc .ftc-sub { text-wrap: pretty; }
 
-.ftc-kicker {
-  margin: 0 0 28px;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 14px;
-  color: var(--oro-gold);
-  letter-spacing: 0.4px;
+@media (prefers-reduced-motion: no-preference) {
+  .ftc-kicker, .ftc-title, .ftc-sub { animation: ftc-rise 650ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+  .ftc-title { animation-delay: 80ms; }
+  .ftc-sub { animation-delay: 160ms; }
+  .ftc [data-revealed='true'] :is(.fl-card, .rack-header, .cl-tag) { animation: ftc-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
 }
-
-.ftc-title {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-weight: 300;
-  font-size: 104px;
-  line-height: 0.94;
-  letter-spacing: -3px;
-  color: var(--color-fg);
-}
-.ftc-em {
-  font-style: italic;
-  /* italic alone is the emphasis — no colour change */
-}
-
-.ftc-hero-right { max-width: 380px; }
-
-.ftc-sub {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-weight: 300;
-  font-style: italic;
-  font-size: 21px;
-  line-height: 1.5;
-  letter-spacing: -0.3px;
-  color: var(--color-fg-faint);
-}
-
-/* ── HERO ENTRANCE on mount ───────────────────────────────────────────── */
 @keyframes ftc-rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.ftc-kicker { animation: ftc-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1)  60ms both; }
-.ftc-title  { animation: ftc-rise 800ms cubic-bezier(0.2, 0.8, 0.2, 1) 140ms both; }
-.ftc-sub    { animation: ftc-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) 320ms both; }
-
-@media (prefers-reduced-motion: reduce) {
-  .ftc-kicker, .ftc-title, .ftc-sub { animation: none; opacity: 1; transform: none; }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
 }
 
-/* ── RESPONSIVE ───────────────────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .ftc-title { font-size: 84px; letter-spacing: -2.4px; }
+@media (max-width: 900px) {
+  .ftc-hero { padding-block: var(--oro-space-16); }
+  .ftc-hero-inner { gap: var(--oro-space-8); }
 }
-@media (max-width: 960px) {
-  .ftc-hero        { padding: 80px 20px 40px; }
-  .ftc-hero-inner  { grid-template-columns: 1fr; gap: 24px; align-items: start; }
-  .ftc-hero-right  { max-width: none; }
-}
-@media (max-width: 720px) {
-  .ftc-title { font-size: 64px; line-height: 0.98; letter-spacing: -1.8px; }
-  .ftc-sub   { font-size: 17px; }
+@media (max-width: 650px) {
+  .ftc { padding-bottom: var(--oro-space-16); }
+  .ftc-hero { padding-block: var(--oro-space-12) var(--oro-space-16); }
+  .ftc-hero-inner { grid-template-columns: 1fr; }
+  .ftc-hero-right { max-width: 440px; padding: 0; }
 }
