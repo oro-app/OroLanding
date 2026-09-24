@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import { Heading, Text } from 'oro-kit'
 import { newsletters } from '../../lib/newsletters'
-import SiteFooter from '../layout/SiteFooter'
 import FeaturedLetter from '../closet/FeaturedLetter'
 import Rack from '../closet/Rack'
 import CareLabelSubscribe from '../closet/CareLabelSubscribe'
@@ -15,7 +15,7 @@ function useRevealOnScroll(threshold = 0.1) {
   const [revealed, setRevealed] = useState(false)
   useEffect(() => {
     const el = ref.current
-    if (!el || revealed) return
+    if (!el || revealed || !('IntersectionObserver' in window)) return
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -31,21 +31,10 @@ function useRevealOnScroll(threshold = 0.1) {
   return [ref, revealed]
 }
 
-// /journal — "from the closet." A four-section editorial page that leans
-// into the closet metaphor:
-//   1. Hero       (kicker + italic-accent headline + right-column subhead)
-//   2. Featured   (this week's letter — pre-rule + asymmetric card)
-//   3. Rack       (hangers on hairline rods; the centerpiece visual)
-//   4. CareLabel  (subscribe form styled as a fabric care label)
-//
 // Featured letter logic: always the latest released letter. `newsletters`
 // (lib/newsletters.js) is already filtered to published issues whose date has
 // arrived and sorted newest-first, so the featured slot is just the top of the
 // list — when a new issue's date comes, it auto-becomes the featured one.
-//
-// (Route stays /journal — per-handoff rename to /from-the-closet was
-// blocked since it requires header/footer updates that are out of scope
-// for this branch.)
 
 function pickFeatured(list) {
   return list[0]  // newest published, date-gated letter
@@ -60,21 +49,21 @@ export default function JournalPage() {
   const rest = newsletters.filter((n) => n.slug !== featured?.slug && !n.comingSoon)
 
   return (
-    <main className="ftc">
+    <div className="ftc halo-container">
       {/* 1. Hero */}
       <section className="ftc-hero">
         <div className="ftc-hero-inner">
           <div className="ftc-hero-left">
-            <p className="ftc-kicker">letters &amp; notes from oro</p>
-            <h1 className="ftc-title">
-              from the<br />
+            <Text variant="label" muted className="ftc-kicker">Letters &amp; notes from Oro</Text>
+            <Heading as="h1" variant="display" className="ftc-title">
+              From the<br />
               <span className="ftc-em">closet</span>.
-            </h1>
+            </Heading>
           </div>
           <div className="ftc-hero-right">
-            <p className="ftc-sub">
-              for the fashion lovers, the outfit planners, the people with opinions about fabric. twice a week — and a rack of older notes you can flip through any time.
-            </p>
+            <Text muted className="ftc-sub">
+              For the fashion lovers, the outfit planners, the people with opinions about fabric. Twice a week — and a rack of older notes you can flip through any time.
+            </Text>
           </div>
         </div>
       </section>
@@ -94,7 +83,6 @@ export default function JournalPage() {
         <CareLabelSubscribe />
       </div>
 
-      <SiteFooter />
-    </main>
+    </div>
   )
 }

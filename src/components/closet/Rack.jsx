@@ -1,3 +1,4 @@
+import { Heading, Text } from 'oro-kit'
 import './Rack.css'
 
 // The Rack — the centerpiece editorial gesture. Each newsletter renders as
@@ -5,10 +6,6 @@ import './Rack.css'
 // care-style date tag) hanging from a hairline "rod". Per-hanger variance
 // (width / aspect / string length / rotation) is deterministically derived
 // from the slug so every render is stable.
-//
-// Idle animation: gentle sway from `transform-origin: top center`. Hover:
-// shorter period + wider swing. Desynchronised via nth-child durations.
-// prefers-reduced-motion turns it all off.
 
 // ── Per-card variance ──────────────────────────────────────────────────
 // Deterministic, slug-seeded picks so the same card always renders the
@@ -60,7 +57,6 @@ function Hanger({ entry }) {
         '--rot': `${v.rotDeg}deg`,
         '--w': `${v.width}px`,
         '--s': `${v.stringLen}px`,
-        width: `${v.width}px`,
       }}
     >
       <SHook />
@@ -75,10 +71,10 @@ function Hanger({ entry }) {
           aspectRatio: v.aspect,
         }}
       />
-      <h3 className="rack-title">{entry.title}</h3>
-      {entry.summary && <p className="rack-excerpt">{entry.summary}</p>}
+      <Heading as="h3" variant="card" className="rack-title">{entry.title}</Heading>
+      {entry.summary && <Text variant="label" muted className="rack-excerpt">{entry.summary}</Text>}
       <span className="rack-tag">
-        <span>{entry.dateLabel.toLowerCase()}</span>
+        <span>{entry.dateLabel}</span>
         {entry.readTime && (
           <>
             <span className="rack-tag-dot" aria-hidden="true">·</span>
@@ -121,13 +117,13 @@ export default function Rack({ entries }) {
       <section className="rack">
         <div className="rack-inner">
           <div className="rack-header">
-            <h2 className="rack-title-h2">
-              the <em>rack</em>.
-            </h2>
-            <span className="rack-sub">flip through older letters.</span>
+            <Heading variant="title" className="rack-title-h2">
+              The <em>rack</em>.
+            </Heading>
+            <span className="rack-sub">Flip through older letters.</span>
           </div>
           <div className="rack-rod" aria-hidden="true" />
-          <p className="rack-empty">the archive opens with the next letter.</p>
+          <p className="rack-empty">The archive opens with the next letter.</p>
         </div>
       </section>
     )
@@ -139,10 +135,10 @@ export default function Rack({ entries }) {
     <section className="rack">
       <div className="rack-inner">
         <div className="rack-header">
-          <h2 className="rack-title-h2">
-            the <em>rack</em>.
-          </h2>
-          <span className="rack-sub">flip through older letters.</span>
+          <Heading variant="title" className="rack-title-h2">
+            The <em>rack</em>.
+          </Heading>
+          <span className="rack-sub">Flip through older letters.</span>
         </div>
 
         {rods.map((rod, ri) => (

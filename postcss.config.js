@@ -1,8 +1,8 @@
 import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
 
-// Both packages define .oro-chip. Scope their recipes to separate surfaces so
-// adopting Halo at home cannot restyle the remaining signup and editorial routes.
+// Both packages define .oro-chip. Scope their recipes so Oro Kit and legacy
+// surfaces can coexist without changing each other's controls.
 const scopeHalo = {
   postcssPlugin: 'scope-halo-homepage',
   Rule(rule) {

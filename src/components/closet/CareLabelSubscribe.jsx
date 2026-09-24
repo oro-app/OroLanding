@@ -1,12 +1,7 @@
 import { useState } from 'react'
-import { Cta } from '@oro/web'
+import { Button, Heading, Text } from 'oro-kit'
 import { trackCtaClick } from '../../lib/analytics'
 import './CareLabelSubscribe.css'
-
-// Subscribe block styled as a fabric care label — cream rectangle pinned
-// to the plum surface, with dashed stitching, two punched holes at top,
-// care symbols, and an underlined email form. Always cream regardless of
-// theme (the tag is a physical object pinned to the page).
 
 const CARE_SYMBOLS = [
   // Wash tub
@@ -49,13 +44,13 @@ export default function CareLabelSubscribe() {
         }),
       })
       if (!res.ok && res.status !== 409) {
-        setError('something went wrong. try again.')
+        setError('Something went wrong. Try again.')
         setLoading(false)
         return
       }
       setDone(true)
     } catch {
-      setError('something went wrong. try again.')
+      setError('Something went wrong. Try again.')
     } finally {
       setLoading(false)
     }
@@ -73,16 +68,16 @@ export default function CareLabelSubscribe() {
           <span className="cl-hole" />
         </div>
 
-        <p className="cl-kicker">letters from oro · twice a week</p>
+        <Text variant="label" muted className="cl-kicker">Letters from Oro · twice a week</Text>
 
-        <h2 className="cl-title">
-          one letter.<br />
-          <span className="cl-em">twice a week.</span>
-        </h2>
+        <Heading variant="title" className="cl-title">
+          One letter.<br />
+          <span className="cl-em">Twice a week.</span>
+        </Heading>
 
-        <p className="cl-body">
-          we spend most of our time building oro. but we also just really like fashion, and this is where that goes.
-        </p>
+        <Text muted className="cl-body">
+          We spend most of our time building Oro. But we also just really like fashion, and this is where that goes.
+        </Text>
 
         <div className="cl-symbols" aria-hidden="true">
           {CARE_SYMBOLS.map((sym, i) => (
@@ -93,33 +88,37 @@ export default function CareLabelSubscribe() {
         </div>
 
         {done ? (
-          <p className="cl-success">
-            ✓ you’re on the list. first letter lands this week.
+          <p className="cl-success" role="status">
+            ✓ You’re on the list. First letter lands this week.
           </p>
         ) : (
           <form className="cl-form" onSubmit={handleSubmit}>
             <input
               type="email"
-              className="cl-input"
-              placeholder="your email"
+              className="oro-input cl-input"
+              placeholder="Your email"
+              aria-label="Your email"
+              autoComplete="email"
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? 'closet-signup-error' : undefined}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
             />
-            <Cta size="inline" type="submit" disabled={loading}>
-              sign me up
+            <Button className="cl-submit" type="submit" disabled={loading}>
+              Sign me up
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
-            </Cta>
+            </Button>
           </form>
         )}
-        {error && <p className="cl-error">{error}</p>}
+        {error && <p className="cl-error" id="closet-signup-error" role="alert">{error}</p>}
 
         <div className="cl-fibre">
           <span>100% words. 0% spam.</span>
-          <span>unsubscribe any day.</span>
+          <span>Unsubscribe any day.</span>
         </div>
       </div>
     </section>
