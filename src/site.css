@@ -17,3 +17,5 @@
 @import './components/layout/SiteHeader.css';
 @import './components/layout/SiteFooter.css';
 @import './components/overlays/CookieConsent.css';
+@import './components/home/BrandDetails.css';
+@import './serif-headings.css';

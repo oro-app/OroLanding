@@ -95,6 +95,7 @@ export default defineConfig({
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         legal: fileURLToPath(new URL('./src/legal.css', import.meta.url)),
+        headings: fileURLToPath(new URL('./src/serif-headings.css', import.meta.url)),
       },
     },
   },
