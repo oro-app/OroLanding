@@ -53,7 +53,7 @@ export default function GoldBackground() {
         follower.x += (target.x - follower.x) * ease
         follower.y += (target.y - follower.y) * ease
         const last = points.at(-1)
-        if (!last || Math.hypot(follower.x - last.x, follower.y - last.y) > .22) {
+        if (!last || (time - last.time >= 24 && Math.hypot(follower.x - last.x, follower.y - last.y) > .22)) {
           points.push({ ...follower, time })
         }
       }
