@@ -1,18 +1,8 @@
-import { BackButton } from '@oro/ui'
-import { Chip, Cta } from '@oro/web'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { trackEvent } from '../../lib/analytics'
+import { Button, Chip, Heading, TextField as KitTextField } from 'oro-kit'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { postOnboarding } from './onboardingApi'
 import './GetStarted.css'
 
-// Signup flow for the text-first pivot, wired to oro-central's public
-// onboarding endpoints (BUI-415): POST /onboarding/start sends the OTP,
-// POST /onboarding/verify creates the account and triggers the opening text.
-// One question per screen; region + age gates are surfaced client-side only
-// (server-side enforcement is BUI-421).
-
-// Ordered question screens. Drives the progress bar + next/back navigation.
-// Quebec exclusion is a passive attestation in the consent note (product call,
-// July 2026 — wording to be blessed by counsel under BUI-421), not a screen.
 const QUESTIONS = ['name', 'birthday', 'province', 'hear', 'phone']
 
 const PROVINCES = [
@@ -67,8 +57,6 @@ const DRAFT_KEY = 'oro_get_started_responses'
 // Matches the server's resend cooldown on /onboarding/start.
 const RESEND_COOLDOWN_SECONDS = 60
 
-const API_BASE = import.meta.env.VITE_ORO_API_URL || 'https://api.buildingoro.ca'
-
 function ageFromISO(iso) {
   if (!iso) return null
   const match = iso.match(/^(\d{4})\/(\d{2})\/(\d{2})$/)
@@ -83,25 +71,17 @@ function ageFromISO(iso) {
   return age
 }
 
-async function postJSON(path, body) {
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  let detail = ''
-  try {
-    const data = await res.json()
-    if (typeof data?.detail === 'string') detail = data.detail
-  } catch {
-    // non-JSON body (proxy error page etc.) — status code is enough
-  }
-  return { status: res.status, detail }
+const PROBLEMS = {
+  invite: { title: 'An invitation comes first.', body: 'This phone number needs an approved beta invitation. Already invited? Use the number on your invitation, or email us for help.' },
+  conflict: { title: 'Let’s check your account.', body: 'We couldn’t link this invitation to your account. Try your approved phone number again, or email us so we can help.' },
+  closed: { title: 'Beta setup isn’t open yet.', body: 'Please come back when setup opens. If you’ve already received an invitation, email us for help.' },
+  unavailable: { title: 'Setup is temporarily unavailable.', body: 'We couldn’t check your beta access. Your answers are still here—please try again shortly.' },
+  expired: { title: 'Let’s get a fresh code.', body: 'Your setup session has expired. Your answers are still here; request a new verification code to continue.' },
+  save: { title: 'We couldn’t finish your setup.', body: 'Your setup hasn’t been confirmed. Your answers are still here; request a new verification code and try again.' },
+  connection: { title: 'We lost the connection.', body: 'We couldn’t confirm your setup. Check your connection, then request a new code to continue. Your answers are still here.' },
 }
 
 export default function GetStarted() {
-  // 'welcome' → question screens → 'otp' → 'done'.
-  // Dead ends: 'ineligible' (age/province) and 'already' (phone already signed up).
   const [view, setView] = useState('welcome')
   const [form, setForm] = useState(() => {
     if (typeof window === 'undefined') {
@@ -132,18 +112,28 @@ export default function GetStarted() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [problem, setProblem] = useState(null)
+  const screenRef = useRef(null)
+
+  useEffect(() => {
+    screenRef.current?.querySelector('h1')?.focus()
+  }, [view])
 
   // Seconds left before /start may be re-called for a fresh code.
   const [resendLeft, setResendLeft] = useState(0)
+  const [verifyLeft, setVerifyLeft] = useState(0)
 
   // Direction the last transition moved, so the content can slide the right way.
   const [dir, setDir] = useState('fwd')
 
   useEffect(() => {
-    if (resendLeft <= 0) return undefined
-    const t = setTimeout(() => setResendLeft((s) => s - 1), 1000)
+    if (resendLeft <= 0 && verifyLeft <= 0) return undefined
+    const t = setTimeout(() => {
+      setResendLeft((s) => Math.max(0, s - 1))
+      setVerifyLeft((s) => Math.max(0, s - 1))
+    }, 1000)
     return () => clearTimeout(t)
-  }, [resendLeft])
+  }, [resendLeft, verifyLeft])
 
   useEffect(() => {
     try {
@@ -167,10 +157,10 @@ export default function GetStarted() {
         .some(([code]) => code === form.province)
       case 'hear': return form.hear.length > 0
       case 'phone': return form.phone.length > 0
-      case 'otp': return code.length === 6
+      case 'otp': return code.length === 6 && verifyLeft === 0
       default: return true
     }
-  }, [view, form, code])
+  }, [view, form, code, verifyLeft])
 
   const goTo = (next, direction = 'fwd') => {
     setDir(direction)
@@ -186,85 +176,94 @@ export default function GetStarted() {
     goTo('welcome', 'back')
   }
 
-  // POST /onboarding/start. Returns the OTP screen on success (or when a code
-  // is already in flight); surfaces contract errors inline.
+  const showProblem = (kind) => {
+    setCode('')
+    setProblem(kind)
+    goTo('problem')
+  }
+
+  const handleAccessError = ({ status, code, detail }, verifying = false) => {
+    if (code === 'beta_invite_required') showProblem('invite')
+    else if (status === 409) showProblem('conflict')
+    else if (status === 410) showProblem('expired')
+    else if (status === 503) showProblem(/not open/i.test(detail) ? 'closed' : verifying ? 'save' : 'unavailable')
+    else if (status === 403 && /16 and up/i.test(detail)) goTo('ineligible')
+    else if (status === 403 && /quebec/i.test(detail)) goTo('region-ineligible')
+    else return false
+    return true
+  }
+
   const startSignup = async ({ resend = false } = {}) => {
-    if (loading) return
+    if (loading || resendLeft > 0) return
     setLoading(true)
     setError('')
     setNotice('')
     try {
-      const { status, detail } = await postJSON('/onboarding/start', {
+      const response = await postOnboarding('start', {
         name: form.name,
         birthday: form.birthday.replaceAll('/', '-'),
-        // The server takes a country + its subdivision. `form.province` holds
-        // whichever list the chosen country showed (provinces or US states).
         country: form.country,
         state: form.province,
         heard_about: [
           ...form.hear,
           form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
         ].filter(Boolean).join(', '),
-        // No consent flag: the notice above this screen's submit button is the
-        // disclosure and sending the number is the acceptance, which the server
-        // timestamps on receipt. A hardcoded `true` asserted nothing.
         phone: form.phone.trim(),
       })
-      if (status === 200) {
-        trackEvent('onboarding_start', { resend })
+      const { status, result, detail, retryAfter } = response
+      if (status === 200 && result === 'otp_sent') {
+        setCode('')
         setResendLeft(RESEND_COOLDOWN_SECONDS)
-        if (resend) setNotice('new code sent.')
-        else goTo('otp')
-      } else if (status === 409) {
-        goTo('already')
-      } else if (status === 429 && /already sent/i.test(detail)) {
-        // A code from a recent attempt is still in flight — let them enter it.
-        setResendLeft(RESEND_COOLDOWN_SECONDS)
-        if (resend) setNotice('a code was already sent — give it a minute.')
-        else { goTo('otp'); setNotice('we already texted you a code — use that one.') }
-      } else if (status === 400) {
-        setError(detail.toLowerCase() || 'that doesn’t look quite right — check it and try again.')
+        goTo('otp')
+        if (resend) setNotice('New code sent.')
+      } else if (handleAccessError(response)) {
+        return
+      } else if (status === 429 && (response.code === 'otp_cooldown' || /already sent/i.test(detail))) {
+        setResendLeft(retryAfter)
+        goTo('otp')
+        setNotice('A code was already sent. Use that one, or wait to request a new one.')
       } else if (status === 429) {
-        setError('too many tries — wait a moment and try again.')
+        setResendLeft(retryAfter)
+        setError('Too many tries. Please wait before requesting another code.')
+      } else if (status === 400 || status === 422) {
+        setError(/phone/i.test(detail) ? 'Check your phone number, including its country code.' : 'Check your answers and try again.')
       } else {
-        setError('couldn’t send the code — try again in a bit.')
+        setError('We couldn’t confirm that a code was sent. Please try again.')
       }
     } catch {
-      setError('couldn’t reach oro — check your connection and try again.')
+      setError('We couldn’t reach Oro. Check your connection and try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  // POST /onboarding/verify. Success = account created + oro's opening text sent.
   const verifyCode = async () => {
-    if (loading) return
+    if (loading || verifyLeft > 0) return
     setLoading(true)
     setError('')
     setNotice('')
     try {
-      const { status, detail } = await postJSON('/onboarding/verify', {
-        phone: form.phone.trim(),
-        code: code.trim(),
-      })
-      if (status === 200) {
-        trackEvent('onboarding_verified')
+      const response = await postOnboarding('verify', { phone: form.phone.trim(), code: code.trim() })
+      if (response.status === 200 && response.result === 'verified') {
         try {
-          // The draft has served its purpose; leaving it would prefill the next visit.
           localStorage.removeItem(DRAFT_KEY)
         } catch {
-          // Storage unavailable — there was nothing persisted to clear.
+          // Setup still completes when browser storage is unavailable.
         }
+        setCode('')
         goTo('done')
-      } else if (status === 410) {
-        goTo('expired')
-      } else if (status === 400) {
-        setError(/phone/i.test(detail) ? 'invalid phone number.' : 'that code didn’t match — double-check and try again.')
+      } else if (handleAccessError(response, true)) {
+        return
+      } else if (response.status === 400) {
+        setError('That code didn’t match or has expired. Check it, or request a new code below.')
+      } else if (response.status === 429) {
+        setVerifyLeft(response.retryAfter)
+        setError('Too many verification attempts. Please wait a moment and try again.')
       } else {
-        setError('couldn’t check the code — try again in a bit.')
+        showProblem('save')
       }
     } catch {
-      setError('couldn’t reach oro — check your connection and try again.')
+      showProblem('connection')
     } finally {
       setLoading(false)
     }
@@ -309,11 +308,11 @@ export default function GetStarted() {
   }
 
   return (
-    <main className="gs" data-view={view}>
+    <section className="gs ph-no-capture" data-private data-view={view} aria-busy={loading}>
       {/* Top bar: back + progress. Only shown on the question screens. */}
       {onQuestion && (
         <div className="gs-bar">
-          <BackButton onPress={back} accessibilityLabel="go back" />
+          <Button variant="tertiary" onClick={back} disabled={loading} aria-label="Go back">←</Button>
           <div className="gs-progress" aria-hidden="true">
             <span
               className="gs-progress-fill"
@@ -328,7 +327,7 @@ export default function GetStarted() {
       )}
 
       <div className="gs-stage">
-        <div className="gs-screen" key={view} data-dir={dir}>
+        <div className="gs-screen" key={view} data-dir={dir} ref={screenRef}>
           {view === 'welcome' && (
             <Welcome onStart={advance} />
           )}
@@ -341,13 +340,13 @@ export default function GetStarted() {
               onContinue={advance}
             >
               <TextField
+                label="First name"
                 value={form.name}
                 onChange={set('name')}
                 onEnter={advance}
                 placeholder="your name"
                 autoComplete="given-name"
                 maxLength={50}
-                autoFocus
               />
             </Question>
           )}
@@ -376,13 +375,14 @@ export default function GetStarted() {
             >
               <div className="gs-chips">
                 {HEAR_OPTIONS.map((opt) => (
-                  <Chip key={opt} pill selected={form.hear.includes(opt)} onClick={() => toggleHear(opt)}>
+                  <Chip key={opt} selected={form.hear.includes(opt)} onClick={() => toggleHear(opt)}>
                     {opt}
                   </Chip>
                 ))}
               </div>
               {form.hear.includes('somewhere else') && (
                 <TextField
+                  label="Where did you hear about Oro?"
                   value={form.hearOther}
                   onChange={set('hearOther')}
                   onEnter={advance}
@@ -408,7 +408,6 @@ export default function GetStarted() {
                 ].map(([code, name]) => (
                   <Chip
                     key={code}
-                    pill
                     selected={form.country === code}
                     onClick={() => {
                       setForm((current) => ({ ...current, country: code, province: '' }))
@@ -432,25 +431,27 @@ export default function GetStarted() {
           {view === 'phone' && (
             <Question
               label={displayName ? `last thing, ${displayName}.` : 'last thing.'}
-              hint="your number"
-              canContinue={canContinue}
+              hint="Use the phone number on your approved beta invitation."
+              canContinue={canContinue && resendLeft === 0}
               onContinue={advance}
-              cta={loading ? 'sending' : 'text me'}
+              cta={loading ? 'Sending' : resendLeft > 0 ? `Send code in ${resendLeft}s` : 'Send verification code'}
               loading={loading}
               error={error}
               footer={<ConsentNote />}
             >
               <TextField
+                label="Phone number"
+                disabled={loading}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? "gs-error" : undefined}
                 type="tel"
                 value={form.phone}
-                onChange={(value) => set('phone')(value.replace(/\D/g, '').slice(0, 11))}
+                onChange={(value) => { set('phone')(value); setResendLeft(0) }}
                 onEnter={advance}
-                placeholder="15550000000"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={11}
+                placeholder="+1 555 000 0000"
+                inputMode="tel"
+                maxLength={32}
                 autoComplete="tel"
-                autoFocus
               />
             </Question>
           )}
@@ -461,7 +462,7 @@ export default function GetStarted() {
               hint={`enter the code we sent to ${form.phone.trim()}.`}
               canContinue={canContinue}
               onContinue={advance}
-              cta={loading ? 'checking' : 'verify'}
+              cta={loading ? 'Checking' : verifyLeft > 0 ? `Try again in ${verifyLeft}s` : 'Verify'}
               loading={loading}
               error={error}
               notice={notice}
@@ -476,10 +477,17 @@ export default function GetStarted() {
                   >
                     {resendLeft > 0 ? `resend in ${resendLeft}s` : 'resend code'}
                   </button>
+                  <button type="button" className="gs-change-phone" disabled={loading} onClick={() => { setCode(''); goTo('phone', 'back') }}>
+                    Change phone number
+                  </button>
                 </p>
               }
             >
               <TextField
+                label="Verification code"
+                disabled={loading}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? "gs-error" : undefined}
                 value={code}
                 onChange={(value) => setCode(value.replace(/\D/g, '').slice(0, 6))}
                 onEnter={advance}
@@ -487,62 +495,38 @@ export default function GetStarted() {
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 maxLength={6}
-                className="gs-input gs-input-otp"
-                autoFocus
+                className="gs-input-otp"
               />
             </Question>
           )}
 
           {view === 'done' && (
             <div className="gs-terminal">
-              <p className="gs-eyebrow">you're in.</p>
-              <h1 className="gs-terminal-title">
-                check your <span className="gs-em">phone</span>.
-              </h1>
-              <p className="gs-terminal-sub">
-                {displayName ? `${displayName}, oro` : 'oro'} just texted you 🤍
-              </p>
+              <p className="gs-eyebrow">Welcome, Oronaut.</p>
+              <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">You’re all set.</Heading>
+              <p className="gs-terminal-sub">Your beta setup is complete.</p>
+              <a className="gs-textlink" href="mailto:sunny@buildingoro.ca">Questions? Email us</a>
             </div>
           )}
 
-          {view === 'already' && (
+          {view === 'problem' && (
             <div className="gs-terminal">
-              <p className="gs-eyebrow">welcome back.</p>
-              <h1 className="gs-terminal-title">
-                you're <span className="gs-em">already</span> signed up.
-              </h1>
-              <p className="gs-terminal-sub">
-                this number is already with oro — just send a text and your stylist picks
-                right back up.
-              </p>
-              <button type="button" className="gs-textlink" onClick={restart}>
-                use a different number
-              </button>
-            </div>
-          )}
-
-          {view === 'expired' && (
-            <div className="gs-terminal">
-              <p className="gs-eyebrow">took a breather?</p>
-              <h1 className="gs-terminal-title">
-                that code <span className="gs-em">expired</span>.
-              </h1>
-              <p className="gs-terminal-sub">
-                no stress — run through the questions once
-                more and we'll text you a fresh one.
-              </p>
-              <button type="button" className="gs-textlink" onClick={restart}>
-                start over
-              </button>
+              <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">{PROBLEMS[problem].title}</Heading>
+              <p className="gs-terminal-sub">{PROBLEMS[problem].body}</p>
+              {problem === 'invite' && <a className="oro-button oro-button--primary gs-cta" href="/beta">Request an invite</a>}
+              <Button className="gs-cta" variant="secondary" onClick={() => goTo('phone', 'back')}>
+                {problem === 'invite' || problem === 'conflict' ? 'Use a different number' : 'Back to phone verification'}
+              </Button>
+              <a className="gs-textlink" href="mailto:sunny@buildingoro.ca">Email us for help</a>
             </div>
           )}
 
           {view === 'ineligible' && (
             <div className="gs-terminal">
               <p className="gs-eyebrow">so close.</p>
-              <h1 className="gs-terminal-title">
+              <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">
                 oro is <span className="gs-em">16+</span> for now.
-              </h1>
+              </Heading>
               <p className="gs-terminal-sub">
                 come back in a bit — we'll be here, and we'll have a fit waiting.
               </p>
@@ -555,9 +539,9 @@ export default function GetStarted() {
           {view === 'region-ineligible' && (
             <div className="gs-terminal">
               <p className="gs-eyebrow">not there just yet.</p>
-              <h1 className="gs-terminal-title">
+              <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">
                 oro isn't available in <span className="gs-em">quebec</span> yet.
-              </h1>
+              </Heading>
               <p className="gs-terminal-sub">
                 we're working on it — check back soon.
               </p>
@@ -568,23 +552,23 @@ export default function GetStarted() {
           )}
         </div>
       </div>
-    </main>
+    </section>
   )
 }
 
 function Welcome({ onStart }) {
   return (
     <div className="gs-welcome">
-      <p className="gs-eyebrow">your stylist, on demand.</p>
-      <h1 className="gs-welcome-title">
-        your stylist is <span className="gs-em">2 minutes</span> away.
-      </h1>
+      <p className="gs-eyebrow">For our invited Oronauts.</p>
+      <Heading as="h1" variant="title" tabIndex={-1} className="gs-welcome-title">
+        Let’s get you <span className="gs-em">set up.</span>
+      </Heading>
       <p className="gs-welcome-sub">
-        a few quick questions, then oro texts you and we get to work.
+        A few quick questions, then we’ll verify the phone number on your approved invitation.
       </p>
-      <Cta size="full" inverse className="gs-cta" onClick={onStart}>
+      <Button className="gs-cta" onClick={onStart}>
         get started.
-      </Cta>
+      </Button>
     </div>
   )
 }
@@ -595,30 +579,24 @@ function Question({
 }) {
   return (
     <div className="gs-question">
-      <h1 className="gs-q-label">{label}</h1>
+      <Heading as="h1" variant="title" tabIndex={-1} className="gs-q-label">{label}</Heading>
       {hint && <p className="gs-q-hint">{hint}</p>}
       <div className="gs-q-field">{children}</div>
       {notice ? <p className="gs-notice" role="status">{notice}</p> : null}
-      {error ? <p className="gs-error" role="alert">{error}</p> : null}
+      {error ? <p id="gs-error" className="gs-error" role="alert">{error}</p> : null}
       {footer && <div className="gs-consent">{footer}</div>}
-      <Cta
-        size="full"
-        inverse
+      <Button
         className="gs-cta"
         data-loading={loading}
         disabled={!canContinue || loading}
         onClick={onContinue}
       >
         {cta}{loading ? '…' : '.'}
-      </Cta>
+      </Button>
     </div>
   )
 }
 
-// Consent + SMS opt-in shown at the phone step. Two distinct lines, worded to
-// match the Terms ("by creating an account … you agree") and Privacy Policy
-// (Twilio texts, msg & data rates, reply STOP). Entering a number creates the
-// account (phone = account identifier via OTP), so this is the point of consent.
 function ConsentNote() {
   return (
     <>
@@ -637,14 +615,10 @@ function ConsentNote() {
   )
 }
 
-function TextField({ value, onChange, onEnter, autoFocus, className = 'gs-input', ...rest }) {
-  const ref = useRef(null)
+function TextField({ value, onChange, onEnter, ...rest }) {
   return (
-    <input
-      ref={ref}
-      className={className}
+    <KitTextField
       value={value}
-      autoFocus={autoFocus}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={(e) => {
         if (e.key === 'Enter') onEnter?.()
@@ -654,19 +628,11 @@ function TextField({ value, onChange, onEnter, autoFocus, className = 'gs-input'
   )
 }
 
-// A native <select>: the options popup anchors to the control (not a bottom
-// sheet) and the OS supplies keyboard + screen-reader behaviour. `required`
-// pairs with the :invalid rule so the empty placeholder renders as muted.
-// Kept in sync with .gs-select-list max-height in GetStarted.css — the flip
-// decision needs the panel's height before it is rendered.
+// Flip the list above the field when the viewport cannot fit it below.
 const PANEL_MAX_HEIGHT = 264
 
-// An anchored listbox. A native <select> was tried first and rejected: macOS
-// draws its popup in the *control's* font, so the 28px editorial trigger blew
-// the option list up into a full-page overlay. Owning the panel keeps the
-// trigger large and the options at a sane reading size — and unlike the OS
-// menu, it can actually be seen and tested.
 function Select({ label, value, options, onChange }) {
+  const id = useId()
   const [open, setOpen] = useState(false)
   const [dropUp, setDropUp] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
@@ -721,7 +687,9 @@ function Select({ label, value, options, onChange }) {
       }
       return
     }
-    if (e.key === 'Escape') {
+    if (e.key === 'Tab') {
+      setOpen(false)
+    } else if (e.key === 'Escape') {
       e.preventDefault()
       setOpen(false)
       triggerRef.current?.focus()
@@ -745,16 +713,19 @@ function Select({ label, value, options, onChange }) {
 
   return (
     <div className="gs-select-field" ref={wrapRef}>
-      <span className="gs-select-label" id={`gs-select-label-${label}`}>
+      <span className="gs-select-label" id={`${id}-label`}>
         {label}
       </span>
       <button
         type="button"
         ref={triggerRef}
         className="gs-select-trigger"
+        role="combobox"
+        aria-controls={`${id}-list`}
+        aria-activedescendant={open && activeIndex >= 0 ? `${id}-${activeIndex}` : undefined}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-labelledby={`gs-select-label-${label}`}
+        aria-labelledby={`${id}-label`}
         onClick={() => (open ? setOpen(false) : openWith(selectedIndex >= 0 ? selectedIndex : 0))}
         onKeyDown={onKeyDown}
       >
@@ -768,6 +739,8 @@ function Select({ label, value, options, onChange }) {
       {open && (
         <ul
           className={`gs-select-list${dropUp ? ' is-above' : ''}`}
+          id={`${id}-list`}
+          aria-labelledby={`${id}-label`}
           role="listbox"
           ref={listRef}
           tabIndex={-1}
@@ -775,6 +748,7 @@ function Select({ label, value, options, onChange }) {
           {options.map(([code, name], i) => (
             <li
               key={code}
+              id={`${id}-${i}`}
               role="option"
               aria-selected={i === selectedIndex}
               className={[
