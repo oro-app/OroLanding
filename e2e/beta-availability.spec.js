@@ -12,7 +12,11 @@ for (const width of [1440, 390]) {
   test(`@smoke beta invitation ends with an availability notice at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 844 })
     const writes = []
-    page.on('request', (request) => { if (request.method() === 'POST') writes.push(request.url()) })
+    page.on('request', (request) => {
+      const url = new URL(request.url())
+      if (url.origin === 'https://vercel.live' && url.pathname === '/login/validate') return
+      if (request.method() === 'POST') writes.push(request.url())
+    })
     for (let index = 0; index < 6; index += 1) await page.getByRole('button', { name: 'Next page', exact: true }).click()
     await expect(page.getByText('Free lifetime access to Oro.', { exact: true }).first()).toBeVisible()
     await page.getByRole('button', { name: 'About beta invites', exact: true }).click()

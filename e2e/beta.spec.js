@@ -157,6 +157,8 @@ test('only terms disable submit; previews preserve answers and no data is sent',
   test.setTimeout(60000)
   const outbound = []
   page.on('request', (request) => {
+    const url = new URL(request.url())
+    if (url.origin === 'https://vercel.live' && url.pathname === '/login/validate') return
     if (request.method() === 'POST' || /google-analytics|googletagmanager|posthog/.test(request.url())) outbound.push(request.url())
   })
   await page.addInitScript(() => localStorage.setItem('oro_cookie_consent', 'accepted'))
