@@ -24,6 +24,8 @@ jobs:
       # npm only — pnpm-lock.yaml is stale (see CLAUDE.md lockfile footgun).
       - run: npm ci
 
+      - run: npm run test:beta
+
       - run: npx playwright install --with-deps chromium
 
       - name: Run Playwright

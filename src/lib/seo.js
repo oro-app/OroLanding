@@ -1,6 +1,6 @@
 import { PRODUCT_FAQS } from './faqs.js'
 
-export const SITE_URL = 'https://buildingoro.ca'
+export const SITE_URL = 'https://www.askoro.now'
 export const SITE_NAME = 'Oro'
 export const SITE_TITLE = 'Oro - AI stylist for the clothes you already own'
 export const DEFAULT_DESCRIPTION =

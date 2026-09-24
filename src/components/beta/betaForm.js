@@ -1,11 +1,5 @@
-export const choices = {
-  usedOro: ['Yes', 'No'],
-  outfitDays: ['0 days', '1–2 days', '3–4 days', '5–7 days', 'I don’t remember'],
-  usualHelp: ['Ask a friend', 'Look online for inspiration', 'Use another AI assistant', 'Buy something', 'Other'],
-  age: ['Under 18', '18–22', '23–28', '29–34'],
-  gender: ['Woman', 'Man', 'Nonbinary', 'I’d like to self-describe', 'Prefer not to say'],
-  source: ['Instagram', 'Word of mouth', 'Website', 'Other'],
-}
+import { normalizeAnswers } from '../../lib/betaContract.js'
+export { choices, textLimits } from '../../lib/betaContract.js'
 
 export const emptyAnswers = {
   name: '', email: '', phone: '', instagram: '', usedOro: '', outfitDays: '',
@@ -40,20 +34,5 @@ export const formSteps = [
 ]
 
 export function validateAnswers(answers) {
-  const errors = {}
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answers.email.trim())) errors.email = 'Enter a valid email address.'
-  const phone = answers.phone.trim().replace(/[\s().-]/g, '')
-  if (!/^\+[1-9]\d{7,14}$/.test(phone)) errors.phone = 'Include your country code, for example +1 416 555 0123.'
-  if (answers.instagram && !/^@?[A-Za-z0-9._]{1,30}$/.test(answers.instagram.trim())) errors.instagram = 'Enter a handle, with or without @, rather than a profile link.'
-  for (const name of ['name', 'usedOro', 'outfitDays', 'occasion', 'uncertainty', 'challenges', 'hopes', 'week', 'location', 'source']) {
-    if (!answers[name].trim()) errors[name] = 'Please add an answer.'
-  }
-  if (!answers.usualHelp.length) errors.usualHelp = 'Choose at least one answer.'
-  if (answers.usualHelp.includes('Other') && !answers.usualHelpOther.trim()) errors.usualHelpOther = 'Tell us what else you do.'
-  if (answers.source === 'Other' && !answers.sourceOther.trim()) errors.sourceOther = 'Tell us where you heard about it.'
-  for (const [name, value] of Object.entries(visibleAnswers(answers))) {
-    if (typeof value === 'string' && value.length > 2000) errors[name] = 'Please keep your answer to 2,000 characters.'
-  }
-  if (!answers.terms) errors.terms = 'Please agree to the Terms of Service to request an invite.'
-  return errors
+  return normalizeAnswers(answers).errors
 }

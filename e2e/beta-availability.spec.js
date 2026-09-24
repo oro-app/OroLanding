@@ -3,6 +3,7 @@ import { formSteps } from '../src/components/beta/betaForm.js'
 
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.route('**/api/beta-request', (route) => route.fulfill({ json: { enabled: false } }))
   await page.goto('/beta')
   await expect(page.getByRole('heading', { name: 'Help us make Oro yours.' })).toBeVisible()
   test.skip(await page.locator('.beta-draft-bar').count() > 0, 'Design previews keep the form available for testing')
