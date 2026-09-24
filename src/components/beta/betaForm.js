@@ -31,7 +31,7 @@ export const formSteps = [
   { hash: '#style-challenges', title: 'What do you find difficult about putting outfits together, if anything?', fields: ['challenges'] },
   { hash: '#usual-help', title: 'What do you usually do when you’re unsure about an outfit?', fields: ['usualHelp', 'usualHelpOther'] },
   { hash: '#your-hopes', title: 'How do you see Oro helping you?', fields: ['hopes'] },
-  { hash: '#your-week', title: 'What does your week look like from September 25–30?', fields: ['week'] },
+  { hash: '#your-week', title: 'What does your week look like from September 26–October 1?', fields: ['week'] },
   { hash: '#your-city', title: 'What city and province do you live in?', fields: ['location'] },
   { hash: '#your-age', title: 'What’s your age range?', optional: true, fields: ['age'] },
   { hash: '#your-gender', title: 'What’s your gender?', optional: true, fields: ['gender', 'genderDescription'] },
