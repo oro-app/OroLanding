@@ -7,7 +7,7 @@ test('home page loads cleanly @smoke', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveTitle(/oro/i)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('The #1 AI stylist you can text')
-  await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', '"DM Sans", sans-serif')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', 'Fraunces, Georgia, serif')
   await expect(page.getByText(/600\+/)).toHaveCount(0)
   await expect(page.getByText('Currently in beta.')).toBeVisible()
   expect(errors).toEqual([])

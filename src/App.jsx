@@ -130,7 +130,7 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className={isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
+      <div className={`oro-editorial ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
         {!isBeta && (isHalo ? <HomeHeader /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>

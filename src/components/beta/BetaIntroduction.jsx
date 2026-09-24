@@ -1,4 +1,5 @@
 import { Children, cloneElement, isValidElement } from 'react'
+import GoldBackground from '../GoldBackground'
 import { Button, Heading, Text } from 'oro-kit'
 import { useBetaPages } from './useBetaPages'
 
@@ -97,6 +98,7 @@ export default function BetaIntroduction({ onStart, previewForm }) {
   return (
     <div className="beta-story" ref={rootRef} data-scene={page.index % 3} data-phase={page.phase} data-direction={page.direction}>
       <div className="beta-story-halo" aria-hidden="true" />
+      <GoldBackground />
       <div className="beta-story-stage" ref={stageRef} tabIndex={0} role="region" aria-label="About Oro">
         <div className="beta-story-page" key={page.index}>{pages[page.index]}</div>
       </div>
