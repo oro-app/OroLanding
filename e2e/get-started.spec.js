@@ -19,7 +19,7 @@ const test = base.extend({
 async function phoneStep(page) {
   await page.addInitScript((answers) => localStorage.setItem('oro_get_started_responses', JSON.stringify(answers)), draft)
   await page.goto('/get-started')
-  await page.getByRole('button', { name: 'Get started.' }).click()
+  await page.getByRole('button', { name: 'Let’s get you settled' }).click()
   for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByLabel('Phone number', { exact: true })).toHaveValue(draft.phone)
 }
@@ -38,7 +38,7 @@ async function verify(page, code = '123456') {
 test('approved setup completes by keyboard with oro-kit controls and clears the draft', async ({ page, api }) => {
   await page.goto('/get-started')
   await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
-  await page.getByRole('button', { name: 'Get started.' }).click()
+  await page.getByRole('button', { name: 'Let’s get you settled' }).click()
   await page.keyboard.press('Tab')
   await expect(page.getByLabel('First name')).toBeFocused()
   await page.keyboard.type('Test Oronaut')

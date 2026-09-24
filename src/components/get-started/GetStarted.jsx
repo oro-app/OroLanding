@@ -563,16 +563,26 @@ export default function GetStarted() {
 function Welcome({ onStart }) {
   return (
     <div className="gs-welcome">
-      <p className="gs-eyebrow">For our invited Oronauts.</p>
-      <Heading as="h1" variant="title" tabIndex={-1} className="gs-welcome-title">
-        Let’s get you <span className="gs-em">set up.</span>
+      <Heading as="h1" variant="display" tabIndex={-1} className="gs-welcome-title" aria-label="You’re in.">
+        <span aria-hidden="true">
+          {[...'You’re in.'].map((letter, index) => (
+            <span key={index} className="gs-welcome-char" style={{ '--letter-delay': `${100 + index * 85}ms` }}>{letter}</span>
+          ))}
+        </span>
       </Heading>
-      <p className="gs-welcome-sub">
-        A few quick questions, then we’ll verify the phone number on your approved invitation.
-      </p>
-      <Button className="gs-cta" onClick={onStart}>
-        Get started.
-      </Button>
+      <div className="gs-welcome-details">
+        <p className="gs-welcome-greeting">Welcome to the first crew of Oronauts.</p>
+        <p className="gs-welcome-sub">
+          We’re so glad you’re here. You’ll get to try Oro early, meet the people building it,
+          and help shape what it becomes.
+        </p>
+        <p className="gs-welcome-signoff">
+          See you inside,<br /><span>Sunny &amp; the Oro team</span>
+        </p>
+        <Button className="gs-cta" onClick={onStart}>
+          Let’s get you settled <span aria-hidden="true">→</span>
+        </Button>
+      </div>
     </div>
   )
 }
