@@ -23,7 +23,7 @@ async function serve(t, options = {}) {
   await once(server, 'listening')
   t.after(() => new Promise((resolve) => server.close(resolve)))
   const url = `http://127.0.0.1:${server.address().port}/api/beta-request`
-  const post = (body, headers = {}) => fetch(url, { method: 'POST', headers: { origin: 'https://buildingoro.ca', 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) })
+  const post = (body, headers = {}) => fetch(url, { method: 'POST', headers: { origin: 'https://www.askoro.now', 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) })
   return { ...google, post, url }
 }
 

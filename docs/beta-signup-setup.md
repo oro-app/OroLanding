@@ -26,7 +26,7 @@ Add these **Script Properties** under Project Settings:
 | Property | Value |
 | --- | --- |
 | `BETA_SHEET_ID` | The ID from the private Sheet URL |
-| `BETA_COHORT` | `2026-09-25`, or the exact cohort chosen for backend onboarding |
+| `BETA_COHORT` | Exact cohort chosen for backend onboarding, e.g. `2026-09-26`; use the same value in Google, Vercel, and the backend |
 | `BETA_SUBMISSION_SECRET` | A new random secret, at least 32 characters; use the same value in the website's server environment |
 
 Generate the secret with a password manager. Never put it in Git, a ticket, a screenshot, or a `VITE_` variable.
@@ -48,7 +48,7 @@ In the OroLanding Vercel project, configure the server environment for the inten
 | `BETA_SUBMISSION_SECRET` | The matching secret from Script Properties |
 | `BETA_COHORT` | Exact match to the Google property and eventual `BETA_ONBOARDING_COHORT` |
 | `BETA_RATE_LIMIT_ID` | The SDK rule ID configured below, e.g. `beta-request` |
-| `BETA_ALLOWED_ORIGINS` | Comma-separated full origins, e.g. `https://buildingoro.ca,https://www.buildingoro.ca`; no paths or trailing slashes |
+| `BETA_ALLOWED_ORIGINS` | Comma-separated full origins, e.g. `https://askoro.now,https://www.askoro.now`; no paths or trailing slashes. Include the old website origins only if that deployment will also accept requests. |
 
 Enable Vercel's automatically exposed system environment variables. `VERCEL=1`, `VERCEL_URL` and `NODE_ENV=production` are required; these are provided by Vercel, not browser configuration. The exact `VERCEL_URL` origin is also accepted for that deployment. Custom preview aliases need an explicit allowed origin. Do not promote a build made with `VERCEL_ENV=preview` into production; create a production build so the design-preview controls are excluded.
 

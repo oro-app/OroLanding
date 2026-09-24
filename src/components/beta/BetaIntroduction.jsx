@@ -59,7 +59,7 @@ export default function BetaIntroduction({ onStart, previewForm }) {
         <TypingTitle />
         <Text muted className="beta-lead"><TypedText>We’re building toward a world where turning to your AI stylist is a normal part of everyday life.</TypedText></Text>
       </div>
-      <Text variant="support" muted className="beta-story-date">SEPTEMBER 25–30, 2026</Text>
+      <Text variant="support" muted className="beta-story-date">SEPTEMBER 26–OCTOBER 1, 2026</Text>
     </section>,
     <Chapter id="our-vision" title={<>Our vision is for everyone to have an AI stylist <em>in their corner.</em></>}>
       <Text muted><TypedText>A stylist that gets to know your taste, understands your wardrobe, remembers your preferences, and helps you make decisions that work for your life.</TypedText></Text>
@@ -67,10 +67,7 @@ export default function BetaIntroduction({ onStart, previewForm }) {
     <Chapter id="over-imessage" title={<>Today, we’re testing the earliest version of that experience with you.</>}>
       <Text muted><TypedText>There’s still a lot to build and improve, and this beta will help us understand what deserves our attention next.</TypedText></Text>
     </Chapter>,
-    <Chapter id="the-beginning" title={<>Oro has been accepted into an accelerator, so <em>things are moving quickly.</em></>}>
-      <Text muted><TypedText>You’re getting involved at the start of something we’re really excited to grow.</TypedText></Text>
-    </Chapter>,
-    <Chapter id="the-week" title={<>The beta runs <em>September 25–30.</em></>}>
+    <Chapter id="the-week" title={<>The beta runs <em>September 26–October 1.</em></>}>
       <div className="beta-expectations">
         <Text muted><TypedText duration={700}>What we need from you:</TypedText></Text>
         <ul className="beta-checklist">

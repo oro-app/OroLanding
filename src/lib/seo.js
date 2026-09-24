@@ -1,6 +1,6 @@
 import { PRODUCT_FAQS } from './faqs.js'
 
-export const SITE_URL = 'https://buildingoro.ca'
+export const SITE_URL = 'https://www.askoro.now'
 export const SITE_NAME = 'Oro'
 export const SITE_TITLE = 'Oro - AI stylist for the clothes you already own'
 export const DEFAULT_DESCRIPTION =
@@ -93,12 +93,12 @@ export const ROUTE_SEO = {
   },
   'get-started': {
     path: '/get-started',
-    title: 'Get Started - Oro texts you your first outfit',
+    title: 'Complete Your Beta Setup - Oro',
     description:
-      'Sign up for Oro in under two minutes: a few quick questions, then Oro texts you and styles your first outfit from your own closet.',
-    h1: 'your stylist is 2 minutes away.',
+      'Invited to the Oro beta? Answer a few quick questions and verify the phone number on your approved invitation.',
+    h1: 'Let’s get you set up.',
     summary:
-      'The Oro signup flow: answer a few questions, verify your number, and Oro texts you to start styling.',
+      'Approved beta testers complete their Oro setup by answering a few questions and verifying their phone number.',
     priority: '0.8',
   },
   'app-terms': {

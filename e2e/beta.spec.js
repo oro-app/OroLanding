@@ -18,7 +18,7 @@ for (const width of [1440, 390, 320]) {
     await expect(page.locator('.beta-chapter')).toHaveCount(1)
     await expect(page.locator('.beta-story')).not.toContainText('Whether you’re figuring out')
     await expect(page.locator('.beta-story')).not.toContainText(/imessage beta/i)
-    for (let index = 1; index < 7; index++) {
+    for (let index = 1; index < 6; index++) {
       await page.getByRole('button', { name: 'Next page', exact: true }).click()
       await expect(page.locator('.beta-story-nav button')).toHaveCount(1)
       const arrow = await page.locator('.beta-story-nav button').boundingBox()

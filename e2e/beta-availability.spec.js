@@ -18,7 +18,7 @@ for (const width of [1440, 390]) {
       if (url.origin === 'https://vercel.live' && url.pathname === '/login/validate') return
       if (request.method() === 'POST') writes.push(request.url())
     })
-    for (let index = 0; index < 6; index += 1) await page.getByRole('button', { name: 'Next page', exact: true }).click()
+    for (let index = 0; index < 5; index += 1) await page.getByRole('button', { name: 'Next page', exact: true }).click()
     await expect(page.getByText('Free lifetime access to Oro.', { exact: true }).first()).toBeVisible()
     await page.getByRole('button', { name: 'About beta invites', exact: true }).click()
     await expect(page.getByRole('heading', { name: 'Invites open soon.' })).toBeFocused()

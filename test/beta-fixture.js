@@ -15,7 +15,7 @@ export const environment = {
   VERCEL: '1', NODE_ENV: 'production', VERCEL_URL: 'beta-test.vercel.app', BETA_SIGNUP_ENABLED: 'true',
   BETA_COHORT: 'september-2026', BETA_SUBMISSION_SECRET: 'test-only-secret-that-is-long-enough',
   BETA_APPS_SCRIPT_URL: 'https://script.google.com/macros/s/test/exec', BETA_RATE_LIMIT_ID: 'beta-request',
-  BETA_ALLOWED_ORIGINS: 'https://buildingoro.ca',
+  BETA_ALLOWED_ORIGINS: 'https://www.askoro.now',
 }
 export const makeSubmission = (answers = exampleAnswers, key = randomUUID()) => ({
   submission_key: key, form_version: FORM_VERSION, consent_version: CONSENT_VERSION, answers,

@@ -21,7 +21,7 @@ test.describe('separate texting and app policies', () => {
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading)
       await expect(page.locator('header nav a').filter({ hasText: /terms|privacy/i })).toHaveAttribute('href', otherPolicy)
       await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(252, 251, 255)')
-      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://buildingoro.ca${path}`)
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://www.askoro.now${path}`)
       await expect(page.locator('header a[href^="/app/"], footer a[href^="/app/"]')).toHaveCount(0)
     })
   }

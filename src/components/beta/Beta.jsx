@@ -244,7 +244,7 @@ export default function Beta() {
         {!requestId && <Text variant="label" muted>Confirmation preview · No request has been saved</Text>}
         <span className="beta-receipt-icon" aria-hidden="true">✓</span>
         <Heading as="h1" variant="display" id="receipt-title">Request <em>received :)</em></Heading>
-        <Text muted>Thanks for helping us make Oro yours. We’ll review your responses and email you if you’re selected for the September 25–30 beta.</Text>
+        <Text muted>Thanks for helping us make Oro yours. We’ll review your responses and email you if you’re selected for the September 26–October 1 beta.</Text>
         <Text variant="label" muted>Questions or concerns? Email <a href="mailto:sunny@buildingoro.ca">sunny@buildingoro.ca</a>.</Text>
         {requestId ? <Text variant="support" muted>Request reference: {requestId}</Text> : <Button variant="secondary" onClick={() => setView('form')}>Back to the draft</Button>}
       </section>}
