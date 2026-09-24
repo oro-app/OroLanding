@@ -36,7 +36,7 @@ function FitsByOroLight() {
           <span className="fits-accent">by oro</span>.
         </h2>
         <div className="fits-l-intro">
-          <p>a week of outfits oro picked from real closets. nothing here was bought — only re-arranged.</p>
+          <p>a week of outfits oro picked from real closets. nothing here was bought - only re-arranged.</p>
           <a className="fits-l-more" href="#more-fits">
             see more fits
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -64,7 +64,7 @@ function FitsByOroLight() {
       </div>
       <div className="fits-l-foot">
         <span>five days · five outfits · zero spirals</span>
-        <span className="fits-l-quip">and weekends? — you’re on your own.</span>
+        <span className="fits-l-quip">and weekends? - you’re on your own.</span>
       </div>
     </section>
   )

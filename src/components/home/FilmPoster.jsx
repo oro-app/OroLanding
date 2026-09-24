@@ -49,7 +49,7 @@ export default function FilmPoster({
       >
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1`}
-          title="oro — the film"
+          title="oro - the film"
           allow="autoplay; encrypted-media; picture-in-picture"
           allowFullScreen
           style={{ width: '100%', height: '100%', display: 'block', border: 0 }}
@@ -109,7 +109,7 @@ export default function FilmPoster({
           <path d="M7 4.5v15l13-7.5z" />
         </svg>
       </button>
-      {showMeta && <div className="film-poster-meta">play the film — 0:49</div>}
+      {showMeta && <div className="film-poster-meta">play the film - 0:49</div>}
       {caption && <div className="film-poster-caption">{caption}</div>}
     </div>
   )

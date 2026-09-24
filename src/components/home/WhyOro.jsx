@@ -40,7 +40,7 @@ function WhyOroLight() {
           </h2>
           <p className="why-l-lead">
             most ai stylists recommend new clothes. oro recommends{' '}
-            <em className="why-em">your</em> clothes — the ones you already love,
+            <em className="why-em">your</em> clothes - the ones you already love,
             in combinations you wouldn’t have tried.
           </p>
           <div className="why-l-list">

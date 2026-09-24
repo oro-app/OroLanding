@@ -121,7 +121,7 @@ function VisitorForm() {
 
       {status === 'error' && (
         <p className="ct-error" role="alert">
-          Couldn’t send — try again, or email us directly at{' '}
+          Couldn’t send - try again, or email us directly at{' '}
           <a href="mailto:hello@buildingoro.ca">hello@buildingoro.ca</a>.
         </p>
       )}
@@ -161,7 +161,7 @@ export default function Contact() {
             <p className="ct-salutation">Dear reader,</p>
             <div className="ct-body">
               <p>We read everything that comes through this page. It’s a small team, so the reply isn’t always immediate, but it’s always written by a person.</p>
-              <p>Tell us anything — an idea, a bug, a question, a polite complaint.</p>
+              <p>Tell us anything - an idea, a bug, a question, a polite complaint.</p>
             </div>
             <p className="ct-signoff-oro">
               Yours,

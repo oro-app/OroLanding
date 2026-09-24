@@ -2,7 +2,7 @@ import { PRODUCT_FAQS } from './faqs.js'
 
 export const SITE_URL = 'https://www.askoro.now'
 export const SITE_NAME = 'Oro'
-export const SITE_TITLE = 'Oro — Your AI stylist, one text away'
+export const SITE_TITLE = 'Oro - Your AI stylist, one text away'
 export const DEFAULT_DESCRIPTION =
   'Nothing to wear? Ask Oro and discover the gold in your wardrobe.'
 export const DEFAULT_IMAGE = '/og/oro-conversation-v1.png'
@@ -20,7 +20,7 @@ const WEBSITE_ID = `${SITE_URL}/#website`
 export const ROUTE_SEO = {
   beta: {
     path: '/beta',
-    title: 'Help us make Oro yours. — Oro beta',
+    title: 'Help us make Oro yours. - Oro beta',
     description: 'Help shape the earliest Oro experience. Meet the beta and our first Oronauts.',
     h1: 'Help us make Oro yours.',
     noindex: true,

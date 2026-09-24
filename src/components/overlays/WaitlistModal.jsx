@@ -102,14 +102,14 @@ export default function WaitlistModal({ onClose }) {
             </div>
             <p className="modal-eyebrow">already subscribed</p>
             <Heading variant="card" id="newsletter-signup-title">You're already on the list.</Heading>
-            <p className="modal-subtitle">No need to sign up again — you're set to receive the Oro newsletter.</p>
+            <p className="modal-subtitle">No need to sign up again - you're set to receive the Oro newsletter.</p>
             <Button variant="secondary" className="modal-done-btn" onClick={onClose}>Got it</Button>
           </div>
         ) : (
           <>
             <p className="modal-eyebrow">newsletter</p>
             <Heading variant="card" id="newsletter-signup-title">Get style notes from Oro</Heading>
-            <p className="modal-subtitle">Wardrobe ideas, product updates, and notes from our team — a few times a month.</p>
+            <p className="modal-subtitle">Wardrobe ideas, product updates, and notes from our team - a few times a month.</p>
 
             <form onSubmit={handleSubmit}>
               <div className="email-form">

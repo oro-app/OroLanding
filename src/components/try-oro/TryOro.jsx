@@ -88,14 +88,14 @@ export default function TryOro() {
               <img
                 className="tryoro-phone tryoro-phone--back"
                 src={phoneStyleme}
-                alt="Oro app — style me input: where are you going? how many looks?"
+                alt="Oro app - style me input: where are you going? how many looks?"
                 width="828" height="1712"
                 loading="eager" decoding="async" draggable={false}
               />
               <img
                 className="tryoro-phone tryoro-phone--front"
                 src={phoneHome}
-                alt="Oro app — good morning, kevin. yesterday's fit."
+                alt="Oro app - good morning, kevin. yesterday's fit."
                 width="828" height="1712"
                 loading="eager" decoding="async" draggable={false}
               />
