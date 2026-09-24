@@ -12,6 +12,13 @@ const ORGANIZATION_ID = `${SITE_URL}/#organization`
 const WEBSITE_ID = `${SITE_URL}/#website`
 
 export const ROUTE_SEO = {
+  beta: {
+    path: '/beta',
+    title: 'Help us make Oro yours. — Oro beta',
+    description: 'Help shape the earliest Oro experience. Meet the beta and our first Oronauts.',
+    h1: 'Help us make Oro yours.',
+    noindex: true,
+  },
   home: {
     path: '/',
     title: 'Oro - The AI stylist you can text',

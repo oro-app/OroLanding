@@ -8,8 +8,8 @@ function HomeLogo() {
 
 export function HomeCta({ place, children, className = '' }) {
   return (
-    <a href="/get-started" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-      onClick={() => trackCtaClick('get_started_click', { location: place, destination: 'get_started' })}>
+    <a href="/beta" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
+      onClick={() => trackCtaClick('get_started_click', { location: place, destination: 'beta' })}>
       {children}
       <svg className="halo-cta-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <path d="M3 13 13 3M3 3h10v10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

@@ -67,6 +67,7 @@ export default defineConfig({
   },
   define: {
     __DEV__: JSON.stringify(false),
+    __BETA_FORM_PREVIEW__: JSON.stringify(process.env.VERCEL_ENV === 'preview'),
   },
   ssr: {
     noExternal: [
@@ -100,7 +101,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': backendUrl,
-      '/static': backendUrl,
+      '^/static/(?!oro-logo\\.png(?:\\?|$))': backendUrl,
       // oro-central public onboarding endpoints (BUI-415) — the /get-started
       // signup form posts here; oro-central has no CORS, so dev goes via proxy.
       '/onboarding': backendUrl,
