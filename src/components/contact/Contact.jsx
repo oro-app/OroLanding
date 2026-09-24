@@ -1,6 +1,5 @@
 import { Button, Chip, Heading, Text } from 'oro-kit'
 import { useState } from 'react'
-import { CONTACT_FAQS } from '../../lib/faqs'
 import './Contact.css'
 
 const TOPICS = ['hello', 'support', 'press', 'partnership', 'careers', 'feedback']
@@ -162,9 +161,7 @@ export default function Contact() {
             <p className="ct-salutation">Dear reader,</p>
             <div className="ct-body">
               <p>We read everything that comes through this page. It’s a small team, so the reply isn’t always immediate, but it’s always written by a person.</p>
-              <p>Tell us anything — an idea, a bug, a question, a polite complaint. Press inquiries, partnerships, hellos, all welcome at the same address.</p>
-              <p>If you’d like a faster answer, the short list of common questions on the next page might already cover it.</p>
-              <p>Otherwise — write us a letter.</p>
+              <p>Tell us anything — an idea, a bug, a question, a polite complaint.</p>
             </div>
             <p className="ct-signoff-oro">
               Yours,
@@ -174,21 +171,6 @@ export default function Contact() {
 
           {/* Right — visitor's form */}
           <VisitorForm />
-        </div>
-      </section>
-
-      {/* Postscript FAQ */}
-      <section className="ct-faq-wrap">
-        <div className="ct-faq-inner">
-          <p className="ct-faq-kicker">Postscript — a few things people often ask.</p>
-          <div className="ct-faq-list">
-            {CONTACT_FAQS.map((row) => (
-              <div className="ct-faq-row" key={row.question}>
-                <Heading variant="subheading" className="ct-faq-q">{row.question}</Heading>
-                <div className="ct-faq-a">{row.answer}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

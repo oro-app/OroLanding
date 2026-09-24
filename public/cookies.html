@@ -5,114 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Oro - Cookie Policy</title>
   <link rel="canonical" href="https://buildingoro.ca/cookies" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 15px;
-      line-height: 1.7;
-      color: #1a1a1a;
-      background: #ffffff;
-    }
-    header {
-      border-bottom: 1px solid #e5e5e5;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header img { height: 22px; width: auto; }
-    header nav { display: flex; gap: 24px; }
-    header nav a { font-size: 13px; color: #555; text-decoration: none; }
-    header nav a:hover { color: #1a1a1a; }
-    .page { max-width: 720px; margin: 0 auto; padding: 56px 24px 96px; }
-    .page-header { margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid #e5e5e5; }
-    .page-header h1 { font-size: 28px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; letter-spacing: -0.01em; }
-    .page-header .updated { font-size: 13px; color: #888; }
-    .intro-box {
-      background: #f9f9f9;
-      border: 1px solid #e5e5e5;
-      border-radius: 6px;
-      padding: 16px 20px;
-      font-size: 14px;
-      color: #444;
-      line-height: 1.65;
-      margin-bottom: 40px;
-    }
-    section { margin-bottom: 40px; }
-    h2 { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-bottom: 12px; letter-spacing: -0.01em; }
-    h3 { font-size: 14px; font-weight: 600; color: #1a1a1a; margin: 20px 0 6px; }
-    p { font-size: 14px; color: #333; margin-bottom: 12px; }
-    p:last-child { margin-bottom: 0; }
-    ul { padding-left: 20px; margin-bottom: 12px; }
-    li { font-size: 14px; color: #333; margin-bottom: 6px; }
-    a { color: #1a1a1a; text-decoration: underline; text-underline-offset: 2px; }
-    a:hover { color: #555; }
-    .cookie-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 16px;
-      font-size: 13px;
-    }
-    .cookie-table th {
-      background: #f9f9f9;
-      text-align: left;
-      padding: 10px 14px;
-      font-weight: 600;
-      color: #1a1a1a;
-      border: 1px solid #e5e5e5;
-      font-size: 12px;
-      letter-spacing: 0.02em;
-    }
-    .cookie-table td {
-      padding: 10px 14px;
-      border: 1px solid #e5e5e5;
-      color: #444;
-      vertical-align: top;
-    }
-    .cookie-table tr:nth-child(even) td { background: #fafafa; }
-    .status-badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.04em;
-    }
-    .status-essential { background: #e8f5e9; color: #2e7d32; }
-    .status-none { background: #f5f5f5; color: #888; }
-    .contact-section {
-      background: #f9f9f9;
-      border: 1px solid #e5e5e5;
-      border-radius: 6px;
-      padding: 24px;
-      margin-top: 48px;
-    }
-    .contact-section h2 { font-size: 15px; margin-bottom: 8px; }
-    .contact-section p { font-size: 13px; color: #555; margin-bottom: 4px; }
-    footer {
-      border-top: 1px solid #e5e5e5;
-      padding: 20px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: #888;
-    }
-    footer a { color: #888; text-decoration: none; }
-    footer a:hover { color: #1a1a1a; }
-    @media (max-width: 600px) {
-      .page { padding: 32px 16px 64px; }
-      footer { flex-direction: column; gap: 8px; text-align: center; }
-    }
-  </style>
+  <link rel="stylesheet" href="/src/legal.css" />
 </head>
-<body>
+<body class="legal-page">
 
 <header>
   <a href="https://buildingoro.ca">
-    <img src="/static/oro-logo.png" alt="Oro" />
+    <img src="/static/oro-logo.png" alt="Oro" width="80" height="32" />
   </a>
   <nav>
     <a href="/terms">Terms of Service</a>
@@ -120,7 +19,7 @@
   </nav>
 </header>
 
-<div class="page">
+<main class="page">
 
   <div class="page-header">
     <h1>Cookie Policy</h1>
@@ -141,6 +40,7 @@
     <h2>2. Cookies We Use</h2>
     <p>Our website currently uses only essential cookies necessary for the website to function. We do not use analytics, advertising, or tracking cookies.</p>
 
+    <div class="legal-table-scroll" role="region" aria-label="Cookies We Use" tabindex="0">
     <table class="cookie-table">
       <tr>
         <th>Category</th>
@@ -168,6 +68,7 @@
         <td><span class="status-badge status-none">Not in use</span></td>
       </tr>
     </table>
+    </div>
   </section>
 
   <section>
@@ -214,11 +115,11 @@
     <p><strong>Oro Digital Inc.</strong></p>
     <p>Email: <a href="mailto:admin@buildingoro.ca">admin@buildingoro.ca</a></p>
     <p>Website: <a href="https://buildingoro.ca">buildingoro.ca</a></p>
-    <p style="margin-top:16px; font-size:13px; color:#555;">This Cookie Policy is governed by the laws of the Province of Ontario and the federal laws of Canada.</p>
-    <p style="margin-top:8px; font-size:12px; color:#aaa;">Corporation No. 1780273-1 — Incorporated under the Canada Business Corporations Act</p>
+    <p class="legal-jurisdiction">This Cookie Policy is governed by the laws of the Province of Ontario and the federal laws of Canada.</p>
+    <p class="legal-registration">Corporation No. 1780273-1 — Incorporated under the Canada Business Corporations Act</p>
   </div>
 
-</div>
+</main>
 
 <footer>
   <span>&copy; 2026 Oro Digital Inc.</span>

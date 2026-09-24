@@ -85,6 +85,13 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    manifest: true,
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        legal: fileURLToPath(new URL('./src/legal.css', import.meta.url)),
+      },
+    },
   },
   server: {
     proxy: {

@@ -1,22 +1,3 @@
-export const CONTACT_FAQS = [
-  {
-    question: 'Is Oro free?',
-    answer: 'Yes. Completely free to use.',
-  },
-  {
-    question: 'Do you sell my closet data?',
-    answer: 'No. Never. It stays on your account.',
-  },
-  {
-    question: 'When does the app launch?',
-    answer: 'iOS and Android are both live now.',
-  },
-  {
-    question: 'Can I write about Oro?',
-    answer: 'Yes, please. Write us and someone on the team will get back to you.',
-  },
-]
-
 export const PRODUCT_FAQS = [
   {
     question: 'What is Oro?',
