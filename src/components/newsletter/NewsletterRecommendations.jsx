@@ -1,3 +1,4 @@
+import { Heading, Text } from 'oro-kit'
 import { readableNewsletters } from '../../lib/newsletters'
 import './NewsletterRecommendations.css'
 
@@ -13,8 +14,8 @@ export default function NewsletterRecommendations({ currentSlug }) {
   return (
     <aside className="newsletter-recs" aria-label="More newsletters">
       <div className="newsletter-recs-header">
-        <span className="newsletter-recs-eyebrow">keep reading</span>
-        <h2 className="newsletter-recs-title">More from the closet</h2>
+        <Text variant="support" muted>Keep reading</Text>
+        <Heading variant="card">More from the closet</Heading>
       </div>
 
       <ul className="newsletter-recs-list">
@@ -39,7 +40,7 @@ export default function NewsletterRecommendations({ currentSlug }) {
                     </>
                   )}
                 </div>
-                <h3 className="newsletter-recs-card-title">{newsletter.title}</h3>
+                <Heading as="h3" variant="subheading" className="newsletter-recs-card-title">{newsletter.title}</Heading>
               </div>
             </a>
           </li>
@@ -47,7 +48,7 @@ export default function NewsletterRecommendations({ currentSlug }) {
       </ul>
 
       <a className="newsletter-recs-all" href="/from-the-closet" rel="noopener noreferrer">
-        see all notes
+        See all notes
         <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <path d="M4 9h10M9.5 4l5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

@@ -1,19 +1,39 @@
-import { Btn } from '@oro/web'
+import { Button, Heading, TextField } from 'oro-kit'
 import './WaitlistModal.css';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { trackEvent } from '../../lib/analytics';
 import { markNewsletterSignedUp } from '../../lib/newsletterSignup';
 
 export default function WaitlistModal({ onClose }) {
+  const dialogRef = useRef(null)
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [alreadyOnList, setAlreadyOnList] = useState(false)
   const [error, setError] = useState(null)
 
-  // Consent used to be a separate checkbox; replaced with an inline blurb
-  // below the email field ("by signing up, you agree..."). Submitting the
-  // form is now the consent action, so we always send consent: true.
+  useEffect(() => {
+    if (success || alreadyOnList) dialogRef.current?.querySelector('.modal-done-btn')?.focus()
+  }, [success, alreadyOnList])
+
+  const handleDialogKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      event.stopPropagation()
+      onClose()
+    }
+    if (event.key !== 'Tab') return
+    const controls = [...dialogRef.current.querySelectorAll('button:not(:disabled), input:not(:disabled), a[href]')]
+    const first = controls[0]
+    const last = controls[controls.length - 1]
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last?.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first?.focus()
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const cleanEmail = email.trim().toLowerCase()
@@ -58,7 +78,7 @@ export default function WaitlistModal({ onClose }) {
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div ref={dialogRef} className="modal" role="dialog" aria-modal="true" aria-labelledby="newsletter-signup-title" onKeyDown={handleDialogKeyDown} onClick={(e) => e.stopPropagation()}>
         <button className="modal-close-x" onClick={onClose} aria-label="Close">✕</button>
 
         {success ? (
@@ -69,9 +89,9 @@ export default function WaitlistModal({ onClose }) {
               </svg>
             </div>
             <p className="modal-eyebrow">you're subscribed</p>
-            <h3>Thanks for joining.</h3>
+            <Heading variant="card" id="newsletter-signup-title">Thanks for joining.</Heading>
             <p className="modal-subtitle">We'll send thoughtful style notes and Oro updates to your inbox.</p>
-            <Btn variant="quiet" className="modal-done-btn" onClick={onClose}>done</Btn>
+            <Button variant="secondary" className="modal-done-btn" onClick={onClose}>Done</Button>
           </div>
         ) : alreadyOnList ? (
           <div className="modal-success">
@@ -81,44 +101,41 @@ export default function WaitlistModal({ onClose }) {
               </svg>
             </div>
             <p className="modal-eyebrow">already subscribed</p>
-            <h3>You're already on the list.</h3>
+            <Heading variant="card" id="newsletter-signup-title">You're already on the list.</Heading>
             <p className="modal-subtitle">No need to sign up again — you're set to receive the Oro newsletter.</p>
-            <Btn variant="quiet" className="modal-done-btn" onClick={onClose}>got it</Btn>
+            <Button variant="secondary" className="modal-done-btn" onClick={onClose}>Got it</Button>
           </div>
         ) : (
           <>
             <p className="modal-eyebrow">newsletter</p>
-            <h3>Get style notes from Oro</h3>
+            <Heading variant="card" id="newsletter-signup-title">Get style notes from Oro</Heading>
             <p className="modal-subtitle">Wardrobe ideas, product updates, and notes from our team — a few times a month.</p>
 
             <form onSubmit={handleSubmit}>
               <div className="email-form">
-                <input
+                <TextField
                   type="email"
+                  label="Your email"
                   className="email-input"
                   placeholder="your@email.com"
+                  autoComplete="email"
+                  aria-describedby="newsletter-signup-consent"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoFocus
                 />
-                <button type="submit" className="email-submit-btn" disabled={loading} aria-label="Subscribe to newsletter">
-                  {loading ? (
-                    <span className="btn-spinner" />
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                </button>
+                <Button type="submit" disabled={loading} aria-label="Subscribe to newsletter">
+                  {loading ? 'Subscribing…' : 'Subscribe'}
+                </Button>
               </div>
 
-              <p className="consent-text">
+              <p className="consent-text" id="newsletter-signup-consent">
                 By signing up, you agree to receive emails from Oro. Unsubscribe any time. See our{' '}
                 <a href="/privacy" rel="noopener noreferrer">Privacy Policy</a>.
               </p>
 
-              {error && <p className="modal-error">{error}</p>}
+              {error && <p className="modal-error" role="alert">{error}</p>}
             </form>
           </>
         )}
