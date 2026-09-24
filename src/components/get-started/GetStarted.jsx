@@ -1,6 +1,7 @@
 import { Button, Chip, Heading, TextField as KitTextField } from 'oro-kit'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { postOnboarding } from './onboardingApi'
+import GoldBackground from '../GoldBackground'
 import './GetStarted.css'
 
 const QUESTIONS = ['name', 'birthday', 'province', 'hear', 'phone']
@@ -309,6 +310,7 @@ export default function GetStarted() {
 
   return (
     <section className="gs ph-no-capture" data-private data-view={view} aria-busy={loading}>
+      <GoldBackground />
       {/* Top bar: back + progress. Only shown on the question screens. */}
       {onQuestion && (
         <div className="gs-bar">
