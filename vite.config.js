@@ -13,12 +13,16 @@ const legalPagePlugin = {
   configureServer(server) {
     server.middlewares.use((req, _res, next) => {
       const map = {
+        '/app/terms': '/app/terms.html',
+        '/app/privacy': '/app/privacy.html',
         '/terms':   '/terms.html',
         '/privacy': '/privacy.html',
         '/cookies': '/cookies.html',
         '/google-play': '/google-play.html',
       }
-      if (map[req.url]) req.url = map[req.url]
+      const [pathname, query] = req.url.split('?')
+      const destination = map[pathname.replace(/\/$/, '')]
+      if (destination) req.url = destination + (query ? `?${query}` : '')
       next()
     })
   },

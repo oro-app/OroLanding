@@ -18,7 +18,7 @@ const root = process.cwd()
 const distDir = path.join(root, 'dist')
 const serverDir = path.join(root, '.seo-server')
 const newsletterDir = path.join(root, 'src', 'content', 'newsletters')
-const STATIC_PAGE_TYPES = ['terms', 'privacy', 'cookies', 'google-play']
+const STATIC_PAGE_TYPES = ['terms', 'privacy', 'app-terms', 'app-privacy', 'cookies', 'google-play']
 const APP_ROUTE_TYPES = PUBLIC_ROUTE_TYPES.filter((type) => !STATIC_PAGE_TYPES.includes(type))
 
 function escapeHtml(value = '') {
@@ -174,7 +174,7 @@ let rnwStyleTag = ''
 
 async function writeSitemap(newsletters) {
   const now = new Date().toISOString().slice(0, 10)
-  const routeUrls = PUBLIC_ROUTE_TYPES.map((type) => ROUTE_SEO[type])
+  const routeUrls = PUBLIC_ROUTE_TYPES.map((type) => ROUTE_SEO[type]).filter((route) => !route.noindex)
   const newsletterUrls = newsletters.map((newsletter) => ({
     path: newsletter.href,
     priority: '0.6',
@@ -211,6 +211,7 @@ async function writeLlms(newsletters) {
     `- How it works: ${absoluteUrl('/how-it-works')}`,
     `- Why Oro: ${absoluteUrl('/why-oro')}`,
     `- Editorial archive: ${absoluteUrl('/from-the-closet')}`,
+    `- Terms: ${absoluteUrl('/terms')}`,
     `- Privacy: ${absoluteUrl('/privacy')}`,
     '',
     '## Key Facts',
@@ -255,7 +256,7 @@ async function main() {
 
   for (const type of STATIC_PAGE_TYPES) {
     const seo = getSeoForRoute({ type })
-    const staticPath = path.join(distDir, `${type}.html`)
+    const staticPath = path.join(distDir, `${seo.path.replace(/^\/+/, '')}.html`)
     // Public HTML bypasses Vite's asset rewriting, so use the emitted CSS URL.
     const html = (await fs.readFile(staticPath, 'utf8'))
       .replace('href="/src/legal.css"', `href="/${legalStylesheet}"`)

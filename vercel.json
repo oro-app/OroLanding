@@ -3,6 +3,24 @@
   "outputDirectory": "dist",
   "headers": [
     {
+      "source": "/app/(terms|privacy)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/app/(terms|privacy).html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/(terms|privacy|cookies|google-play)",
       "headers": [
         {
@@ -53,6 +71,8 @@
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
   "rewrites": [
+    { "source": "/app/terms", "destination": "/app/terms.html" },
+    { "source": "/app/privacy", "destination": "/app/privacy.html" },
     { "source": "/app", "destination": "/api/app" },
     { "source": "/terms",   "destination": "/terms.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
