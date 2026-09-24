@@ -21,7 +21,7 @@ function confirmHtml(token: string): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Unsubscribe — Oro Insiders</title>
+  <title>Unsubscribe - Oro Insiders</title>
   <style>
     ${SHARED_STYLES}
     .btn { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1a1a; color: #fff; font-family: -apple-system, sans-serif; font-size: 15px; border: none; cursor: pointer; border-radius: 4px; text-decoration: none; }
@@ -37,7 +37,7 @@ function confirmHtml(token: string): string {
 <body>
   <div class="meta">Oro Insiders</div>
   <h1>Unsubscribe from Oro Insiders?</h1>
-  <p>You'll stop receiving all future issues. If this was an accidental click, just close this page — you're still subscribed.</p>
+  <p>You'll stop receiving all future issues. If this was an accidental click, just close this page - you're still subscribed.</p>
   <form method="POST" action="/api/unsubscribe?token=${encodeURIComponent(token)}">
     <input type="hidden" name="confirm" value="1">
     <div class="reasons">
@@ -72,7 +72,7 @@ const SUCCESS_HTML = `<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Unsubscribed — Oro Insiders</title>
+  <title>Unsubscribed - Oro Insiders</title>
   <style>${SHARED_STYLES}</style>
 </head>
 <body>

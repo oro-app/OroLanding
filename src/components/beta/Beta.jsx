@@ -80,7 +80,7 @@ export default function Beta() {
   }, [])
 
   useEffect(() => {
-    document.title = 'Help us make Oro yours. — Oro beta'
+    document.title = 'Help us make Oro yours. - Oro beta'
     const syncLocation = () => {
       const index = formSteps.findIndex((item) => item.hash === window.location.hash)
       if (index >= 0) {
@@ -186,7 +186,7 @@ export default function Beta() {
     field('challenges', 'Your experience', { multiline: true }),
     <>{options('usualHelp', { multiple: true })}{answers.usualHelp.includes('Other') && <div className="beta-follow-up">{field('usualHelpOther', 'What else do you do?')}</div>}</>,
     field('hopes', 'What you have in mind', { multiline: true }),
-    field('week', 'Your plans', { multiline: true, hint: 'Tell us everything! School, work, seeing friends, any plans or events—anything you’ll be getting dressed for.' }),
+    field('week', 'Your plans', { multiline: true, hint: 'Tell us everything! School, work, seeing friends, any plans or events - anything you’ll be getting dressed for.' }),
     field('location', 'City and province', { placeholder: 'Toronto, Ontario' }),
     options('age', { optional: true }),
     <>{options('gender', { optional: true })}{answers.gender === 'I’d like to self-describe' && <div className="beta-follow-up">{field('genderDescription', <>How would you describe your gender? <span className="beta-optional">Optional</span></>, { optional: true })}</div>}</>,

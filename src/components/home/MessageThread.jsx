@@ -18,7 +18,7 @@ const STEPS = [
     hides: 't1',
     text: "Cold and grey today, so we're layering: jeans, the black cami, cardigan over. How's this? 💜",
   },
-  { at: 3200, from: 'oro', image: lookDay, alt: 'the look oro sent — grey jeans, black cami, cream cardigan' },
+  { at: 3200, from: 'oro', image: lookDay, alt: 'the look oro sent - grey jeans, black cami, cream cardigan' },
   { at: 4300, from: 'user', text: 'Obsessed 😍 Can we swap the jeans for a skirt though?' },
   { at: 5300, from: 'oro', typing: 't2' },
   {

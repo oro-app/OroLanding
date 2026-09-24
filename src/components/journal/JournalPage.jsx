@@ -62,7 +62,7 @@ export default function JournalPage() {
           </div>
           <div className="ftc-hero-right">
             <Text muted className="ftc-sub">
-              For the fashion lovers, the outfit planners, the people with opinions about fabric. Twice a week — and a rack of older notes you can flip through any time.
+              For the fashion lovers, the outfit planners, the people with opinions about fabric. Twice a week - and a rack of older notes you can flip through any time.
             </Text>
           </div>
         </div>

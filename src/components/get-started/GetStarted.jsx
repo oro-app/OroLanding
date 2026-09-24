@@ -76,7 +76,7 @@ const PROBLEMS = {
   invite: { title: 'An invitation comes first.', body: 'This phone number needs an approved beta invitation. Already invited? Use the number on your invitation, or email us for help.' },
   conflict: { title: 'Let’s check your account.', body: 'We couldn’t link this invitation to your account. Try your approved phone number again, or email us so we can help.' },
   closed: { title: 'Beta setup isn’t open yet.', body: 'Please come back when setup opens. If you’ve already received an invitation, email us for help.' },
-  unavailable: { title: 'Setup is temporarily unavailable.', body: 'We couldn’t check your beta access. Your answers are still here—please try again shortly.' },
+  unavailable: { title: 'Setup is temporarily unavailable.', body: 'We couldn’t check your beta access. Your answers are still here - please try again shortly.' },
   expired: { title: 'Let’s get a fresh code.', body: 'Your setup session has expired. Your answers are still here; request a new verification code to continue.' },
   save: { title: 'We couldn’t finish your setup.', body: 'Your setup hasn’t been confirmed. Your answers are still here; request a new verification code and try again.' },
   connection: { title: 'We lost the connection.', body: 'We couldn’t confirm your setup. Check your connection, then request a new code to continue. Your answers are still here.' },
@@ -336,7 +336,7 @@ export default function GetStarted() {
 
           {view === 'name' && (
             <Question
-              label="First — what should I call you?"
+              label="First - what should I call you?"
               hint="Just your first name is perfect."
               canContinue={canContinue}
               onContinue={advance}
@@ -534,7 +534,7 @@ export default function GetStarted() {
                 Oro is <span className="gs-em">16+</span> for now.
               </Heading>
               <p className="gs-terminal-sub">
-                Come back in a bit — we'll be here, and we'll have a fit waiting.
+                Come back in a bit - we'll be here, and we'll have a fit waiting.
               </p>
               <button type="button" className="gs-textlink" onClick={restart}>
                 Start over
@@ -549,7 +549,7 @@ export default function GetStarted() {
                 Oro isn't available in <span className="gs-em">Quebec</span> yet.
               </Heading>
               <p className="gs-terminal-sub">
-                We're working on it — check back soon.
+                We're working on it - check back soon.
               </p>
               <button type="button" className="gs-textlink" onClick={restart}>
                 Start over
@@ -623,7 +623,7 @@ function ConsentNote() {
         confirm that you are not a resident of Quebec.
       </p>
       <p className="gs-consent-line">
-        You're also opting in to recurring automated texts from Oro at this number — it's how Oro
+        You're also opting in to recurring automated texts from Oro at this number - it's how Oro
         styles you. Msg &amp; data rates may apply, frequency varies. Reply STOP to opt out, HELP for
         help.
       </p>
