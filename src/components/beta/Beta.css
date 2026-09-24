@@ -90,9 +90,9 @@
 .beta-follow-up { padding-left: var(--oro-space-4); border-left: 2px solid var(--oro-color-selected-border); }
 .beta-consent { display: grid; gap: var(--oro-space-4); }
 .beta-consent > .oro-text { text-align: center; }
-.beta-consent-options { display: grid; gap: var(--oro-space-1); margin: 0; }
-.beta-consent-options label { display: flex; align-items: flex-start; gap: var(--oro-space-2); padding-block: 2px; font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); color: var(--oro-color-muted); cursor: pointer; min-height: 28px; }
-.beta-consent input { width: 14px; height: 14px; flex-basis: 14px; margin-top: 4px; }
+.beta-consent-options { display: grid; gap: 2px; margin: 0; }
+.beta-consent-options label { display: flex; align-items: flex-start; gap: var(--oro-space-2); padding-block: 0; font-size: var(--oro-type-support-size); line-height: 1.4; color: var(--oro-color-muted); cursor: pointer; min-height: 24px; }
+.beta-consent input { width: 14px; height: 14px; flex-basis: 14px; margin-top: 2px; }
 .beta-consent input:focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
 .beta-submit { width: 100%; }
 .beta-receipt { min-height: 72vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--oro-space-6); max-width: 720px; margin-inline: auto; padding-block: var(--oro-space-20); text-align: center; }
