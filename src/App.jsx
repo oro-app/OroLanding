@@ -50,10 +50,11 @@ function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
   const isHome = route.type === 'home'
   const isBeta = route.type === 'beta'
-  const isHalo = isHome || isBeta || route.type === 'journal' || route.type === 'contact'
+  const isPrivateForm = isBeta || route.type === 'get-started'
+  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact'
 
   useEffect(() => {
-    if (isBeta) return
+    if (isPrivateForm) return
     if (hasAnalyticsConsent()) {
       initAnalytics()
       trackPageView({
@@ -61,10 +62,10 @@ function App({ initialRoute }) {
         ...(route.slug ? { newsletter_slug: route.slug } : {}),
       })
     }
-  }, [route.slug, route.type, isBeta])
+  }, [route.slug, route.type, isPrivateForm])
 
   useEffect(() => {
-    if (isBeta) return
+    if (isPrivateForm) return
     const handleLinkClick = (event) => {
       const link = event.target.closest?.('a[href]')
       if (!link) return
@@ -115,7 +116,7 @@ function App({ initialRoute }) {
       window.removeEventListener('popstate', handleLocationChange)
       window.removeEventListener('hashchange', handleLocationChange)
     }
-  }, [isBeta])
+  }, [isPrivateForm])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -174,7 +175,7 @@ function App({ initialRoute }) {
           )}
         </main>
         {isHalo && <HomeFooter />}
-        {!isBeta && <CookieConsent halo={isHalo} />}
+        {!isPrivateForm && <CookieConsent halo={isHalo} />}
       </div>
     </ThemeProvider>
   )

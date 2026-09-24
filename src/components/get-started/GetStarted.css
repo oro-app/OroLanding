@@ -1,9 +1,13 @@
-/* /get-started — static text-first signup flow. One question per screen.
-   Theme-aware via --color-* tokens; editorial (Fraunces + lowercase),
-   hairline rules, full-width CTA. No hardcoded hex — matches /try-oro. */
-
 .gs {
-  background: var(--color-bg);
+  --color-bg: var(--oro-color-canvas);
+  --color-fg: var(--oro-color-ink);
+  --color-fg-faint: var(--oro-color-muted);
+  --color-fg-light: var(--oro-color-muted);
+  --color-fg-line: var(--oro-color-border);
+  --color-accent: var(--oro-color-accent);
+  --font-sans: var(--oro-font-family-body);
+  --font-serif: var(--oro-font-family-body);
+  background: radial-gradient(ellipse at 85% 15%, var(--oro-color-soft), transparent 60%), var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-sans);
   min-height: calc(100vh - var(--site-header-height));
@@ -90,7 +94,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gs-screen { animation: none; }
+  .gs-screen[data-dir] { animation: none; }
   .gs-progress-fill { transition: none; }
 }
 
@@ -319,8 +323,18 @@
   .gs-date-parts { font-size: 24px; }
 }
 
-/* layout leftover for the @oro/web Cta (recipe lives in @oro/web) */
-.gs-cta { margin-top: 48px; }
+.gs-cta { margin-top: 32px; width: 100%; }
+.gs-cta + .gs-cta { margin-top: 12px; }
+.gs h1 { font-weight: var(--oro-font-weight-heading); }
+.halo-site .gs h1[tabindex='-1']:focus { outline: none; }
+.gs-terminal .gs-textlink { display: inline-block; }
+.gs-country-options { flex-wrap: wrap; }
+.gs-change-phone { display: block; margin-top: 16px; color: var(--oro-color-accent); text-decoration: underline; }
+.gs button:focus-visible, .gs a:focus-visible, .gs-date-parts:focus-within {
+  outline: 2px solid var(--oro-color-accent);
+  outline-offset: 4px;
+}
+
 
 /* ── select ───────────────────────────────────────────────────────────── */
 /* An anchored listbox, not a native <select>: macOS paints a <select>'s popup
