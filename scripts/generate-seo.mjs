@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url'
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_IMAGE,
+  DEFAULT_IMAGE_META,
   PUBLIC_ROUTE_TYPES,
   ROUTE_SEO,
   SITE_NAME,
@@ -123,6 +124,7 @@ function removeExistingSeoTags(html) {
 function seoHeadTags(seo) {
   const canonical = absoluteUrl(seo.path)
   const image = absoluteUrl(seo.image || DEFAULT_IMAGE)
+  const isDefaultImage = image === absoluteUrl(DEFAULT_IMAGE)
 
   return [
     `<title>${escapeHtml(seo.title)}</title>`,
@@ -135,10 +137,17 @@ function seoHeadTags(seo) {
     `<meta property="og:description" content="${escapeAttr(seo.description)}">`,
     `<meta property="og:url" content="${escapeAttr(canonical)}">`,
     `<meta property="og:image" content="${escapeAttr(image)}">`,
+    ...(isDefaultImage ? [
+      `<meta property="og:image:type" content="${DEFAULT_IMAGE_META.type}">`,
+      `<meta property="og:image:width" content="${DEFAULT_IMAGE_META.width}">`,
+      `<meta property="og:image:height" content="${DEFAULT_IMAGE_META.height}">`,
+      `<meta property="og:image:alt" content="${escapeAttr(DEFAULT_IMAGE_META.alt)}">`,
+    ] : []),
     '<meta name="twitter:card" content="summary_large_image">',
     `<meta name="twitter:title" content="${escapeAttr(seo.title)}">`,
     `<meta name="twitter:description" content="${escapeAttr(seo.description)}">`,
     `<meta name="twitter:image" content="${escapeAttr(image)}">`,
+    ...(isDefaultImage ? [`<meta name="twitter:image:alt" content="${escapeAttr(DEFAULT_IMAGE_META.alt)}">`] : []),
     `<script type="application/ld+json" data-seo-jsonld="true">${safeJson(seo.jsonLd)}</script>`,
   ].join('\n    ')
 }

@@ -2,10 +2,16 @@ import { PRODUCT_FAQS } from './faqs.js'
 
 export const SITE_URL = 'https://www.askoro.now'
 export const SITE_NAME = 'Oro'
-export const SITE_TITLE = 'Oro - AI stylist for the clothes you already own'
+export const SITE_TITLE = 'Oro — Your AI stylist, one text away'
 export const DEFAULT_DESCRIPTION =
-  'Oro is an AI stylist that builds outfits from the clothes you already own, tuned to your closet, taste, plans, weather, and body.'
-export const DEFAULT_IMAGE = '/thumbnail.webp'
+  'Nothing to wear? Ask Oro and discover the gold in your wardrobe.'
+export const DEFAULT_IMAGE = '/og/oro-conversation-v1.png'
+export const DEFAULT_IMAGE_META = {
+  type: 'image/png',
+  width: 1731,
+  height: 909,
+  alt: 'Two Oro chat bubbles: “does this outfit work?” and “let’s make it yours.”',
+}
 export const LOGO_IMAGE = '/static/oro-logo.png'
 
 const ORGANIZATION_ID = `${SITE_URL}/#organization`
@@ -21,8 +27,8 @@ export const ROUTE_SEO = {
   },
   home: {
     path: '/',
-    title: 'Oro - The AI stylist you can text',
-    description: 'Ask Oro what to wear, what to buy, or how to style what you have. Your personal AI stylist, one text away.',
+    title: SITE_TITLE,
+    description: DEFAULT_DESCRIPTION,
     h1: 'The #1 AI stylist you can text',
     summary:
       'Oro helps you find your look, whatever your plans. Ask Oro, and head out feeling good about what you’re wearing.',
