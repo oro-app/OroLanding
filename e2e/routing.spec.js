@@ -22,7 +22,7 @@ for (const route of SPA_ROUTES) {
 test('unknown path falls back to home', async ({ page }) => {
   await page.goto('/definitely-not-a-real-page')
   // App.jsx getRouteFromPath falls back to the home view.
-  await expect(page.locator('.jr-subscribe')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('The #1 AI stylist you can text')
 })
 
 test.describe('vercel.json rewrites and redirects', () => {

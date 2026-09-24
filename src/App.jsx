@@ -1,18 +1,10 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
-import Hero from './components/home/Hero'
-import WhyOro from './components/home/WhyOro'
-import TheFilm from './components/home/TheFilm'
-import FitsByOro from './components/home/FitsByOro'
-import Testimonials from './components/home/Testimonials'
-import TheJournal from './components/home/TheJournal'
-import OroInsiders from './components/home/OroInsiders'
-import FinalCTA from './components/home/FinalCTA'
+import { lazy, Suspense, useEffect } from 'react'
+import Home from './components/home/Home'
+import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
 import SiteHeader from './components/layout/SiteHeader'
-import SiteFooter from './components/layout/SiteFooter'
 import CookieConsent from './components/overlays/CookieConsent'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics, trackPageNavigation, trackPageView, trackSocialLinkClick } from './lib/analytics'
-import { DISCORD_URL } from './lib/links'
 
 // Code-split the article + archive + product-subpage routes.
 const NewsletterPage = lazy(() => import('./components/newsletter/NewsletterPage'))
@@ -23,7 +15,6 @@ const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
 const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
-const WaitlistModal = lazy(() => import('./components/overlays/WaitlistModal'))
 
 export function getRouteFromPath(pathname = '/') {
   const path = pathname.replace(/\/+$/, '') || '/'
@@ -55,24 +46,7 @@ function getBrowserRoute() {
 
 function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
-  const [waitlistOpen, setWaitlistOpen] = useState(false)
-
-  // Every "try oro" CTA now funnels to /try-oro - the page
-  // pitches the perks and offers both stores. OroInsiders "join our
-  // community" opens the Discord invite directly. WaitlistModal stays
-  // mounted for the periodic newsletter-page signup popup and the
-  // TheJournal mailing-list CTA, the two remaining email-collection
-  // surfaces on the home flow.
-  const openTryOro = () => {
-    trackPageNavigation({
-      to_path: '/try-oro',
-      navigation_type: 'programmatic',
-    })
-    window.location.assign('/try-oro')
-  }
-  const openDiscord = () => {
-    window.open(DISCORD_URL, '_blank', 'noopener,noreferrer')
-  }
+  const isHome = route.type === 'home'
 
   useEffect(() => {
     if (hasAnalyticsConsent()) {
@@ -149,9 +123,10 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--color-bg)' }}>
-        <SiteHeader />
-        <main id="main">
+      <div className={isHome ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'} style={isHome ? undefined : { background: 'var(--color-bg)' }}>
+        {isHome && <a className="halo-skip-link" href="#main">Skip to content</a>}
+        {isHome ? <HomeHeader /> : <SiteHeader />}
+        <main id="main" tabIndex={-1}>
           {route.type === 'newsletter' ? (
             <Suspense fallback={null}>
               <NewsletterPage slug={route.slug} />
@@ -185,25 +160,11 @@ function App({ initialRoute }) {
               <GetStartedPage />
             </Suspense>
           ) : (
-            <>
-              <Hero onTryOro={openTryOro} />
-              <WhyOro />
-              <TheFilm />
-              <FitsByOro />
-              <Testimonials />
-              <TheJournal onSubscribe={() => setWaitlistOpen(true)} />
-              <OroInsiders onApply={openDiscord} />
-              <FinalCTA onTryOro={openTryOro} />
-              <SiteFooter />
-            </>
+            <Home />
           )}
         </main>
-        <CookieConsent />
-        {waitlistOpen && (
-          <Suspense fallback={null}>
-            <WaitlistModal onClose={() => setWaitlistOpen(false)} />
-          </Suspense>
-        )}
+        {isHome && <HomeFooter />}
+        <CookieConsent halo={isHome} />
       </div>
     </ThemeProvider>
   )

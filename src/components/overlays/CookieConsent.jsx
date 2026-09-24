@@ -1,8 +1,9 @@
 import { Btn } from '@oro/web'
+import { Button } from 'oro-kit'
 import { useEffect, useState } from 'react'
 import { setAnalyticsConsent } from '../../lib/analytics.js'
 
-export default function CookieConsent() {
+export default function CookieConsent({ halo = false }) {
   // Render first-time consent in the prerendered HTML. Waiting for hydration
   // made the late-arriving banner the homepage LCP element on mobile.
   const [visible, setVisible] = useState(true)
@@ -24,6 +25,8 @@ export default function CookieConsent() {
     setVisible(false)
   }
 
+  const ConsentButton = halo ? Button : Btn
+
   return (
     <div className="cookie-consent-wrap" role="dialog" aria-live="polite" aria-label="Cookie consent">
       <div className="cookie-consent">
@@ -31,12 +34,12 @@ export default function CookieConsent() {
           We use analytics <a href="/cookies" rel="noopener noreferrer">cookies</a> to understand how people find and use our site.
         </p>
         <div className="cookie-consent-actions">
-          <Btn variant="accent" className="cookie-consent-accept" onClick={() => handleChoice(true)}>
-            accept
-          </Btn>
-          <Btn variant="ghost" className="cookie-consent-decline" onClick={() => handleChoice(false)}>
-            no thanks
-          </Btn>
+          <ConsentButton variant={halo ? 'primary' : 'accent'} className="cookie-consent-accept" onClick={() => handleChoice(true)}>
+            {halo ? 'Accept' : 'accept'}
+          </ConsentButton>
+          <ConsentButton variant={halo ? 'secondary' : 'ghost'} className="cookie-consent-decline" onClick={() => handleChoice(false)}>
+            {halo ? 'No thanks' : 'no thanks'}
+          </ConsentButton>
         </div>
       </div>
     </div>
