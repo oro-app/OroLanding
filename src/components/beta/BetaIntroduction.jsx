@@ -67,9 +67,6 @@ export default function BetaIntroduction({ onStart, previewForm }) {
     <Chapter id="over-imessage" title={<>Today, we’re testing the earliest version of that experience with you.</>}>
       <Text muted><TypedText>There’s still a lot to build and improve, and this beta will help us understand what deserves our attention next.</TypedText></Text>
     </Chapter>,
-    <Chapter id="the-beginning" title={<>Oro has been accepted into an accelerator, so <em>things are moving quickly.</em></>}>
-      <Text muted><TypedText>You’re getting involved at the start of something we’re really excited to grow.</TypedText></Text>
-    </Chapter>,
     <Chapter id="the-week" title={<>The beta runs <em>September 25–30.</em></>}>
       <div className="beta-expectations">
         <Text muted><TypedText duration={700}>What we need from you:</TypedText></Text>
