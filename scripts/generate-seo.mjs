@@ -237,6 +237,9 @@ async function writeLlms(newsletters) {
 
 async function main() {
   const template = await fs.readFile(path.join(distDir, 'index.html'), 'utf8')
+  const manifest = JSON.parse(await fs.readFile(path.join(distDir, '.vite', 'manifest.json'), 'utf8'))
+  const legalStylesheet = manifest['src/legal.css']?.file
+  if (!legalStylesheet) throw new Error('Missing legal page stylesheet in the client build manifest')
   const newsletterEntries = await getNewsletterEntries()
   const newsletters = newsletterEntries.filter((newsletter) => newsletter.readable)
   const unreadableNewsletters = newsletterEntries.filter((newsletter) => !newsletter.readable)
@@ -253,7 +256,9 @@ async function main() {
   for (const type of STATIC_PAGE_TYPES) {
     const seo = getSeoForRoute({ type })
     const staticPath = path.join(distDir, `${type}.html`)
-    const html = await fs.readFile(staticPath, 'utf8')
+    // Public HTML bypasses Vite's asset rewriting, so use the emitted CSS URL.
+    const html = (await fs.readFile(staticPath, 'utf8'))
+      .replace('href="/src/legal.css"', `href="/${legalStylesheet}"`)
     await fs.writeFile(staticPath, withSeoHeadOnly(html, seo))
   }
 
