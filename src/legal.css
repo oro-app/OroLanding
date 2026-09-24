@@ -1,5 +1,6 @@
 @import 'oro-kit/tokens.css';
 @import 'oro-kit/fonts.css';
+@import './serif-headings.css';
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 

@@ -1,0 +1,11 @@
+@import '@fontsource/fraunces/latin-400.css';
+@import '@fontsource/fraunces/latin-400-italic.css';
+
+:is(.oro-editorial, .legal-page, .account-deletion-page) :is(h1, h2, h3, h4, h5, h6, .oro-heading):not(.mt-device *, .op-bezel *) {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+}
+
+.oro-editorial .oro-heading em {
+  font-style: italic;
+}
