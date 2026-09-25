@@ -21,7 +21,7 @@ function FeedbackPrompt({ text }) {
   ))}</span>
 }
 
-export default function FeedbackForm({ state, onChange, onSubmit, demo = false }) {
+export default function FeedbackForm({ state, onChange, onSubmit }) {
   const { form, draft = {}, step } = state
   const questions = pruneFeedbackDraft(form.questions, draft).questions
   const reviewing = step === 'review'
@@ -128,7 +128,7 @@ export default function FeedbackForm({ state, onChange, onSubmit, demo = false }
         </>}
         <div className="feedback-actions">
           {(reviewing || index > 0) && <Button type="button" variant="secondary" onClick={() => go(questions[reviewing ? questions.length - 1 : index - 1].id)}>Back</Button>}
-          <Button type="submit">{reviewing ? demo ? 'Finish demo' : 'Send feedback' : index === questions.length - 1 ? 'Review answers' : 'Continue'}</Button>
+          <Button type="submit">{reviewing ? 'Send feedback' : index === questions.length - 1 ? 'Review answers' : 'Continue'}</Button>
         </div>
       </div>
     </form>

@@ -27,9 +27,6 @@
 .feedback-review dt { font-weight: 600; }
 .feedback-review dd { margin: var(--oro-space-2) 0 0; }
 .feedback-review p { white-space: pre-wrap; overflow-wrap: anywhere; margin-block: var(--oro-space-2); }
-.feedback-demo-nav { display: flex; flex-wrap: wrap; gap: var(--oro-space-2); }
-.feedback-demo-nav a { min-height: 44px; display: inline-flex; align-items: center; padding: var(--oro-space-2) var(--oro-space-4); border: 1px solid var(--oro-color-border); border-radius: var(--oro-radius-pill); background: color-mix(in srgb, var(--oro-color-surface) 65%, transparent); font-size: var(--oro-type-label-size); }
-.feedback-demo-nav [aria-current] { color: var(--oro-color-on-accent); background: var(--oro-color-accent); border-color: var(--oro-color-accent); }
 
 @media (prefers-reduced-motion: no-preference) {
   .feedback-step { animation: feedbackStepIn 360ms cubic-bezier(.2, .7, .2, 1); }

@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures'
 import { readFileSync } from 'node:fs'
 
-const definitions = JSON.parse(readFileSync(new URL('../src/components/feedback/demoForms.json', import.meta.url)))
+const definitions = JSON.parse(readFileSync(new URL('../test/fixtures/feedback-forms.json', import.meta.url)))
 
 const token = 'synthetic-form-invitation'
 const id = '11111111-1111-4111-8111-111111111111'
@@ -29,15 +29,21 @@ async function advanceTo(page, kind, target) {
 }
 
 for (const kind of ['daily', 'task', 'task-no-outfit', 'final']) {
-  test(`demo completes the ${kind} survey without API calls or private persistence`, async ({ page }) => {
-    const calls = [], errors = []
-    page.on('request', (request) => { if (/agent2\/beta-feedback|google-analytics|googletagmanager|posthog/.test(request.url())) calls.push(request.url()) })
+  test(`invitation completes the ${kind} survey and clears private state after confirmation`, async ({ page }) => {
+    const calls = [], errors = [], writes = []
+    page.on('request', (request) => { if (/google-analytics|googletagmanager|posthog/.test(request.url())) calls.push(request.url()) })
     page.on('pageerror', (error) => errors.push(error.message))
-    await page.goto(`/feedback?demo=${kind}`)
-    await expect(page.getByRole('heading', { name: 'Feedback demo', exact: true })).toBeVisible()
+    const survey = kind.startsWith('task') ? 'task' : kind
+    const questions = definitions[survey].filter((question) => kind !== 'task-no-outfit' || question.id !== 'R9')
+    await page.route(endpoint, (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: form(survey, questions) })
+      writes.push(route.request().postDataJSON())
+      return route.fulfill({ json: { submission_id: route.request().url().split('/').at(-1), submitted_at: '2026-09-25T00:00:00Z' } })
+    })
+    await page.goto(`/feedback#token=${token}`)
+    await expect(page.getByRole('heading', { name: 'Beta feedback', exact: true })).toBeVisible()
     await expect(page.locator('input:checked')).toHaveCount(0)
     await expect(page.locator('#feedback-question-title')).not.toBeFocused()
-    const survey = kind.startsWith('task') ? 'task' : kind
     const visited = []
     for (let steps = 0; steps < 25 && await button(page).isVisible(); steps++) {
       const heading = await page.locator('#feedback-question-title').innerText()
@@ -52,8 +58,10 @@ for (const kind of ['daily', 'task', 'task-no-outfit', 'final']) {
     await expect(page.getByRole('heading', { name: 'Ready to send your feedback?' })).toBeVisible()
     if (kind === 'task-no-outfit') expect(visited).not.toContain(prompt('task', 'R9'))
     if (kind === 'task') expect(visited).toContain(prompt('task', 'R9'))
-    await page.getByRole('button', { name: 'Finish demo' }).click()
-    await expect(page.getByRole('heading', { name: 'Demo complete' })).toBeFocused()
+    await page.getByRole('button', { name: 'Send feedback', exact: true }).click()
+    await expect(page.getByRole('status')).toContainText('Your feedback is saved')
+    expect(writes).toHaveLength(1)
+    expect(writes[0].survey_version).toBe(1)
     expect(await stored(page)).toBeNull()
     expect(calls).toEqual([])
     expect(errors).toEqual([])
@@ -62,7 +70,8 @@ for (const kind of ['daily', 'task', 'task-no-outfit', 'final']) {
 
 test('question transitions preserve keyboard typing and honor reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
-  await page.goto('/feedback?demo=daily')
+  await page.route(endpoint, (route) => route.fulfill({ json: form() }))
+  await page.goto(`/feedback#token=${token}`)
   await advanceTo(page, 'daily', 'D13')
   await expect(page.getByRole('heading', { name: prompt('daily', 'D13'), exact: true })).toBeFocused()
   await expect(page.locator('#feedback-question-title')).toHaveCSS('outline-style', 'none')
@@ -230,7 +239,8 @@ test('accepted submission shows pending until receipt; a fresh tab only polls', 
 })
 
 test('mobile layouts and keyboard navigation stay usable with long Other text', async ({ page }) => {
-  await page.goto('/feedback?demo=daily')
+  await page.route(endpoint, (route) => route.fulfill({ json: form() }))
+  await page.goto(`/feedback#token=${token}`)
   await page.getByRole('radio', { name: 'No', exact: true }).focus()
   await page.keyboard.press('Space')
   await page.getByRole('button', { name: 'Continue' }).click()
@@ -285,16 +295,10 @@ test('backend field rejection preserves input, focuses its error, and keeps answ
   expect(errors).toEqual([])
 })
 
-test('demo never reads or overwrites an existing invitation draft', async ({ page }) => {
-  const saved = { token, draft: { F1: { text: 'real private draft' } }, attempt: { id: 'private-attempt' } }
-  await page.addInitScript((value) => sessionStorage.setItem('oro_feedback_session', JSON.stringify(value)), saved)
-  const calls = []
-  await page.route(endpoint, (route) => { calls.push(route.request().url()); return route.abort() })
+test('legacy demo links no longer bypass the invitation flow', async ({ page }) => {
   await page.goto('/feedback?demo=daily')
-  await page.getByRole('radio', { name: 'Yes, with changes', exact: true }).check()
-  await button(page).click()
-  await page.getByRole('textbox').fill('demo only')
-  expect(await stored(page)).toEqual(saved)
-  expect(calls).toEqual([])
-  await expect(page.locator('body')).not.toContainText('real private draft')
+  await expect(page.getByRole('status')).toContainText('Open your personal feedback link')
+  await expect(page.getByRole('link', { name: 'Back to Oro', exact: true })).toHaveAttribute('href', '/')
+  await expect(page.getByRole('textbox')).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: 'Feedback demo', exact: true })).toHaveCount(0)
 })

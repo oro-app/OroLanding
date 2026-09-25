@@ -4,12 +4,12 @@ import { readFileSync } from 'node:fs'
 import { prepareFeedbackAnswers } from '../src/lib/feedbackAnswers.js'
 import { validFeedbackQuestions } from '../src/lib/feedbackQuestions.js'
 
-const forms = JSON.parse(readFileSync(new URL('../src/components/feedback/demoForms.json', import.meta.url)))
+const forms = JSON.parse(readFileSync(new URL('./fixtures/feedback-forms.json', import.meta.url)))
 const base = { id: 'Q', type: 'single', prompt: 'Question', choices: [{ id: 'yes', label: 'Yes', score: null }, { id: 'other', label: 'Other', score: null }],
   required: false, show_if: [], allow_comment: true, helper: null }
 const prepare = (answer, changes = {}) => prepareFeedbackAnswers([{ ...base, ...changes }], { Q: answer })
 
-test('approved demo definitions remain valid and preserve explicit rating scores', () => {
+test('approved questionnaire fixtures remain valid and preserve explicit rating scores', () => {
   for (const questions of Object.values(forms)) assert.equal(validFeedbackQuestions(questions), true)
   assert.deepEqual(forms.daily.find((question) => question.id === 'D7').choices.slice(0, 5).map((choice) => choice.score), [5, 4, 3, 2, 1])
   assert.equal(forms.daily.some((question) => ['D1', 'D2', 'D14'].includes(question.id)), false)

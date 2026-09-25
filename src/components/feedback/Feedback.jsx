@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Heading, Text } from 'oro-kit'
 import { captureFeedbackSession, readFeedbackSession } from '../../lib/feedbackSession.js'
 import { createFeedbackFlow } from '../../lib/feedbackFlow.js'
@@ -21,16 +21,12 @@ const messages = {
   retry: 'We haven’t confirmed your feedback yet. Retry to send the same response safely.',
   conflict: 'We couldn’t reconcile this response. Reopen your personal invitation or email us for help. Your answers remain locked.',
 }
-const FeedbackDemo = lazy(() => import('./FeedbackDemo.jsx'))
 
 export default function Feedback() {
   const [state, setState] = useState({ status: 'opening' })
-  const [demo, setDemo] = useState(null)
   const flow = useRef(null)
   const statusMessage = useRef(null)
   useEffect(() => {
-    const demoKind = new URLSearchParams(location.search).get('demo')
-    if (demoKind !== null) { setDemo(demoKind || 'daily'); return }
     let active = true
     const pause = () => flow.current?.pause()
     const resume = () => { if (active) document.hidden ? pause() : flow.current?.resume() }
@@ -67,7 +63,6 @@ export default function Feedback() {
   useEffect(() => {
     if (['submitted', 'retry', 'conflict'].includes(state.status)) statusMessage.current?.focus()
   }, [state.status])
-  if (demo !== null) return <Suspense fallback={<p role="status">Opening the demo…</p>}><FeedbackDemo kind={demo} /></Suspense>
   const context = state.form?.context
   const label = context && ({ task: context.task_label, daily: context.local_date, final: context.beta_label })[state.form.survey_kind]
   const status = state.status === 'missing_token' ? 'missing' : state.status

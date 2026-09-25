@@ -40,7 +40,10 @@ async function feedbackRequest(token, path, { signal, apiBase = API_BASE, body }
   let url
   try {
     url = new URL(`${apiBase.replace(/\/+$/, '')}/agent2/beta-feedback/${path}`)
-    if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) return failure()
+    const localDevelopment = import.meta.env?.DEV && url.protocol === 'http:'
+      && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)
+      && ['localhost', '127.0.0.1', '[::1]'].includes(globalThis.location?.hostname)
+    if ((!localDevelopment && url.protocol !== 'https:') || url.username || url.password || url.search || url.hash) return failure()
   } catch {
     return failure()
   }
