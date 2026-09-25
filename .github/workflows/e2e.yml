@@ -25,6 +25,7 @@ jobs:
       - run: npm ci
 
       - run: npm run test:beta
+      - run: npm run test:feedback
 
       - run: npx playwright install --with-deps chromium
 
