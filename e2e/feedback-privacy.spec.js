@@ -1,8 +1,14 @@
 import { test, expect, deploymentOnly } from './fixtures'
 
 const token = 'synthetic-feedback-token'
-const session = (page) => page.evaluate(() => JSON.parse(sessionStorage.getItem('oro_feedback_session')))
-test.beforeEach(async ({ page }) => {
+const session = (page) => page.evaluate(() => {
+  const value = JSON.parse(sessionStorage.getItem('oro_feedback_session'))
+  if (value) delete value.nextCheckAt
+  return value
+})
+test.beforeEach(async ({ page, context }) => {
+  await context.route('**/agent2/beta-feedback/**', (route) => route.fulfill({ status: 404, json: { detail: { code: 'feedback_disabled' } } }))
+  await page.clock.install()
   await page.addInitScript(() => {
     localStorage.setItem('oro_cookie_consent', 'accepted')
     window.dataLayer = []
@@ -14,7 +20,11 @@ for (const path of ['/feedback', '/feedback/', '/feedback/index.html']) {
   test(`private entry and refresh at ${path}`, async ({ page }) => {
     const requests = [], logs = []
     page.on('request', (request) => requests.push(request.url()))
-    page.on('console', (message) => logs.push(message.text()))
+    page.on('console', (message) => {
+      if (message.location().url.endsWith('/agent2/beta-feedback/form')
+        && message.text() === 'Failed to load resource: the server responded with a status of 404 (Not Found)') return
+      logs.push(message.text())
+    })
     page.on('pageerror', (error) => logs.push(error.message))
     await page.goto(`${path}#token=${token}`)
     await expect(page.getByRole('status')).toContainText('Feedback is not available yet')
@@ -22,6 +32,8 @@ for (const path of ['/feedback', '/feedback/', '/feedback/index.html']) {
     expect(await session(page)).toEqual({ token })
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
     await page.reload()
+    await expect(page.getByRole('status')).toContainText('Opening your invitation')
+    await page.clock.fastForward(15000)
     await expect(page.getByRole('status')).toContainText('Feedback is not available yet')
     await page.keyboard.press('Tab')
     await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused()
