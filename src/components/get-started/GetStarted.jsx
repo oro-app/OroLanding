@@ -510,7 +510,9 @@ export default function GetStarted() {
             <div className="gs-terminal">
               <p className="gs-eyebrow">Welcome, Oronaut.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">You’re all set.</Heading>
-              <p className="gs-terminal-sub">Your beta setup is complete.</p>
+              <p className="gs-terminal-sub">Your beta setup is complete. Send Oro your first text to get started.</p>
+              <a className="oro-button oro-button--primary gs-cta" href="sms:+18556762419">Start texting Oro</a>
+              <p className="gs-terminal-sub">On your computer? Text +1 (855) 676-2419 from your phone.</p>
               <a className="gs-textlink" href="mailto:sunny@buildingoro.ca">Questions? Email us</a>
             </div>
           )}
