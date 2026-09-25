@@ -3,7 +3,11 @@
   --oro-background-gold: var(--oro-color-warm-glow);
   --oro-background-lavender: var(--oro-color-glow);
   --oro-background-light: var(--oro-color-surface);
+  --oro-background-muted-ink: color-mix(in srgb, var(--oro-color-muted) 80%, var(--oro-color-ink));
 }
+
+.halo-site, .legal-page { --oro-color-muted: var(--oro-background-muted-ink); }
+:root[data-theme='light'] .oro-editorial:not(.halo-site) { --color-fg-faint: var(--oro-background-muted-ink); }
 
 .oro-editorial, .legal-page {
   position: relative;
