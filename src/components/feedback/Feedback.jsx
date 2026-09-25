@@ -81,7 +81,9 @@ export default function Feedback() {
         : <Text muted role="status" tabIndex={-1} ref={statusMessage}>{messages[status] || messages.unavailable}</Text>}
       {status === 'retry' && <Button onClick={() => flow.current?.retry()}>Retry sending</Button>}
       {['feedback_disabled', 'conflict'].includes(status) && <Button variant="secondary" onClick={() => flow.current?.resume()}>Check again</Button>}
-      <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us</a>
+      <a className="oro-button oro-button--secondary" href={status === 'missing' ? '/' : 'mailto:sunny@buildingoro.ca'}>
+        {status === 'missing' ? 'Back to Oro' : 'Email us'}
+      </a>
     </section>
   )
 }
