@@ -10,6 +10,12 @@ const backendUrl = process.env.VITE_BACKEND_URL || 'https://oro-kmuj.onrender.co
 // Rewrite /terms, /privacy, /cookies to the standalone HTML files in dev
 const legalPagePlugin = {
   name: 'legal-page-rewrites',
+  configurePreviewServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      if (req.url.split('?')[0] === '/feedback') req.url = req.url.replace('/feedback', '/feedback/')
+      next()
+    })
+  },
   configureServer(server) {
     server.middlewares.use((req, _res, next) => {
       const map = {

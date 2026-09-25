@@ -20,7 +20,7 @@ const distDir = path.join(root, 'dist')
 const serverDir = path.join(root, '.seo-server')
 const newsletterDir = path.join(root, 'src', 'content', 'newsletters')
 const STATIC_PAGE_TYPES = ['terms', 'privacy', 'app-terms', 'app-privacy', 'cookies', 'google-play']
-const APP_ROUTE_TYPES = [...PUBLIC_ROUTE_TYPES.filter((type) => !STATIC_PAGE_TYPES.includes(type)), 'beta']
+const APP_ROUTE_TYPES = [...PUBLIC_ROUTE_TYPES.filter((type) => !STATIC_PAGE_TYPES.includes(type)), 'beta', 'feedback']
 
 function escapeHtml(value = '') {
   return String(value)

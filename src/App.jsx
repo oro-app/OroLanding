@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
+import { isFeedbackPath } from './lib/feedbackSession.js'
 import Home from './components/home/Home'
 import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
 import SiteHeader from './components/layout/SiteHeader'
@@ -16,9 +17,11 @@ const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
 const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
 const BetaPage = lazy(() => import('./components/beta/Beta'))
+const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
 
 export function getRouteFromPath(pathname = '/') {
   const path = pathname.replace(/\/+$/, '') || '/'
+  if (isFeedbackPath(path)) return { type: 'feedback' }
   const newsletterMatch = path.match(/^\/newsletter\/([^/]+)$/)
 
   if (newsletterMatch) {
@@ -50,7 +53,8 @@ function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
   const isHome = route.type === 'home'
   const isBeta = route.type === 'beta'
-  const isPrivateForm = isBeta || route.type === 'get-started'
+  const isFeedback = route.type === 'feedback'
+  const isPrivateForm = isBeta || isFeedback || route.type === 'get-started'
   const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'newsletter'
 
   useEffect(() => {
@@ -132,9 +136,11 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && (isHalo ? <HomeHeader /> : <SiteHeader />)}
+        {!isBeta && !isFeedback && (isHalo ? <HomeHeader /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
-          {isBeta ? (
+          {isFeedback ? (
+            <Suspense fallback={null}><FeedbackPage /></Suspense>
+          ) : isBeta ? (
             <Suspense fallback={null}>
               <BetaPage />
             </Suspense>
@@ -174,7 +180,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && <HomeFooter />}
+        {isHalo && !isFeedback && <HomeFooter />}
         {!isPrivateForm && <CookieConsent halo={isHalo} />}
       </div>
     </ThemeProvider>

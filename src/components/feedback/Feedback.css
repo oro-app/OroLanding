@@ -1,0 +1,3 @@
+.feedback-page { width: min(100% - 48px, 640px); min-height: 100svh; margin-inline: auto; padding-block: var(--oro-space-12); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--oro-space-6); }
+.feedback-page .halo-logo-link { min-height: 44px; display: inline-flex; align-items: center; }
+.feedback-page .oro-heading { overflow-wrap: anywhere; }

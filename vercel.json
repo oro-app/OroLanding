@@ -3,6 +3,14 @@
   "outputDirectory": "dist",
   "headers": [
     {
+      "source": "/feedback(/.*)?",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    },
+    {
       "source": "/app/(terms|privacy)",
       "headers": [
         {
@@ -71,6 +79,7 @@
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
   "rewrites": [
+    { "source": "/feedback", "destination": "/feedback/index.html" },
     { "source": "/app/terms", "destination": "/app/terms.html" },
     { "source": "/app/privacy", "destination": "/app/privacy.html" },
     { "source": "/app", "destination": "/api/app" },
