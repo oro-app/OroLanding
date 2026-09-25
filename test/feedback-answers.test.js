@@ -8,7 +8,7 @@ const question = (id, type = 'single', options = ['yes', 'no', 'depends'], extra
   choices: options.map((id) => ({ id, label: id, score: null })), show_if: [], ...extra,
 })
 const daily = [
-  question('D3', 'single', ['exactly', 'with_changes', 'no']),
+  question('D3', 'single', ['as_suggested', 'with_changes', 'no']),
   question('D5', 'text', [], { show_if: [rule('D3', 'with_changes')] }),
   question('D6', 'single', ['planned_for_later', 'other'], { required: true, show_if: [rule('D3', 'no')] }),
   question('D7', 'rating', [], { required: true, choices: [
@@ -29,7 +29,7 @@ const ids = (result) => result.questions.map(({ id }) => id)
 test('daily branches clear inactive answers and do not restore them when changing back', () => {
   const draft = { D3: { choice: 'no' }, D5: { text: '  changed shoes  ' },
     D6: { choice: 'other', other_text: '  reason  ' }, D7: { choice: 'much_easier' }, unknown: { text: 'discard' } }
-  for (const [choice, followup] of [['exactly', []], ['with_changes', ['D5']], ['no', ['D6']]]) {
+  for (const [choice, followup] of [['as_suggested', []], ['with_changes', ['D5']], ['no', ['D6']]]) {
     const result = pruneFeedbackDraft(daily, { ...draft, D3: { choice } })
     assert.deepEqual(ids(result), ['D3', ...followup, 'D7'])
     assert.deepEqual(Object.keys(result.answers), ['D3', ...followup, 'D7'])
@@ -59,7 +59,7 @@ test('missing, unsupported and malformed controllers cannot reveal follow-ups', 
 
 test('all conditions must match a valid single selection, including rating controllers', () => {
   const questions = [...daily, question('followup', 'text', [], { show_if: [rule('D3', 'no'), rule('D7', 'much_harder')] })]
-  for (const [choice, rating, visible] of [['no', 'much_harder', true], ['exactly', 'much_harder', false], ['no', 'much_easier', false]]) {
+  for (const [choice, rating, visible] of [['no', 'much_harder', true], ['as_suggested', 'much_harder', false], ['no', 'much_easier', false]]) {
     assert.equal(ids(pruneFeedbackDraft(questions, { D3: { choice }, D7: { choice: rating } })).includes('followup'), visible)
   }
   const checklist = [question('parent', 'multiple'), question('child', 'text', [], { show_if: [rule('parent', 'yes')] })]

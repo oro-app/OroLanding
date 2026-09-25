@@ -1,0 +1,782 @@
+{
+  "task": [
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": null,
+          "id": "fully",
+          "label": "Yes, completely"
+        },
+        {
+          "score": null,
+          "id": "mostly",
+          "label": "Mostly"
+        },
+        {
+          "score": null,
+          "id": "partly",
+          "label": "Partly"
+        },
+        {
+          "score": null,
+          "id": "a_little",
+          "label": "Only a little"
+        },
+        {
+          "score": null,
+          "id": "not_at_all",
+          "label": "No, not at all"
+        },
+        {
+          "score": null,
+          "id": "exploring",
+          "label": "I was just exploring, without a specific goal"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "R1",
+      "type": "single",
+      "prompt": "Did Oro help you accomplish what you wanted?"
+    },
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": 1,
+          "id": "not_at_all",
+          "label": "Not at all"
+        },
+        {
+          "score": 2,
+          "id": "a_little",
+          "label": "A little"
+        },
+        {
+          "score": 3,
+          "id": "somewhat",
+          "label": "Somewhat"
+        },
+        {
+          "score": 4,
+          "id": "well",
+          "label": "Well"
+        },
+        {
+          "score": 5,
+          "id": "very_well",
+          "label": "Very well"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "R2",
+      "type": "rating",
+      "prompt": "How well did Oro understand what you were asking for?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "R3",
+      "type": "text",
+      "prompt": "What were you hoping Oro would do differently?"
+    },
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": null,
+          "id": "as_suggested",
+          "label": "Yes, exactly as suggested"
+        },
+        {
+          "score": null,
+          "id": "small_changes",
+          "label": "Yes, with a few small changes"
+        },
+        {
+          "score": null,
+          "id": "substantial_changes",
+          "label": "Only with substantial changes"
+        },
+        {
+          "score": null,
+          "id": "maybe",
+          "label": "Maybe"
+        },
+        {
+          "score": null,
+          "id": "different_occasion",
+          "label": "For a different occasion"
+        },
+        {
+          "score": null,
+          "id": "different_weather",
+          "label": "In different weather"
+        },
+        {
+          "score": null,
+          "id": "try_on_first",
+          "label": "I'd need to try it on first"
+        },
+        {
+          "score": null,
+          "id": "no",
+          "label": "No"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": true,
+      "helper": null,
+      "id": "R9",
+      "type": "single",
+      "prompt": "Would you consider wearing this outfit? Why or why not?"
+    },
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": 1,
+          "id": "very_difficult",
+          "label": "Very difficult"
+        },
+        {
+          "score": 2,
+          "id": "difficult",
+          "label": "Difficult"
+        },
+        {
+          "score": 3,
+          "id": "neutral",
+          "label": "Neither easy nor difficult"
+        },
+        {
+          "score": 4,
+          "id": "easy",
+          "label": "Easy"
+        },
+        {
+          "score": 5,
+          "id": "very_easy",
+          "label": "Very easy"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "R12",
+      "type": "rating",
+      "prompt": "How easy or difficult was it to get a useful answer?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "R16",
+      "type": "text",
+      "prompt": "What was the most useful part of this interaction?"
+    }
+  ],
+  "daily": [
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": null,
+          "id": "as_suggested",
+          "label": "Yes, exactly as suggested"
+        },
+        {
+          "score": null,
+          "id": "with_changes",
+          "label": "Yes, with changes"
+        },
+        {
+          "score": null,
+          "id": "no",
+          "label": "No"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "D3",
+      "type": "single",
+      "prompt": "Did you wear an Oro-suggested outfit today, including one suggested on an earlier day?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [
+        {
+          "question_id": "D3",
+          "choice_ids": [
+            "with_changes"
+          ]
+        }
+      ],
+      "allow_comment": false,
+      "helper": null,
+      "id": "D5",
+      "type": "text",
+      "prompt": "If you changed the suggested outfit, what did you change and why?"
+    },
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": null,
+          "id": "personal_style",
+          "label": "It didn't match my personal style"
+        },
+        {
+          "score": null,
+          "id": "combination",
+          "label": "I didn't like the overall combination"
+        },
+        {
+          "score": null,
+          "id": "too_basic",
+          "label": "It felt too basic or uninteresting"
+        },
+        {
+          "score": null,
+          "id": "too_bold",
+          "label": "It felt too bold or outside my comfort zone"
+        },
+        {
+          "score": null,
+          "id": "occasion",
+          "label": "It didn't suit the occasion"
+        },
+        {
+          "score": null,
+          "id": "weather",
+          "label": "It didn't suit the weather"
+        },
+        {
+          "score": null,
+          "id": "impractical",
+          "label": "It wasn't practical for what I was doing"
+        },
+        {
+          "score": null,
+          "id": "confidence",
+          "label": "I didn't feel confident wearing it"
+        },
+        {
+          "score": null,
+          "id": "item_unavailable",
+          "label": "An item was dirty or otherwise unavailable"
+        },
+        {
+          "score": null,
+          "id": "unowned_item",
+          "label": "It included something I don't own"
+        },
+        {
+          "score": null,
+          "id": "unclear",
+          "label": "I couldn't clearly understand or picture the outfit"
+        },
+        {
+          "score": null,
+          "id": "too_late",
+          "label": "The suggestion arrived too late"
+        },
+        {
+          "score": null,
+          "id": "no_suggestion",
+          "label": "I didn't receive an outfit suggestion"
+        },
+        {
+          "score": null,
+          "id": "changed_plans",
+          "label": "My plans changed"
+        },
+        {
+          "score": null,
+          "id": "planned_for_later",
+          "label": "I was planning an outfit for another day"
+        },
+        {
+          "score": null,
+          "id": "technical_problem",
+          "label": "A technical problem stopped me from getting a usable suggestion"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [
+        {
+          "question_id": "D3",
+          "choice_ids": [
+            "no"
+          ]
+        }
+      ],
+      "allow_comment": false,
+      "helper": null,
+      "id": "D6",
+      "type": "single",
+      "prompt": "What was the main reason you didn't wear a suggested outfit?"
+    },
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": 5,
+          "id": "much_easier",
+          "label": "Much easier"
+        },
+        {
+          "score": 4,
+          "id": "a_little_easier",
+          "label": "A little easier"
+        },
+        {
+          "score": 3,
+          "id": "same",
+          "label": "About the same"
+        },
+        {
+          "score": 2,
+          "id": "a_little_harder",
+          "label": "A little harder"
+        },
+        {
+          "score": 1,
+          "id": "much_harder",
+          "label": "Much harder"
+        },
+        {
+          "score": null,
+          "id": "not_applicable",
+          "label": "I didn't choose an outfit today"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "D7",
+      "type": "rating",
+      "prompt": "Compared with your usual routine, did choosing an outfit feel easier, about the same, or harder today?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "D13",
+      "type": "text",
+      "prompt": "What was the most frustrating part of using Oro today, if anything?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "D17",
+      "type": "text",
+      "prompt": "What would have made Oro more useful to you today?"
+    }
+  ],
+  "final": [
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F1",
+      "type": "text",
+      "prompt": "How would you describe Oro to someone who hasn't tried it?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F2",
+      "type": "text",
+      "prompt": "What was the most useful thing Oro did for you during the beta?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F3",
+      "type": "text",
+      "prompt": "What disappointed you most, if anything?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F4",
+      "type": "text",
+      "prompt": "In which situations was Oro most useful?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F5",
+      "type": "text",
+      "prompt": "In which situations did Oro fall short?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F6",
+      "type": "text",
+      "prompt": "How did using Oro change the way you chose outfits, if at all?"
+    },
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": 1,
+          "id": "not_at_all",
+          "label": "Not at all"
+        },
+        {
+          "score": 2,
+          "id": "a_little",
+          "label": "A little"
+        },
+        {
+          "score": 3,
+          "id": "somewhat",
+          "label": "Somewhat"
+        },
+        {
+          "score": 4,
+          "id": "a_lot",
+          "label": "A lot"
+        },
+        {
+          "score": 5,
+          "id": "completely",
+          "label": "Completely"
+        },
+        {
+          "score": null,
+          "id": "not_enough_recommendations",
+          "label": "I haven't received enough recommendations to judge"
+        },
+        {
+          "score": null,
+          "id": "not_worn_yet",
+          "label": "I haven't tried wearing a recommendation yet"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F9",
+      "type": "rating",
+      "prompt": "How much would you trust Oro's next outfit recommendation?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F11",
+      "type": "text",
+      "prompt": "What was the hardest part of getting started?"
+    },
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": null,
+          "id": "fully",
+          "label": "Yes, completely"
+        },
+        {
+          "score": null,
+          "id": "mostly",
+          "label": "Mostly"
+        },
+        {
+          "score": null,
+          "id": "partly",
+          "label": "Partly"
+        },
+        {
+          "score": null,
+          "id": "a_little",
+          "label": "Only a little"
+        },
+        {
+          "score": null,
+          "id": "no",
+          "label": "No"
+        },
+        {
+          "score": null,
+          "id": "not_yet",
+          "label": "Not yet, but it might become worthwhile with more use"
+        },
+        {
+          "score": null,
+          "id": "did_not_add",
+          "label": "I didn't add my wardrobe"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F12",
+      "type": "single",
+      "prompt": "Was the effort of adding your wardrobe worthwhile for the value you received?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F15",
+      "type": "text",
+      "prompt": "If we could fix only one thing before your next use, what should it be?"
+    },
+    {
+      "required": true,
+      "choices": [
+        {
+          "score": null,
+          "id": "yes",
+          "label": "Yes"
+        },
+        {
+          "score": null,
+          "id": "no",
+          "label": "No"
+        },
+        {
+          "score": null,
+          "id": "depends",
+          "label": "Depends"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": true,
+      "helper": null,
+      "id": "F17",
+      "type": "single",
+      "prompt": "Would you keep using Oro after this beta? Why or why not?"
+    },
+    {
+      "required": true,
+      "choices": [],
+      "show_if": [
+        {
+          "question_id": "F17",
+          "choice_ids": [
+            "depends"
+          ]
+        }
+      ],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F17_depends",
+      "type": "text",
+      "prompt": "What does your decision depend on?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F18",
+      "type": "text",
+      "prompt": "What would most likely cause you to stop using Oro?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [
+        {
+          "question_id": "F17",
+          "choice_ids": [
+            "no"
+          ]
+        }
+      ],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F19",
+      "type": "text",
+      "prompt": "What would you use instead of Oro?"
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F20",
+      "type": "text",
+      "prompt": "Who, if anyone, do you think would find Oro useful?"
+    },
+    {
+      "required": false,
+      "choices": [
+        {
+          "score": null,
+          "id": "yes",
+          "label": "Yes"
+        },
+        {
+          "score": null,
+          "id": "no",
+          "label": "No"
+        },
+        {
+          "score": null,
+          "id": "depends",
+          "label": "Depends"
+        }
+      ],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F21",
+      "type": "single",
+      "prompt": "Would you consider paying for Oro as it works today?"
+    },
+    {
+      "required": false,
+      "choices": [
+        {
+          "score": null,
+          "id": "price",
+          "label": "It depends on the price"
+        },
+        {
+          "score": null,
+          "id": "more_time",
+          "label": "I'd need to use it for longer before deciding"
+        },
+        {
+          "score": null,
+          "id": "consistent_recommendations",
+          "label": "I'd need to see more consistently useful recommendations"
+        },
+        {
+          "score": null,
+          "id": "time_saved",
+          "label": "I'd only pay if it saved me enough time"
+        },
+        {
+          "score": null,
+          "id": "more_features",
+          "label": "I'd only pay if it offered additional features"
+        },
+        {
+          "score": null,
+          "id": "free_only",
+          "label": "I'd use it for free, but wouldn't pay"
+        },
+        {
+          "score": null,
+          "id": "would_not_use",
+          "label": "I wouldn't use it even if it were free"
+        },
+        {
+          "score": null,
+          "id": "other",
+          "label": "Other"
+        }
+      ],
+      "show_if": [
+        {
+          "question_id": "F21",
+          "choice_ids": [
+            "yes",
+            "no",
+            "depends"
+          ]
+        }
+      ],
+      "allow_comment": true,
+      "helper": null,
+      "id": "F21_reasons",
+      "type": "multiple",
+      "prompt": "What affects your answer? Select all that apply."
+    },
+    {
+      "required": false,
+      "choices": [],
+      "show_if": [],
+      "allow_comment": false,
+      "helper": null,
+      "id": "F22",
+      "type": "text",
+      "prompt": "What haven't we asked that you think we should know?"
+    }
+  ]
+}

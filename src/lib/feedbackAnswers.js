@@ -39,3 +39,54 @@ export function pruneFeedbackDraft(questions, input = {}) {
     }))
   return { questions: visibleQuestions, answers }
 }
+
+export function prepareFeedbackAnswers(questions, draft) {
+  const active = pruneFeedbackDraft(questions, draft)
+  const answers = {}, errors = {}
+  for (const question of active.questions) {
+    const field = answerFields[question.type]
+    const value = active.answers[question.id]
+    const fail = (name, message) => { errors[question.id] ??= { field: name, message } }
+    const written = (name, required) => {
+      const raw = value?.[name]
+      if (raw === undefined || raw === null || raw === '') {
+        if (required) fail(name, 'Please add an answer.')
+        return ''
+      }
+      if (typeof raw !== 'string') { fail(name, 'Please enter a written answer.'); return '' }
+      const text = raw.trim()
+      if (!text && required) fail(name, 'Please add an answer.')
+      if ([...text].length > 2000) fail(name, 'Please keep your answer to 2,000 characters.')
+      return text
+    }
+    if (value !== undefined && !isObject(value)) {
+      fail(field, 'Please check this answer.')
+      continue
+    }
+    if (question.type === 'text') {
+      const text = written('text', question.required)
+      if (text) answers[question.id] = { text }
+      continue
+    }
+    const selected = question.type === 'multiple' ? (value?.choices ?? [])
+      : (value?.choice == null || value.choice === '' ? [] : [value.choice])
+    if (!Array.isArray(selected) || selected.some((id) => typeof id !== 'string' || !question.choices.some((option) => option.id === id))
+      || new Set(selected).size !== selected.length) {
+      fail(field, 'Choose from the listed answers.')
+      continue
+    }
+    if (!selected.length) {
+      if (question.required) fail(field, question.type === 'multiple' ? 'Choose at least one answer.' : 'Choose an answer.')
+      if (question.allow_comment && written('comment', false)) fail(field, 'Choose an answer to include your explanation.')
+      continue
+    }
+    const answer = { [field]: question.type === 'multiple' ? [...selected].sort() : selected[0] }
+    if (selected.includes('other')) answer.other_text = written('other_text', true)
+    if (question.allow_comment) {
+      const comment = written('comment', false)
+      if (comment) answer.comment = comment
+    }
+    answers[question.id] = answer
+  }
+  return { answers, errors }
+}

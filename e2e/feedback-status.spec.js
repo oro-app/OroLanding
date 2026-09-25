@@ -8,7 +8,7 @@ const form = (status = 'open') => ({
   invitation_id: id, survey_kind: 'daily', survey_version: 1, status,
   context: { beta_label: 'Oro beta', local_date: '2026-09-24', timezone: 'America/Toronto' },
   expires_at: '2020-01-01T00:00:00Z', submission_id: status === 'open' ? null : id,
-  questions: status === 'open' ? [{ id: 'D1', type: 'text', prompt: 'Your day', choices: [], show_if: [] }] : [],
+  questions: status === 'open' ? [{ id: 'D13', type: 'text', prompt: 'Your day', required: false, allow_comment: false, choices: [], show_if: [] }] : [],
   receipt: status === 'submitted' ? { submission_id: id, submitted_at: '2026-09-25T00:00:00Z' } : null,
 })
 
@@ -21,7 +21,7 @@ test('open forms retain their original daily context on narrow screens', async (
   await page.route(endpoint, (route) => route.fulfill({ json: form() }))
   await page.goto(`/feedback#token=${token}`)
   await expect(page.getByText('daily feedback · 2026-09-24 (America/Toronto)')).toBeVisible()
-  await expect(page.getByRole('status')).toContainText('Feedback is not available yet')
+  await expect(page.getByRole('textbox', { name: 'Your day' })).toBeVisible()
   expect((await session(page)).token).toBe(token)
   for (const width of [320, 390]) {
     await page.setViewportSize({ width, height: 844 })
@@ -41,7 +41,7 @@ test('saving waits for a receipt and completion survives skip-link navigation', 
   await page.clock.runFor(1)
   await expect(page.getByRole('status')).toContainText('Your feedback is saved')
   expect(await session(page)).toBeNull()
-  await page.keyboard.press('Tab')
+  await page.getByRole('link', { name: 'Skip to content' }).focus()
   await page.keyboard.press('Enter')
   await expect(page.locator('main')).toBeFocused()
   await expect(page.getByRole('status')).toContainText('Your feedback is saved')
@@ -116,5 +116,5 @@ test('a late receipt cannot overwrite a replacement invitation', async ({ page }
   await expect(page.getByText('daily feedback · 2026-09-24 (America/Toronto)')).toBeVisible()
   await pending.fulfill({ json: form('submitted') })
   expect((await session(page)).token).toBe('replacement-invitation')
-  await expect(page.getByRole('status')).toContainText('not available yet')
+  await expect(page.getByRole('textbox', { name: 'Your day' })).toBeVisible()
 })
