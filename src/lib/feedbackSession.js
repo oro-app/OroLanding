@@ -1,4 +1,8 @@
 const SESSION_KEY = 'oro_feedback_session'
+export const readFeedbackSession = () => JSON.parse(sessionStorage.getItem(SESSION_KEY))
+export const writeFeedbackSession = (value) => value === null
+  ? sessionStorage.removeItem(SESSION_KEY)
+  : sessionStorage.setItem(SESSION_KEY, JSON.stringify(value))
 export const isFeedbackPath = (path) => /^\/feedback(?:\/index\.html)?\/*$/.test(path)
 
 export function captureFeedbackSession() {

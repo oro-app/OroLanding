@@ -6,4 +6,6 @@ This first BUI-618 slice shows missing-link/unavailable states using Oro Kit. It
 
 `loadFeedbackForm` provides a read-only bearer client using `VITE_ORO_API_URL` (default `https://api.buildingoro.ca`). It preserves form definitions, validates status/receipt envelopes, rejects insecure destinations and redirects, and returns safe error codes and retry delays. It never stores data or retries automatically; the page integration will own polling and session cleanup. Verify its mocked transport contract with `npm run test:feedback`; these tests do not establish live API/CORS readiness.
 
+`createFeedbackReader` adds invitation-scoped status scheduling, persisted cooldowns, terminal credential cleanup, and pause/resume/stop controls. Saving checks wait at least 15 seconds; transient failures back off and honor Retry-After. It ignores cancelled or replaced invitations. The page hookup, visibility listeners, and status presentation follow separately; creating a reader does not start it until `resume()` is called.
+
 Verify with `npm run build` and `E2E_BASE_URL=<preview-url> npm run e2e`. The feedback privacy spec also runs against local preview; HTTP header checks require Vercel. Use synthetic invitation tokens in tests and screenshots.
