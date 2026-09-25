@@ -64,7 +64,8 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeFocused()
   await expect(page.getByText('Your beta setup is complete. Send Oro your first text to get started.')).toBeVisible()
   await expect(page.getByText(/oro just texted you|check your phone|already signed up/i)).toHaveCount(0)
-  await expect(page.getByRole('link', { name: 'Start texting Oro', exact: true })).toHaveAttribute('href', 'sms:+18556762419')
+  const separator = await page.evaluate(() => /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) ? '&' : '?')
+  await expect(page.getByRole('link', { name: 'Start texting Oro', exact: true })).toHaveAttribute('href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey Oro! Your newest Oronaut has landed 🚀')}`)
   await expect(page.getByText('On your computer? Text +1 (855) 676-2419 from your phone.')).toBeVisible()
   expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
   expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', phone: '+1 (416) 555-0123' })
@@ -205,5 +206,19 @@ for (const width of [320, 390]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
     await verify(page)
     await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeVisible()
+  })
+}
+
+for (const [device, userAgent, separator] of [
+  ['iPhone', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)', '&'],
+  ['Android', 'Mozilla/5.0 (Linux; Android 15; Pixel 9)', '?'],
+]) {
+  test(`texting link prefills the welcome message on ${device}`, async ({ page, api }) => {
+    await page.addInitScript((value) => Object.defineProperty(navigator, 'userAgent', { get: () => value }), userAgent)
+    await codeStep(page)
+    await verify(page)
+    await expect(page.getByRole('link', { name: 'Start texting Oro', exact: true })).toHaveAttribute(
+      'href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey Oro! Your newest Oronaut has landed 🚀')}`,
+    )
   })
 }
