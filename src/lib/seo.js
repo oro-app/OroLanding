@@ -18,6 +18,13 @@ const ORGANIZATION_ID = `${SITE_URL}/#organization`
 const WEBSITE_ID = `${SITE_URL}/#website`
 
 export const ROUTE_SEO = {
+  feedback: {
+    path: '/feedback',
+    title: 'Beta feedback - Oro',
+    description: 'Share your Oro beta experience using your personal invitation.',
+    h1: 'Beta feedback',
+    noindex: true,
+  },
   beta: {
     path: '/beta',
     title: 'Help us make Oro yours. - Oro beta',
