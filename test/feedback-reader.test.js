@@ -7,7 +7,7 @@ const id = '11111111-1111-4111-8111-111111111111'
 const settle = () => new Promise(setImmediate)
 const form = (status) => ({ invitation_id: id, survey_kind: 'final', survey_version: 1, status,
   submission_id: status === 'open' ? null : id, context: { beta_label: 'Oro beta' }, expires_at: '2020-01-01T00:00:00Z',
-  questions: status === 'open' ? [{ id: 'F1', type: 'text', prompt: 'Your experience', choices: [], show_if: [] }] : [],
+  questions: status === 'open' ? [{ id: 'F1', type: 'text', prompt: 'Your experience', required: false, allow_comment: false, choices: [], show_if: [] }] : [],
   receipt: status === 'submitted' ? { submission_id: id, submitted_at: '2026-09-25T00:00:00Z' } : null })
 
 function setup(t, serve) {

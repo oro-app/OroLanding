@@ -8,7 +8,7 @@ const question = { id: 'D7', type: 'rating', prompt: 'Original wording', require
   choices: [{ id: 'much_easier', label: 'Much easier', score: 5 }, { id: 'other', label: 'Other', score: null }],
   show_if: [], allow_comment: true, helper: 'Original helper' }
 const followup = { id: 'D5', type: 'text', prompt: 'Original follow-up', required: false,
-  choices: [], show_if: [{ question_id: 'D3', choice_ids: ['with_changes'] }], allow_comment: false, helper: null }
+  choices: [], show_if: [{ question_id: 'D7', choice_ids: ['much_easier'] }], allow_comment: false, helper: null }
 const envelope = (overrides = {}) => ({ invitation_id: id, survey_kind: 'daily', survey_version: 1,
   status: 'open', submission_id: null, context: { beta_label: 'Oro beta', local_date: '2026-09-24', timezone: 'America/Toronto' },
   expires_at: '2020-01-01T00:00:00Z', questions: [question, followup], receipt: null, ...overrides })

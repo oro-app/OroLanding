@@ -1,0 +1,55 @@
+:root {
+  --oro-background-base: var(--oro-color-canvas);
+  --oro-background-gold: var(--oro-color-warm-glow);
+  --oro-background-lavender: var(--oro-color-glow);
+  --oro-background-light: var(--oro-color-surface);
+  --oro-background-muted-ink: color-mix(in srgb, var(--oro-color-muted) 80%, var(--oro-color-ink));
+}
+
+.halo-site, .legal-page { --oro-color-muted: var(--oro-background-muted-ink); }
+:root[data-theme='light'] .oro-editorial:not(.halo-site) { --color-fg-faint: var(--oro-background-muted-ink); }
+
+.oro-editorial, .legal-page {
+  position: relative;
+  isolation: isolate;
+  --oro-background-wash:
+    radial-gradient(ellipse at 4% 6%, var(--oro-background-gold), transparent 58%),
+    radial-gradient(ellipse at 94% 32%, var(--oro-background-lavender), transparent 62%),
+    radial-gradient(ellipse at 18% 100%, var(--oro-background-gold), transparent 54%),
+    linear-gradient(145deg, var(--oro-background-base), var(--oro-background-light) 48%, var(--oro-background-base));
+}
+.oro-editorial::before, .legal-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--oro-background-wash);
+}
+
+:root:not([data-theme='light']) .oro-editorial:not(.halo-site) {
+  --oro-background-base: var(--color-bg);
+  --oro-background-light: var(--color-bg);
+  --oro-background-gold: color-mix(in srgb, var(--oro-color-warm-glow) 22%, transparent);
+  --oro-background-lavender: color-mix(in srgb, var(--oro-color-glow) 22%, transparent);
+}
+
+.oro-editorial :is(.tryoro, .hiw, .hiw-cta, .hi-section, .hi-sticky, .wy, .mn, .product-faq, .newsletter-page, .site-footer),
+.oro-editorial.halo-site .gs { background: transparent; }
+.oro-editorial .beta-story-halo { background: var(--oro-background-wash); }
+.oro-editorial .beta-story-halo::before { opacity: .35; }
+.oro-editorial .beta-story-halo::after { opacity: .5; }
+
+.oro-editorial :is(.halo-header, .site-header) {
+  background: color-mix(in srgb, var(--color-bg) 86%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+@media (max-width: 650px) {
+  .oro-editorial::before, .legal-page::before {
+    background:
+      radial-gradient(ellipse at 0% 0%, var(--oro-background-gold), transparent 64%),
+      radial-gradient(ellipse at 100% 75%, var(--oro-background-lavender), transparent 70%),
+      var(--oro-background-light);
+  }
+}
