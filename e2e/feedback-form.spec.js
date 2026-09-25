@@ -36,6 +36,7 @@ for (const kind of ['daily', 'task', 'task-no-outfit', 'final']) {
     await page.goto(`/feedback?demo=${kind}`)
     await expect(page.getByRole('heading', { name: 'Feedback demo', exact: true })).toBeVisible()
     await expect(page.locator('input:checked')).toHaveCount(0)
+    await expect(page.locator('#feedback-question-title')).not.toBeFocused()
     const survey = kind.startsWith('task') ? 'task' : kind
     const visited = []
     for (let steps = 0; steps < 25 && await button(page).isVisible(); steps++) {
@@ -58,6 +59,32 @@ for (const kind of ['daily', 'task', 'task-no-outfit', 'final']) {
     expect(errors).toEqual([])
   })
 }
+
+test('question transitions preserve keyboard typing and honor reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/feedback?demo=daily')
+  await advanceTo(page, 'daily', 'D13')
+  await expect(page.getByRole('heading', { name: prompt('daily', 'D13'), exact: true })).toBeFocused()
+  await expect(page.locator('#feedback-question-title')).toHaveCSS('outline-style', 'none')
+  await page.keyboard.press('Tab')
+  const answer = page.getByRole('textbox')
+  await expect(answer).toBeFocused()
+  await expect(answer).toHaveAttribute('autocapitalize', 'sentences')
+  await expect(answer).toHaveAttribute('spellcheck', 'true')
+  await answer.pressSequentially('A small improvement. Another thought.', { delay: 8 })
+  await expect(answer).toHaveValue('A small improvement. Another thought.')
+  await expect(answer).toBeFocused()
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(page.locator('.feedback-step')).toHaveCSS('animation-name', 'none')
+  expect(await page.locator('.feedback-prompt-char').evaluateAll((letters) => letters.every((letter) => {
+    const style = getComputedStyle(letter)
+    return style.animationName === 'none' && style.opacity === '1'
+  }))).toBe(true)
+  await button(page).click()
+  await page.getByRole('button', { name: 'Review answers' }).click()
+  await expect(page.getByRole('progressbar', { name: 'Feedback progress' })).toHaveAttribute('aria-valuetext', 'Ready to review')
+  await expect(page.locator('.feedback-review')).toContainText('A small improvement. Another thought.')
+})
 
 test('daily branching clears old answers, validates accessibly, and submits IDs with trimmed text', async ({ page }) => {
   let payload

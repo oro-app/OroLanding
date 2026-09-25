@@ -4,6 +4,8 @@
 
 The Oro Kit page renders task, daily, and end-of-beta questions from the API, one question per step with Back/Continue and a final review. It preserves backend wording, option IDs/order, requiredness, helpers, and explicit score metadata. Only a validated receipt produces thanks. Live API and Google workbook verification depend on BUI-624.
 
+The form opens without focusing a question or choosing an answer. Step changes retain accessible heading/error focus without a decorative outline around the prompt. A short typed reveal, step entrance, and progress indicator respect reduced motion; input stays available throughout. Written answers request sentence capitalization, autocorrection, and spellcheck from supported keyboards without changing stored text. `src/brand-background.css` shares the gold, white, and lavender background across website and legal pages, with a darker treatment for the existing legacy dark theme.
+
 `loadFeedbackForm` and `saveFeedback` use `VITE_ORO_API_URL` (default `https://api.buildingoro.ca`) with HTTPS bearer authorization, no caching/cookies/referrers, and rejected redirects. The client validates question definitions and status/receipt envelopes, exposes safe errors, and respects Retry-After. It submits choice IDs, not labels or scores. Text is trimmed at submission, limited to 2,000 Unicode code points, and the complete UTF-8 JSON body is limited to 64 KiB.
 
 `createFeedbackReader` owns invitation-scoped scheduling, persisted cooldowns, terminal credential cleanup, and pause/resume/stop controls. Saving checks wait at least 15 seconds; transient failures back off and honor Retry-After. It ignores cancelled or replaced invitations. The page resumes the reader only while visible and stops it on replacement or unmount.

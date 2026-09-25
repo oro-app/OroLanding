@@ -9,6 +9,7 @@ export function FeedbackWrittenAnswer({ questionId, field, label, value, update,
       <textarea className="oro-input feedback-textarea" id={id} name={field} rows={4} value={text}
         required={required} aria-labelledby={labelledBy} aria-invalid={error ? true : undefined}
         aria-describedby={`${id}-count${error ? ` ${id}-error` : ''}`} autoComplete="off"
+        autoCapitalize="sentences" autoCorrect="on" spellCheck
         onChange={(event) => update(event.target.value)} />
       <div className="feedback-field-footer">
         {error && <p id={`${id}-error`} className="oro-field__error">{error}</p>}
