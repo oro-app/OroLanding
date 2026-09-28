@@ -35,7 +35,7 @@ for (const width of [1440, 390, 320]) {
     await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '1')
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await expect(page.getByRole('textbox')).toHaveCount(1)
-    await expect(page.getByRole('button', { name: 'Back', exact: true })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Back', exact: true })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Email us', exact: true })).toHaveAttribute('href', 'mailto:sunny@buildingoro.ca')
     await page.getByLabel('Your name', { exact: true }).fill('Jamie')
     await next(page)
