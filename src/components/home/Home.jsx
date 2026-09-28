@@ -4,6 +4,8 @@ import { Heading, Text } from 'oro-kit'
 import MessageThread from './MessageThread'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
+import oroHurray from '../../assets/mascot/oro_hurray.webp'
+import oroTexting from '../../assets/mascot/oro_texting.webp'
 
 const REASONS = ['It knows your closet', 'It answers in a minute', 'It tells you why']
 const HEADLINE = 'The #1 AI stylist you can text'
@@ -68,6 +70,7 @@ export default function Home() {
               ))}
             </ul>
             <Text muted className="home-reason-note home-stagger" style={{ '--home-delay': '510ms' }}>It gets more personal every time.</Text>
+            <img className="home-mascot home-mascot--texting home-stagger" src={oroTexting} alt="" loading="lazy" decoding="async" />
           </section>
         </div>
         <div className="home-phone-column">
@@ -78,6 +81,7 @@ export default function Home() {
         </div>
       </div>
       <section className="home-closer halo-container" aria-labelledby="closer-title" data-home-reveal>
+        <img className="home-mascot home-mascot--hurray home-stagger" src={oroHurray} alt="" loading="lazy" decoding="async" />
         <Heading as="h2" variant="title" id="closer-title" className="home-stagger">Whatever the day is,<br /><em>you’re dressed for it.</em></Heading>
         <HomeCta place="closer" className="home-stagger">Start the conversation</HomeCta>
       </section>
