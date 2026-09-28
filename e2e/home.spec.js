@@ -29,6 +29,7 @@ test('left content scrolls normally while the phone stays pinned', async ({ page
   await page.evaluate(() => document.fonts.ready)
   await expect(page.locator('.halo-home')).toHaveAttribute('data-motion', 'ready')
   await expect(page.locator('.mt-device')).toHaveCSS('transform', 'none')
+  await page.locator('.mt-device').evaluate((element) => Promise.all(element.getAnimations().map((animation) => animation.finished)))
   const heading = page.getByRole('heading', { level: 1 })
   const headingTop = await heading.evaluate((element) => element.getBoundingClientRect().top)
   const phoneTop = await page.locator('.mt-device').evaluate((element) => element.getBoundingClientRect().top)
