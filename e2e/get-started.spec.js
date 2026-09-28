@@ -1,6 +1,6 @@
 import { test as base, expect } from './fixtures.js'
 
-const draft = { name: 'Test Oronaut', birthday: '1998/01/02', country: 'CA', province: 'ON', hear: ['a friend'], hearOther: '', phone: '+14165550123' }
+const draft = { name: 'Test Oronaut', birthday: '1998/01/02', country: 'CA', province: 'ON', hear: ['a friend'], hearOther: '', phone: '(416) 555-0123', phoneCountry: 'CA' }
 const inviteError = { status: 403, json: { detail: { code: 'beta_invite_required', message: 'An approved beta invite is required' } } }
 const test = base.extend({
   api: async ({ page }, use) => {
@@ -16,12 +16,17 @@ const test = base.extend({
   },
 })
 
-async function phoneStep(page) {
-  await page.addInitScript((answers) => localStorage.setItem('oro_get_started_responses', JSON.stringify(answers)), draft)
+async function phoneStep(page, answers = draft) {
   await page.goto('/get-started')
+  await page.evaluate((answers) => localStorage.setItem('oro_get_started_responses', JSON.stringify(answers)), answers)
+  await page.reload()
+  await continueToPhone(page)
+}
+
+async function continueToPhone(page) {
   await page.getByRole('button', { name: 'Let’s get you settled' }).click()
   for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
-  await expect(page.getByLabel('Phone number', { exact: true })).toHaveValue(draft.phone)
+  await expect(page.getByLabel('Phone number', { exact: true })).toBeVisible()
 }
 
 async function codeStep(page) {
@@ -58,7 +63,8 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await page.getByRole('button', { name: 'A friend', exact: true }).click()
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
-  await page.getByLabel('Phone number', { exact: true }).fill('+1 (416) 555-0123')
+  await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('CA')
+  await page.getByLabel('Phone number', { exact: true }).fill('(416) 555-0123')
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await verify(page)
   await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeFocused()
@@ -68,8 +74,72 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await expect(page.getByRole('link', { name: 'Start texting Oro', exact: true })).toHaveAttribute('href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey Oro! Your newest Oronaut has landed 🚀')}`)
   await expect(page.getByText('On your computer? Text +1 (855) 676-2419 from your phone.')).toBeVisible()
   expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
-  expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', phone: '+1 (416) 555-0123' })
+  expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', phone: '+14165550123' })
+  expect(api.requests[1].body.phone).toBe('+14165550123')
   expect(await page.evaluate(() => localStorage.getItem('oro_get_started_responses'))).toBeNull()
+})
+
+for (const [country, phone, expected] of [
+  ['PK', '0301 2345678', '+923012345678'],
+  ['GB', '07911 123456', '+447911123456'],
+  ['IT', '02 3661 8300', '+390236618300'],
+]) {
+  test(`the ${country} dropdown normalizes local numbers for start, resend, and verify`, async ({ page, api }) => {
+    await page.clock.install()
+    await phoneStep(page)
+    await page.getByRole('combobox', { name: 'Country code' }).selectOption(country)
+    await page.getByLabel('Phone number', { exact: true }).fill(phone)
+    await page.getByRole('button', { name: 'Send verification code.' }).click()
+    await expect(page.getByLabel('Verification code', { exact: true })).toBeVisible()
+    expect((await page.getByText(/Enter the code we sent to/).innerText()).replace(/[^\d+]/g, '')).toBe(expected)
+    await page.clock.runFor(61000)
+    await page.getByRole('button', { name: 'Resend code', exact: true }).click()
+    await expect(page.getByRole('status')).toContainText('New code sent.')
+    await verify(page)
+    await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeVisible()
+    expect(api.requests.map(({ action, body }) => [action, body.phone])).toEqual([
+      ['start', expected], ['start', expected], ['verify', expected],
+    ])
+    expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON' })
+  })
+}
+
+test('pasted international numbers update the dropdown and survive a reload', async ({ page, api }) => {
+  await phoneStep(page)
+  await page.getByLabel('Phone number', { exact: true }).fill('+92 301 2345678')
+  await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('PK')
+  await expect(page.getByLabel('Phone number', { exact: true })).toHaveValue('0301 2345678')
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('oro_get_started_responses')))
+  expect(saved).toMatchObject({ phoneCountry: 'PK', phone: '0301 2345678', country: 'CA' })
+  await page.reload()
+  await continueToPhone(page)
+  await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('PK')
+  await page.getByRole('button', { name: 'Send verification code.' }).click()
+  await verify(page)
+  await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeVisible()
+  expect(api.requests.map(({ body }) => body.phone)).toEqual(['+923012345678', '+923012345678'])
+})
+
+test('older drafts with full international numbers are split into the country and national number', async ({ page, api }) => {
+  const { phoneCountry, ...olderDraft } = draft
+  await phoneStep(page, { ...olderDraft, phone: '+1 (416) 555-0123' })
+  await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('CA')
+  await expect(page.getByLabel('Phone number', { exact: true })).toHaveValue('(416) 555-0123')
+  await page.getByRole('button', { name: 'Send verification code.' }).click()
+  await expect(page.getByLabel('Verification code', { exact: true })).toBeVisible()
+  expect(api.requests[0].body.phone).toBe('+14165550123')
+})
+
+test('invalid phone numbers and extensions show a local error without requesting an OTP', async ({ page, api }) => {
+  await phoneStep(page)
+  for (const phone of ['123', 'not a phone number', '416 555 0123 ext. 5']) {
+    await page.getByLabel('Phone number', { exact: true }).fill(phone)
+    await page.getByRole('button', { name: 'Send verification code.' }).click()
+    await expect(page.getByRole('alert')).toContainText('Enter a valid phone number')
+  }
+  expect(api.requests).toEqual([])
+  await page.getByLabel('Phone number', { exact: true }).fill('416 555 0123')
+  await expect(page.getByRole('alert')).toHaveCount(0)
 })
 
 for (const phase of ['start', 'verify']) {
