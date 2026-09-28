@@ -20,8 +20,6 @@
 .beta-story-halo { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: linear-gradient(135deg, color-mix(in srgb, var(--oro-color-display) 12%, var(--oro-color-canvas)), var(--oro-color-canvas) 46%, color-mix(in srgb, var(--oro-color-champagne) 13%, var(--oro-color-canvas))); }
 .beta-story-halo::before { content: ''; position: absolute; inset: -15%; background: radial-gradient(ellipse at 92% 8%, color-mix(in srgb, var(--oro-color-display) 38%, transparent), transparent 58%), radial-gradient(ellipse at 6% 88%, color-mix(in srgb, var(--oro-color-champagne) 34%, transparent), transparent 55%), radial-gradient(ellipse at 0% 8%, color-mix(in srgb, var(--oro-color-display) 12%, transparent), transparent 45%); transform: translate(var(--beta-wash-x, 0%), var(--beta-wash-y, 0%)) rotate(var(--beta-wash-turn, 0deg)); }
 .beta-story-halo::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 55% at 50% 48%, color-mix(in srgb, var(--oro-color-canvas) 78%, transparent), transparent); }
-.beta-story[data-scene='1'], .beta-application[data-scene='1'] { --beta-wash-x: -5%; --beta-wash-y: 4%; --beta-wash-turn: -5deg; }
-.beta-story[data-scene='2'], .beta-application[data-scene='2'] { --beta-wash-x: 4%; --beta-wash-y: -4%; --beta-wash-turn: 4deg; }
 .beta-chapter { flex: 0 0 auto; width: min(100% - 96px, 960px); margin-inline: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding-block: var(--oro-space-10); scroll-margin-top: var(--halo-header-height); text-align: center; }
 .beta-chapter--hero { gap: var(--oro-space-10); }
 .halo-site .beta-chapter :is(h1, h2):focus-visible { outline: none; }
@@ -101,27 +99,22 @@
 .beta-receipt .oro-button { margin-top: var(--oro-space-4); }
 @media (hover: hover) { .beta-option:hover { background: var(--oro-color-soft); } }
 @media (prefers-reduced-motion: no-preference) {
-  .beta-option:has(:checked) { animation: beta-choice-settle 240ms cubic-bezier(.2, .8, .3, 1); }
-  .beta-story-halo::before { transition: transform 1600ms cubic-bezier(.2, .65, .3, 1); }
-  .beta-story[data-phase='leaving'] :is(.beta-chapter-content, .beta-story-date) { animation: beta-page-out 280ms ease-in both; }
-  .beta-chapter:not(.beta-chapter--hero) .beta-chapter-content > .oro-heading { animation: beta-page-in 640ms cubic-bezier(.16, 1, .3, 1) both; }
-  .beta-chapter-copy > .oro-button, .beta-checkmark { animation: beta-copy-in 560ms cubic-bezier(.16, 1, .3, 1) both; animation-delay: var(--beta-copy-delay); }
+  .beta-story[data-phase='leaving'] :is(.beta-chapter-content, .beta-story-date) { animation: beta-page-out 140ms ease-in both; }
+  .beta-chapter:not(.beta-chapter--hero) .beta-chapter-content { animation: beta-page-in 180ms ease-out both; }
   .beta-type-char { animation: beta-type-on 40ms linear both; animation-delay: var(--type-delay); }
   .beta-type-with-caret .beta-type-char::after { animation: beta-type-caret var(--type-hold) step-end both; animation-delay: var(--type-delay); }
   .beta-type-with-caret .beta-type-char--last::after { animation: beta-caret-settle 500ms step-end 2 both; animation-delay: var(--type-delay); }
-  .beta-chapter--hero .beta-lead { animation: beta-copy-in 700ms cubic-bezier(.16, 1, .3, 1) 1650ms both; }
-  .beta-story-date { animation: beta-copy-in 700ms cubic-bezier(.16, 1, .3, 1) 1850ms both; }
-  .beta-form-panel { animation: beta-step-in 550ms cubic-bezier(.16,1,.3,1) both; }
-  .beta-form-progress > span { transition: width 550ms cubic-bezier(.16,1,.3,1); }
+  .beta-chapter--hero .beta-lead, .beta-story-date { animation: beta-copy-in 240ms ease-out 1650ms both; }
+  .beta-form-panel { animation: beta-step-in 180ms ease-out both; }
+  .beta-form-progress > span { transition: width 180ms ease-out; }
 }
-@keyframes beta-choice-settle { 0% { transform: scale(.97); } 65% { transform: scale(1.025); } 100% { transform: none; } }
-@keyframes beta-page-out { to { opacity: 0; transform: translateY(calc(-18px * var(--beta-page-direction))); } }
-@keyframes beta-page-in { from { opacity: 0; transform: translateY(calc(26px * var(--beta-page-direction))); filter: blur(2px); } to { opacity: 1; transform: none; filter: none; } }
-@keyframes beta-copy-in { from { opacity: 0; transform: translateY(calc(16px * var(--beta-page-direction))); } to { opacity: 1; transform: none; } }
+@keyframes beta-page-out { to { opacity: 0; } }
+@keyframes beta-page-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes beta-copy-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes beta-type-on { from { opacity: 0; } 20%, 100% { opacity: 1; } }
 @keyframes beta-type-caret { 0%, 90% { opacity: 1; } 91%, 100% { opacity: 0; } }
 @keyframes beta-caret-settle { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-@keyframes beta-step-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes beta-step-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .beta-option { transition: none; } .beta-chapter-content { opacity: 1; transform: none; filter: none; } }
 @media (max-width: 760px) {
   .beta-header-note { display: none; }

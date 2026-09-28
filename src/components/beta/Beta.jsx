@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Heading, Notice, Text, TextField } from 'oro-kit'
-import BetaIntroduction, { TypedText } from './BetaIntroduction'
-import GoldBackground from '../GoldBackground'
+import BetaIntroduction from './BetaIntroduction'
 import { choices, emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { saveBetaRequest, submissionMessages } from './betaSubmission'
 import './Beta.css'
@@ -206,20 +205,18 @@ export default function Beta() {
       {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} previewForm={allowForm} />}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
         <div className="beta-story-halo" aria-hidden="true" />
-        <GoldBackground />
         <div className="beta-form-panel beta-form-heading">
-          <Heading ref={comingSoonRef} tabIndex={-1} as="h1" variant="title" id="coming-soon-title"><TypedText duration={1000} delay="60ms" caret>Invites open <em>soon.</em></TypedText></Heading>
+          <Heading ref={comingSoonRef} tabIndex={-1} as="h1" variant="title" id="coming-soon-title">Invites open <em>soon.</em></Heading>
           <Text muted>We’re getting ready to welcome our first Oronauts. Check back soon to request your invite.</Text>
           <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <span aria-hidden="true">↗</span></a>
         </div>
       </section>}
       {allowForm && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
         <div className="beta-story-halo" aria-hidden="true" />
-        <GoldBackground />
         <div className="beta-form-progress" role="progressbar" aria-label="Invite request progress" aria-valuemin={0} aria-valuemax={formSteps.length} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${formSteps.length}`}><span style={{ width: `${(step + 1) / formSteps.length * 100}%` }} /></div>
         <div className="beta-form-panel" key={step}>
           <div className="beta-form-heading">
-            <Heading ref={stepTitleRef} tabIndex={-1} as="h1" variant="title" id="request-title"><TypedText duration={Math.min(1200, stepInfo.title.length * 24)} delay="60ms" caret>{stepInfo.title}</TypedText></Heading>
+            <Heading ref={stepTitleRef} tabIndex={-1} as="h1" variant="title" id="request-title">{stepInfo.title}</Heading>
             {stepInfo.optional && <Text variant="support" muted>Optional</Text>}
             {stepInfo.description && <Text muted>{stepInfo.description}</Text>}
           </div>
