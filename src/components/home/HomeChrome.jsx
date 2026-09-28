@@ -3,7 +3,7 @@ import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 
 function HomeLogo() {
-  return <img className="halo-logo" src="/static/oro-logo.png" alt="oro" width="80" height="32" decoding="async" />
+  return <img className="halo-logo" src="/static/oro-logo.webp" alt="Oro" width="1672" height="941" decoding="async" />
 }
 
 export function HomeCta({ place, children, className = '' }) {
@@ -24,7 +24,7 @@ export function HomeHeader() {
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          <a className="halo-nav-journal" href="/from-the-closet">From the closet</a>
+          <a className="halo-nav-journal" href="/from-the-closet">Blog</a>
           <HomeCta place="header">Get started</HomeCta>
         </nav>
       </div>

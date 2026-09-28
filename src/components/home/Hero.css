@@ -266,16 +266,10 @@
   gap: 16px; /* spacing.md */
 }
 .hero-d-logo {
-  height: 375px;
-  width: auto;
+  width: min(100%, 360px);
+  height: auto;
   display: block;
-  /* The asset is a 500×500 square; the "oro" mark only occupies x∈[31,463],
-     y∈[214,347]. At height:375 (scale 0.75) these negative margins crop the
-     transparent border exactly so the box === the glyph (~324×100), letting
-     the mark take the spotlight with no dead space. */
-  margin: -161px -28px -107px -23px;
-  /* rail is a flex column (align-items: stretch) — without this the img is
-     stretched to the full rail width and the wordmark smears. */
+  margin: 0;
   align-self: flex-start;
 }
 .hero-d-title {
@@ -351,11 +345,10 @@
   .hero-d-title {
     font-size: 18px; /* brandTypography.taglineSmall */
   }
-  /* Scale the cropped logo down for phones (crop margins recomputed at
-     this height — they're linear in the 500px source canvas). */
   .hero-d-logo {
-    height: 280px;
-    margin: -120px -21px -86px -17px;
+    width: min(100%, 280px);
+    height: auto;
+    margin: 0;
   }
 }
 

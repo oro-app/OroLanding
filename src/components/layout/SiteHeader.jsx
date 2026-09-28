@@ -43,12 +43,12 @@ export default function SiteHeader() {
       <div className="site-header-inner">
         <a href="/" className="site-header-logo-link" aria-label="oro home">
         <img
-          src="/static/oro-logo.png"
-          alt="oro"
+          src="/static/oro-logo.webp"
+          alt="Oro"
           className="site-header-logo"
           decoding="async"
-          width="500"
-          height="500"
+          width="1672"
+          height="941"
         />
         </a>
 

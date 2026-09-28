@@ -1,4 +1,5 @@
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
+import oroMascot from '../../assets/logos/oro_logo_mascot_only.webp'
 import './OroPhone.css'
 
 // Real-app phone mockup — ported from the /try-oro handoff's phones.jsx, which
@@ -112,11 +113,7 @@ function ScreenHome() {
       <div className="op-home-body">
         <div className="op-daterow">
           <span className="op-date">tuesday, may 12</span>
-          <div
-            className="op-avatar"
-            style={{ backgroundImage: `url(${ORO_PHOTOS.detail})` }}
-            aria-hidden="true"
-          />
+          <img className="op-avatar" src={oroMascot} alt="" />
         </div>
 
         <div className="op-greeting">

@@ -107,7 +107,7 @@
 }
 .op-avatar {
   width: 34px; height: 34px; border-radius: 50%;
-  background-size: cover; background-position: center;
+  display: block; object-fit: contain;
 }
 
 .op-greeting { margin-top: 56px; }

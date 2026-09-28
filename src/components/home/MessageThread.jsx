@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import lookDay from '../../assets/home/look-day.png'
-import lookNight from '../../assets/home/look-night.png'
+import lookDay from '../../assets/home/look-day.webp'
+import lookNight from '../../assets/home/look-night.webp'
+import oroMascot from '../../assets/logos/oro_logo_mascot_only.webp'
 
 // The thread is transcribed from Oro-Mobile-Refresh's MigrationDemoThread, and
 // the timings below are that component's shipped values in ms. SLOW stretches
@@ -117,7 +118,7 @@ export default function MessageThread({ startDelay = 0 }) {
         <div className="mt-contact">
           <span className="mt-back" aria-hidden="true">‹</span>
           <div className="mt-contact-id">
-            <span className="mt-avatar">o</span>
+            <img className="mt-avatar" src={oroMascot} alt="" />
             <span className="mt-contact-name">oro</span>
           </div>
           <span />
