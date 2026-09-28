@@ -18,16 +18,16 @@ for (const width of [1440, 390]) {
       if (url.origin === 'https://vercel.live' && url.pathname === '/login/validate') return
       if (request.method() === 'POST') writes.push(request.url())
     })
-    for (let index = 0; index < 5; index += 1) await page.getByRole('button', { name: 'Next page', exact: true }).click()
+    await page.getByRole('button', { name: 'See beta details', exact: true }).click()
     await expect(page.getByText('Free lifetime access to Oro.', { exact: true }).first()).toBeVisible()
-    await page.getByRole('button', { name: 'About beta invites', exact: true }).click()
+    await page.getByRole('button', { name: 'Continue to invite', exact: true }).click()
+    await page.getByRole('button', { name: 'Invites open soon', exact: true }).click()
     await expect(page.getByRole('heading', { name: 'Invites open soon.' })).toBeFocused()
     await expect(page.getByRole('link', { name: 'Email us' })).toHaveAttribute('href', 'mailto:sunny@buildingoro.ca')
     await expect(page.locator('form, input, textarea')).toHaveCount(0)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     expect(writes).toEqual([])
-    await page.getByRole('button', { name: 'Back to the invitation' }).click()
-    await expect(page.getByRole('heading', { name: 'Help us make Oro yours.' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Back to the invitation' })).toHaveCount(0)
   })
 }
 

@@ -4,6 +4,7 @@ import { Heading, Text } from 'oro-kit'
 import MessageThread from './MessageThread'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
+import oroHurray from '../../assets/mascot/oro_hurray.webp'
 
 const REASONS = ['It knows your closet', 'It answers in a minute', 'It tells you why']
 const HEADLINE = 'The #1 AI stylist you can text'
@@ -49,10 +50,9 @@ export default function Home() {
             </div>
           </section>
           <section className="home-panel" aria-labelledby="home-moments-title" data-home-reveal>
-            <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself. Feel ready for anything.</Heading>
+            <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself.<br />{' '}Feel ready for anything.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
-              You know how you want to feel when you walk into a room. Getting dressed for it can
-              be harder. Oro helps you find your look, whatever your plans.
+              From everyday plans to big moments, Oro helps you find a look you’ll feel good in.
             </Text>
           </section>
           <section className="home-panel" aria-labelledby="home-reasons-title" data-home-reveal>
@@ -67,7 +67,6 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <Text muted className="home-reason-note home-stagger" style={{ '--home-delay': '510ms' }}>It gets more personal every time.</Text>
           </section>
         </div>
         <div className="home-phone-column">
@@ -78,6 +77,7 @@ export default function Home() {
         </div>
       </div>
       <section className="home-closer halo-container" aria-labelledby="closer-title" data-home-reveal>
+        <img className="home-mascot home-mascot--hurray home-stagger" src={oroHurray} alt="" loading="lazy" decoding="async" />
         <Heading as="h2" variant="title" id="closer-title" className="home-stagger">Whatever the day is,<br /><em>you’re dressed for it.</em></Heading>
         <HomeCta place="closer" className="home-stagger">Start the conversation</HomeCta>
       </section>

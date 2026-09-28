@@ -35,7 +35,7 @@ function HeroLight({ onTryOro }) {
     <section id="intro" className="hero hero--light">
       <div className="hero-l-id">
         <div className="hero-l-avatar"><span>o</span></div>
-        <img src="/static/oro-logo.png" alt="oro" className="hero-l-logo" />
+        <img src="/oro-logo.webp" alt="Oro" className="hero-l-logo" width="1672" height="941" />
         <div className="hero-l-time">this morning, 7:42</div>
       </div>
 
@@ -114,7 +114,7 @@ function HeroDark({ onTryOro }) {
         </div>
 
         <aside className="hero-d-rail">
-          <img className="hero-d-logo" src="/static/oro-logo.png" alt="oro" width="500" height="500" fetchpriority="high" />
+          <img className="hero-d-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" fetchpriority="high" />
           <h1 className="hero-d-title">make your wardrobe <span className="hero-d-title-accent">work</span> for you.</h1>
           <div className="hero-d-ctacol">
             <Cta size="hero" inverse onClick={onTryOro}>

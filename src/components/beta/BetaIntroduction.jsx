@@ -1,5 +1,6 @@
 import { Children, cloneElement, isValidElement } from 'react'
 import GoldBackground from '../GoldBackground'
+import ButtonArrow from '../ButtonArrow'
 import { Button, Heading, Text } from 'oro-kit'
 import { useBetaPages } from './useBetaPages'
 
@@ -11,7 +12,7 @@ function textContent(children) {
   }).join('')
 }
 
-export function TypedText({ children, duration = 1400, delay = 'var(--beta-copy-delay, 1800ms)', caret = false }) {
+function TypedText({ children, duration = 1400, delay = '180ms', caret = false }) {
   const text = textContent(children)
   const length = [...text].length
   const interval = duration / Math.max(length - 1, 1)
@@ -34,11 +35,10 @@ export function TypedText({ children, duration = 1400, delay = 'var(--beta-copy-
 }
 
 function Chapter({ id, title, children, className = '' }) {
-  const duration = Math.min(2200, textContent(title).length * 36)
   return (
-    <section id={id} className={`beta-chapter ${className}`} aria-labelledby={`${id}-title`} style={{ '--beta-copy-delay': `${duration + 260}ms` }}>
+    <section id={id} className={`beta-chapter ${className}`} aria-labelledby={`${id}-title`}>
       <div className="beta-chapter-content">
-        <Heading as="h2" variant="title" id={`${id}-title`} tabIndex={-1} className="beta-typing-title"><TypedText duration={duration} delay="100ms" caret>{title}</TypedText></Heading>
+        <Heading as="h2" variant="title" id={`${id}-title`} tabIndex={-1}>{title}</Heading>
         <div className="beta-chapter-copy">{children}</div>
       </div>
     </section>
@@ -48,63 +48,72 @@ function Chapter({ id, title, children, className = '' }) {
 function TypingTitle() {
   return (
     <Heading as="h1" variant="display" id="beta-title" tabIndex={-1} className="beta-typing-title">
-      <TypedText duration={1600} delay="180ms" caret>Help us make<br />Oro <em>yours.</em></TypedText>
+      <TypedText duration={1000} delay="180ms" caret>Help us make<br />Oro <em>yours.</em></TypedText>
     </Heading>
   )
 }
 
-export default function BetaIntroduction({ onStart, previewForm }) {
-  const pages = [
+function LandingStep({ disabled, onNext }) {
+  return (
     <section className="beta-chapter beta-chapter--hero" aria-labelledby="beta-title">
       <div className="beta-chapter-content">
         <TypingTitle />
-        <Text muted className="beta-lead"><TypedText>We’re building toward a world where turning to your AI stylist is a normal part of everyday life.</TypedText></Text>
+        <Text muted className="beta-lead">We’re building toward a world where turning to your AI stylist is a normal part of everyday life.</Text>
+        <Button className="beta-story-next" disabled={disabled} onClick={onNext}>See beta details <ButtonArrow /></Button>
       </div>
       <Text variant="support" muted className="beta-story-date">SEPTEMBER 26–OCTOBER 1, 2026</Text>
-    </section>,
-    <Chapter id="our-vision" title={<>Our vision is for everyone to have an AI stylist <em>in their corner.</em></>}>
-      <Text muted><TypedText>A stylist that gets to know your taste, understands your wardrobe, remembers your preferences, and helps you make decisions that work for your life.</TypedText></Text>
-    </Chapter>,
-    <Chapter id="over-imessage" title={<>Today, we’re testing the earliest version of that experience with you.</>}>
-      <Text muted><TypedText>There’s still a lot to build and improve, and this beta will help us understand what deserves our attention next.</TypedText></Text>
-    </Chapter>,
-    <Chapter id="the-week" title={<>The beta runs <em>September 26–October 1.</em></>}>
+    </section>
+  )
+}
+
+function BetaDetailsStep({ disabled, onNext }) {
+  return (
+    <Chapter id="tester-value" title={<>Help shape the future of <em>Oro.</em></>} className="beta-chapter--benefits">
       <div className="beta-expectations">
-        <Text muted><TypedText duration={700}>What we need from you:</TypedText></Text>
+        <Text muted>As a beta tester, you’ll use Oro with your real clothes and plans, then tell us what works and what needs to improve.</Text>
         <ul className="beta-checklist">
-          {['Try Oro with your real clothes and everyday plans.', 'Share feedback after selected interactions.', 'Complete a daily check-in.', 'Give us an end-of-beta review.'].map((item, index) => (
-            <li key={item}><span className="beta-checkmark" aria-hidden="true">✓</span><TypedText delay={`calc(var(--beta-copy-delay) + ${600 + index * 180}ms)`} duration={900}>{item}</TypedText></li>
+          {['Try Oro during the September 26–October 1 beta.', 'Share honest feedback so we know what to build next.'].map((item) => (
+            <li key={item}><span className="beta-checkmark" aria-hidden="true">✓</span>{item}</li>
           ))}
         </ul>
       </div>
-      <Text variant="label" muted className="beta-review-disclosure"><TypedText delay="calc(var(--beta-copy-delay) + 1400ms)">Our team will review your beta conversations, any photos you share, and your feedback to understand your experience and improve Oro.</TypedText></Text>
-    </Chapter>,
-    <Chapter id="be-honest" title={<>Please don’t tell us it’s good <em>just to be nice.</em></>} className="beta-chapter--honest">
-      <Text muted><TypedText>If an outfit suggestion sucks, tell us. If something is confusing, frustrating, or more effort than it’s worth, tell us.</TypedText></Text>
-    </Chapter>,
-    <Chapter id="a-little-thank-you" title={<>As a thank-you, selected beta testers <em>will get:</em></>} className="beta-chapter--benefits">
+      <Text variant="label" muted className="beta-review-disclosure">Our team will review your beta conversations, photos you share, and feedback to improve Oro.</Text>
       <ul className="beta-benefit-list">
-        <li><span aria-hidden="true">01</span><div><strong><TypedText duration={1000}>Free lifetime access to Oro.</TypedText></strong></div></li>
-        <li><span aria-hidden="true">02</span><div><strong><TypedText duration={1000}>Future referral codes for your friends</TypedText></strong></div></li>
-        <li><span aria-hidden="true">03</span><div><strong><TypedText duration={1000}>An invitation to our Oronauts beta group chat</TypedText></strong></div></li>
-        <li><span aria-hidden="true">04</span><div><strong><TypedText duration={1000}>Free Oro merch.</TypedText></strong></div></li>
+        <li><span aria-hidden="true">01</span><div><strong>Free lifetime access to Oro.</strong></div></li>
+        <li><span aria-hidden="true">02</span><div><strong>Future referral codes for your friends.</strong></div></li>
+        <li><span aria-hidden="true">03</span><div><strong>An invitation to our Oronauts beta group chat.</strong></div></li>
+        <li><span aria-hidden="true">04</span><div><strong>Free Oro merch.</strong></div></li>
       </ul>
-      {previewForm && <Text muted><TypedText>Tell us a little about yourself below to <strong>request an invite</strong> :)</TypedText></Text>}
-      <Button onClick={onStart}>{previewForm ? 'Request an invite' : 'Invites open soon'} <span aria-hidden="true">↗</span></Button>
+      <Button className="beta-story-next" disabled={disabled} onClick={onNext}>Continue to invite <ButtonArrow /></Button>
+    </Chapter>
+  )
+}
+
+function InviteStep({ onStart, previewForm }) {
+  return (
+    <Chapter id="request-an-invite" title={<>Ready to help us make Oro <em>yours?</em></>}>
+      <Text muted>{previewForm ? 'Tell us a little about yourself to request a beta invite.' : 'Beta invites will open soon.'}</Text>
+      <Button onClick={onStart}>{previewForm ? 'Request an invite' : 'Invites open soon'} <ButtonArrow direction="up-right" /></Button>
       {previewForm && <Text variant="support" muted>Requesting an invite doesn’t guarantee selection.</Text>}
-    </Chapter>,
-  ]
-  const { rootRef, stageRef, page, goTo } = useBetaPages(pages.length, onStart)
+    </Chapter>
+  )
+}
+
+export default function BetaIntroduction({ onStart, previewForm, initialPage, onNavigate }) {
+  const { rootRef, stageRef, page, goTo } = useBetaPages(3, onStart, initialPage, onNavigate)
+  const activeStep = page.index === 0
+    ? <LandingStep disabled={page.phase !== 'idle'} onNext={() => goTo(1)} />
+    : page.index === 1
+      ? <BetaDetailsStep disabled={page.phase !== 'idle'} onNext={() => goTo(2)} />
+      : <InviteStep onStart={onStart} previewForm={previewForm} />
+
   return (
     <div className="beta-story" ref={rootRef} data-scene={page.index % 3} data-phase={page.phase} data-direction={page.direction}>
       <div className="beta-story-halo" aria-hidden="true" />
-      <GoldBackground />
+      {page.index === 0 && <GoldBackground />}
       <div className="beta-story-stage" ref={stageRef} tabIndex={0} role="region" aria-label="About Oro">
-        <div className="beta-story-page" key={page.index}>{pages[page.index]}</div>
+        <div className="beta-story-page" key={page.index}>{activeStep}</div>
       </div>
-      <nav className="beta-story-nav" aria-label="Invitation pages">
-        <button type="button" className="beta-page-arrow" aria-label={page.index === pages.length - 1 ? (previewForm ? 'Go to the form' : 'About beta invites') : 'Next page'} aria-disabled={page.phase !== 'idle' || undefined} onClick={() => { if (page.phase === 'idle') page.index === pages.length - 1 ? onStart() : goTo(page.index + 1) }}><span aria-hidden="true">→</span></button>
-      </nav>
     </div>
   )
 }

@@ -1,16 +1,9 @@
 import { Button, Chip, Heading, Text } from 'oro-kit'
 import { useState } from 'react'
+import ButtonArrow from '../ButtonArrow'
 import './Contact.css'
 
 const TOPICS = ['hello', 'support', 'press', 'partnership', 'careers', 'feedback']
-
-function Arrow() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M5 12h14M13 5l7 7-7 7" />
-    </svg>
-  )
-}
 
 function VisitorForm() {
   const [message, setMessage] = useState('')
@@ -116,7 +109,7 @@ function VisitorForm() {
       </div>
 
       <Button type="submit" className="ct-send" disabled={status === 'submitting'}>
-        {status === 'submitting' ? '…Sealing.' : (<>Seal &amp; send <Arrow /></>)}
+        {status === 'submitting' ? '…Sealing.' : (<>Seal &amp; send <ButtonArrow /></>)}
       </Button>
 
       {status === 'error' && (
@@ -165,7 +158,7 @@ export default function Contact() {
             </div>
             <p className="ct-signoff-oro">
               Yours,
-              <img className="halo-logo ct-signoff-logo" src="/static/oro-logo.png" alt="Oro" width="80" height="32" decoding="async" />
+              <img className="halo-logo ct-signoff-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" decoding="async" />
             </p>
           </div>
 

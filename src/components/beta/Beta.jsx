@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Heading, Notice, Text, TextField } from 'oro-kit'
-import BetaIntroduction, { TypedText } from './BetaIntroduction'
-import GoldBackground from '../GoldBackground'
+import ButtonArrow from '../ButtonArrow'
+import BetaIntroduction from './BetaIntroduction'
 import { choices, emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { saveBetaRequest, submissionMessages } from './betaSubmission'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
+const storySteps = ['landing', 'beta-details', 'invite']
 
 function Choices({ name, value, update, error, multiple = false, optional = false, disabled = false }) {
   return (
@@ -58,6 +59,7 @@ export default function Beta() {
   const message = submissionMessages[status]
   const [view, setView] = useState('story')
   const [step, setStep] = useState(0)
+  const [storyStep, setStoryStep] = useState(0)
   const formRef = useRef(null)
   const stepTitleRef = useRef(null)
   const receiptRef = useRef(null)
@@ -82,11 +84,25 @@ export default function Beta() {
   useEffect(() => {
     document.title = 'Help us make Oro yours. - Oro beta'
     const syncLocation = () => {
-      const index = formSteps.findIndex((item) => item.hash === window.location.hash)
+      const url = new URL(window.location.href)
+      const requestedStep = url.searchParams.get('step') || url.hash.slice(1)
+      const index = formSteps.findIndex((item) => item.hash.slice(1) === requestedStep)
       if (index >= 0) {
+        if (!url.searchParams.has('step')) {
+          url.searchParams.set('step', requestedStep)
+          url.hash = ''
+          window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+        }
         setStep(index)
         setView(entryView)
       } else {
+        const storyIndex = Math.max(storySteps.indexOf(requestedStep), 0)
+        if (storySteps[storyIndex] !== requestedStep) {
+          url.searchParams.set('step', storySteps[storyIndex])
+          url.hash = ''
+          window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+        }
+        setStoryStep(storyIndex)
         setView('story')
       }
     }
@@ -127,14 +143,25 @@ export default function Beta() {
 
   function openStep(index) {
     if (submitting.current) return
-    window.history.pushState(null, '', formSteps[index].hash)
+    const url = new URL(window.location.href)
+    url.searchParams.set('step', formSteps[index].hash.slice(1))
+    url.hash = ''
+    window.history.pushState(null, '', `${url.pathname}${url.search}`)
     setStep(index)
     setView(entryView)
   }
 
-  function openStory() {
+  function navigateStory(index) {
+    const url = new URL(window.location.href)
+    url.searchParams.set('step', storySteps[index])
+    url.hash = ''
+    window.history.pushState(null, '', `${url.pathname}${url.search}`)
+  }
+
+  function openStory(index = storySteps.length - 1) {
     if (submitting.current) return
-    window.history.pushState(null, '', window.location.pathname)
+    navigateStory(index)
+    setStoryStep(index)
     setView('story')
     window.scrollTo({ top: 0, behavior: 'instant' })
   }
@@ -178,7 +205,7 @@ export default function Beta() {
     field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name', wrapperClassName: 'beta-name-field' }),
     <>
       <div className="beta-contact-fields">{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}{field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123' })}</div>
-      {field('instagram', <>Instagram handle <span className="beta-optional">Optional</span></>, { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle', maxLength: 31, hint: 'We’re making an Instagram group chat for our original Oronauts so you can meet other testers, share your experiences, and have some fun together. Leave your handle if you’d like an invite :)' })}
+      {field('instagram', 'Instagram handle', { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle (optional)', maxLength: 31, hint: 'Leave your handle if you’d like an invite to the original Oronauts Instagram group chat :)' })}
     </>,
     options('usedOro'),
     options('outfitDays'),
@@ -196,30 +223,27 @@ export default function Beta() {
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <header className="halo-header beta-header"><div className="halo-container halo-header-inner">
-        <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/static/oro-logo.png" alt="Oro" width="80" height="32" /></a>
-        <nav className="halo-nav" aria-label="Beta"><span className="beta-header-note">Made with you, for you.</span>
-          {view === 'story' ? <a className="oro-button oro-button--secondary" href="#request" onClick={(event) => { event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <span aria-hidden="true">↗</span></a>
-            : <Button variant="tertiary" disabled={saving} onClick={openStory}>Back to the invitation</Button>}
-        </nav>
+        <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" /></a>
+        {view === 'story' && <nav className="halo-nav" aria-label="Beta">
+          <a className="oro-button oro-button--secondary" href={`?step=${formSteps[step].hash.slice(1)}`} onClick={(event) => { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <ButtonArrow direction="up-right" /></a>
+        </nav>}
       </div></header>
       {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is sent or saved</span><button onClick={() => setView(view === 'receipt' ? 'form' : 'receipt')}>{view === 'receipt' ? 'Back to form' : 'Preview confirmation'} <span aria-hidden="true">↗</span></button></div></div>}
-      {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} previewForm={allowForm} />}
+      {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} previewForm={allowForm} initialPage={storyStep} onNavigate={navigateStory} />}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
         <div className="beta-story-halo" aria-hidden="true" />
-        <GoldBackground />
         <div className="beta-form-panel beta-form-heading">
-          <Heading ref={comingSoonRef} tabIndex={-1} as="h1" variant="title" id="coming-soon-title"><TypedText duration={1000} delay="60ms" caret>Invites open <em>soon.</em></TypedText></Heading>
+          <Heading ref={comingSoonRef} tabIndex={-1} as="h1" variant="title" id="coming-soon-title">Invites open <em>soon.</em></Heading>
           <Text muted>We’re getting ready to welcome our first Oronauts. Check back soon to request your invite.</Text>
-          <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <span aria-hidden="true">↗</span></a>
+          <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <ButtonArrow direction="up-right" /></a>
         </div>
       </section>}
       {allowForm && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
         <div className="beta-story-halo" aria-hidden="true" />
-        <GoldBackground />
         <div className="beta-form-progress" role="progressbar" aria-label="Invite request progress" aria-valuemin={0} aria-valuemax={formSteps.length} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${formSteps.length}`}><span style={{ width: `${(step + 1) / formSteps.length * 100}%` }} /></div>
         <div className="beta-form-panel" key={step}>
           <div className="beta-form-heading">
-            <Heading ref={stepTitleRef} tabIndex={-1} as="h1" variant="title" id="request-title"><TypedText duration={Math.min(1200, stepInfo.title.length * 24)} delay="60ms" caret>{stepInfo.title}</TypedText></Heading>
+            <Heading ref={stepTitleRef} tabIndex={-1} as="h1" variant="title" id="request-title">{stepInfo.title}</Heading>
             {stepInfo.optional && <Text variant="support" muted>Optional</Text>}
             {stepInfo.description && <Text muted>{stepInfo.description}</Text>}
           </div>
@@ -229,7 +253,7 @@ export default function Beta() {
               <Text variant="support" muted>We’ll review your responses and email you if you’re selected.</Text>
               {status === 'unavailable' && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title="This draft isn’t connected yet.">Nothing was submitted. Your answers are still here. Use “Preview confirmation” above to review the receipt design.</Notice></div>}
               {message && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title={message[0]}>{message[1]}</Notice></div>}
-              <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Request an invite'} <span aria-hidden="true">↗</span></Button>
+              <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Request an invite'} <ButtonArrow direction="up-right" /></Button>
               <div className="beta-consent-options">
                 <label><input type="checkbox" disabled={saving} name="terms" required checked={answers.terms} onChange={(event) => update('terms', event.target.checked)} aria-invalid={errors.terms ? true : undefined} aria-describedby={errors.terms ? 'terms-error' : undefined} /><span>By submitting this request, I agree to Oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a>.</span></label>
                 {errors.terms && <p id="terms-error" className="oro-field__error">{errors.terms}</p>}
@@ -238,7 +262,7 @@ export default function Beta() {
               </div>
               <Text variant="support" muted>Read our <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a> to learn how we handle your information.</Text>
             </div>}
-            <div className="beta-step-actions"><Button variant="tertiary" className="beta-form-back" disabled={saving} onClick={() => step > 0 ? openStep(step - 1) : openStory()}>← {step > 0 ? 'Back' : 'The invitation'}</Button>{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><span aria-hidden="true">→</span></button>}</div>
+            <div className="beta-step-actions"><button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving} onClick={() => step > 0 ? openStep(step - 1) : openStory(1)}><ButtonArrow direction="left" size={18} /></button>{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><ButtonArrow size={18} /></button>}</div>
           </form>
           <Text variant="support" muted className="beta-form-help">Questions? <a href="mailto:sunny@buildingoro.ca">Email us</a></Text>
         </div>

@@ -1,5 +1,6 @@
 import { Button, Chip, Heading, TextField as KitTextField } from 'oro-kit'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import ButtonArrow from '../ButtonArrow'
 import { postOnboarding } from './onboardingApi'
 import GoldBackground from '../GoldBackground'
 import './GetStarted.css'
@@ -591,7 +592,7 @@ function Welcome({ onStart }) {
           See you inside,<br /><span>Sunny &amp; the Oro team</span>
         </p>
         <Button className="gs-cta" onClick={onStart}>
-          Let’s get you settled <span aria-hidden="true">→</span>
+          Let’s get you settled <ButtonArrow />
         </Button>
       </div>
     </div>

@@ -17,7 +17,7 @@ export default function SiteFooter() {
     <footer className="site-footer">
       <div className="site-footer-grid">
         <div className="site-footer-brand">
-          <img src="/static/oro-logo.png" alt="oro" className="site-footer-logo" />
+          <img src="/oro-logo.webp" alt="Oro" className="site-footer-logo" width="1672" height="941" />
           <p className="site-footer-tagline">
             the stylist that fits in your pocket.
           </p>
