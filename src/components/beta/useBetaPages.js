@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-export function useBetaPages(count, onComplete) {
+export function useBetaPages(count, onComplete, initialPage = 0, onNavigate) {
   const rootRef = useRef(null)
   const stageRef = useRef(null)
-  const current = useRef(0)
+  const current = useRef(initialPage)
   const transition = useRef(null)
   const timers = useRef([])
   const focusNext = useRef(false)
   const reducedMotion = useRef(false)
-  const [page, setPage] = useState({ index: 0, phase: 'idle', direction: 1 })
+  const [page, setPage] = useState({ index: initialPage, phase: 'idle', direction: 1 })
 
   const finish = useCallback(() => {
     timers.current.forEach(clearTimeout)
@@ -27,6 +27,7 @@ export function useBetaPages(count, onComplete) {
       return
     }
     const direction = Math.sign(index - current.current)
+    onNavigate?.(index)
     focusNext.current = keyboard || stageRef.current?.contains(document.activeElement)
     transition.current = { index, direction }
     if (reducedMotion.current) {
@@ -39,7 +40,18 @@ export function useBetaPages(count, onComplete) {
       setPage({ index, direction, phase: 'entering' })
     }, 140))
     timers.current.push(setTimeout(finish, 850))
-  }, [count, finish, onComplete])
+  }, [count, finish, onComplete, onNavigate])
+
+  useEffect(() => {
+    if (initialPage === current.current) return
+    timers.current.forEach(clearTimeout)
+    timers.current = []
+    transition.current = null
+    focusNext.current = true
+    const direction = Math.sign(initialPage - current.current)
+    current.current = initialPage
+    setPage({ index: initialPage, direction, phase: 'idle' })
+  }, [initialPage])
 
   useEffect(() => {
     stageRef.current?.scrollTo({ top: 0, behavior: 'instant' })

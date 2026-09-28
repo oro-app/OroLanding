@@ -6,6 +6,7 @@ import { saveBetaRequest, submissionMessages } from './betaSubmission'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
+const storySteps = ['landing', 'beta-details', 'invite']
 
 function Choices({ name, value, update, error, multiple = false, optional = false, disabled = false }) {
   return (
@@ -57,6 +58,7 @@ export default function Beta() {
   const message = submissionMessages[status]
   const [view, setView] = useState('story')
   const [step, setStep] = useState(0)
+  const [storyStep, setStoryStep] = useState(0)
   const formRef = useRef(null)
   const stepTitleRef = useRef(null)
   const receiptRef = useRef(null)
@@ -93,6 +95,13 @@ export default function Beta() {
         setStep(index)
         setView(entryView)
       } else {
+        const storyIndex = Math.max(storySteps.indexOf(requestedStep), 0)
+        if (storySteps[storyIndex] !== requestedStep) {
+          url.searchParams.set('step', storySteps[storyIndex])
+          url.hash = ''
+          window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+        }
+        setStoryStep(storyIndex)
         setView('story')
       }
     }
@@ -141,12 +150,17 @@ export default function Beta() {
     setView(entryView)
   }
 
-  function openStory() {
-    if (submitting.current) return
+  function navigateStory(index) {
     const url = new URL(window.location.href)
-    url.searchParams.delete('step')
+    url.searchParams.set('step', storySteps[index])
     url.hash = ''
     window.history.pushState(null, '', `${url.pathname}${url.search}`)
+  }
+
+  function openStory(index = storySteps.length - 1) {
+    if (submitting.current) return
+    navigateStory(index)
+    setStoryStep(index)
     setView('story')
     window.scrollTo({ top: 0, behavior: 'instant' })
   }
@@ -208,14 +222,14 @@ export default function Beta() {
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <header className="halo-header beta-header"><div className="halo-container halo-header-inner">
-        <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/static/oro-logo.png" alt="Oro" width="80" height="32" /></a>
+        <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/static/oro-logo.webp" alt="Oro" width="1672" height="941" /></a>
         <nav className="halo-nav" aria-label="Beta"><span className="beta-header-note">Made with you, for you.</span>
           {view === 'story' ? <a className="oro-button oro-button--secondary" href={`?step=${formSteps[step].hash.slice(1)}`} onClick={(event) => { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <span aria-hidden="true">↗</span></a>
-            : <Button variant="tertiary" disabled={saving} onClick={openStory}>Back to the invitation</Button>}
+            : <Button variant="tertiary" disabled={saving} onClick={() => openStory()}>Back to the invitation</Button>}
         </nav>
       </div></header>
       {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is sent or saved</span><button onClick={() => setView(view === 'receipt' ? 'form' : 'receipt')}>{view === 'receipt' ? 'Back to form' : 'Preview confirmation'} <span aria-hidden="true">↗</span></button></div></div>}
-      {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} previewForm={allowForm} />}
+      {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} previewForm={allowForm} initialPage={storyStep} onNavigate={navigateStory} />}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-panel beta-form-heading">

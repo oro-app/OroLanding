@@ -52,8 +52,8 @@ function TypingTitle() {
   )
 }
 
-export default function BetaIntroduction({ onStart, previewForm }) {
-  const { rootRef, stageRef, page, goTo } = useBetaPages(3, onStart)
+export default function BetaIntroduction({ onStart, previewForm, initialPage, onNavigate }) {
+  const { rootRef, stageRef, page, goTo } = useBetaPages(3, onStart, initialPage, onNavigate)
   const pages = [
     <section className="beta-chapter beta-chapter--hero" aria-labelledby="beta-title">
       <div className="beta-chapter-content">
