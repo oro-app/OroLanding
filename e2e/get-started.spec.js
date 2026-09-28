@@ -63,7 +63,7 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await page.getByRole('button', { name: 'A friend', exact: true }).click()
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
-  await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('CA')
+  await expect(page.getByRole('button', { name: 'Country code: Canada (+1)', exact: true })).toBeVisible()
   await page.getByLabel('Phone number', { exact: true }).fill('(416) 555-0123')
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await verify(page)
@@ -87,7 +87,10 @@ for (const [country, phone, expected] of [
   test(`the ${country} dropdown normalizes local numbers for start, resend, and verify`, async ({ page, api }) => {
     await page.clock.install()
     await phoneStep(page)
-    await page.getByRole('combobox', { name: 'Country code' }).selectOption(country)
+    await page.getByRole('button', { name: /^Country code:/ }).click()
+    await page.getByRole('textbox', { name: 'Search countries' }).fill(country)
+    const label = { PK: 'Pakistan (+92)', GB: 'United Kingdom (+44)', IT: 'Italy (+39)' }[country]
+    await page.getByRole('button', { name: label, exact: true }).click()
     await page.getByLabel('Phone number', { exact: true }).fill(phone)
     await page.getByRole('button', { name: 'Send verification code.' }).click()
     await expect(page.getByLabel('Verification code', { exact: true })).toBeVisible()
@@ -107,13 +110,13 @@ for (const [country, phone, expected] of [
 test('pasted international numbers update the dropdown and survive a reload', async ({ page, api }) => {
   await phoneStep(page)
   await page.getByLabel('Phone number', { exact: true }).fill('+92 301 2345678')
-  await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('PK')
+  await expect(page.getByRole('button', { name: 'Country code: Pakistan (+92)', exact: true })).toBeVisible()
   await expect(page.getByLabel('Phone number', { exact: true })).toHaveValue('0301 2345678')
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('oro_get_started_responses')))
   expect(saved).toMatchObject({ phoneCountry: 'PK', phone: '0301 2345678', country: 'CA' })
   await page.reload()
   await continueToPhone(page)
-  await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('PK')
+  await expect(page.getByRole('button', { name: 'Country code: Pakistan (+92)', exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await verify(page)
   await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeVisible()
@@ -123,7 +126,7 @@ test('pasted international numbers update the dropdown and survive a reload', as
 test('older drafts with full international numbers are split into the country and national number', async ({ page, api }) => {
   const { phoneCountry, ...olderDraft } = draft
   await phoneStep(page, { ...olderDraft, phone: '+1 (416) 555-0123' })
-  await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('CA')
+  await expect(page.getByRole('button', { name: 'Country code: Canada (+1)', exact: true })).toBeVisible()
   await expect(page.getByLabel('Phone number', { exact: true })).toHaveValue('(416) 555-0123')
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await expect(page.getByLabel('Verification code', { exact: true })).toBeVisible()
