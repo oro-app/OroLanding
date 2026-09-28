@@ -51,6 +51,7 @@
 .beta-form-progress > span { display: block; height: 100%; background: var(--oro-color-accent); }
 .beta-form-panel { width: min(100%, 680px); margin: auto; }
 .beta-form-heading { display: grid; gap: var(--oro-space-3); margin-bottom: var(--oro-space-8); text-align: center; }
+.beta-form-heading:has(+ .beta-form .beta-choice-hint) { margin-bottom: var(--oro-space-3); }
 .beta-form-heading .oro-heading { font-size: var(--oro-type-section-size); line-height: var(--oro-type-section-line-height); text-wrap: balance; }
 .halo-site .beta-form-heading h1:focus-visible { outline: none; }
 .beta-form { width: min(100%, 560px); margin-inline: auto; min-width: 0; display: grid; gap: var(--oro-space-6); }
@@ -67,10 +68,10 @@
 .beta-question-body > .oro-button--tertiary { justify-self: center; }
 .beta-contact-fields { display: grid; grid-template-columns: 1fr 1fr; gap: var(--oro-space-4); }
 .beta-optional { margin-left: var(--oro-space-2); font-size: var(--oro-type-support-size); font-weight: 400; color: var(--oro-color-muted); }
-.beta-choice-hint { margin-bottom: calc(-1 * var(--oro-space-3)); text-align: center; }
+.beta-choice-hint { margin-bottom: var(--oro-space-2); text-align: center; }
 .beta-choices { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--oro-space-2); }
-.beta-option { display: flex; align-items: center; gap: var(--oro-space-2); min-height: 48px; padding: var(--oro-space-3) var(--oro-space-4); border: 1px solid var(--oro-color-border); border-radius: var(--oro-radius-pill); cursor: pointer; background: var(--oro-color-surface); color: var(--oro-color-muted); font-size: var(--oro-type-label-size); line-height: var(--oro-type-label-line-height); transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
-.beta-option:has(:checked) { background: var(--oro-color-soft); border-color: var(--oro-color-accent); color: var(--oro-color-accent); box-shadow: 0 3px 0 color-mix(in srgb, var(--oro-color-accent) 18%, transparent); }
+.beta-option { display: flex; align-items: center; gap: var(--oro-space-2); min-height: 48px; padding: var(--oro-space-3) var(--oro-space-4); border: 1px solid var(--oro-color-border); border-radius: var(--oro-radius-pill); cursor: pointer; background: var(--oro-color-surface); color: var(--oro-color-muted); font-size: var(--oro-type-label-size); line-height: var(--oro-type-label-line-height); transition: background-color 180ms ease, border-color 180ms ease; }
+.beta-option:has(:checked) { background: var(--oro-color-soft); border-color: var(--oro-color-accent); color: var(--oro-color-accent); }
 .beta-option:has(:focus-visible) { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
 .beta-option input, .beta-consent input { appearance: auto; width: 17px; height: 17px; accent-color: var(--oro-color-accent); flex: 0 0 17px; margin: 0; cursor: pointer; }
 .beta-option input { appearance: none; width: 20px; height: 20px; flex-basis: 20px; display: grid; place-content: center; border: 1px solid var(--oro-color-selected-border); border-radius: 50%; background: var(--oro-color-surface); }
