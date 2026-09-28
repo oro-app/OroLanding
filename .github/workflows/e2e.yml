@@ -8,7 +8,9 @@ on:
 
 jobs:
   e2e:
-    if: github.event.deployment_status.state == 'success'
+    if: >-
+      github.event.deployment_status.state == 'success' &&
+      contains(fromJSON('["Preview – oro", "Production – oro"]'), github.event.deployment_status.environment)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
