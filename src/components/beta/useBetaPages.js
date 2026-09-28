@@ -6,7 +6,7 @@ export function useBetaPages(count, onComplete, initialPage = 0, onNavigate) {
   const current = useRef(initialPage)
   const transition = useRef(null)
   const timers = useRef([])
-  const focusNext = useRef(false)
+  const focusNext = useRef(true)
   const reducedMotion = useRef(false)
   const [page, setPage] = useState({ index: initialPage, phase: 'idle', direction: 1 })
 
