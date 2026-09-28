@@ -47,7 +47,7 @@ function Chapter({ id, title, children, className = '' }) {
 function TypingTitle() {
   return (
     <Heading as="h1" variant="display" id="beta-title" tabIndex={-1} className="beta-typing-title">
-      <TypedText duration={1600} delay="180ms" caret>Help us make<br />Oro <em>yours.</em></TypedText>
+      <TypedText duration={1000} delay="180ms" caret>Help us make<br />Oro <em>yours.</em></TypedText>
     </Heading>
   )
 }

@@ -100,12 +100,12 @@
 @media (hover: hover) { .beta-option:hover { background: var(--oro-color-soft); } }
 @media (prefers-reduced-motion: no-preference) {
   .beta-story[data-phase='leaving'] :is(.beta-chapter-content, .beta-story-date) { animation: beta-page-out 140ms ease-in both; }
-  .beta-chapter:not(.beta-chapter--hero) .beta-chapter-content > .oro-heading { animation: beta-title-in 180ms ease-out both; }
-  .beta-chapter:not(.beta-chapter--hero) .beta-chapter-copy { animation: beta-body-in 300ms cubic-bezier(.22, 1, .36, 1) 140ms both; }
+  .beta-chapter:not(.beta-chapter--hero) .beta-chapter-content > .oro-heading { animation: beta-title-in 280ms ease-out both; }
+  .beta-chapter:not(.beta-chapter--hero) .beta-chapter-copy { animation: beta-body-in 450ms cubic-bezier(.22, 1, .36, 1) 240ms both; }
   .beta-type-char { animation: beta-type-on 40ms linear both; animation-delay: var(--type-delay); }
   .beta-type-with-caret .beta-type-char::after { animation: beta-type-caret var(--type-hold) step-end both; animation-delay: var(--type-delay); }
   .beta-type-with-caret .beta-type-char--last::after { animation: beta-caret-settle 500ms step-end 2 both; animation-delay: var(--type-delay); }
-  .beta-chapter--hero .beta-lead, .beta-story-date { animation: beta-copy-in 240ms ease-out 1650ms both; }
+  .beta-chapter--hero .beta-lead, .beta-story-date { animation: beta-copy-in 240ms ease-out 1050ms both; }
   .beta-form-panel { animation: beta-step-in 180ms ease-out both; }
   .beta-form-progress > span { transition: width 180ms ease-out; }
 }
