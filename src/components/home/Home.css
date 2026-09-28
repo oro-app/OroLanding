@@ -120,3 +120,5 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-site a, .halo-site button, .home-panel { transition: none; }
   .halo-site button:active { transform: none; }
 }
+
+:root:has(.halo-site) { scrollbar-gutter: stable; }
