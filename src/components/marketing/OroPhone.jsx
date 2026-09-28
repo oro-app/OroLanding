@@ -1,5 +1,5 @@
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
-import oroMascot from '../../assets/logos/oro_logo_mascot_only.webp'
+import oroMascot from '../../assets/logos/oro_logo.webp'
 import './OroPhone.css'
 
 // Real-app phone mockup — ported from the /try-oro handoff's phones.jsx, which

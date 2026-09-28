@@ -12,7 +12,7 @@ export const DEFAULT_IMAGE_META = {
   height: 909,
   alt: 'Two Oro chat bubbles: “i have nothing to wear.” and “i think your closet disagrees.”',
 }
-export const LOGO_IMAGE = '/static/oro-logo.png'
+export const LOGO_IMAGE = '/oro-logo.webp'
 
 const ORGANIZATION_ID = `${SITE_URL}/#organization`
 const WEBSITE_ID = `${SITE_URL}/#website`

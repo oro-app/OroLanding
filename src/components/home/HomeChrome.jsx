@@ -3,7 +3,7 @@ import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 
 function HomeLogo() {
-  return <img className="halo-logo" src="/static/oro-logo.webp" alt="Oro" width="1672" height="941" decoding="async" />
+  return <img className="halo-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" decoding="async" />
 }
 
 export function HomeCta({ place, children, className = '' }) {

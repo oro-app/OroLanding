@@ -165,7 +165,7 @@ export default function Contact() {
             </div>
             <p className="ct-signoff-oro">
               Yours,
-              <img className="halo-logo ct-signoff-logo" src="/static/oro-logo.webp" alt="Oro" width="1672" height="941" decoding="async" />
+              <img className="halo-logo ct-signoff-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" decoding="async" />
             </p>
           </div>
 

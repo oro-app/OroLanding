@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import lookDay from '../../assets/home/look-day.webp'
 import lookNight from '../../assets/home/look-night.webp'
-import oroMascot from '../../assets/logos/oro_logo_mascot_only.webp'
+import oroMascot from '../../assets/logos/oro_logo.webp'
 
 // The thread is transcribed from Oro-Mobile-Refresh's MigrationDemoThread, and
 // the timings below are that component's shipped values in ms. SLOW stretches
