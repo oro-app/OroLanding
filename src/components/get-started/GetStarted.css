@@ -191,18 +191,22 @@
 .gs-q-field { margin-top: 40px; }
 
 .gs-phone-fields {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
-  gap: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--oro-color-border);
+  border-radius: var(--oro-radius-field);
+  background: var(--oro-color-surface);
 }
-.gs-phone-country { font-family: inherit; }
+.gs-phone-fields:focus-within { border-color: var(--oro-color-accent); }
+.gs-phone-fields[data-invalid='true'] { border-color: var(--oro-color-error); }
+.gs-phone-fields > .oro-field { flex: 1; min-width: 0; }
+.gs-phone-fields .oro-field__label { display: none; }
+.halo-site .gs-phone-fields .oro-input { border: 0; background: transparent; padding-left: 12px; box-shadow: none; outline: none; }
 .gs-phone-hint {
   margin: 10px 0 0;
   color: var(--oro-color-muted);
   font-size: var(--oro-type-label-size);
-}
-@media (max-width: 520px) {
-  .gs-phone-fields { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ── input ────────────────────────────────────────────────────────────── */

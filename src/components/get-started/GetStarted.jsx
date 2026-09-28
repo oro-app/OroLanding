@@ -2,6 +2,7 @@ import { Button, Chip, Heading, TextField as KitTextField } from 'oro-kit'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { getCountries, getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js/max'
 import ButtonArrow from '../ButtonArrow'
+import CountryCodePicker from './CountryCodePicker'
 import { postOnboarding } from './onboardingApi'
 import GoldBackground from '../GoldBackground'
 import './GetStarted.css'
@@ -475,25 +476,13 @@ export default function GetStarted() {
               error={error}
               footer={<ConsentNote />}
             >
-              <div className="gs-phone-fields">
-                <div className="oro-field">
-                  <label className="oro-field__label" htmlFor="gs-phone-country">Country code</label>
-                  <select
-                    id="gs-phone-country"
-                    className="oro-input gs-phone-country"
-                    value={form.phoneCountry}
-                    disabled={loading}
-                    onChange={(event) => {
-                      set('phoneCountry')(event.target.value)
-                      setResendLeft(0)
-                      setError('')
-                    }}
-                  >
-                    {PHONE_COUNTRIES.map(({ country, label }) => <option key={country} value={country}>{label}</option>)}
-                  </select>
-                </div>
+              <label className="oro-field__label" htmlFor="gs-phone-number">Phone number</label>
+              <div className="gs-phone-fields" data-invalid={Boolean(error)}>
+                <CountryCodePicker value={form.phoneCountry} options={PHONE_COUNTRIES} disabled={loading}
+                  onChange={(country) => { set('phoneCountry')(country); setResendLeft(0); setError('') }} />
                 <TextField
-                  label="Phone number"
+                  label=""
+                  id="gs-phone-number"
                   disabled={loading}
                   aria-invalid={Boolean(error)}
                   aria-describedby={error ? 'gs-phone-hint gs-error' : 'gs-phone-hint'}
