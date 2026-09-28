@@ -27,8 +27,7 @@ for (const width of [1440, 390]) {
     await expect(page.locator('form, input, textarea')).toHaveCount(0)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     expect(writes).toEqual([])
-    await page.getByRole('button', { name: 'Back to the invitation' }).click()
-    await expect(page.getByRole('heading', { name: 'Help us make Oro yours.' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Back to the invitation' })).toHaveCount(0)
   })
 }
 
