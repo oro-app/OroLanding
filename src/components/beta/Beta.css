@@ -8,12 +8,11 @@
 .beta-page--story { height: 100svh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 0; }
 .beta-page--story > :is(.beta-header, .beta-draft-bar) { flex-shrink: 0; }
 .halo-site:has(.beta-page--story, .beta-page--form, .beta-page--coming-soon) > .halo-footer { display: none; }
-.beta-story { position: relative; isolation: isolate; flex: 1; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; --beta-page-direction: 1; }
+.beta-story { position: relative; isolation: isolate; flex: 1; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr); --beta-page-direction: 1; }
 .beta-story[data-direction='-1'] { --beta-page-direction: -1; }
 .beta-story-stage { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--oro-color-selected-border) transparent; }
 .beta-story-stage:focus-visible { outline-offset: -4px; }
 .beta-story-page { min-height: 100%; display: flex; }
-.beta-story-nav { width: min(100% - 96px, 760px); margin-inline: auto; display: flex; justify-content: center; align-items: center; gap: var(--oro-space-4); padding-block: var(--oro-space-4) max(var(--oro-space-5), env(safe-area-inset-bottom)); }
 .beta-page-arrow { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border: 1px solid var(--oro-color-selected-border); border-radius: var(--oro-radius-pill); background: transparent; color: var(--oro-color-accent); cursor: pointer; font-size: 20px; transition: background-color var(--oro-motion-duration) var(--oro-motion-easing); }
 .beta-page-arrow:hover:not(:disabled) { background: var(--oro-color-soft); }
 .beta-page-arrow:disabled { opacity: .25; cursor: default; }
@@ -32,6 +31,7 @@
 .beta-type-char { position: relative; }
 .beta-type-with-caret .beta-type-char::after { content: ''; position: absolute; right: -.045em; top: .14em; width: 2px; height: .8em; border-radius: 1px; background: currentColor; opacity: 0; }
 .beta-page .beta-lead { margin: var(--oro-space-8) auto 0; max-width: 580px; }
+.beta-chapter-content > .beta-story-next { margin-top: var(--oro-space-8); }
 .beta-story-date { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--oro-space-3); letter-spacing: .08em; }
 .beta-review-disclosure { padding-top: var(--oro-space-6); border-top: 1px solid var(--oro-color-border); }
 .beta-expectations { text-align: left; width: 100%; }
@@ -100,7 +100,7 @@
 @media (hover: hover) { .beta-option:hover { background: var(--oro-color-soft); } }
 @media (prefers-reduced-motion: no-preference) {
   .beta-story[data-phase='leaving'] :is(.beta-chapter-content, .beta-story-date) { animation: beta-page-out 140ms ease-in both; }
-  .beta-chapter:not(.beta-chapter--hero) .beta-chapter-content { animation: beta-page-in 180ms ease-out both; }
+  .beta-chapter:not(.beta-chapter--hero) .beta-chapter-content { animation: beta-page-in 320ms cubic-bezier(.22, 1, .36, 1) both; }
   .beta-type-char { animation: beta-type-on 40ms linear both; animation-delay: var(--type-delay); }
   .beta-type-with-caret .beta-type-char::after { animation: beta-type-caret var(--type-hold) step-end both; animation-delay: var(--type-delay); }
   .beta-type-with-caret .beta-type-char--last::after { animation: beta-caret-settle 500ms step-end 2 both; animation-delay: var(--type-delay); }
@@ -109,7 +109,7 @@
   .beta-form-progress > span { transition: width 180ms ease-out; }
 }
 @keyframes beta-page-out { to { opacity: 0; } }
-@keyframes beta-page-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes beta-page-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes beta-copy-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes beta-type-on { from { opacity: 0; } 20%, 100% { opacity: 1; } }
 @keyframes beta-type-caret { 0%, 90% { opacity: 1; } 91%, 100% { opacity: 0; } }
@@ -119,7 +119,6 @@
 @media (max-width: 760px) {
   .beta-header-note { display: none; }
   .beta-chapter { width: calc(100% - 48px); padding-block: var(--oro-space-8); flex: 0 0 auto; }
-  .beta-story-nav { width: calc(100% - 48px); }
   .beta-chapter .oro-heading--title { font-size: var(--oro-type-section-size); line-height: 1.15; }
   .beta-chapter-copy { margin-top: var(--oro-space-6); }
   .beta-application { padding-top: var(--oro-space-6); }

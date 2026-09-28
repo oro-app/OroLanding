@@ -53,11 +53,13 @@ function TypingTitle() {
 }
 
 export default function BetaIntroduction({ onStart, previewForm }) {
+  const { rootRef, stageRef, page, goTo } = useBetaPages(3, onStart)
   const pages = [
     <section className="beta-chapter beta-chapter--hero" aria-labelledby="beta-title">
       <div className="beta-chapter-content">
         <TypingTitle />
         <Text muted className="beta-lead">We’re building toward a world where turning to your AI stylist is a normal part of everyday life.</Text>
+        <Button className="beta-story-next" disabled={page.phase !== 'idle'} onClick={() => goTo(1)}>See beta details <span aria-hidden="true">→</span></Button>
       </div>
       <Text variant="support" muted className="beta-story-date">SEPTEMBER 26–OCTOBER 1, 2026</Text>
     </section>,
@@ -77,6 +79,7 @@ export default function BetaIntroduction({ onStart, previewForm }) {
         <li><span aria-hidden="true">03</span><div><strong>An invitation to our Oronauts beta group chat.</strong></div></li>
         <li><span aria-hidden="true">04</span><div><strong>Free Oro merch.</strong></div></li>
       </ul>
+      <Button className="beta-story-next" disabled={page.phase !== 'idle'} onClick={() => goTo(2)}>Continue to invite <span aria-hidden="true">→</span></Button>
     </Chapter>,
     <Chapter id="request-an-invite" title={<>Ready to help us make Oro <em>yours?</em></>}>
       <Text muted>{previewForm ? 'Tell us a little about yourself to request a beta invite.' : 'Beta invites will open soon.'}</Text>
@@ -84,7 +87,6 @@ export default function BetaIntroduction({ onStart, previewForm }) {
       {previewForm && <Text variant="support" muted>Requesting an invite doesn’t guarantee selection.</Text>}
     </Chapter>,
   ]
-  const { rootRef, stageRef, page, goTo } = useBetaPages(pages.length, onStart)
   return (
     <div className="beta-story" ref={rootRef} data-scene={page.index % 3} data-phase={page.phase} data-direction={page.direction}>
       <div className="beta-story-halo" aria-hidden="true" />
@@ -92,9 +94,6 @@ export default function BetaIntroduction({ onStart, previewForm }) {
       <div className="beta-story-stage" ref={stageRef} tabIndex={0} role="region" aria-label="About Oro">
         <div className="beta-story-page" key={page.index}>{pages[page.index]}</div>
       </div>
-      <nav className="beta-story-nav" aria-label="Invitation pages">
-        <button type="button" className="beta-page-arrow" aria-label={page.index === pages.length - 1 ? (previewForm ? 'Go to the form' : 'About beta invites') : 'Next page'} aria-disabled={page.phase !== 'idle' || undefined} onClick={() => { if (page.phase === 'idle') page.index === pages.length - 1 ? onStart() : goTo(page.index + 1) }}><span aria-hidden="true">→</span></button>
-      </nav>
     </div>
   )
 }

@@ -18,11 +18,11 @@ for (const width of [1440, 390, 320]) {
     await expect(page.locator('.beta-chapter')).toHaveCount(1)
     await expect(page.locator('.beta-story')).not.toContainText('Whether you’re figuring out')
     await expect(page.locator('.beta-story')).not.toContainText(/imessage beta/i)
-    for (let index = 1; index < 3; index++) {
-      await page.getByRole('button', { name: 'Next page', exact: true }).click()
-      await expect(page.locator('.beta-story-nav button')).toHaveCount(1)
-      const arrow = await page.locator('.beta-story-nav button').boundingBox()
-      expect(Math.abs(arrow.x + arrow.width / 2 - width / 2)).toBeLessThan(1)
+    for (const name of ['See beta details', 'Continue to invite']) {
+      const next = page.getByRole('button', { name, exact: true })
+      await expect(next).toBeVisible()
+      expect((await next.boundingBox()).height).toBeGreaterThanOrEqual(44)
+      await next.click()
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
       expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1)).toBe(true)
     }
@@ -193,15 +193,18 @@ test('the opening title types without shifting and reduced motion reveals it imm
   await expect(page.getByRole('heading', { name: 'First, what’s your name?' })).toBeVisible()
 })
 
-test('pages after the opening use a simple fade without typing text', async ({ page }) => {
+test('pages after the opening rise into view without typing text', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/beta')
-  await page.getByRole('button', { name: 'Next page', exact: true }).click()
+  await page.getByRole('button', { name: 'See beta details', exact: true }).click()
   const title = page.getByRole('heading', { name: 'Help shape the future of Oro.' })
   await expect(title).toBeVisible()
   await expect(page.locator('#tester-value .beta-type-char')).toHaveCount(0)
   await expect(page.locator('#tester-value .beta-chapter-content')).toHaveCSS('animation-name', 'beta-page-in')
-  await page.getByRole('button', { name: 'Next page', exact: true }).click()
+  expect(await page.locator('#tester-value .beta-chapter-content').evaluate((element) => (
+    element.getAnimations()[0].effect.getKeyframes()[0].transform
+  ))).toBe('translateY(18px)')
+  await page.getByRole('button', { name: 'Continue to invite', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Ready to help us make Oro yours?' })).toBeVisible()
   await expect(page.locator('#request-an-invite .beta-type-char')).toHaveCount(0)
   await expect(page.locator('.beta-story')).toHaveAttribute('data-phase', 'idle')
@@ -234,7 +237,7 @@ test('wheel paging animates one page per gesture and supports reverse and reduce
   await page.mouse.wheel(0, -120)
   await expect(page.getByRole('heading', { name: 'Help us make Oro yours.' })).toBeVisible()
   await expect(story).toHaveAttribute('data-phase', 'idle')
-  await page.getByRole('button', { name: 'Next page', exact: true }).click()
+  await page.getByRole('button', { name: 'See beta details', exact: true }).click()
   await expect(story).toHaveAttribute('data-phase', 'leaving')
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await expect(story).toHaveAttribute('data-phase', 'idle')
@@ -272,7 +275,7 @@ test('scrolling forward from the final invitation page opens the form', async ({
   const stage = page.getByRole('region', { name: 'About Oro', exact: true })
   await stage.focus()
   await page.keyboard.press('End')
-  await expect(page.getByRole('button', { name: 'Go to the form', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Request an invite', exact: true })).toBeVisible()
   await stage.hover()
   await page.mouse.wheel(0, 120)
   await expect(page.getByRole('heading', { name: 'First, what’s your name?' })).toBeFocused()
