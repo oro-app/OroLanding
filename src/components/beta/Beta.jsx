@@ -205,7 +205,7 @@ export default function Beta() {
     field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name', wrapperClassName: 'beta-name-field' }),
     <>
       <div className="beta-contact-fields">{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}{field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123' })}</div>
-      {field('instagram', <>Instagram handle <span className="beta-optional">Optional</span></>, { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle', maxLength: 31, hint: 'We’re making an Instagram group chat for our original Oronauts so you can meet other testers, share your experiences, and have some fun together. Leave your handle if you’d like an invite :)' })}
+      {field('instagram', 'Instagram handle', { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle (optional)', maxLength: 31, hint: 'We’re making an Instagram group chat for our original Oronauts to meet, share experiences, and have some fun together. Leave your handle if you’d like an invite :)' })}
     </>,
     options('usedOro'),
     options('outfitDays'),
@@ -262,7 +262,7 @@ export default function Beta() {
               </div>
               <Text variant="support" muted>Read our <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a> to learn how we handle your information.</Text>
             </div>}
-            <div className="beta-step-actions">{step > 0 && <Button variant="tertiary" className="beta-form-back" disabled={saving} onClick={() => openStep(step - 1)}>← Back</Button>}{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><span aria-hidden="true">→</span></button>}</div>
+            <div className="beta-step-actions">{step > 0 && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><ButtonArrow size={18} /></button>}</div>
           </form>
           <Text variant="support" muted className="beta-form-help">Questions? <a href="mailto:sunny@buildingoro.ca">Email us</a></Text>
         </div>

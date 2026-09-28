@@ -12,7 +12,8 @@
 .beta-story-stage { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--oro-color-selected-border) transparent; }
 .beta-story-stage:focus-visible { outline-offset: -4px; }
 .beta-story-page { min-height: 100%; display: flex; }
-.beta-page-arrow { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border: 1px solid var(--oro-color-selected-border); border-radius: var(--oro-radius-pill); background: transparent; color: var(--oro-color-accent); cursor: pointer; font-size: 20px; transition: background-color var(--oro-motion-duration) var(--oro-motion-easing); }
+.beta-page-arrow { width: 44px; height: 44px; padding: 0; flex-shrink: 0; display: grid; place-items: center; border: 1px solid var(--oro-color-selected-border); border-radius: var(--oro-radius-pill); background: transparent; color: var(--oro-color-accent); cursor: pointer; transition: background-color var(--oro-motion-duration) var(--oro-motion-easing); }
+.beta-page-arrow svg { display: block; }
 .beta-page-arrow:hover:not(:disabled) { background: var(--oro-color-soft); }
 .beta-page-arrow:disabled { opacity: .25; cursor: default; }
 .beta-story-halo { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: linear-gradient(135deg, color-mix(in srgb, var(--oro-color-display) 12%, var(--oro-color-canvas)), var(--oro-color-canvas) 46%, color-mix(in srgb, var(--oro-color-champagne) 13%, var(--oro-color-canvas))); }
@@ -59,7 +60,7 @@
 .beta-form .oro-input:not(textarea) { background: transparent; border: 0; border-bottom: 1px solid var(--oro-color-selected-border); border-radius: 0; padding-inline: 0; }
 .beta-form .beta-textarea { background: color-mix(in srgb, var(--oro-color-canvas) 65%, transparent); }
 .beta-step-actions { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--oro-space-3); margin-top: var(--oro-space-4); }
-.beta-form-back { grid-column: 1; justify-self: start; }
+.beta-form-back { grid-column: 1; justify-self: start; width: 52px; height: 52px; }
 .beta-form-next { grid-column: 2; width: 52px; height: 52px; }
 .beta-form-help { margin-top: var(--oro-space-6); text-align: center; }
 .beta-form-help a, .beta-consent a, .beta-receipt a { color: var(--oro-color-accent); text-decoration: underline; text-underline-offset: 3px; }
