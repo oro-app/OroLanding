@@ -33,7 +33,6 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-check { width: 20px; height: 20px; flex: 0 0 20px; margin-top: 3px; color: var(--oro-color-accent); }
 .home-check path { stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .home-mascot { display: block; object-fit: contain; }
-.home-mascot--texting { width: clamp(112px, 11vw, 152px); margin: var(--oro-space-8) var(--oro-space-6) 0 auto; }
 .home-mascot--hurray { width: clamp(120px, 13vw, 176px); margin: 0 auto var(--oro-space-6); }
 .home-phone-column { grid-column: 2; grid-row: 1; padding-bottom: var(--oro-space-24); }
 .home-phone-sticky { position: sticky; isolation: isolate; top: var(--halo-header-height); height: calc(100dvh - var(--halo-header-height)); display: flex; align-items: center; justify-content: center; }
@@ -109,7 +108,6 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-footer { flex-wrap: wrap; gap: var(--oro-space-4) var(--oro-space-6); }
   .halo-footer > .oro-text { flex-basis: 100%; }
   .halo-footer-links { column-gap: var(--oro-space-4); row-gap: 0; }
-  .home-mascot--texting { width: 116px; margin-right: auto; }
   .home-mascot--hurray { width: 132px; }
 }
 @media (max-width: 440px) {

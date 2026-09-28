@@ -5,7 +5,6 @@ import MessageThread from './MessageThread'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
 import oroHurray from '../../assets/mascot/oro_hurray.webp'
-import oroTexting from '../../assets/mascot/oro_texting.webp'
 
 const REASONS = ['It knows your closet', 'It answers in a minute', 'It tells you why']
 const HEADLINE = 'The #1 AI stylist you can text'
@@ -68,7 +67,6 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <img className="home-mascot home-mascot--texting home-stagger" src={oroTexting} alt="" loading="lazy" decoding="async" />
           </section>
         </div>
         <div className="home-phone-column">
