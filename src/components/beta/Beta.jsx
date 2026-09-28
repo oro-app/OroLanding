@@ -205,7 +205,7 @@ export default function Beta() {
     field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name', wrapperClassName: 'beta-name-field' }),
     <>
       <div className="beta-contact-fields">{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}{field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123' })}</div>
-      {field('instagram', 'Instagram handle', { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle (optional)', maxLength: 31, hint: 'We’re making an Instagram group chat for our original Oronauts to meet, share experiences, and have some fun together. Leave your handle if you’d like an invite :)' })}
+      {field('instagram', 'Instagram handle', { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle (optional)', maxLength: 31, hint: 'Leave your handle if you’d like an invite to the original Oronauts Instagram group chat :)' })}
     </>,
     options('usedOro'),
     options('outfitDays'),

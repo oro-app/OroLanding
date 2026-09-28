@@ -51,10 +51,9 @@ export default function Home() {
             </div>
           </section>
           <section className="home-panel" aria-labelledby="home-moments-title" data-home-reveal>
-            <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself. Feel ready for anything.</Heading>
+            <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself.<br />{' '}Feel ready for anything.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
-              You know how you want to feel when you walk into a room. Getting dressed for it can
-              be harder. Oro helps you find your look, whatever your plans.
+              From everyday plans to big moments, Oro helps you find a look you’ll feel good in.
             </Text>
           </section>
           <section className="home-panel" aria-labelledby="home-reasons-title" data-home-reveal>
@@ -69,7 +68,6 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <Text muted className="home-reason-note home-stagger" style={{ '--home-delay': '510ms' }}>It gets more personal every time.</Text>
             <img className="home-mascot home-mascot--texting home-stagger" src={oroTexting} alt="" loading="lazy" decoding="async" />
           </section>
         </div>
