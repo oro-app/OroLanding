@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Heading, Notice, Text, TextField } from 'oro-kit'
+import ButtonArrow from '../ButtonArrow'
 import BetaIntroduction from './BetaIntroduction'
 import { choices, emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { saveBetaRequest, submissionMessages } from './betaSubmission'
@@ -224,7 +225,7 @@ export default function Beta() {
       <header className="halo-header beta-header"><div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" /></a>
         <nav className="halo-nav" aria-label="Beta"><span className="beta-header-note">Made with you, for you.</span>
-          {view === 'story' ? <a className="oro-button oro-button--secondary" href={`?step=${formSteps[step].hash.slice(1)}`} onClick={(event) => { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <span aria-hidden="true">↗</span></a>
+          {view === 'story' ? <a className="oro-button oro-button--secondary" href={`?step=${formSteps[step].hash.slice(1)}`} onClick={(event) => { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <ButtonArrow direction="up-right" /></a>
             : <Button variant="tertiary" disabled={saving} onClick={() => openStory()}>Back to the invitation</Button>}
         </nav>
       </div></header>
@@ -235,7 +236,7 @@ export default function Beta() {
         <div className="beta-form-panel beta-form-heading">
           <Heading ref={comingSoonRef} tabIndex={-1} as="h1" variant="title" id="coming-soon-title">Invites open <em>soon.</em></Heading>
           <Text muted>We’re getting ready to welcome our first Oronauts. Check back soon to request your invite.</Text>
-          <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <span aria-hidden="true">↗</span></a>
+          <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <ButtonArrow direction="up-right" /></a>
         </div>
       </section>}
       {allowForm && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
@@ -253,7 +254,7 @@ export default function Beta() {
               <Text variant="support" muted>We’ll review your responses and email you if you’re selected.</Text>
               {status === 'unavailable' && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title="This draft isn’t connected yet.">Nothing was submitted. Your answers are still here. Use “Preview confirmation” above to review the receipt design.</Notice></div>}
               {message && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title={message[0]}>{message[1]}</Notice></div>}
-              <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Request an invite'} <span aria-hidden="true">↗</span></Button>
+              <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Request an invite'} <ButtonArrow direction="up-right" /></Button>
               <div className="beta-consent-options">
                 <label><input type="checkbox" disabled={saving} name="terms" required checked={answers.terms} onChange={(event) => update('terms', event.target.checked)} aria-invalid={errors.terms ? true : undefined} aria-describedby={errors.terms ? 'terms-error' : undefined} /><span>By submitting this request, I agree to Oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a>.</span></label>
                 {errors.terms && <p id="terms-error" className="oro-field__error">{errors.terms}</p>}

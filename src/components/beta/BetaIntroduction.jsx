@@ -1,5 +1,6 @@
 import { Children, cloneElement, isValidElement } from 'react'
 import GoldBackground from '../GoldBackground'
+import ButtonArrow from '../ButtonArrow'
 import { Button, Heading, Text } from 'oro-kit'
 import { useBetaPages } from './useBetaPages'
 
@@ -58,7 +59,7 @@ function LandingStep({ disabled, onNext }) {
       <div className="beta-chapter-content">
         <TypingTitle />
         <Text muted className="beta-lead">We’re building toward a world where turning to your AI stylist is a normal part of everyday life.</Text>
-        <Button className="beta-story-next" disabled={disabled} onClick={onNext}>See beta details <span aria-hidden="true">→</span></Button>
+        <Button className="beta-story-next" disabled={disabled} onClick={onNext}>See beta details <ButtonArrow /></Button>
       </div>
       <Text variant="support" muted className="beta-story-date">SEPTEMBER 26–OCTOBER 1, 2026</Text>
     </section>
@@ -83,7 +84,7 @@ function BetaDetailsStep({ disabled, onNext }) {
         <li><span aria-hidden="true">03</span><div><strong>An invitation to our Oronauts beta group chat.</strong></div></li>
         <li><span aria-hidden="true">04</span><div><strong>Free Oro merch.</strong></div></li>
       </ul>
-      <Button className="beta-story-next" disabled={disabled} onClick={onNext}>Continue to invite <span aria-hidden="true">→</span></Button>
+      <Button className="beta-story-next" disabled={disabled} onClick={onNext}>Continue to invite <ButtonArrow /></Button>
     </Chapter>
   )
 }
@@ -92,7 +93,7 @@ function InviteStep({ onStart, previewForm }) {
   return (
     <Chapter id="request-an-invite" title={<>Ready to help us make Oro <em>yours?</em></>}>
       <Text muted>{previewForm ? 'Tell us a little about yourself to request a beta invite.' : 'Beta invites will open soon.'}</Text>
-      <Button onClick={onStart}>{previewForm ? 'Request an invite' : 'Invites open soon'} <span aria-hidden="true">↗</span></Button>
+      <Button onClick={onStart}>{previewForm ? 'Request an invite' : 'Invites open soon'} <ButtonArrow direction="up-right" /></Button>
       {previewForm && <Text variant="support" muted>Requesting an invite doesn’t guarantee selection.</Text>}
     </Chapter>
   )
