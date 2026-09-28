@@ -224,7 +224,7 @@ export default function Beta() {
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <header className="halo-header beta-header"><div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" /></a>
-        <nav className="halo-nav" aria-label="Beta"><span className="beta-header-note">Made with you, for you.</span>
+        <nav className="halo-nav" aria-label="Beta">
           {view === 'story' ? <a className="oro-button oro-button--secondary" href={`?step=${formSteps[step].hash.slice(1)}`} onClick={(event) => { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <ButtonArrow direction="up-right" /></a>
             : <Button variant="tertiary" disabled={saving} onClick={() => openStory()}>Back to the invitation</Button>}
         </nav>

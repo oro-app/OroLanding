@@ -1,7 +1,6 @@
 .beta-page { padding-bottom: var(--oro-space-16); }
 .beta-page strong { font-weight: var(--oro-font-weight-heading); color: var(--oro-color-ink); }
 .beta-header { top: 0; }
-.beta-header-note { color: var(--oro-color-muted); }
 .beta-draft-bar { border-bottom: 1px solid var(--oro-color-border); background: var(--oro-color-soft); font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }
 .beta-draft-bar > div { display: flex; justify-content: space-between; align-items: center; gap: var(--oro-space-4); min-height: 44px; }
 .beta-draft-bar button { min-height: 44px; color: var(--oro-color-accent); font: inherit; background: none; border: 0; cursor: pointer; }
@@ -119,7 +118,6 @@
 @keyframes beta-step-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .beta-option { transition: none; } .beta-chapter-content { opacity: 1; transform: none; filter: none; } }
 @media (max-width: 760px) {
-  .beta-header-note { display: none; }
   .beta-chapter { width: calc(100% - 48px); padding-block: var(--oro-space-8); flex: 0 0 auto; }
   .beta-chapter .oro-heading--title { font-size: var(--oro-type-section-size); line-height: 1.15; }
   .beta-chapter-copy { margin-top: var(--oro-space-6); }
