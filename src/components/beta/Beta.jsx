@@ -81,8 +81,15 @@ export default function Beta() {
   useEffect(() => {
     document.title = 'Help us make Oro yours. - Oro beta'
     const syncLocation = () => {
-      const index = formSteps.findIndex((item) => item.hash === window.location.hash)
+      const url = new URL(window.location.href)
+      const requestedStep = url.searchParams.get('step') || url.hash.slice(1)
+      const index = formSteps.findIndex((item) => item.hash.slice(1) === requestedStep)
       if (index >= 0) {
+        if (!url.searchParams.has('step')) {
+          url.searchParams.set('step', requestedStep)
+          url.hash = ''
+          window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+        }
         setStep(index)
         setView(entryView)
       } else {
@@ -126,14 +133,20 @@ export default function Beta() {
 
   function openStep(index) {
     if (submitting.current) return
-    window.history.pushState(null, '', formSteps[index].hash)
+    const url = new URL(window.location.href)
+    url.searchParams.set('step', formSteps[index].hash.slice(1))
+    url.hash = ''
+    window.history.pushState(null, '', `${url.pathname}${url.search}`)
     setStep(index)
     setView(entryView)
   }
 
   function openStory() {
     if (submitting.current) return
-    window.history.pushState(null, '', window.location.pathname)
+    const url = new URL(window.location.href)
+    url.searchParams.delete('step')
+    url.hash = ''
+    window.history.pushState(null, '', `${url.pathname}${url.search}`)
     setView('story')
     window.scrollTo({ top: 0, behavior: 'instant' })
   }
@@ -197,7 +210,7 @@ export default function Beta() {
       <header className="halo-header beta-header"><div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/static/oro-logo.png" alt="Oro" width="80" height="32" /></a>
         <nav className="halo-nav" aria-label="Beta"><span className="beta-header-note">Made with you, for you.</span>
-          {view === 'story' ? <a className="oro-button oro-button--secondary" href="#request" onClick={(event) => { event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <span aria-hidden="true">↗</span></a>
+          {view === 'story' ? <a className="oro-button oro-button--secondary" href={`?step=${formSteps[step].hash.slice(1)}`} onClick={(event) => { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <span aria-hidden="true">↗</span></a>
             : <Button variant="tertiary" disabled={saving} onClick={openStory}>Back to the invitation</Button>}
         </nav>
       </div></header>
