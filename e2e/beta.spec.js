@@ -200,19 +200,24 @@ test('pages after the opening rise into view without typing text', async ({ page
   const title = page.getByRole('heading', { name: 'Help shape the future of Oro.' })
   await expect(title).toBeVisible()
   await expect(page.locator('#tester-value .beta-type-char')).toHaveCount(0)
-  await expect(page.locator('#tester-value .beta-chapter-content')).toHaveCSS('animation-name', 'beta-page-in')
-  expect(await page.locator('#tester-value .beta-chapter-content').evaluate((element) => (
+  await expect(title).toHaveCSS('animation-name', 'beta-title-in')
+  await expect(page.locator('#tester-value .beta-chapter-copy')).toHaveCSS('animation-name', 'beta-body-in')
+  expect(await page.locator('#tester-value .beta-chapter-copy').evaluate((element) => (
     element.getAnimations()[0].effect.getKeyframes()[0].transform
   ))).toBe('translateY(18px)')
   await page.getByRole('button', { name: 'Continue to invite', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Ready to help us make Oro yours?' })).toBeVisible()
+  const inviteTitle = page.getByRole('heading', { name: 'Ready to help us make Oro yours?' })
+  await expect(inviteTitle).toBeVisible()
+  await expect(inviteTitle).toHaveCSS('animation-name', 'beta-title-in')
+  await expect(page.locator('#request-an-invite .beta-chapter-copy')).toHaveCSS('animation-name', 'beta-body-in')
   await expect(page.locator('#request-an-invite .beta-type-char')).toHaveCount(0)
   await expect(page.locator('.beta-story')).toHaveAttribute('data-phase', 'idle')
   await page.getByRole('region', { name: 'About Oro', exact: true }).focus()
   await page.keyboard.press('ArrowLeft')
   await expect(title).toBeVisible()
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await expect(page.locator('#tester-value .beta-chapter-content')).toHaveCSS('animation-name', 'none')
+  await expect(title).toHaveCSS('animation-name', 'none')
+  await expect(page.locator('#tester-value .beta-chapter-copy')).toHaveCSS('animation-name', 'none')
 })
 
 test('wheel paging animates one page per gesture and supports reverse and reduced motion', async ({ page }) => {

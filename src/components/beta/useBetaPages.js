@@ -38,7 +38,7 @@ export function useBetaPages(count, onComplete) {
       current.current = index
       setPage({ index, direction, phase: 'entering' })
     }, 140))
-    timers.current.push(setTimeout(finish, 480))
+    timers.current.push(setTimeout(finish, 600))
   }, [count, finish, onComplete])
 
   useEffect(() => {
