@@ -5,12 +5,12 @@ export const SITE_NAME = 'Oro'
 export const SITE_TITLE = 'Oro - Your AI stylist, one text away'
 export const DEFAULT_DESCRIPTION =
   'Nothing to wear? Ask Oro and discover the gold in your wardrobe.'
-export const DEFAULT_IMAGE = '/og/oro-conversation-v2.png'
+export const DEFAULT_IMAGE = '/favicon.webp'
 export const DEFAULT_IMAGE_META = {
-  type: 'image/png',
-  width: 1731,
-  height: 909,
-  alt: 'Two Oro chat bubbles: “i have nothing to wear.” and “i think your closet disagrees.”',
+  type: 'image/webp',
+  width: 1071,
+  height: 1071,
+  alt: 'Oro mascot logo',
 }
 export const LOGO_IMAGE = '/oro-logo.webp'
 
