@@ -263,7 +263,7 @@ export default function Beta() {
               </div>
               <Text variant="support" muted>Read our <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a> to learn how we handle your information.</Text>
             </div>}
-            <div className="beta-step-actions"><Button variant="tertiary" className="beta-form-back" disabled={saving} onClick={() => step > 0 ? openStep(step - 1) : openStory()}>← {step > 0 ? 'Back' : 'The invitation'}</Button>{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><span aria-hidden="true">→</span></button>}</div>
+            <div className="beta-step-actions">{step > 0 && <Button variant="tertiary" className="beta-form-back" disabled={saving} onClick={() => openStep(step - 1)}>← Back</Button>}{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><span aria-hidden="true">→</span></button>}</div>
           </form>
           <Text variant="support" muted className="beta-form-help">Questions? <a href="mailto:sunny@buildingoro.ca">Email us</a></Text>
         </div>
