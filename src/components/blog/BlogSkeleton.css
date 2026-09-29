@@ -1,0 +1,129 @@
+.blog-skeleton { min-height: 70vh; }
+
+.blog-skeleton-status {
+  margin: 0;
+  padding: var(--oro-space-4);
+  color: var(--oro-color-muted);
+  font-size: var(--oro-type-support-size);
+  text-align: center;
+}
+
+.blog-skeleton-line,
+.blog-skeleton-block {
+  display: block;
+  background: var(--oro-color-soft);
+  border-radius: var(--oro-radius-field);
+}
+
+.blog-skeleton-line {
+  width: 100%;
+  height: 0.875rem;
+}
+
+.blog-skeleton-copy { display: grid; gap: var(--oro-space-3); }
+.blog-skeleton-line--label { width: 8rem; height: 0.75rem; }
+.blog-skeleton-line--display { width: min(100%, 30rem); height: 3.75rem; }
+.blog-skeleton-line--title { height: 2rem; }
+.blog-skeleton-line--medium { width: 70%; }
+.blog-skeleton-line--short { width: 45%; }
+
+.blog-skeleton-archive { padding-bottom: var(--oro-space-24); }
+
+.blog-skeleton-archive-hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  align-items: end;
+  gap: var(--oro-space-16);
+  padding-block: var(--oro-space-20);
+}
+
+.blog-skeleton-archive-hero > div:first-child { display: grid; gap: var(--oro-space-4); }
+
+.blog-skeleton-rule {
+  padding-bottom: var(--oro-space-8);
+  border-bottom: var(--oro-border-width) solid var(--oro-color-border);
+}
+
+.blog-skeleton-feature {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  gap: var(--oro-space-16);
+  padding-block: var(--oro-space-8) var(--oro-space-24);
+}
+
+.blog-skeleton-feature-image { aspect-ratio: 5 / 4; }
+
+.blog-skeleton-rack-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--oro-space-6);
+  margin-bottom: var(--oro-space-8);
+}
+
+.blog-skeleton-rack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--oro-space-10);
+  padding: var(--oro-space-8) var(--oro-space-6) 0;
+  border-top: var(--oro-border-width) solid var(--oro-color-selected-border);
+}
+
+.blog-skeleton-card { display: grid; gap: var(--oro-space-4); }
+.blog-skeleton-card-image { aspect-ratio: 3 / 4; }
+
+.blog-skeleton-article > .blog-skeleton-line:first-child { margin-bottom: var(--oro-space-10); }
+
+.blog-skeleton-article-header {
+  display: grid;
+  justify-items: center;
+  gap: var(--oro-space-4);
+  max-width: 820px;
+  margin: 0 auto var(--oro-space-12);
+}
+
+.blog-skeleton-article-header .blog-skeleton-line:last-child { width: min(100%, 38rem); }
+.blog-skeleton-article-image { aspect-ratio: 16 / 9; margin-bottom: var(--oro-space-16); }
+
+.blog-skeleton-article-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: var(--oro-space-16);
+}
+
+.blog-skeleton-aside { min-height: 22rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .blog-skeleton-line,
+  .blog-skeleton-block {
+    background: linear-gradient(100deg, var(--oro-color-soft) 35%, var(--oro-color-border) 50%, var(--oro-color-soft) 65%);
+    background-size: 300% 100%;
+    animation: blog-skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes blog-skeleton-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: 0 0; }
+}
+
+@media (max-width: 960px) {
+  .blog-skeleton-article-grid { grid-template-columns: minmax(0, 1fr); }
+  .blog-skeleton-aside { min-height: 12rem; }
+}
+
+@media (max-width: 650px) {
+  .blog-skeleton-archive-hero,
+  .blog-skeleton-feature { grid-template-columns: 1fr; gap: var(--oro-space-8); }
+  .blog-skeleton-archive-hero { padding-block: var(--oro-space-12) var(--oro-space-16); }
+  .blog-skeleton-feature { padding-bottom: var(--oro-space-20); }
+  .blog-skeleton-rack-heading { align-items: flex-start; flex-direction: column; }
+  .blog-skeleton-rack { grid-template-columns: 1fr; padding-inline: var(--oro-space-3); }
+  .blog-skeleton-card { width: min(100%, 300px); margin-inline: auto; }
+  .blog-skeleton-card:nth-child(n + 2) { display: none; }
+  .blog-skeleton-article-header { justify-items: start; }
+  .blog-skeleton-article-header .blog-skeleton-line--display { height: 2.5rem; }
+  .blog-skeleton-article-image { aspect-ratio: 4 / 3; }
+}

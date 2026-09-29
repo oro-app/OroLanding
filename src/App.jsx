@@ -3,6 +3,7 @@ import { isFeedbackPath } from './lib/feedbackSession.js'
 import Home from './components/home/Home'
 import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
 import SiteHeader from './components/layout/SiteHeader'
+import BlogSkeleton from './components/blog/BlogSkeleton'
 import CookieConsent from './components/overlays/CookieConsent'
 import { ThemeProvider } from './context/ThemeContext'
 import { hasAnalyticsConsent, initAnalytics, trackPageNavigation, trackPageView, trackSocialLinkClick } from './lib/analytics'
@@ -145,11 +146,11 @@ function App({ initialRoute }) {
               <BetaPage />
             </Suspense>
           ) : route.type === 'newsletter' ? (
-            <Suspense fallback={null}>
+            <Suspense fallback={<BlogSkeleton variant="article" />}>
               <NewsletterPage slug={route.slug} />
             </Suspense>
           ) : route.type === 'journal' ? (
-            <Suspense fallback={null}>
+            <Suspense fallback={<BlogSkeleton variant="archive" />}>
               <JournalPage />
             </Suspense>
           ) : route.type === 'try-oro' ? (
