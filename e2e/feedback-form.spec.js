@@ -7,7 +7,8 @@ const token = 'synthetic-form-invitation'
 const id = '11111111-1111-4111-8111-111111111111'
 const endpoint = '**/agent2/beta-feedback/**'
 const stored = (page) => page.evaluate(() => JSON.parse(sessionStorage.getItem('oro_feedback_session')))
-const form = (kind = 'daily', questions = definitions[kind]) => ({ invitation_id: id, survey_kind: kind, survey_version: 1,
+const cached = (page, invitationId = id) => page.evaluate((key) => JSON.parse(localStorage.getItem(`oro_feedback_draft:${key}`)), invitationId)
+const form = (kind = 'daily', questions = definitions[kind], invitationId = id) => ({ invitation_id: invitationId, survey_kind: kind, survey_version: 1,
   status: 'open', submission_id: null, receipt: null, expires_at: '2020-01-01T00:00:00Z', questions,
   context: { beta_label: 'oro beta', task_label: 'Your oro task', local_date: '2026-09-24', timezone: 'America/Toronto' } })
 const button = (page) => page.getByRole('button', { name: /^(Continue|Review answers)$/ })
@@ -63,6 +64,7 @@ for (const kind of ['daily', 'task', 'task-no-outfit', 'final']) {
     expect(writes).toHaveLength(1)
     expect(writes[0].survey_version).toBe(1)
     expect(await stored(page)).toBeNull()
+    expect(await cached(page)).toBeNull()
     expect(calls).toEqual([])
     expect(errors).toEqual([])
   })
@@ -120,7 +122,7 @@ test('daily branching clears old answers, validates accessibly, and submits IDs 
   await page.getByRole('radio', { name: 'No', exact: true }).check()
   await button(page).click()
   await expect(page.locator('input:checked')).toHaveCount(0)
-  expect((await stored(page)).draft.D5).toBeUndefined()
+  expect((await cached(page)).draft.D5).toBeUndefined()
   await page.getByRole('radio', { name: 'I was planning an outfit for another day', exact: true }).check()
   await button(page).click()
   await page.getByRole('radio', { name: 'Much easier', exact: true }).check()
@@ -136,6 +138,7 @@ test('daily branching clears old answers, validates accessibly, and submits IDs 
   await expect(page.getByRole('status')).toContainText('Your feedback is saved')
   expect(payload).toEqual({ survey_version: 1, answers: { D3: { choice: 'no' }, D6: { choice: 'planned_for_later' }, D7: { choice: 'much_easier' }, D13: { text: 'private answer' } } })
   expect(await stored(page)).toBeNull()
+  expect(await cached(page)).toBeNull()
 })
 
 test('final Depends and optional payment branches support Other, comments, clearing and review edits', async ({ page }) => {
@@ -158,7 +161,7 @@ test('final Depends and optional payment branches support Other, comments, clear
   await page.getByRole('textbox', { name: 'Add an explanation (optional)' }).fill('payment comment')
   await page.getByRole('button', { name: 'Back', exact: true }).click()
   await page.getByRole('button', { name: 'Clear answer', exact: true }).click()
-  expect((await stored(page)).draft.F21_reasons).toBeUndefined()
+  expect((await cached(page)).draft.F21_reasons).toBeUndefined()
   await button(page).click()
   await expect(page.getByRole('heading', { name: prompt('final', 'F22'), exact: true })).toBeVisible()
   await button(page).click()
@@ -171,7 +174,9 @@ test('final Depends and optional payment branches support Other, comments, clear
 
 test('draft refresh restores the step and a new invitation starts empty', async ({ page }) => {
   await page.clock.install()
-  await page.route(endpoint, (route) => route.fulfill({ json: form() }))
+  const nextId = '22222222-2222-4222-8222-222222222222'
+  await page.route(endpoint, (route) => route.fulfill({ json: form('daily', definitions.daily,
+    route.request().headers().authorization?.endsWith('another-invitation') ? nextId : id) }))
   await page.goto(`/feedback#token=${token}`)
   await page.getByRole('radio', { name: 'Yes, with changes', exact: true }).check()
   await button(page).click()
@@ -181,7 +186,8 @@ test('draft refresh restores the step and a new invitation starts empty', async 
   await expect(page.getByRole('textbox')).toHaveValue('  saved in this tab  ')
   await page.evaluate(() => { location.hash = 'token=another-invitation' })
   await expect(page.getByRole('heading', { name: prompt('daily', 'D3'), exact: true })).toBeVisible()
-  expect((await stored(page)).draft).toEqual({})
+  expect(await cached(page, nextId)).toBeNull()
+  expect((await cached(page)).draft.D5.text).toBe('  saved in this tab  ')
 })
 
 test('uncertain submission stays locked across reload and retries the identical write', async ({ page }) => {
@@ -205,6 +211,7 @@ test('uncertain submission stays locked across reload and retries the identical 
   await expect(page.getByRole('button', { name: 'Retry sending' })).toBeVisible()
   await page.getByRole('button', { name: 'Retry sending' }).click()
   await expect(page.getByRole('status')).toContainText('Your feedback is saved')
+  expect(await cached(page)).toBeNull()
   expect(writes).toHaveLength(2)
   expect(writes[1]).toEqual(writes[0])
 })
@@ -235,6 +242,7 @@ test('accepted submission shows pending until receipt; a fresh tab only polls', 
   confirmed = true
   await page.clock.fastForward(15000)
   await expect(page.getByRole('status')).toContainText('Your feedback is saved')
+  expect(await cached(page)).toBeNull()
   await other.close()
 })
 
@@ -283,7 +291,8 @@ test('backend field rejection preserves input, focuses its error, and keeps answ
   await expect(page.getByRole('textbox')).toHaveValue('private answer')
   await expect(page.getByText('Please check this answer.', { exact: true })).toBeVisible()
   await expect(page.locator('body')).not.toContainText('private-marker')
-  const captured = await page.evaluate(() => JSON.stringify([localStorage, document.cookie, window.dataLayer]))
+  expect((await cached(page)).draft.F1.text).toBe('private answer')
+  const captured = await page.evaluate(() => JSON.stringify([document.cookie, window.dataLayer]))
   expect(captured).not.toContain('private answer')
   expect(captured).not.toContain(token)
   expect(captured).toContain('page_view')
@@ -294,6 +303,7 @@ test('backend field rejection preserves input, focuses its error, and keeps answ
   await button(page).click()
   await page.getByRole('button', { name: 'Send feedback', exact: true }).click()
   await expect(page.getByRole('status')).toContainText('Your feedback is saved')
+  expect(await cached(page)).toBeNull()
   expect(errors).toEqual([])
 })
 

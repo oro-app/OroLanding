@@ -1,5 +1,6 @@
 import { MAX_FEEDBACK_BYTES, saveFeedback } from './feedbackApi.js'
 import { prepareFeedbackAnswers, pruneFeedbackDraft } from './feedbackAnswers.js'
+import { clearFeedbackDraft, readFeedbackDraft, writeFeedbackDraft } from './feedbackDraft.js'
 import { createFeedbackReader } from './feedbackReader.js'
 import { readFeedbackSession, writeFeedbackSession } from './feedbackSession.js'
 
@@ -7,7 +8,7 @@ const terminal = ['submitted', 'invalid_invitation', 'invitation_expired', 'miss
 
 export function createFeedbackFlow(token, onChange) {
   let state = { status: 'opening' }
-  let form, request
+  let form, formKey, draft = {}, step, request
   let stopped = false, visible = false
   const emit = (next) => { if (!stopped) { state = next; onChange(next) } }
   const session = () => {
@@ -25,6 +26,7 @@ export function createFeedbackFlow(token, onChange) {
   function receive(next) {
     if (stopped) return
     if (terminal.includes(next.status) || next.status === 'storage') {
+      if (next.status === 'submitted') clearFeedbackDraft(`${next.form.invitation_id}:${next.form.survey_version}`)
       emit(next)
       return
     }
@@ -42,20 +44,23 @@ export function createFeedbackFlow(token, onChange) {
       emit({ status: retry ? 'retry' : 'conflict', form })
       return
     }
-    const formKey = `${form.invitation_id}:${form.survey_version}`
+    formKey = `${form.invitation_id}:${form.survey_version}`
     const changed = Boolean(current.formKey && current.formKey !== formKey) || current.formChanged
-    const draft = pruneFeedbackDraft(form.questions, changed ? {} : current.draft).answers
-    const step = changed ? null : current.step
-    writeFeedbackSession({ ...current, formKey, formChanged: false, draft, step })
+    const cached = changed ? null : readFeedbackDraft(formKey)
+    draft = pruneFeedbackDraft(form.questions, cached?.draft).answers
+    step = changed ? null : cached?.step
+    writeFeedbackSession({ ...current, formKey, formChanged: false })
     emit({ status: 'open', form, draft, step, notice: changed ? 'form_changed' : undefined })
   }
-  function update(draft, step) {
+  function update(nextDraft, nextStep) {
     if (stopped || state.status !== 'open' || request) return
     try {
       const current = session()
       if (!current || current.attempt || current.acceptedSubmissionId) return
-      const answers = pruneFeedbackDraft(form.questions, draft).answers
-      writeFeedbackSession({ ...current, draft: answers, step })
+      const answers = pruneFeedbackDraft(form.questions, nextDraft).answers
+      draft = answers
+      step = nextStep
+      writeFeedbackDraft(formKey, { draft, step })
       emit({ ...state, draft: answers, step, errors: {}, error: undefined })
     } catch { storageFailure() }
   }
@@ -74,6 +79,7 @@ export function createFeedbackFlow(token, onChange) {
       const current = session()
       if (!current || current.attempt?.id !== attempt.id) return stop()
       if (result.ok && result.status === 'submitted') {
+        clearFeedbackDraft(formKey)
         writeFeedbackSession(null)
         reader.stop()
         emit({ status: 'submitted', receipt: result.receipt })
@@ -94,7 +100,7 @@ export function createFeedbackFlow(token, onChange) {
           const question = form?.questions.find((item) => item.id === id)
           if (question) errors[id] = { field: question.type === 'text' ? 'text' : question.type === 'multiple' ? 'choices' : 'choice', message: 'Please check this answer.' }
         }
-        emit({ status: 'open', form, draft: current.draft, step: current.step, errors, error: result.code })
+        emit({ status: 'open', form, draft, step, errors, error: result.code })
         return
       } else if (result.code === 'survey_version_mismatch') {
         writeFeedbackSession({ ...current, attempt: undefined, formChanged: true, nextCheckAt: Date.now() + 15000 })
@@ -113,7 +119,7 @@ export function createFeedbackFlow(token, onChange) {
     try {
       const current = session()
       if (!current || current.attempt || current.acceptedSubmissionId) return
-      const prepared = prepareFeedbackAnswers(form.questions, current.draft)
+      const prepared = prepareFeedbackAnswers(form.questions, draft)
       if (Object.keys(prepared.errors).length) { emit({ ...state, errors: prepared.errors }); return }
       const body = JSON.stringify({ survey_version: form.survey_version, answers: prepared.answers })
       if (new TextEncoder().encode(body).byteLength > MAX_FEEDBACK_BYTES) { emit({ ...state, error: 'request_too_large' }); return }

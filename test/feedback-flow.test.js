@@ -14,10 +14,15 @@ const rejection = (status, code, question_ids) => Response.json({ detail: { code
 function setup(t, serve) {
   t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: 0 })
   const original = Object.getOwnPropertyDescriptor(globalThis, 'sessionStorage')
+  const originalLocal = Object.getOwnPropertyDescriptor(globalThis, 'localStorage')
   const storage = { value: { token }, getItem() { return JSON.stringify(this.value) },
     setItem(_key, value) { this.value = JSON.parse(value) }, removeItem() { this.value = null } }
+  const draftStorage = { values: new Map(), getItem(key) { return this.values.get(key) ?? null },
+    setItem(key, value) { this.values.set(key, value) }, removeItem(key) { this.values.delete(key) } }
   Object.defineProperty(globalThis, 'sessionStorage', { configurable: true, value: storage })
+  Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: draftStorage })
   t.after(() => original ? Object.defineProperty(globalThis, 'sessionStorage', original) : delete globalThis.sessionStorage)
+  t.after(() => originalLocal ? Object.defineProperty(globalThis, 'localStorage', originalLocal) : delete globalThis.localStorage)
   const requests = t.mock.method(globalThis, 'fetch', serve)
   const states = []
   const start = () => {
@@ -26,7 +31,7 @@ function setup(t, serve) {
     flow.resume()
     return flow
   }
-  return { storage, states, requests, start, state: () => states.at(-1) }
+  return { storage, draftStorage, states, requests, start, state: () => states.at(-1) }
 }
 
 test('drafts persist before sending; confirmed receipt clears all private state', async (t) => {
@@ -38,14 +43,28 @@ test('drafts persist before sending; confirmed receipt clears all private state'
   const flow = fixture.start()
   await settle()
   flow.update({ F1: { text: '  answer  ' } }, 'review')
-  assert.equal(fixture.storage.value.draft.F1.text, '  answer  ')
+  assert.equal(JSON.parse([...fixture.draftStorage.values.values()][0]).draft.F1.text, '  answer  ')
   flow.submit()
   flow.submit()
   await settle()
   assert.equal(fixture.state().status, 'submitted')
   assert.equal(fixture.storage.value, null)
+  assert.equal(fixture.draftStorage.values.size, 0)
   assert.equal(fixture.requests.mock.callCount(), 2)
   assert.deepEqual(JSON.parse(fixture.requests.mock.calls[1].arguments[1].body), { survey_version: 1, answers: { F1: { text: 'answer' } } })
+})
+
+test('local draft restores after a new browser flow', async (t) => {
+  const fixture = setup(t, async () => Response.json(form()))
+  let flow = fixture.start()
+  await settle()
+  flow.update({ F1: { text: 'kept locally' } }, 'review')
+  assert.equal(fixture.storage.value.draft, undefined)
+  flow.stop()
+  flow = fixture.start()
+  await settle()
+  assert.deepEqual(fixture.state().draft, { F1: { text: 'kept locally' } })
+  assert.equal(fixture.state().step, 'review')
 })
 
 test('lost PUT response survives reload and retries the exact UUID/body only after GET reconciliation', async (t) => {
@@ -65,7 +84,7 @@ test('lost PUT response survives reload and retries the exact UUID/body only aft
   await settle()
   assert.equal(fixture.state().status, 'reconciling')
   flow.update({ F1: { text: 'changed' } }, 'F1')
-  assert.equal(fixture.storage.value.draft.F1.text, 'answer')
+  assert.equal(JSON.parse([...fixture.draftStorage.values.values()][0]).draft.F1.text, 'answer')
   flow.stop()
   flow = fixture.start()
   t.mock.timers.tick(59999)
@@ -87,6 +106,7 @@ test('lost PUT response survives reload and retries the exact UUID/body only aft
   t.mock.timers.tick(1)
   await settle()
   assert.equal(fixture.state().status, 'submitted')
+  assert.equal(fixture.draftStorage.values.size, 0)
 })
 
 test('definite validation rejection preserves editable input and safe field errors', async (t) => {
@@ -100,7 +120,7 @@ test('definite validation rejection preserves editable input and safe field erro
   assert.deepEqual(Object.keys(fixture.state().errors), ['F1'])
   assert.equal(fixture.storage.value.attempt, undefined)
   flow.update({ F1: { text: 'corrected' } }, 'F1')
-  assert.equal(fixture.storage.value.draft.F1.text, 'corrected')
+  assert.equal(JSON.parse([...fixture.draftStorage.values.values()][0]).draft.F1.text, 'corrected')
 })
 
 test('version rejection reloads the form and requires fresh answers rather than relabeling old ones', async (t) => {
@@ -120,6 +140,7 @@ test('version rejection reloads the form and requires fresh answers rather than 
   assert.equal(fixture.state().form.survey_version, 2)
   assert.deepEqual(fixture.state().draft, {})
   assert.equal(fixture.state().notice, 'form_changed')
+  assert.equal(fixture.draftStorage.values.size, 1)
 })
 
 test('conflicts never generate another attempt when reconciliation still reports open', async (t) => {
