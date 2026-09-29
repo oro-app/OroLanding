@@ -323,9 +323,9 @@ test.describe('touch invitation navigation', () => {
 })
 
 test('inactive answers are omitted, whitespace is invalid, and text limits apply', () => {
-  const answers = { ...emptyAnswers, usualHelpOther: 'Hidden answer', sourceOther: 'Hidden source', genderDescription: 'Hidden description', occasion: '   ', week: 'x'.repeat(2001) }
+  const answers = { ...emptyAnswers, usualHelpOther: 'Hidden answer', sourceOther: 'Hidden source', genderDescription: 'Hidden description', name: '   ', week: 'x'.repeat(2001) }
   expect(visibleAnswers(answers)).not.toHaveProperty('usualHelpOther')
   expect(visibleAnswers(answers)).not.toHaveProperty('sourceOther')
   expect(visibleAnswers(answers)).not.toHaveProperty('genderDescription')
-  expect(validateAnswers(answers)).toMatchObject({ occasion: 'Please add an answer.', week: 'Please keep your answer to 2,000 characters.' })
+  expect(validateAnswers(answers)).toMatchObject({ name: 'Please add an answer.', week: 'Please keep your answer to 2,000 characters.' })
 })

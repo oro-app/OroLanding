@@ -210,7 +210,6 @@ export default function Beta() {
     </>,
     options('usedOro'),
     options('outfitDays'),
-    <>{field('occasion', 'What were you getting dressed for?')}{field('uncertainty', 'What were you unsure about?')}</>,
     field('challenges', 'Your experience', { multiline: true }),
     <>{options('usualHelp', { multiple: true })}{answers.usualHelp.includes('Other') && <div className="beta-follow-up">{field('usualHelpOther', 'What else do you do?')}</div>}</>,
     field('hopes', 'What you have in mind', { multiline: true }),

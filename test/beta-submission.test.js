@@ -44,14 +44,15 @@ test('HTTP submission saves a literal row with canonical contact details and ind
   assert.equal(row.request_id, receipt.request_id)
   assert.equal(row.email, 'beta-test@example.com')
   assert.equal(row.phone, '+14165550123')
-  assert.equal(row.occasion, '=1+1')
+  assert.equal(row.occasion, undefined)
+  assert.equal(row.uncertainty, undefined)
   assert.equal(row.instagram, 'example')
   assert.equal(row.futureBeta, false)
   assert.equal(row.marketing, true)
   assert.equal(row.usualHelpOther, '')
   assert.equal(row.age, '')
   assert.equal(row.gender, '')
-  assert.equal(row.form_version, '2026-09-24.1')
+  assert.equal(row.form_version, '2026-09-28.1')
   assert.equal(row.consent_recorded_at, row.received_at)
   assert.equal(state.appends[0].options.valueInputOption, 'RAW')
   assert.equal(state.locked, false)
@@ -99,7 +100,8 @@ test('malformed answers, phone numbers, stale forms and privileged fields do not
   for (const patch of [
     { phone: '+11111111111' }, { phone: '4165550123 ext. 10' }, { terms: false }, { marketing: 'true' },
     { usedOro: 'Maybe' }, { usualHelp: ['Ask a friend', 'Ask a friend'] }, { usualHelp: 'Ask a friend' },
-    { source: 'Other', sourceOther: '' }, { age: '35+' }, { email: 'nope' }, { name: 'x'.repeat(101) }, { approved: true },
+    { source: 'Other', sourceOther: '' }, { age: '35+' }, { email: 'nope' }, { name: 'x'.repeat(101) },
+    { occasion: 'Dinner' }, { uncertainty: 'Shoes' }, { approved: true },
   ]) assert.equal((await post({ ...valid, answers: { ...exampleAnswers, ...patch } })).status, 400)
   for (const patch of [{ cohort: 'other' }, { sheet_id: 'other' }, { submission_key: 'bad' }, { form_version: 'old' }, { consent_version: 'old' }, { answers: null }]) assert.equal((await post({ ...valid, ...patch })).status, 400)
   assert.equal((await post({ ...valid, answers: { ...exampleAnswers, week: 'x'.repeat(66000) } })).status, 413)

@@ -1,6 +1,6 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js/max'
 
-export const FORM_VERSION = '2026-09-24.1'
+export const FORM_VERSION = '2026-09-28.1'
 export const CONSENT_VERSION = '2026-09-24.1'
 export const UUID4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 export const MAX_BODY_BYTES = 64 * 1024
@@ -13,12 +13,12 @@ export const choices = {
   source: ['Instagram', 'Word of mouth', 'Website', 'Other'],
 }
 export const textLimits = {
-  name: 100, email: 254, phone: 64, instagram: 31, occasion: 2000, uncertainty: 2000,
-  challenges: 2000, usualHelpOther: 2000, hopes: 2000, week: 2000, location: 2000,
+  name: 100, email: 254, phone: 64, instagram: 31, challenges: 2000,
+  usualHelpOther: 2000, hopes: 2000, week: 2000, location: 2000,
   genderDescription: 2000, sourceOther: 2000,
 }
 export const answerFields = [...Object.keys(textLimits), ...Object.keys(choices), 'terms', 'futureBeta', 'marketing']
-const requiredText = ['name', 'email', 'phone', 'occasion', 'uncertainty', 'challenges', 'hopes', 'week', 'location']
+const requiredText = ['name', 'email', 'phone', 'challenges', 'hopes', 'week', 'location']
 
 export function isObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value)

@@ -3,7 +3,7 @@ export { choices, textLimits } from '../../lib/betaContract.js'
 
 export const emptyAnswers = {
   name: '', email: '', phone: '', instagram: '', usedOro: '', outfitDays: '',
-  occasion: '', uncertainty: '', challenges: '', usualHelp: [], usualHelpOther: '',
+  challenges: '', usualHelp: [], usualHelpOther: '',
   hopes: '', week: '', location: '', age: '', gender: '', genderDescription: '',
   source: '', sourceOther: '', terms: true, futureBeta: true, marketing: true,
 }
@@ -21,7 +21,6 @@ export const formSteps = [
   { hash: '#contact', title: 'How can we reach you?', fields: ['email', 'phone', 'instagram'] },
   { hash: '#used-oro', title: 'Have you used the oro app before?', fields: ['usedOro'] },
   { hash: '#your-style', title: 'In the past 7 days, on how many days did you want help choosing or improving an outfit?', fields: ['outfitDays'] },
-  { hash: '#last-outfit', title: 'Think about the most recent time you wanted help with an outfit.', description: 'If you don’t have a recent example, you can say that.', fields: ['occasion', 'uncertainty'] },
   { hash: '#style-challenges', title: 'What do you find difficult about putting outfits together, if anything?', fields: ['challenges'] },
   { hash: '#usual-help', title: 'What do you usually do when you’re unsure about an outfit?', fields: ['usualHelp', 'usualHelpOther'] },
   { hash: '#your-hopes', title: 'How do you see oro helping you?', fields: ['hopes'] },

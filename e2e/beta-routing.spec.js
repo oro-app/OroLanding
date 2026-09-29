@@ -37,6 +37,12 @@ test('a direct beta invitation link restores its screen', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Ready to help us make oro yours?' })).toBeVisible()
 })
 
+test('the removed last-outfit step falls back to the beta landing screen', async ({ page }) => {
+  await page.goto('/beta?step=last-outfit')
+  await expect(page).toHaveURL(/\/beta\?step=landing$/)
+  await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
+})
+
 test('beta form steps use bookmarkable query URLs and browser history', async ({ page }) => {
   await page.goto('/beta?step=request')
   await page.getByRole('button', { name: 'Back', exact: true }).click()

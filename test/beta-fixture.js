@@ -5,8 +5,8 @@ import { CONSENT_VERSION, FORM_VERSION } from '../src/lib/betaContract.js'
 
 export const exampleAnswers = {
   name: 'Jamie', email: ' BETA-TEST@example.com ', phone: '(416) 555-0123', instagram: '@example',
-  usedOro: 'No', outfitDays: '1–2 days', occasion: '=1+1', uncertainty: 'Shoes with jeans',
-  challenges: 'Combining colours', usualHelp: ['Ask a friend'], usualHelpOther: 'hidden',
+  usedOro: 'No', outfitDays: '1–2 days', challenges: 'Combining colours',
+  usualHelp: ['Ask a friend'], usualHelpOther: 'hidden',
   hopes: 'A second opinion', week: 'School and dinner', location: 'Toronto, Ontario',
   source: 'Website', sourceOther: 'hidden', genderDescription: 'hidden', terms: true,
   futureBeta: false, marketing: true,
