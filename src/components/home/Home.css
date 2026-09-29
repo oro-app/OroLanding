@@ -93,11 +93,10 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-nav { gap: var(--oro-space-5); }
   .home-grid { display: flex; flex-direction: column; }
   .home-copy { display: contents; }
-  .home-panel { max-width: 600px; min-height: 0; max-height: none; display: block; padding: 0; }
-  .home-panel:first-child { order: 1; min-height: 0; display: block; padding: var(--oro-space-12) 0 0; }
-  .home-panel + .home-panel { margin-top: var(--oro-space-12); }
+  .home-panel { max-width: 600px; }
+  .home-panel:first-child { order: 1; }
   .home-panel:nth-child(2) { order: 3; }
-  .home-panel:nth-child(3) { order: 4; margin-top: var(--oro-space-24); margin-bottom: var(--oro-space-20); }
+  .home-panel:nth-child(3) { order: 4; }
   .home-phone-column { order: 2; padding: var(--oro-space-12) 0; }
   .home-phone-sticky { position: relative; top: auto; height: auto; }
   .home-phone-glow { inset: -5% 0; }
