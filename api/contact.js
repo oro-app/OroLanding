@@ -9,7 +9,7 @@ const supabase = createClient(
 // Add RESEND_API_KEY to this project's Vercel env (Production + Preview).
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const CONTACT_TO = process.env.CONTACT_TO_EMAIL || 'admin@buildingoro.ca';
-const CONTACT_FROM = process.env.CONTACT_FROM_EMAIL || 'Oro Contact <admin@buildingoro.ca>';
+const CONTACT_FROM = process.env.CONTACT_FROM_EMAIL || 'oro Contact <admin@buildingoro.ca>';
 
 const TOPICS = ['hello', 'support', 'press', 'partnership', 'careers', 'feedback'];
 

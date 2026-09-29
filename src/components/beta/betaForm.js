@@ -19,17 +19,17 @@ export function visibleAnswers(answers) {
 export const formSteps = [
   { hash: '#request', title: 'First, what’s your name?', fields: ['name'] },
   { hash: '#contact', title: 'How can we reach you?', fields: ['email', 'phone', 'instagram'] },
-  { hash: '#used-oro', title: 'Have you used the Oro app before?', fields: ['usedOro'] },
+  { hash: '#used-oro', title: 'Have you used the oro app before?', fields: ['usedOro'] },
   { hash: '#your-style', title: 'In the past 7 days, on how many days did you want help choosing or improving an outfit?', fields: ['outfitDays'] },
   { hash: '#last-outfit', title: 'Think about the most recent time you wanted help with an outfit.', description: 'If you don’t have a recent example, you can say that.', fields: ['occasion', 'uncertainty'] },
   { hash: '#style-challenges', title: 'What do you find difficult about putting outfits together, if anything?', fields: ['challenges'] },
   { hash: '#usual-help', title: 'What do you usually do when you’re unsure about an outfit?', fields: ['usualHelp', 'usualHelpOther'] },
-  { hash: '#your-hopes', title: 'How do you see Oro helping you?', fields: ['hopes'] },
+  { hash: '#your-hopes', title: 'How do you see oro helping you?', fields: ['hopes'] },
   { hash: '#your-week', title: 'What does your week look like from September 26–October 1?', fields: ['week'] },
   { hash: '#your-city', title: 'What city and province do you live in?', fields: ['location'] },
   { hash: '#your-age', title: 'What’s your age range?', optional: true, fields: ['age'] },
   { hash: '#your-gender', title: 'What’s your gender?', optional: true, fields: ['gender', 'genderDescription'] },
-  { hash: '#heard-about-oro', title: 'How did you hear about Oro’s beta?', fields: ['source', 'sourceOther'] },
+  { hash: '#heard-about-oro', title: 'How did you hear about oro’s beta?', fields: ['source', 'sourceOther'] },
   { hash: '#before-send', title: 'Ready to be one of the first Oronauts?', fields: ['terms'] },
 ]
 

@@ -6,7 +6,7 @@ const endpoint = '**/agent2/beta-feedback/**'
 const session = (page) => page.evaluate(() => JSON.parse(sessionStorage.getItem('oro_feedback_session')))
 const form = (status = 'open') => ({
   invitation_id: id, survey_kind: 'daily', survey_version: 1, status,
-  context: { beta_label: 'Oro beta', local_date: '2026-09-24', timezone: 'America/Toronto' },
+  context: { beta_label: 'oro beta', local_date: '2026-09-24', timezone: 'America/Toronto' },
   expires_at: '2020-01-01T00:00:00Z', submission_id: status === 'open' ? null : id,
   questions: status === 'open' ? [{ id: 'D13', type: 'text', prompt: 'Your day', required: false, allow_comment: false, choices: [], show_if: [] }] : [],
   receipt: status === 'submitted' ? { submission_id: id, submitted_at: '2026-09-25T00:00:00Z' } : null,

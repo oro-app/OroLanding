@@ -6,7 +6,7 @@ const token = 'synthetic-invitation'
 const id = '11111111-1111-4111-8111-111111111111'
 const question = { id: 'F1', type: 'text', prompt: 'Your experience', required: true, allow_comment: false, choices: [], show_if: [] }
 const form = (status = 'open', submissionId = id, version = 1) => ({ invitation_id: id, survey_kind: 'final', survey_version: version, status,
-  submission_id: status === 'open' ? null : submissionId, context: { beta_label: 'Oro beta' }, expires_at: '2020-01-01T00:00:00Z',
+  submission_id: status === 'open' ? null : submissionId, context: { beta_label: 'oro beta' }, expires_at: '2020-01-01T00:00:00Z',
   questions: status === 'open' ? [question] : [], receipt: status === 'submitted' ? { submission_id: submissionId, submitted_at: '2026-09-25T00:00:00Z' } : null })
 const settle = () => new Promise(setImmediate)
 const rejection = (status, code, question_ids) => Response.json({ detail: { code, question_ids } }, { status })

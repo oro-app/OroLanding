@@ -7,7 +7,7 @@ import './Feedback.css'
 
 const messages = {
   opening: 'Opening your invitation…',
-  missing: 'Open your personal feedback link from Oro to continue.',
+  missing: 'Open your personal feedback link from oro to continue.',
   unavailable: 'Feedback is not available yet. Please check back using your invitation link.',
   storage: 'Your browser could not keep this invitation. Allow browser storage, then reopen your personal link. You can also email us for help.',
   invalid_invitation: 'This invitation is no longer valid. Email us for help getting a new link.',
@@ -68,7 +68,7 @@ export default function Feedback() {
   const status = state.status === 'missing_token' ? 'missing' : state.status
   return (
     <section className="feedback-page ph-no-capture" data-private="true" aria-labelledby="feedback-title">
-      <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/static/oro-logo.png" alt="Oro" width="80" height="32" /></a>
+      <a className="halo-logo-link" href="/" aria-label="oro home"><img className="halo-logo" src="/static/oro-logo.png" alt="oro" width="80" height="32" /></a>
       <Heading as="h1" variant="title" id="feedback-title">Beta feedback</Heading>
       {status === 'open' && <Text>{state.form.survey_kind} feedback · {label}{state.form.survey_kind === 'daily' && ` (${context.timezone})`}</Text>}
       {status === 'open'
@@ -77,7 +77,7 @@ export default function Feedback() {
       {status === 'retry' && <Button onClick={() => flow.current?.retry()}>Retry sending</Button>}
       {['feedback_disabled', 'conflict'].includes(status) && <Button variant="secondary" onClick={() => flow.current?.resume()}>Check again</Button>}
       <a className="oro-button oro-button--secondary" href={status === 'missing' ? '/' : 'mailto:sunny@buildingoro.ca'}>
-        {status === 'missing' ? 'Back to Oro' : 'Email us'}
+        {status === 'missing' ? 'Back to oro' : 'Email us'}
       </a>
     </section>
   )

@@ -87,7 +87,7 @@ function WhyOroDark() {
         <img
           className="why-d-photo"
           src={photo}
-          alt="A wardrobe of clothes selected by Oro"
+          alt="A wardrobe of clothes selected by oro"
           loading="lazy"
           decoding="async"
           width="768"

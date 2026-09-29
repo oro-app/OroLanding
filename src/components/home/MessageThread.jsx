@@ -3,7 +3,7 @@ import lookDay from '../../assets/home/look-day.webp'
 import lookNight from '../../assets/home/look-night.webp'
 import oroMascot from '../../assets/logos/oro_logo.webp'
 
-// The thread is transcribed from Oro-Mobile-Refresh's MigrationDemoThread, and
+// The thread is transcribed from oro-Mobile-Refresh's MigrationDemoThread, and
 // the timings below are that component's shipped values in ms. SLOW stretches
 // them so the loop reads at browsing pace rather than texting pace.
 const SLOW = 1.45
@@ -134,7 +134,7 @@ export default function MessageThread({ startDelay = 0 }) {
   return (
     <div className="mt-device-frame" ref={frameRef}>
       <div className="mt-device-scale">
-        <div className="mt-device" role="region" aria-label="Example conversation with Oro">
+        <div className="mt-device" role="region" aria-label="Example conversation with oro">
           <div className="mt-notch" />
           <div className="mt-screen">
             <div className="mt-statusbar">

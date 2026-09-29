@@ -4,7 +4,7 @@ import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 
 function HomeLogo() {
-  return <img className="halo-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" decoding="async" />
+  return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
 }
 
 export function HomeCta({ place, children, className = '' }) {
@@ -38,7 +38,7 @@ export function HomeFooter() {
       <nav className="halo-footer-links" aria-label="site">
         {FOOTER_LINKS.map((link) => <a key={link.href} href={link.href}>{link.label[0].toUpperCase() + link.label.slice(1)}</a>)}
       </nav>
-      <Text variant="support" muted>© 2026 Oro Digital Inc.</Text>
+      <Text variant="support" muted>© 2026 oro Digital Inc.</Text>
     </footer>
   )
 }

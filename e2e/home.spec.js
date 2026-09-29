@@ -18,7 +18,7 @@ for (const place of ['header', 'hero', 'closer']) {
     await page.goto('/')
     await page.locator(`.halo-cta--${place}`).click()
     await expect(page).toHaveURL(/\/beta$/)
-    await expect(page.getByRole('heading', { name: 'Help us make Oro yours.' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Skip to the form' })).toBeVisible()
   })
 }
@@ -41,7 +41,7 @@ test('left content scrolls normally while the phone stays pinned', async ({ page
 
 test('the phone demo plays messages', async ({ page }) => {
   await page.goto('/')
-  const thread = page.getByRole('region', { name: 'Example conversation with Oro' })
+  const thread = page.getByRole('region', { name: 'Example conversation with oro' })
   await expect(thread).toBeVisible()
   await expect(thread).toContainText('I have class', { timeout: 5000 })
   await expect(thread).toContainText('Cold and grey today', { timeout: 6000 })
@@ -54,7 +54,7 @@ for (const width of [320, 390, 768, 1440]) {
     await expect(page.locator('.halo-cta--hero')).toBeVisible()
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
     expect(overflow).toBeLessThanOrEqual(1)
-    await expect(page.getByRole('region', { name: 'Example conversation with Oro' })).toBeVisible()
+    await expect(page.getByRole('region', { name: 'Example conversation with oro' })).toBeVisible()
     if (width <= 900) {
       const layout = await page.evaluate(() => ({
         phone: document.querySelector('.mt-device').getBoundingClientRect().top,

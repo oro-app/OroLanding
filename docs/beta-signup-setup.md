@@ -94,7 +94,7 @@ The browser retains answers and the retry key **in memory only**. Refreshing or 
 
 For selection, map Sheet `request_id` to backend `source_request_id`, keep the saved `phone`, and use the exact `cohort`. Follow [PR #418's backend selection guide](https://github.com/oro-app/oro-central/blob/codex/beta-signup-consolidated/docs/beta-access.md) in the merged backend version. An operator prepares, reviews and applies approved phones, then sends invitations manually. A Sheet selection alone does not allow onboarding. Do not edit an already-selected application's phone in place; review the corrected request separately.
 
-`/get-started` compatibility and “message Oro first” completion are tracked in [BUI-623](https://linear.app/buildingoro/issue/BUI-623/update-get-started-for-approved-beta-testers-and-message-first-setup). Backend migration/configuration and that website work must be ready before sending invitations. Signup saving can be configured and rehearsed independently of those invitations.
+`/get-started` compatibility and “message oro first” completion are tracked in [BUI-623](https://linear.app/buildingoro/issue/BUI-623/update-get-started-for-approved-beta-testers-and-message-first-setup). Backend migration/configuration and that website work must be ready before sending invitations. Signup saving can be configured and rehearsed independently of those invitations.
 
 ## Close or roll back intake
 

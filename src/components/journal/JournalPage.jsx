@@ -54,7 +54,7 @@ export default function JournalPage() {
       <section className="ftc-hero">
         <div className="ftc-hero-inner">
           <div className="ftc-hero-left">
-            <Text variant="label" muted className="ftc-kicker">Letters &amp; notes from Oro</Text>
+            <Text variant="label" muted className="ftc-kicker">Letters &amp; notes from oro</Text>
             <Heading as="h1" variant="display" className="ftc-title">
               From the<br />
               <span className="ftc-em">closet</span>.

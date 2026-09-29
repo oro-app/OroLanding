@@ -1,7 +1,7 @@
 import { Cta } from '@oro/web'
 import { trackCtaClick } from '../../lib/analytics'
 
-// Oro insiders — a SHARED section (single component; theme-aware colour, same
+// oro insiders — a SHARED section (single component; theme-aware colour, same
 // layout in both themes). Faithful to the handoff's sections/oro-insiders.jsx.
 // "apply for access" opens the existing WaitlistModal (the early-access list).
 

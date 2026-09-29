@@ -90,7 +90,7 @@ export default function WaitlistModal({ onClose }) {
             </div>
             <p className="modal-eyebrow">you're subscribed</p>
             <Heading variant="card" id="newsletter-signup-title">Thanks for joining.</Heading>
-            <p className="modal-subtitle">We'll send thoughtful style notes and Oro updates to your inbox.</p>
+            <p className="modal-subtitle">We'll send thoughtful style notes and oro updates to your inbox.</p>
             <Button variant="secondary" className="modal-done-btn" onClick={onClose}>Done</Button>
           </div>
         ) : alreadyOnList ? (
@@ -102,13 +102,13 @@ export default function WaitlistModal({ onClose }) {
             </div>
             <p className="modal-eyebrow">already subscribed</p>
             <Heading variant="card" id="newsletter-signup-title">You're already on the list.</Heading>
-            <p className="modal-subtitle">No need to sign up again - you're set to receive the Oro newsletter.</p>
+            <p className="modal-subtitle">No need to sign up again - you're set to receive the oro newsletter.</p>
             <Button variant="secondary" className="modal-done-btn" onClick={onClose}>Got it</Button>
           </div>
         ) : (
           <>
             <p className="modal-eyebrow">newsletter</p>
-            <Heading variant="card" id="newsletter-signup-title">Get style notes from Oro</Heading>
+            <Heading variant="card" id="newsletter-signup-title">Get style notes from oro</Heading>
             <p className="modal-subtitle">Wardrobe ideas, product updates, and notes from our team - a few times a month.</p>
 
             <form onSubmit={handleSubmit}>
@@ -131,7 +131,7 @@ export default function WaitlistModal({ onClose }) {
               </div>
 
               <p className="consent-text" id="newsletter-signup-consent">
-                By signing up, you agree to receive emails from Oro. Unsubscribe any time. See our{' '}
+                By signing up, you agree to receive emails from oro. Unsubscribe any time. See our{' '}
                 <a href="/privacy" rel="noopener noreferrer">Privacy Policy</a>.
               </p>
 

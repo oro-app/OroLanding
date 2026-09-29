@@ -68,7 +68,7 @@ export default function CareLabelSubscribe() {
           <span className="cl-hole" />
         </div>
 
-        <Text variant="label" muted className="cl-kicker">Letters from Oro · twice a week</Text>
+        <Text variant="label" muted className="cl-kicker">Letters from oro · twice a week</Text>
 
         <Heading variant="title" className="cl-title">
           One letter.<br />
@@ -76,7 +76,7 @@ export default function CareLabelSubscribe() {
         </Heading>
 
         <Text muted className="cl-body">
-          We spend most of our time building Oro. But we also just really like fashion, and this is where that goes.
+          We spend most of our time building oro. But we also just really like fashion, and this is where that goes.
         </Text>
 
         <div className="cl-symbols" aria-hidden="true">

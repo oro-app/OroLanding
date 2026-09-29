@@ -21,7 +21,7 @@ function confirmHtml(token: string): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Unsubscribe - Oro Insiders</title>
+  <title>Unsubscribe - oro Insiders</title>
   <style>
     ${SHARED_STYLES}
     .btn { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1a1a; color: #fff; font-family: -apple-system, sans-serif; font-size: 15px; border: none; cursor: pointer; border-radius: 4px; text-decoration: none; }
@@ -35,8 +35,8 @@ function confirmHtml(token: string): string {
   </style>
 </head>
 <body>
-  <div class="meta">Oro Insiders</div>
-  <h1>Unsubscribe from Oro Insiders?</h1>
+  <div class="meta">oro Insiders</div>
+  <h1>Unsubscribe from oro Insiders?</h1>
   <p>You'll stop receiving all future issues. If this was an accidental click, just close this page - you're still subscribed.</p>
   <form method="POST" action="/api/unsubscribe?token=${encodeURIComponent(token)}">
     <input type="hidden" name="confirm" value="1">
@@ -46,7 +46,7 @@ function confirmHtml(token: string): string {
       <label class="reason-option"><input type="radio" name="reason" value="too_frequent"> Too many emails</label>
       <label class="reason-option"><input type="radio" name="reason" value="too_long"> Emails are too long</label>
       <label class="reason-option"><input type="radio" name="reason" value="wrong_format"> I prefer a different format (video, social, etc.)</label>
-      <label class="reason-option"><input type="radio" name="reason" value="not_for_me"> I'm not sure Oro is for me anymore</label>
+      <label class="reason-option"><input type="radio" name="reason" value="not_for_me"> I'm not sure oro is for me anymore</label>
       <label class="reason-option"><input type="radio" name="reason" value="lost_interest"> I signed up out of curiosity but lost interest</label>
       <label class="reason-option"><input type="radio" name="reason" value="other" id="reason-other-radio"> Other</label>
       <input type="text" name="reason_other" id="reason-other-input" class="other-input" placeholder="Tell us more…" maxlength="280">
@@ -72,21 +72,21 @@ const SUCCESS_HTML = `<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Unsubscribed - Oro Insiders</title>
+  <title>Unsubscribed - oro Insiders</title>
   <style>${SHARED_STYLES}</style>
 </head>
 <body>
-  <div class="meta">Oro Insiders</div>
+  <div class="meta">oro Insiders</div>
   <h1>You're unsubscribed.</h1>
-  <p>You won't receive any more issues of Oro Insiders. If this was a mistake, reply to any past issue and we'll add you back.</p>
-  <p>The Oro app waitlist is separate. Visit <a href="https://buildingoro.ca">buildingoro.ca</a> if you want to manage that.</p>
+  <p>You won't receive any more issues of oro Insiders. If this was a mistake, reply to any past issue and we'll add you back.</p>
+  <p>The oro app waitlist is separate. Visit <a href="https://buildingoro.ca">buildingoro.ca</a> if you want to manage that.</p>
 </body>
 </html>`;
 
 const ERROR_HTML = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>Invalid link</title>
 <style>body{font-family:Georgia,serif;max-width:480px;margin:80px auto;padding:24px;color:#1a1a1a;line-height:1.6}h1{font-weight:500}p{color:#4a4a4a}</style>
-</head><body><h1>This unsubscribe link is invalid or expired.</h1><p>If you keep getting Oro Insiders, reply to the latest issue and we'll remove you manually.</p></body></html>`;
+</head><body><h1>This unsubscribe link is invalid or expired.</h1><p>If you keep getting oro Insiders, reply to the latest issue and we'll remove you manually.</p></body></html>`;
 
 function html(res: VercelResponse, status: number, body: string) {
   return res.status(status).setHeader('Content-Type', 'text/html; charset=utf-8').send(body);

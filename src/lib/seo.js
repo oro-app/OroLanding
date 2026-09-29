@@ -1,16 +1,16 @@
 import { PRODUCT_FAQS } from './faqs.js'
 
 export const SITE_URL = 'https://www.askoro.now'
-export const SITE_NAME = 'Oro'
-export const SITE_TITLE = 'Oro - Your AI stylist, one text away'
+export const SITE_NAME = 'oro'
+export const SITE_TITLE = 'oro - Your AI stylist, one text away'
 export const DEFAULT_DESCRIPTION =
-  'Nothing to wear? Ask Oro and discover the gold in your wardrobe.'
+  'Nothing to wear? Ask oro and discover the gold in your wardrobe.'
 export const DEFAULT_IMAGE = '/favicon.webp'
 export const DEFAULT_IMAGE_META = {
   type: 'image/webp',
   width: 1071,
   height: 1071,
-  alt: 'Oro mascot logo',
+  alt: 'oro mascot logo',
 }
 export const LOGO_IMAGE = '/oro-logo.webp'
 
@@ -20,16 +20,16 @@ const WEBSITE_ID = `${SITE_URL}/#website`
 export const ROUTE_SEO = {
   feedback: {
     path: '/feedback',
-    title: 'Beta feedback - Oro',
-    description: 'Share your Oro beta experience using your personal invitation.',
+    title: 'Beta feedback - oro',
+    description: 'Share your oro beta experience using your personal invitation.',
     h1: 'Beta feedback',
     noindex: true,
   },
   beta: {
     path: '/beta',
-    title: 'Help us make Oro yours. - Oro beta',
-    description: 'Help shape the earliest Oro experience. Meet the beta and our first Oronauts.',
-    h1: 'Help us make Oro yours.',
+    title: 'Help us make oro yours. - oro beta',
+    description: 'Help shape the earliest oro experience. Meet the beta and our first Oronauts.',
+    h1: 'Help us make oro yours.',
     noindex: true,
   },
   home: {
@@ -38,129 +38,129 @@ export const ROUTE_SEO = {
     description: DEFAULT_DESCRIPTION,
     h1: 'The #1 AI stylist you can text',
     summary:
-      'Oro helps you find your look, whatever your plans. Ask Oro, and head out feeling good about what you’re wearing.',
+      'oro helps you find your look, whatever your plans. Ask oro, and head out feeling good about what you’re wearing.',
     priority: '1.0',
   },
   'try-oro': {
     path: '/try-oro',
-    title: 'Try Oro - AI outfit planner and virtual stylist app',
+    title: 'Try oro - AI outfit planner and virtual stylist app',
     description:
-      'Download Oro to get outfit ideas from your own clothes, preview looks with virtual try-on, and get dressed faster.',
-    h1: 'Try Oro.',
+      'Download oro to get outfit ideas from your own clothes, preview looks with virtual try-on, and get dressed faster.',
+    h1: 'Try oro.',
     summary:
-      'Oro is free to start and builds outfits from your actual wardrobe in under a minute.',
+      'oro is free to start and builds outfits from your actual wardrobe in under a minute.',
     priority: '0.9',
     faqs: PRODUCT_FAQS,
   },
   'how-it-works': {
     path: '/how-it-works',
-    title: 'How Oro Works - Outfit ideas from your own closet',
+    title: 'How oro Works - Outfit ideas from your own closet',
     description:
-      'See how Oro turns your wardrobe, plans, taste, weather, and virtual try-on into outfit recommendations.',
-    h1: 'How Oro works.',
+      'See how oro turns your wardrobe, plans, taste, weather, and virtual try-on into outfit recommendations.',
+    h1: 'How oro works.',
     summary:
-      'Add your closet, tell Oro where you are going, preview the outfit, and leave with a look made from clothes you own.',
+      'Add your closet, tell oro where you are going, preview the outfit, and leave with a look made from clothes you own.',
     priority: '0.8',
     faqs: PRODUCT_FAQS,
   },
   'why-oro': {
     path: '/why-oro',
-    title: 'Why Oro - Personal styling without buying more clothes',
+    title: 'Why oro - Personal styling without buying more clothes',
     description:
-      'Oro is built around your closet, your taste, your body, and your week, so style recommendations feel personal.',
-    h1: 'Why Oro?',
+      'oro is built around your closet, your taste, your body, and your week, so style recommendations feel personal.',
+    h1: 'Why oro?',
     summary:
-      'Oro thinks through color, silhouette, occasion, weather, and taste so your wardrobe is easier to use.',
+      'oro thinks through color, silhouette, occasion, weather, and taste so your wardrobe is easier to use.',
     priority: '0.8',
     faqs: PRODUCT_FAQS,
   },
   journal: {
     path: '/from-the-closet',
-    title: 'From the Closet - Oro style notes and newsletter',
+    title: 'From the Closet - oro style notes and newsletter',
     description:
-      'Read Oro essays and style notes on outfits, fashion, getting dressed, and making more of the clothes you own.',
+      'Read oro essays and style notes on outfits, fashion, getting dressed, and making more of the clothes you own.',
     h1: 'From the Closet.',
     summary:
-      'From the Closet is Oro\'s editorial archive on fashion, personal style, wardrobes, and getting dressed.',
+      'From the Closet is oro\'s editorial archive on fashion, personal style, wardrobes, and getting dressed.',
     priority: '0.7',
   },
   manifesto: {
     path: '/honestly',
-    title: 'Honestly - What Oro believes about style',
+    title: 'Honestly - What oro believes about style',
     description:
-      'Six short beliefs behind Oro: personal style, confidence, better outfits, and making the most of your wardrobe.',
+      'Six short beliefs behind oro: personal style, confidence, better outfits, and making the most of your wardrobe.',
     h1: 'Honestly.',
     summary:
-      'Oro believes fashion should work for your life, and that the best outfit may already be in your wardrobe.',
+      'oro believes fashion should work for your life, and that the best outfit may already be in your wardrobe.',
     priority: '0.6',
   },
   contact: {
     path: '/contact',
-    title: 'Contact Oro - Help, press, partnerships, and feedback',
+    title: 'Contact oro - Help, press, partnerships, and feedback',
     description:
-      'Contact Oro for support, press, partnerships, careers, feedback, or questions about the AI stylist app.',
-    h1: 'Contact Oro.',
+      'Contact oro for support, press, partnerships, careers, feedback, or questions about the AI stylist app.',
+    h1: 'Contact oro.',
     summary:
-      'A real person at Oro reads support questions, press notes, partnership inquiries, and product feedback.',
+      'A real person at oro reads support questions, press notes, partnership inquiries, and product feedback.',
     priority: '0.5',
   },
   'get-started': {
     path: '/get-started',
-    title: 'Complete Your Beta Setup - Oro',
+    title: 'Complete Your Beta Setup - oro',
     description:
-      'Invited to the Oro beta? Answer a few quick questions and verify the phone number on your approved invitation.',
+      'Invited to the oro beta? Answer a few quick questions and verify the phone number on your approved invitation.',
     h1: 'Let’s get you set up.',
     summary:
-      'Approved beta testers complete their Oro setup by answering a few questions and verifying their phone number.',
+      'Approved beta testers complete their oro setup by answering a few questions and verifying their phone number.',
     priority: '0.8',
   },
   'app-terms': {
     path: '/app/terms',
-    title: 'Oro - Mobile App Terms of Service',
-    description: 'Read the terms of service for the Oro mobile app.',
+    title: 'oro - Mobile App Terms of Service',
+    description: 'Read the terms of service for the oro mobile app.',
     h1: 'Mobile app terms of service',
-    summary: 'The terms that govern use of the Oro mobile app.',
+    summary: 'The terms that govern use of the oro mobile app.',
     priority: '0.3',
   },
   terms: {
     path: '/terms',
-    title: 'Oro - Terms of Service',
-    description: 'Terms for Oro’s AI styling service by text, including messaging, photos, subscriptions, and account choices.',
+    title: 'oro - Terms of Service',
+    description: 'Terms for oro’s AI styling service by text, including messaging, photos, subscriptions, and account choices.',
     h1: 'Terms of service',
-    summary: 'The terms for using Oro’s texting service.',
+    summary: 'The terms for using oro’s texting service.',
     priority: '0.3',
   },
   privacy: {
     path: '/privacy',
-    title: 'Oro - Privacy Policy',
-    description: 'How Oro handles your phone number, conversations, photos, wardrobe information, and privacy choices when you text Oro.',
+    title: 'oro - Privacy Policy',
+    description: 'How oro handles your phone number, conversations, photos, wardrobe information, and privacy choices when you text oro.',
     h1: 'Privacy policy',
-    summary: 'Privacy practices for Oro’s texting service and website.',
+    summary: 'Privacy practices for oro’s texting service and website.',
     priority: '0.3',
   },
   'app-privacy': {
     path: '/app/privacy',
-    title: 'Oro - Mobile App Privacy Policy',
+    title: 'oro - Mobile App Privacy Policy',
     description:
-      'Read how the Oro mobile app collects, uses, protects, and retains account, wardrobe, photo, and app usage information.',
+      'Read how the oro mobile app collects, uses, protects, and retains account, wardrobe, photo, and app usage information.',
     h1: 'Mobile app privacy policy',
-    summary: 'Privacy practices for the Oro mobile app, including account data, wardrobe data, photos, analytics, and communications.',
+    summary: 'Privacy practices for the oro mobile app, including account data, wardrobe data, photos, analytics, and communications.',
     priority: '0.3',
   },
   cookies: {
     path: '/cookies',
-    title: 'Oro - Cookie Policy',
-    description: 'Read how Oro uses browser storage and optional Google Analytics cookies.',
+    title: 'oro - Cookie Policy',
+    description: 'Read how oro uses browser storage and optional Google Analytics cookies.',
     h1: 'Cookie policy',
-    summary: 'Oro browser storage, Google Analytics, and consent choices.',
+    summary: 'oro browser storage, Google Analytics, and consent choices.',
     priority: '0.2',
   },
   'google-play': {
     path: '/google-play',
-    title: 'Oro - Account Deletion',
-    description: 'Learn how to delete your Oro account and what happens to retained data.',
+    title: 'oro - Account Deletion',
+    description: 'Learn how to delete your oro account and what happens to retained data.',
     h1: 'Account Deletion',
-    summary: 'Instructions for deleting an Oro account and understanding retained data.',
+    summary: 'Instructions for deleting an oro account and understanding retained data.',
     priority: '0.2',
   },
 }
@@ -198,7 +198,7 @@ export function getBaseJsonLd() {
       '@type': 'Organization',
       '@id': ORGANIZATION_ID,
       name: SITE_NAME,
-      legalName: 'Oro Digital Inc.',
+      legalName: 'oro Digital Inc.',
       url: SITE_URL,
       logo: getImageUrl(LOGO_IMAGE),
       sameAs: [
@@ -309,7 +309,7 @@ export function getSeoForRoute(route, newsletter) {
     const page = newsletter
       ? {
           path: newsletter.href,
-          title: `${newsletter.title} - Oro`,
+          title: `${newsletter.title} - oro`,
           description: newsletter.summary || DEFAULT_DESCRIPTION,
           h1: newsletter.title,
           summary: newsletter.summary || '',
@@ -319,10 +319,10 @@ export function getSeoForRoute(route, newsletter) {
         }
       : {
           path: `/newsletter/${route.slug || ''}`,
-          title: 'Newsletter - Oro',
-          description: 'This Oro newsletter could not be found.',
+          title: 'Newsletter - oro',
+          description: 'This oro newsletter could not be found.',
           h1: 'Newsletter not found',
-          summary: 'This Oro newsletter could not be found.',
+          summary: 'This oro newsletter could not be found.',
           noindex: true,
         }
 

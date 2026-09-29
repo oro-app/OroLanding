@@ -10,14 +10,14 @@ const question = { id: 'D7', type: 'rating', prompt: 'Original wording', require
 const followup = { id: 'D5', type: 'text', prompt: 'Original follow-up', required: false,
   choices: [], show_if: [{ question_id: 'D7', choice_ids: ['much_easier'] }], allow_comment: false, helper: null }
 const envelope = (overrides = {}) => ({ invitation_id: id, survey_kind: 'daily', survey_version: 1,
-  status: 'open', submission_id: null, context: { beta_label: 'Oro beta', local_date: '2026-09-24', timezone: 'America/Toronto' },
+  status: 'open', submission_id: null, context: { beta_label: 'oro beta', local_date: '2026-09-24', timezone: 'America/Toronto' },
   expires_at: '2020-01-01T00:00:00Z', questions: [question, followup], receipt: null, ...overrides })
 const respond = (t, body, status = 200, headers = {}) => t.mock.method(globalThis, 'fetch', async () => Response.json(body, { status, headers }))
 
 test('GET preserves every survey envelope and keeps credentials out of the URL and body', async (t) => {
   t.mock.timers.enable({ apis: ['setTimeout'] })
   for (const survey_kind of ['task', 'daily', 'final']) {
-    const form = envelope({ survey_kind, context: { ...envelope().context, task_label: 'Your Oro task' } })
+    const form = envelope({ survey_kind, context: { ...envelope().context, task_label: 'Your oro task' } })
     const mock = respond(t, form)
     assert.deepEqual(await loadFeedbackForm(token), { ok: true, form })
     const [url, options] = mock.mock.calls.at(-1).arguments

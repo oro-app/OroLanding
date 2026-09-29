@@ -62,7 +62,7 @@ test('close button dismisses the modal', async ({ page }) => {
 test('newsletter dialog keeps keyboard focus inside and fits a small screen', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 })
   await openModal(page)
-  const dialog = page.getByRole('dialog', { name: 'Get style notes from Oro' })
+  const dialog = page.getByRole('dialog', { name: 'Get style notes from oro' })
   await expect(dialog).toBeVisible()
   await expect(dialog.getByLabel('Your email')).toBeFocused()
   const bounds = await dialog.boundingBox()

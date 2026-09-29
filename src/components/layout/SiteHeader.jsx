@@ -44,7 +44,7 @@ export default function SiteHeader() {
         <a href="/" className="site-header-logo-link" aria-label="oro home">
         <img
           src="/oro-logo.webp"
-          alt="Oro"
+          alt="oro"
           className="site-header-logo"
           decoding="async"
           width="1672"

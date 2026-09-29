@@ -87,7 +87,7 @@ function FitsByOroDark() {
             <img
               className="fits-d-photo"
               src={d.photo}
-              alt={`An Oro outfit for ${d.day}`}
+              alt={`An oro outfit for ${d.day}`}
               loading="lazy"
               decoding="async"
             />

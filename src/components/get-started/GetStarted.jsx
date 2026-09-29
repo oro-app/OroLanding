@@ -5,7 +5,7 @@ import { postOnboarding } from './onboardingApi'
 import GoldBackground from '../GoldBackground'
 import './GetStarted.css'
 
-const FIRST_MESSAGE = 'Hey Oro! Your newest Oronaut has landed 🚀'
+const FIRST_MESSAGE = 'Hey oro! Your newest Oronaut has landed 🚀'
 
 function textingLink() {
   const apple = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)
@@ -240,7 +240,7 @@ export default function GetStarted() {
         setError('We couldn’t confirm that a code was sent. Please try again.')
       }
     } catch {
-      setError('We couldn’t reach Oro. Check your connection and try again.')
+      setError('We couldn’t reach oro. Check your connection and try again.')
     } finally {
       setLoading(false)
     }
@@ -365,7 +365,7 @@ export default function GetStarted() {
           {view === 'birthday' && (
             <Question
               label="When's your birthday?"
-              hint="Oro is 16+."
+              hint="oro is 16+."
               canContinue={canContinue}
               onContinue={advance}
             >
@@ -379,7 +379,7 @@ export default function GetStarted() {
 
           {view === 'hear' && (
             <Question
-              label="How'd you hear about Oro?"
+              label="How'd you hear about oro?"
               hint="Select all that apply."
               canContinue={canContinue}
               onContinue={advance}
@@ -393,14 +393,14 @@ export default function GetStarted() {
               </div>
               {form.hear.includes('somewhere else') && (
                 <TextField
-                  label="Where did you hear about Oro?"
+                  label="Where did you hear about oro?"
                   value={form.hearOther}
                   onChange={set('hearOther')}
                   onEnter={advance}
                   placeholder="Tell us more (optional)"
                   autoCapitalize="sentences"
                   maxLength={100}
-                  aria-label="Tell us where you heard about Oro"
+                  aria-label="Tell us where you heard about oro"
                 />
               )}
             </Question>
@@ -518,8 +518,8 @@ export default function GetStarted() {
             <div className="gs-terminal">
               <p className="gs-eyebrow">Welcome, Oronaut.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">You’re all set.</Heading>
-              <p className="gs-terminal-sub">Your beta setup is complete. Send Oro your first text to get started.</p>
-              <a className="oro-button oro-button--primary gs-cta" href={textingLink()}>Start texting Oro</a>
+              <p className="gs-terminal-sub">Your beta setup is complete. Send oro your first text to get started.</p>
+              <a className="oro-button oro-button--primary gs-cta" href={textingLink()}>Start texting oro</a>
               <p className="gs-terminal-sub">On your computer? Text +1 (855) 676-2419 from your phone.</p>
               <a className="gs-textlink" href="mailto:sunny@buildingoro.ca">Questions? Email us</a>
             </div>
@@ -541,7 +541,7 @@ export default function GetStarted() {
             <div className="gs-terminal">
               <p className="gs-eyebrow">So close.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">
-                Oro is <span className="gs-em">16+</span> for now.
+                oro is <span className="gs-em">16+</span> for now.
               </Heading>
               <p className="gs-terminal-sub">
                 Come back in a bit - we'll be here, and we'll have a fit waiting.
@@ -556,7 +556,7 @@ export default function GetStarted() {
             <div className="gs-terminal">
               <p className="gs-eyebrow">Not there just yet.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">
-                Oro isn't available in <span className="gs-em">Quebec</span> yet.
+                oro isn't available in <span className="gs-em">Quebec</span> yet.
               </Heading>
               <p className="gs-terminal-sub">
                 We're working on it - check back soon.
@@ -585,11 +585,11 @@ function Welcome({ onStart }) {
       <div className="gs-welcome-details">
         <p className="gs-welcome-greeting">Welcome to the first crew of Oronauts.</p>
         <p className="gs-welcome-sub">
-          We’re so glad you’re here. You’ll get to try Oro early, meet the people building it,
+          We’re so glad you’re here. You’ll get to try oro early, meet the people building it,
           and help shape what it becomes.
         </p>
         <p className="gs-welcome-signoff">
-          See you inside,<br /><span>Sunny &amp; the Oro team</span>
+          See you inside,<br /><span>Sunny &amp; the oro team</span>
         </p>
         <Button className="gs-cta" onClick={onStart}>
           Let’s get you settled <ButtonArrow />
@@ -627,13 +627,13 @@ function ConsentNote() {
   return (
     <>
       <p className="gs-consent-line">
-        By entering your number, you agree to Oro's{' '}
+        By entering your number, you agree to oro's{' '}
         <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and{' '}
         <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and
         confirm that you are not a resident of Quebec.
       </p>
       <p className="gs-consent-line">
-        You're also opting in to recurring automated texts from Oro at this number - it's how Oro
+        You're also opting in to recurring automated texts from oro at this number - it's how oro
         styles you. Msg &amp; data rates may apply, frequency varies. Reply STOP to opt out, HELP for
         help.
       </p>

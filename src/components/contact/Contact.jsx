@@ -47,7 +47,7 @@ function VisitorForm() {
         <span className="ct-meta-gold">Not yet sent</span>
       </div>
 
-      <p className="ct-salutation">Dear Oro,</p>
+      <p className="ct-salutation">Dear oro,</p>
 
       <textarea
         className="oro-input ct-textarea"
@@ -148,7 +148,7 @@ export default function Contact() {
           {/* Left — oro's pre-printed letter */}
           <div className="oro-card ct-sheet ct-sheet--oro">
             <div className="ct-meta">
-              <span>From Oro</span>
+              <span>From oro</span>
               <span>Any day</span>
             </div>
             <p className="ct-salutation">Dear reader,</p>
@@ -158,7 +158,7 @@ export default function Contact() {
             </div>
             <p className="ct-signoff-oro">
               Yours,
-              <img className="halo-logo ct-signoff-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" decoding="async" />
+              <img className="halo-logo ct-signoff-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
             </p>
           </div>
 

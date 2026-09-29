@@ -82,7 +82,7 @@ export default function Beta() {
   }, [])
 
   useEffect(() => {
-    document.title = 'Help us make Oro yours. - Oro beta'
+    document.title = 'Help us make oro yours. - oro beta'
     const syncLocation = () => {
       const url = new URL(window.location.href)
       const requestedStep = url.searchParams.get('step') || url.hash.slice(1)
@@ -223,7 +223,7 @@ export default function Beta() {
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <header className="halo-header beta-header"><div className="halo-container halo-header-inner">
-        <a className="halo-logo-link" href="/" aria-label="Oro home"><img className="halo-logo" src="/oro-logo.webp" alt="Oro" width="1672" height="941" /></a>
+        <a className="halo-logo-link" href="/" aria-label="oro home"><img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" /></a>
         {view === 'story' && <nav className="halo-nav" aria-label="Beta">
           <a className="oro-button oro-button--secondary" href={`?step=${formSteps[step].hash.slice(1)}`} onClick={(event) => { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); openStep(step) }}>{allowForm ? 'Skip to the form' : 'Beta invites'} <ButtonArrow direction="up-right" /></a>
         </nav>}
@@ -255,10 +255,10 @@ export default function Beta() {
               {message && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title={message[0]}>{message[1]}</Notice></div>}
               <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Request an invite'} <ButtonArrow direction="up-right" /></Button>
               <div className="beta-consent-options">
-                <label><input type="checkbox" disabled={saving} name="terms" required checked={answers.terms} onChange={(event) => update('terms', event.target.checked)} aria-invalid={errors.terms ? true : undefined} aria-describedby={errors.terms ? 'terms-error' : undefined} /><span>By submitting this request, I agree to Oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a>.</span></label>
+                <label><input type="checkbox" disabled={saving} name="terms" required checked={answers.terms} onChange={(event) => update('terms', event.target.checked)} aria-invalid={errors.terms ? true : undefined} aria-describedby={errors.terms ? 'terms-error' : undefined} /><span>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a>.</span></label>
                 {errors.terms && <p id="terms-error" className="oro-field__error">{errors.terms}</p>}
-                <label><input type="checkbox" disabled={saving} name="futureBeta" checked={answers.futureBeta} onChange={(event) => update('futureBeta', event.target.checked)} /><span>If I’m not invited to this beta, Oro can email or text me about future beta opportunities. I can unsubscribe at any time.</span></label>
-                <label><input type="checkbox" disabled={saving} name="marketing" checked={answers.marketing} onChange={(event) => update('marketing', event.target.checked)} /><span>I’d like to receive marketing emails and texts from Oro, including product updates and promotions. I can unsubscribe at any time.</span></label>
+                <label><input type="checkbox" disabled={saving} name="futureBeta" checked={answers.futureBeta} onChange={(event) => update('futureBeta', event.target.checked)} /><span>If I’m not invited to this beta, oro can email or text me about future beta opportunities. I can unsubscribe at any time.</span></label>
+                <label><input type="checkbox" disabled={saving} name="marketing" checked={answers.marketing} onChange={(event) => update('marketing', event.target.checked)} /><span>I’d like to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</span></label>
               </div>
               <Text variant="support" muted>Read our <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a> to learn how we handle your information.</Text>
             </div>}
@@ -271,7 +271,7 @@ export default function Beta() {
         {!requestId && <Text variant="label" muted>Confirmation preview · No request has been saved</Text>}
         <span className="beta-receipt-icon" aria-hidden="true">✓</span>
         <Heading as="h1" variant="display" id="receipt-title">Request <em>received :)</em></Heading>
-        <Text muted>Thanks for helping us make Oro yours. We’ll review your responses and email you if you’re selected for the September 26–October 1 beta.</Text>
+        <Text muted>Thanks for helping us make oro yours. We’ll review your responses and email you if you’re selected for the September 26–October 1 beta.</Text>
         <Text variant="label" muted>Questions or concerns? Email <a href="mailto:sunny@buildingoro.ca">sunny@buildingoro.ca</a>.</Text>
         {requestId ? <Text variant="support" muted>Request reference: {requestId}</Text> : <Button variant="secondary" onClick={() => setView('form')}>Back to the draft</Button>}
       </section>}

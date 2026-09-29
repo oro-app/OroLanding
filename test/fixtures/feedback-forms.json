@@ -44,7 +44,7 @@
       "helper": null,
       "id": "R1",
       "type": "single",
-      "prompt": "Did Oro help you accomplish what you wanted?"
+      "prompt": "Did oro help you accomplish what you wanted?"
     },
     {
       "required": true,
@@ -85,7 +85,7 @@
       "helper": null,
       "id": "R2",
       "type": "rating",
-      "prompt": "How well did Oro understand what you were asking for?"
+      "prompt": "How well did oro understand what you were asking for?"
     },
     {
       "required": false,
@@ -95,7 +95,7 @@
       "helper": null,
       "id": "R3",
       "type": "text",
-      "prompt": "What were you hoping Oro would do differently?"
+      "prompt": "What were you hoping oro would do differently?"
     },
     {
       "required": true,
@@ -230,7 +230,7 @@
       "helper": null,
       "id": "D3",
       "type": "single",
-      "prompt": "Did you wear an Oro-suggested outfit today, including one suggested on an earlier day?"
+      "prompt": "Did you wear an oro-suggested outfit today, including one suggested on an earlier day?"
     },
     {
       "required": false,
@@ -406,7 +406,7 @@
       "helper": null,
       "id": "D13",
       "type": "text",
-      "prompt": "What was the most frustrating part of using Oro today, if anything?"
+      "prompt": "What was the most frustrating part of using oro today, if anything?"
     },
     {
       "required": false,
@@ -416,7 +416,7 @@
       "helper": null,
       "id": "D17",
       "type": "text",
-      "prompt": "What would have made Oro more useful to you today?"
+      "prompt": "What would have made oro more useful to you today?"
     }
   ],
   "final": [
@@ -428,7 +428,7 @@
       "helper": null,
       "id": "F1",
       "type": "text",
-      "prompt": "How would you describe Oro to someone who hasn't tried it?"
+      "prompt": "How would you describe oro to someone who hasn't tried it?"
     },
     {
       "required": false,
@@ -438,7 +438,7 @@
       "helper": null,
       "id": "F2",
       "type": "text",
-      "prompt": "What was the most useful thing Oro did for you during the beta?"
+      "prompt": "What was the most useful thing oro did for you during the beta?"
     },
     {
       "required": false,
@@ -458,7 +458,7 @@
       "helper": null,
       "id": "F4",
       "type": "text",
-      "prompt": "In which situations was Oro most useful?"
+      "prompt": "In which situations was oro most useful?"
     },
     {
       "required": false,
@@ -468,7 +468,7 @@
       "helper": null,
       "id": "F5",
       "type": "text",
-      "prompt": "In which situations did Oro fall short?"
+      "prompt": "In which situations did oro fall short?"
     },
     {
       "required": false,
@@ -478,7 +478,7 @@
       "helper": null,
       "id": "F6",
       "type": "text",
-      "prompt": "How did using Oro change the way you chose outfits, if at all?"
+      "prompt": "How did using oro change the way you chose outfits, if at all?"
     },
     {
       "required": true,
@@ -529,7 +529,7 @@
       "helper": null,
       "id": "F9",
       "type": "rating",
-      "prompt": "How much would you trust Oro's next outfit recommendation?"
+      "prompt": "How much would you trust oro's next outfit recommendation?"
     },
     {
       "required": false,
@@ -626,7 +626,7 @@
       "helper": null,
       "id": "F17",
       "type": "single",
-      "prompt": "Would you keep using Oro after this beta? Why or why not?"
+      "prompt": "Would you keep using oro after this beta? Why or why not?"
     },
     {
       "required": true,
@@ -653,7 +653,7 @@
       "helper": null,
       "id": "F18",
       "type": "text",
-      "prompt": "What would most likely cause you to stop using Oro?"
+      "prompt": "What would most likely cause you to stop using oro?"
     },
     {
       "required": false,
@@ -670,7 +670,7 @@
       "helper": null,
       "id": "F19",
       "type": "text",
-      "prompt": "What would you use instead of Oro?"
+      "prompt": "What would you use instead of oro?"
     },
     {
       "required": false,
@@ -680,7 +680,7 @@
       "helper": null,
       "id": "F20",
       "type": "text",
-      "prompt": "Who, if anyone, do you think would find Oro useful?"
+      "prompt": "Who, if anyone, do you think would find oro useful?"
     },
     {
       "required": false,
@@ -706,7 +706,7 @@
       "helper": null,
       "id": "F21",
       "type": "single",
-      "prompt": "Would you consider paying for Oro as it works today?"
+      "prompt": "Would you consider paying for oro as it works today?"
     },
     {
       "required": false,

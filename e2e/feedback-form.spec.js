@@ -9,7 +9,7 @@ const endpoint = '**/agent2/beta-feedback/**'
 const stored = (page) => page.evaluate(() => JSON.parse(sessionStorage.getItem('oro_feedback_session')))
 const form = (kind = 'daily', questions = definitions[kind]) => ({ invitation_id: id, survey_kind: kind, survey_version: 1,
   status: 'open', submission_id: null, receipt: null, expires_at: '2020-01-01T00:00:00Z', questions,
-  context: { beta_label: 'Oro beta', task_label: 'Your Oro task', local_date: '2026-09-24', timezone: 'America/Toronto' } })
+  context: { beta_label: 'oro beta', task_label: 'Your oro task', local_date: '2026-09-24', timezone: 'America/Toronto' } })
 const button = (page) => page.getByRole('button', { name: /^(Continue|Review answers)$/ })
 const prompt = (kind, questionId) => definitions[kind].find((question) => question.id === questionId).prompt
 
@@ -298,7 +298,7 @@ test('backend field rejection preserves input, focuses its error, and keeps answ
 test('legacy demo links no longer bypass the invitation flow', async ({ page }) => {
   await page.goto('/feedback?demo=daily')
   await expect(page.getByRole('status')).toContainText('Open your personal feedback link')
-  await expect(page.getByRole('link', { name: 'Back to Oro', exact: true })).toHaveAttribute('href', '/')
+  await expect(page.getByRole('link', { name: 'Back to oro', exact: true })).toHaveAttribute('href', '/')
   await expect(page.getByRole('textbox')).toHaveCount(0)
   await expect(page.getByRole('heading', { name: 'Feedback demo', exact: true })).toHaveCount(0)
 })

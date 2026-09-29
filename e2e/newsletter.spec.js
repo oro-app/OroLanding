@@ -34,7 +34,7 @@ for (const width of [320, 390, 1440]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1)
     await page.locator('.halo-cta--newsletter_article').click()
     await expect(page).toHaveURL(/\/beta$/)
-    await expect(page.getByRole('heading', { name: 'Help us make Oro yours.' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
   })
 }
 
