@@ -1,6 +1,6 @@
 # Beta feedback
 
-`/feedback#token=<invitation>` removes the fragment before app startup and keeps the credential in `oro_feedback_session` in tab session storage. Another invitation replaces the previous session. Malformed links clear it; blocked storage shows recovery guidance. Feedback has no analytics, public sitemap entry, or shared caching.
+`/feedback#token=<invitation>` removes the fragment before app startup and keeps the credential in `oro_feedback_session` in tab session storage. Another invitation replaces the previous session. Malformed links clear it; blocked storage shows recovery guidance. Consent-gated analytics record the route and link navigation, but never the invitation token, questions, answers, or submission state. Feedback has no public sitemap entry or shared caching.
 
 The oro Kit page renders task, daily, and end-of-beta questions from the API, one question per step with Back/Continue and a final review. It preserves backend wording, option IDs/order, requiredness, helpers, and explicit score metadata. Only a validated receipt produces thanks. Live API and Google workbook verification depend on BUI-624.
 

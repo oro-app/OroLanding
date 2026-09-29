@@ -138,10 +138,10 @@ export function hasAnalyticsConsent() {
   return localStorage.getItem('oro_cookie_consent') === 'accepted';
 }
 
-export function setAnalyticsConsent(accepted) {
+export function setAnalyticsConsent(accepted, pageViewParams = {}) {
   localStorage.setItem('oro_cookie_consent', accepted ? 'accepted' : 'declined');
   if (accepted) {
     initAnalytics();
-    trackPageView({ consent_source: 'cookie_banner' });
+    trackPageView({ ...pageViewParams, consent_source: 'cookie_banner' });
   }
 }

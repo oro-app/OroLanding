@@ -42,8 +42,10 @@ for (const path of ['/feedback', '/feedback/', '/feedback/index.html']) {
     expect(await session(page)).toEqual({ token })
     const captured = await page.evaluate(() => JSON.stringify([document.body.innerHTML, localStorage, document.cookie, window.dataLayer]))
     expect(captured).not.toContain(token)
-    expect(await page.evaluate(() => window.dataLayer)).toEqual([])
-    expect(requests.filter((url) => /google-analytics|googletagmanager|posthog/.test(url))).toEqual([])
+    const analyticsState = await page.evaluate(() => JSON.stringify(window.dataLayer))
+    expect(analyticsState).toContain('page_view')
+    expect(analyticsState).toContain('"route_type":"feedback"')
+    expect(requests.some((url) => /googletagmanager\.com\/gtag\/js/.test(url))).toBe(true)
     expect(requests.join()).not.toContain(token)
     expect(logs).toEqual([])
     for (const width of [320, 390]) {

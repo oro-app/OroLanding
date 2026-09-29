@@ -57,20 +57,19 @@ function App({ initialRoute }) {
   const isFeedback = route.type === 'feedback'
   const isPrivateForm = isBeta || isFeedback || route.type === 'get-started'
   const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'newsletter'
+  const pageViewParams = {
+    route_type: route.type,
+    ...(route.slug ? { newsletter_slug: route.slug } : {}),
+  }
 
   useEffect(() => {
-    if (isPrivateForm) return
     if (hasAnalyticsConsent()) {
       initAnalytics()
-      trackPageView({
-        route_type: route.type,
-        ...(route.slug ? { newsletter_slug: route.slug } : {}),
-      })
+      trackPageView(pageViewParams)
     }
-  }, [route.slug, route.type, isPrivateForm])
+  }, [route.slug, route.type])
 
   useEffect(() => {
-    if (isPrivateForm) return
     const handleLinkClick = (event) => {
       const link = event.target.closest?.('a[href]')
       if (!link) return
@@ -121,7 +120,7 @@ function App({ initialRoute }) {
       window.removeEventListener('popstate', handleLocationChange)
       window.removeEventListener('hashchange', handleLocationChange)
     }
-  }, [isPrivateForm])
+  }, [])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -182,7 +181,7 @@ function App({ initialRoute }) {
           )}
         </main>
         {isHalo && !isFeedback && <HomeFooter />}
-        {!isPrivateForm && <CookieConsent halo={isHalo} />}
+        <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />
       </div>
     </ThemeProvider>
   )

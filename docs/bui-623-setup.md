@@ -4,7 +4,7 @@ Manual approval emails should link to `/get-started`. The page is public; access
 
 The page uses oro-kit controls. Approved new and existing accounts follow the same flow. A successful `200 {"status":"verified"}` confirms setup is saved. Completion says “You’re all set. Your beta setup is complete.” It does not ask the tester to message oro or promise an automatic welcome message.
 
-`beta_invite_required` links to `/beta` and `sunny@buildingoro.ca`. Account conflicts, closed setup, expired sessions, failed saves, and uncertain network responses have recovery screens. Fresh-code recovery preserves the answers. Codes stay in memory; existing draft answers stay in browser storage until setup succeeds. Analytics initialization and link tracking are disabled on this route.
+`beta_invite_required` links to `/beta` and `sunny@buildingoro.ca`. Account conflicts, closed setup, expired sessions, failed saves, and uncertain network responses have recovery screens. Fresh-code recovery preserves the answers. Codes stay in memory; existing draft answers stay in browser storage until setup succeeds. Consent-gated analytics record the route and link navigation, but never setup fields, phone numbers, verification codes, or API payloads.
 
 ## Backend and release
 

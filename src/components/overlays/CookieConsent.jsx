@@ -3,7 +3,7 @@ import { Button } from 'oro-kit'
 import { useEffect, useState } from 'react'
 import { setAnalyticsConsent } from '../../lib/analytics.js'
 
-export default function CookieConsent({ halo = false }) {
+export default function CookieConsent({ halo = false, pageViewParams = {} }) {
   // Render first-time consent in the prerendered HTML. Waiting for hydration
   // made the late-arriving banner the homepage LCP element on mobile.
   const [visible, setVisible] = useState(true)
@@ -20,7 +20,7 @@ export default function CookieConsent({ halo = false }) {
   if (!visible) return null
 
   const handleChoice = (accepted) => {
-    setAnalyticsConsent(accepted)
+    setAnalyticsConsent(accepted, pageViewParams)
     document.documentElement.dataset.cookieConsent = 'set'
     setVisible(false)
   }
