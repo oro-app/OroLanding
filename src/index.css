@@ -111,6 +111,32 @@ button:active, .btn:active {
   transform: scale(0.98);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  :where(button, a) [data-button-icon] {
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :where(button, a):not(:disabled):focus-visible [data-button-icon] {
+    transform: translateY(-2px);
+  }
+
+  :where(button, a):not(:disabled):focus-visible [data-button-icon="right"] { transform: translateX(3px); }
+  :where(button, a):not(:disabled):focus-visible [data-button-icon="left"] { transform: translateX(-3px); }
+  :where(button, a):not(:disabled):focus-visible [data-button-icon="down"] { transform: translateY(2px); }
+  :where(button, a):not(:disabled):focus-visible [data-button-icon="up-right"] { transform: translate(2px, -2px); }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :where(button, a):not(:disabled):hover [data-button-icon] {
+    transform: translateY(-2px);
+  }
+
+  :where(button, a):not(:disabled):hover [data-button-icon="right"] { transform: translateX(3px); }
+  :where(button, a):not(:disabled):hover [data-button-icon="left"] { transform: translateX(-3px); }
+  :where(button, a):not(:disabled):hover [data-button-icon="down"] { transform: translateY(2px); }
+  :where(button, a):not(:disabled):hover [data-button-icon="up-right"] { transform: translate(2px, -2px); }
+}
+
 /* Smooth scroll */
 html { scroll-behavior: smooth; }
 

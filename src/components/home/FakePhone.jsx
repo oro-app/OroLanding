@@ -50,7 +50,7 @@ function PhoneHome({ s }) {
             fontFamily: SERIF, fontStyle: 'italic', fontSize: 13 * s, cursor: 'pointer',
           }}
         >
-          style me. →
+          style me. <span data-button-icon="right" aria-hidden="true">→</span>
         </button>
         <button
           type="button"
@@ -88,7 +88,7 @@ function PhoneStyleMe({ s }) {
           fontFamily: SERIF, fontStyle: 'italic', fontSize: 13 * s, cursor: 'pointer',
         }}
       >
-        style me. →
+        style me. <span data-button-icon="right" aria-hidden="true">→</span>
       </button>
     </div>
   )

@@ -9,19 +9,12 @@ test('beta invitation screens use bookmarkable query URLs and browser history', 
   await page.goto('/beta')
   await expect(page).toHaveURL(/\/beta\?step=landing$/)
 
-  await page.getByRole('button', { name: 'See beta details', exact: true }).click()
+  await page.getByRole('button', { name: 'See details', exact: true }).click()
   await expect(page).toHaveURL(/\/beta\?step=beta-details$/)
   await expect(page.getByRole('heading', { name: 'Help shape the future of oro.' })).toBeFocused()
 
-  await page.getByRole('button', { name: 'Continue to invite', exact: true }).click()
-  await expect(page).toHaveURL(/\/beta\?step=invite$/)
-
-  await page.getByRole('button', { name: 'Request an invite', exact: true }).click()
+  await page.getByRole('button', { name: 'Continue', exact: true }).click()
   await expect(page).toHaveURL(/\/beta\?step=request$/)
-
-  await page.goBack()
-  await expect(page).toHaveURL(/\/beta\?step=invite$/)
-  await expect(page.getByRole('heading', { name: 'Ready to help us make oro yours?' })).toBeFocused()
 
   await page.goBack()
   await expect(page).toHaveURL(/\/beta\?step=beta-details$/)
@@ -32,16 +25,19 @@ test('beta invitation screens use bookmarkable query URLs and browser history', 
   await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeFocused()
 })
 
-test('a direct beta invitation link restores its screen', async ({ page }) => {
+test('the removed invite step falls back to the beta landing screen', async ({ page }) => {
   await page.goto('/beta?step=invite')
-  await expect(page.getByRole('heading', { name: 'Ready to help us make oro yours?' })).toBeVisible()
-})
-
-test('the removed last-outfit step falls back to the beta landing screen', async ({ page }) => {
-  await page.goto('/beta?step=last-outfit')
   await expect(page).toHaveURL(/\/beta\?step=landing$/)
   await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
 })
+
+for (const removedStep of ['your-hopes', 'your-week', 'last-outfit']) {
+  test(`the removed ${removedStep} step falls back to the beta landing screen`, async ({ page }) => {
+    await page.goto(`/beta?step=${removedStep}`)
+    await expect(page).toHaveURL(/\/beta\?step=landing$/)
+    await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
+  })
+}
 
 test('beta form steps use bookmarkable query URLs and browser history', async ({ page }) => {
   await page.goto('/beta?step=request')

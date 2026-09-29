@@ -8,7 +8,7 @@ export const exampleAnswers = {
   usedOro: 'No', outfitDays: '1–2 days', challenges: 'Combining colours',
   usualHelp: ['Ask a friend'], usualHelpOther: 'hidden',
   hopes: 'A second opinion', week: 'School and dinner', location: 'Toronto, Ontario',
-  source: 'Website', sourceOther: 'hidden', genderDescription: 'hidden', terms: true,
+  age: 'Prefer not to say', gender: 'Prefer not to say', source: 'Website', sourceOther: 'hidden', genderDescription: 'hidden', terms: true,
   futureBeta: false, marketing: true,
 }
 export const environment = {

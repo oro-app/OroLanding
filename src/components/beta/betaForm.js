@@ -23,13 +23,11 @@ export const formSteps = [
   { hash: '#your-style', title: 'In the past 7 days, on how many days did you want help choosing or improving an outfit?', fields: ['outfitDays'] },
   { hash: '#style-challenges', title: 'What do you find difficult about putting outfits together, if anything?', fields: ['challenges'] },
   { hash: '#usual-help', title: 'What do you usually do when you’re unsure about an outfit?', fields: ['usualHelp', 'usualHelpOther'] },
-  { hash: '#your-hopes', title: 'How do you see oro helping you?', fields: ['hopes'] },
-  { hash: '#your-week', title: 'What does your week look like from September 26–October 1?', fields: ['week'] },
   { hash: '#your-city', title: 'What city and province do you live in?', fields: ['location'] },
-  { hash: '#your-age', title: 'What’s your age range?', optional: true, fields: ['age'] },
-  { hash: '#your-gender', title: 'What’s your gender?', optional: true, fields: ['gender', 'genderDescription'] },
+  { hash: '#your-age', title: 'What’s your age range?', fields: ['age'] },
+  { hash: '#your-gender', title: 'What’s your gender?', fields: ['gender', 'genderDescription'] },
   { hash: '#heard-about-oro', title: 'How did you hear about oro’s beta?', fields: ['source', 'sourceOther'] },
-  { hash: '#before-send', title: 'Ready to be one of the first Oronauts?', fields: ['terms'] },
+  { hash: '#before-send', title: 'Ready to be one of the first oronauts?', fields: ['terms'] },
 ]
 
 export function validateAnswers(answers) {

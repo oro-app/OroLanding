@@ -6,6 +6,7 @@ export default function ButtonArrow({ direction = 'right', className, size = 14 
   return (
     <svg
       className={className}
+      data-button-icon={direction}
       width={size}
       height={size}
       viewBox="0 0 16 16"

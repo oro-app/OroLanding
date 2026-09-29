@@ -1,6 +1,6 @@
 import { test as base, expect } from './fixtures.js'
 
-const draft = { name: 'Test Oronaut', birthday: '1998/01/02', country: 'CA', province: 'ON', hear: ['a friend'], hearOther: '', phone: '+14165550123' }
+const draft = { name: 'Test oronaut', birthday: '1998/01/02', country: 'CA', province: 'ON', hear: ['a friend'], hearOther: '', phone: '+14165550123' }
 const inviteError = { status: 403, json: { detail: { code: 'beta_invite_required', message: 'An approved beta invite is required' } } }
 const test = base.extend({
   api: async ({ page }, use) => {
@@ -41,7 +41,7 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await page.getByRole('button', { name: 'Let’s get you settled' }).click()
   await page.keyboard.press('Tab')
   await expect(page.getByLabel('First name')).toBeFocused()
-  await page.keyboard.type('Test Oronaut')
+  await page.keyboard.type('Test oronaut')
   await page.keyboard.press('Enter')
   await page.getByLabel('Birth year', { exact: true }).fill('1998')
   await page.getByLabel('Birth month', { exact: true }).fill('01')
@@ -65,7 +65,7 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await expect(page.getByText('Your beta setup is complete. Send oro your first text to get started.')).toBeVisible()
   await expect(page.getByText(/oro just texted you|check your phone|already signed up/i)).toHaveCount(0)
   const separator = await page.evaluate(() => /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) ? '&' : '?')
-  await expect(page.getByRole('link', { name: 'Start texting oro', exact: true })).toHaveAttribute('href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey oro! Your newest Oronaut has landed 🚀')}`)
+  await expect(page.getByRole('link', { name: 'Start texting oro', exact: true })).toHaveAttribute('href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`)
   await expect(page.getByText('On your computer? Text +1 (855) 676-2419 from your phone.')).toBeVisible()
   expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
   expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', phone: '+1 (416) 555-0123' })
@@ -178,7 +178,7 @@ test('a lost verification response offers a fresh-code recovery', async ({ page,
   await expect(page.getByRole('button', { name: 'Back to phone verification' })).toBeEnabled()
 })
 
-test('private setup fields never enter analytics even with prior consent', async ({ page, api }) => {
+test('setup analytics never include private fields', async ({ page, api }) => {
   const analyticsRequests = []
   page.on('request', (request) => {
     if (/google-analytics|googletagmanager|posthog/.test(request.url())) analyticsRequests.push(request.url())
@@ -191,8 +191,11 @@ test('private setup fields never enter analytics even with prior consent', async
   await codeStep(page)
   await verify(page)
   await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeVisible()
-  expect(analyticsRequests).toEqual([])
-  expect(await page.evaluate(() => window.dataLayer)).toEqual([])
+  expect(analyticsRequests.some((url) => /googletagmanager\.com\/gtag\/js/.test(url))).toBe(true)
+  const analyticsState = await page.evaluate(() => JSON.stringify(window.dataLayer))
+  expect(analyticsState).toContain('page_view')
+  expect(analyticsState).toContain('"route_type":"get-started"')
+  expect(analyticsState).not.toMatch(/Test oronaut|1998|416|555|0123|123456/i)
   expect(api.requests).toHaveLength(2)
 })
 
@@ -218,7 +221,7 @@ for (const [device, userAgent, separator] of [
     await codeStep(page)
     await verify(page)
     await expect(page.getByRole('link', { name: 'Start texting oro', exact: true })).toHaveAttribute(
-      'href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey oro! Your newest Oronaut has landed 🚀')}`,
+      'href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`,
     )
   })
 }

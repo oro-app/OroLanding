@@ -1,6 +1,6 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js/max'
 
-export const FORM_VERSION = '2026-09-28.1'
+export const FORM_VERSION = '2026-09-28.4'
 export const CONSENT_VERSION = '2026-09-24.1'
 export const UUID4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 export const MAX_BODY_BYTES = 64 * 1024
@@ -8,7 +8,7 @@ export const choices = {
   usedOro: ['Yes', 'No'],
   outfitDays: ['0 days', '1–2 days', '3–4 days', '5–7 days', 'I don’t remember'],
   usualHelp: ['Ask a friend', 'Look online for inspiration', 'Use another AI assistant', 'Buy something', 'Other'],
-  age: ['Under 18', '18–22', '23–28', '29–34'],
+  age: ['Under 18', '18–22', '23–28', '29–34', '35–40', 'Over 40', 'Prefer not to say'],
   gender: ['Woman', 'Man', 'Nonbinary', 'I’d like to self-describe', 'Prefer not to say'],
   source: ['Instagram', 'Word of mouth', 'Website', 'Other'],
 }
@@ -18,7 +18,7 @@ export const textLimits = {
   genderDescription: 2000, sourceOther: 2000,
 }
 export const answerFields = [...Object.keys(textLimits), ...Object.keys(choices), 'terms', 'futureBeta', 'marketing']
-const requiredText = ['name', 'email', 'phone', 'challenges', 'hopes', 'week', 'location']
+const requiredText = ['name', 'email', 'phone', 'location']
 
 export function isObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -48,7 +48,7 @@ export function normalizeAnswers(input) {
       if (!Array.isArray(value) || !value.length || value.length > options.length || new Set(value).size !== value.length || value.some((option) => !options.includes(option))) errors[name] = 'Choose at least one of the listed answers.'
     } else {
       answers[name] = typeof value === 'string' ? value : ''
-      if (!options.includes(value) && !(['age', 'gender'].includes(name) && value === '')) errors[name] = 'Choose one of the listed answers.'
+      if (!options.includes(value)) errors[name] = 'Choose one of the listed answers.'
     }
   }
   for (const [name, shown] of Object.entries({
@@ -61,7 +61,7 @@ export function normalizeAnswers(input) {
     answers[name] = input[name] === true
     if (input[name] !== undefined && typeof input[name] !== 'boolean') errors[name] = 'Please check this choice.'
   }
-  if (!answers.terms) errors.terms = 'Please agree to the Terms of Service to request an invite.'
+  if (!answers.terms) errors.terms = 'Please agree to the Terms of Service.'
   return { answers, errors }
 }
 

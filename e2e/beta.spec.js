@@ -18,7 +18,7 @@ for (const width of [1440, 390, 320]) {
     await expect(page.locator('.beta-chapter')).toHaveCount(1)
     await expect(page.locator('.beta-story')).not.toContainText('Whether you’re figuring out')
     await expect(page.locator('.beta-story')).not.toContainText(/imessage beta/i)
-    for (const name of ['See beta details', 'Continue to invite']) {
+    for (const name of ['See details', 'Continue']) {
       const next = page.getByRole('button', { name, exact: true })
       await expect(next).toBeVisible()
       expect((await next.boundingBox()).height).toBeGreaterThanOrEqual(44)
@@ -26,8 +26,6 @@ for (const width of [1440, 390, 320]) {
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
       expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1)).toBe(true)
     }
-    await expect(page.getByRole('button', { name: 'Request an invite', exact: true })).toBeVisible()
-    await page.getByRole('link', { name: 'Skip to the form' }).click()
     await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible()
     await expect(page.getByRole('form').getByRole('group')).toHaveCount(1)
     await expect(page.locator('.beta-question-card')).toHaveCount(0)
@@ -42,7 +40,7 @@ for (const width of [1440, 390, 320]) {
     await expect(page.getByRole('heading', { name: 'How can we reach you?' })).toBeVisible()
     await expect(page.getByText('Include your country code. We’re testing over iMessage.')).toHaveCount(0)
     await expect(page.getByLabel('Instagram handle', { exact: true })).toHaveAttribute('placeholder', '@yourhandle (optional)')
-    await expect(page.getByText('We’re making an Instagram group chat for our original Oronauts to meet, share experiences, and have some fun together. Leave your handle if you’d like an invite :)')).toBeVisible()
+    await expect(page.getByText('We’re making an Instagram group chat for our original oronauts to meet, share experiences, and have some fun together. Leave your handle if you’d like an invite :)')).toBeVisible()
     await fillContact(page)
     await next(page)
     await expect(page.getByRole('heading', { name: 'Have you used the oro app before?' })).toBeVisible()
@@ -105,6 +103,26 @@ test('keyboard users can choose and change one radio answer', async ({ page }) =
   expect(await no.evaluate((input) => getComputedStyle(input.closest('label')).outlineStyle)).toBe('solid')
 })
 
+test('age and gender are required and offer private responses', async ({ page }) => {
+  await page.goto('/beta#your-age')
+  await expect(page.getByText('Optional', { exact: true })).toHaveCount(0)
+  await next(page)
+  await expect(page.getByRole('radio', { name: 'Under 18', exact: true })).toBeFocused()
+  await expect(page.getByText('Choose one of the listed answers.')).toBeVisible()
+  await page.getByRole('radio', { name: 'Prefer not to say', exact: true }).check()
+  await expect(page.getByRole('button', { name: 'Clear answer' })).toHaveCount(0)
+  await next(page)
+  await expect(page.getByRole('heading', { name: 'What’s your gender?' })).toBeVisible()
+  await expect(page.getByText('Optional', { exact: true })).toHaveCount(0)
+  await next(page)
+  await expect(page.getByRole('radio', { name: 'Woman', exact: true })).toBeFocused()
+  await expect(page.getByText('Choose one of the listed answers.')).toBeVisible()
+  await page.getByRole('radio', { name: 'Prefer not to say', exact: true }).check()
+  await expect(page.getByRole('button', { name: 'Clear answer' })).toHaveCount(0)
+  await next(page)
+  await expect(page.getByRole('heading', { name: 'How did you hear about oro’s beta?' })).toBeVisible()
+})
+
 test('optional choices clear and hidden follow-ups do not block continuing', async ({ page }) => {
   await page.goto('/beta#usual-help')
   await page.getByRole('checkbox', { name: 'Ask a friend', exact: true }).check()
@@ -115,14 +133,10 @@ test('optional choices clear and hidden follow-ups do not block continuing', asy
   await expect(page.getByLabel('What else do you do?', { exact: true })).toHaveCount(0)
   await next(page)
   await expect(page.getByLabel('What you have in mind', { exact: true })).toBeVisible()
-  await page.goto('/beta#your-age')
-  await page.getByRole('radio', { name: '23–28', exact: true }).check()
-  await page.getByRole('button', { name: 'Clear answer' }).click()
-  await expect(page.locator('.beta-question input:checked')).toHaveCount(0)
-  await next(page)
+  await page.goto('/beta#your-gender')
   await page.getByRole('radio', { name: 'I’d like to self-describe', exact: true }).check()
   await expect(page.getByLabel(/How would you describe your gender/)).toBeVisible()
-  await page.getByRole('button', { name: 'Clear answer' }).click()
+  await page.getByRole('radio', { name: 'Prefer not to say', exact: true }).check()
   await expect(page.getByLabel(/How would you describe your gender/)).toHaveCount(0)
   await next(page)
   await page.getByRole('radio', { name: 'Other', exact: true }).check()
@@ -133,25 +147,26 @@ test('optional choices clear and hidden follow-ups do not block continuing', asy
   await expect(page.getByRole('button', { name: 'Request an invite', exact: true })).toBeVisible()
 })
 
-test('consent notices are text; previews preserve answers and no data is sent', async ({ page }) => {
+test('consent notices are text; previews preserve answers and analytics exclude them', async ({ page }) => {
   test.setTimeout(60000)
   const outbound = []
   page.on('request', (request) => {
     const url = new URL(request.url())
     if (url.origin === 'https://vercel.live' && url.pathname === '/login/validate') return
-    if (request.method() === 'POST' || /google-analytics|googletagmanager|posthog/.test(request.url())) outbound.push(request.url())
+    if (request.method() === 'POST' && !/google-analytics|googletagmanager|posthog/.test(request.url())) outbound.push(request.url())
   })
-  await page.addInitScript(() => localStorage.setItem('oro_cookie_consent', 'accepted'))
+  await page.addInitScript(() => {
+    localStorage.setItem('oro_cookie_consent', 'accepted')
+    window.dataLayer = []
+    window.gtag = (...args) => window.dataLayer.push(args)
+  })
   await page.goto('/beta#request')
   await fillRequired(page)
-  const futureBeta = page.getByRole('checkbox', { name: /If I’m not invited/ })
-  const submit = page.getByRole('button', { name: 'Request an invite', exact: true })
+  const submit = page.getByRole('button', { name: 'Join the beta', exact: true })
   await expect(page.getByText(/By submitting this request/)).toBeVisible()
-  await expect(page.getByText(/I’d like to receive marketing/)).toBeVisible()
+  await expect(page.getByText(/receive marketing emails and texts/)).toBeVisible()
   await expect(page.getByRole('checkbox', { name: /By submitting this request/ })).toHaveCount(0)
-  await expect(page.getByRole('checkbox', { name: /I’d like to receive marketing/ })).toHaveCount(0)
-  await expect(futureBeta).toBeChecked()
-  await futureBeta.uncheck()
+  await expect(page.getByRole('checkbox')).toHaveCount(0)
   await expect(submit).toBeEnabled()
   await submit.click()
   await expect(page.getByText('This draft isn’t connected yet.')).toBeVisible()
@@ -159,7 +174,6 @@ test('consent notices are text; previews preserve answers and no data is sent', 
   await expect(page.getByRole('heading', { name: 'Request received :)' })).toBeVisible()
   await expect(page.getByText('Confirmation preview · No request has been saved')).toBeVisible()
   await page.getByRole('button', { name: 'Back to the draft', exact: true }).click()
-  await expect(futureBeta).not.toBeChecked()
   for (let index = 0; index < 5; index++) await page.getByRole('button', { name: 'Back', exact: true }).click()
   await expect(page.getByLabel('Your plans', { exact: true })).toHaveValue('School and dinner with friends')
   for (let index = 0; index < 7; index++) await page.getByRole('button', { name: 'Back', exact: true }).click()
@@ -167,6 +181,10 @@ test('consent notices are text; previews preserve answers and no data is sent', 
   await page.getByRole('button', { name: 'Back', exact: true }).click()
   await expect(page.getByLabel('Your name', { exact: true })).toHaveValue('Jamie')
   expect(outbound).toEqual([])
+  const analyticsState = await page.evaluate(() => JSON.stringify(window.dataLayer))
+  expect(analyticsState).toContain('page_view')
+  expect(analyticsState).toContain('"route_type":"beta"')
+  expect(analyticsState).not.toMatch(/Jamie|beta-test@example\.com|School and dinner/i)
 })
 
 test('final submission returns to an invalid earlier question', async ({ page }) => {
@@ -201,10 +219,10 @@ test('the opening title types without shifting and reduced motion reveals it imm
   await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible()
 })
 
-test('pages after the opening rise into view without typing text', async ({ page }) => {
+test('the details page rises into view without typing text', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/beta')
-  await page.getByRole('button', { name: 'See beta details', exact: true }).click()
+  await page.getByRole('button', { name: 'See details', exact: true }).click()
   const title = page.getByRole('heading', { name: 'Help shape the future of oro.' })
   await expect(title).toBeVisible()
   await expect(page.locator('#tester-value .beta-type-char')).toHaveCount(0)
@@ -213,16 +231,6 @@ test('pages after the opening rise into view without typing text', async ({ page
   expect(await page.locator('#tester-value .beta-chapter-copy').evaluate((element) => (
     element.getAnimations()[0].effect.getKeyframes()[0].transform
   ))).toBe('translateY(18px)')
-  await page.getByRole('button', { name: 'Continue to invite', exact: true }).click()
-  const inviteTitle = page.getByRole('heading', { name: 'Ready to help us make oro yours?' })
-  await expect(inviteTitle).toBeVisible()
-  await expect(inviteTitle).toHaveCSS('animation-name', 'beta-title-in')
-  await expect(page.locator('#request-an-invite .beta-chapter-copy')).toHaveCSS('animation-name', 'beta-body-in')
-  await expect(page.locator('#request-an-invite .beta-type-char')).toHaveCount(0)
-  await expect(page.locator('.beta-story')).toHaveAttribute('data-phase', 'idle')
-  await page.getByRole('region', { name: 'About oro', exact: true }).focus()
-  await page.keyboard.press('ArrowLeft')
-  await expect(title).toBeVisible()
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await expect(title).toHaveCSS('animation-name', 'none')
   await expect(page.locator('#tester-value .beta-chapter-copy')).toHaveCSS('animation-name', 'none')
@@ -250,7 +258,7 @@ test('wheel paging animates one page per gesture and supports reverse and reduce
   await page.mouse.wheel(0, -120)
   await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
   await expect(story).toHaveAttribute('data-phase', 'idle')
-  await page.getByRole('button', { name: 'See beta details', exact: true }).click()
+  await page.getByRole('button', { name: 'See details', exact: true }).click()
   await expect(story).toHaveAttribute('data-phase', 'leaving')
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await expect(story).toHaveAttribute('data-phase', 'idle')
@@ -275,8 +283,8 @@ test('keyboard navigation moves focus and long pages remain scrollable', async (
   await expect.poll(() => stage.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
   await stage.focus()
   await page.keyboard.press('End')
-  await expect(page.locator('#request-an-invite-title')).toBeFocused()
-  await page.getByRole('button', { name: 'Request an invite', exact: true }).click()
+  await expect(page.locator('#tester-value-title')).toBeFocused()
+  await page.keyboard.press('ArrowRight')
   await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeFocused()
   await expect(page.getByLabel('Your name', { exact: true })).toBeVisible()
 })
@@ -288,7 +296,7 @@ test('scrolling forward from the final invitation page opens the form', async ({
   const stage = page.getByRole('region', { name: 'About oro', exact: true })
   await stage.focus()
   await page.keyboard.press('End')
-  await expect(page.getByRole('button', { name: 'Request an invite', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Continue', exact: true })).toBeVisible()
   await stage.hover()
   await page.mouse.wheel(0, 120)
   await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeFocused()
@@ -318,9 +326,9 @@ test.describe('touch invitation navigation', () => {
 })
 
 test('inactive answers are omitted, whitespace is invalid, and text limits apply', () => {
-  const answers = { ...emptyAnswers, usualHelpOther: 'Hidden answer', sourceOther: 'Hidden source', genderDescription: 'Hidden description', name: '   ', week: 'x'.repeat(2001) }
+  const answers = { ...emptyAnswers, usualHelpOther: 'Hidden answer', sourceOther: 'Hidden source', genderDescription: 'Hidden description', name: '   ', location: 'x'.repeat(2001) }
   expect(visibleAnswers(answers)).not.toHaveProperty('usualHelpOther')
   expect(visibleAnswers(answers)).not.toHaveProperty('sourceOther')
   expect(visibleAnswers(answers)).not.toHaveProperty('genderDescription')
-  expect(validateAnswers(answers)).toMatchObject({ name: 'Please add an answer.', week: 'Please keep your answer to 2,000 characters.' })
+  expect(validateAnswers(answers)).toMatchObject({ name: 'Please add an answer.', location: 'Please keep your answer to 2,000 characters.' })
 })

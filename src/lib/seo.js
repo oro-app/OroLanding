@@ -28,7 +28,7 @@ export const ROUTE_SEO = {
   beta: {
     path: '/beta',
     title: 'Help us make oro yours. - oro beta',
-    description: 'Help shape the earliest oro experience. Meet the beta and our first Oronauts.',
+    description: 'Help shape the earliest oro experience. Meet the beta and our first oronauts.',
     h1: 'Help us make oro yours.',
     noindex: true,
   },
@@ -198,7 +198,7 @@ export function getBaseJsonLd() {
       '@type': 'Organization',
       '@id': ORGANIZATION_ID,
       name: SITE_NAME,
-      legalName: 'oro Digital Inc.',
+      legalName: 'Oro Digital Inc.',
       url: SITE_URL,
       logo: getImageUrl(LOGO_IMAGE),
       sameAs: [
@@ -308,23 +308,23 @@ export function getSeoForRoute(route, newsletter) {
   if (route?.type === 'newsletter') {
     const page = newsletter
       ? {
-          path: newsletter.href,
-          title: `${newsletter.title} - oro`,
-          description: newsletter.summary || DEFAULT_DESCRIPTION,
-          h1: newsletter.title,
-          summary: newsletter.summary || '',
-          image: newsletter.image || DEFAULT_IMAGE,
-          date: newsletter.date,
-          priority: '0.6',
-        }
+        path: newsletter.href,
+        title: `${newsletter.title} - oro`,
+        description: newsletter.summary || DEFAULT_DESCRIPTION,
+        h1: newsletter.title,
+        summary: newsletter.summary || '',
+        image: newsletter.image || DEFAULT_IMAGE,
+        date: newsletter.date,
+        priority: '0.6',
+      }
       : {
-          path: `/newsletter/${route.slug || ''}`,
-          title: 'Newsletter - oro',
-          description: 'This oro newsletter could not be found.',
-          h1: 'Newsletter not found',
-          summary: 'This oro newsletter could not be found.',
-          noindex: true,
-        }
+        path: `/newsletter/${route.slug || ''}`,
+        title: 'Newsletter - oro',
+        description: 'This oro newsletter could not be found.',
+        h1: 'Newsletter not found',
+        summary: 'This oro newsletter could not be found.',
+        noindex: true,
+      }
 
     return {
       ...page,

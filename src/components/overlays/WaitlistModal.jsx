@@ -79,7 +79,7 @@ export default function WaitlistModal({ onClose }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div ref={dialogRef} className="modal" role="dialog" aria-modal="true" aria-labelledby="newsletter-signup-title" onKeyDown={handleDialogKeyDown} onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-x" onClick={onClose} aria-label="Close">✕</button>
+        <button className="modal-close-x" onClick={onClose} aria-label="Close"><span data-button-icon aria-hidden="true">✕</span></button>
 
         {success ? (
           <div className="modal-success">

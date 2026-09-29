@@ -38,7 +38,7 @@ export function HomeFooter() {
       <nav className="halo-footer-links" aria-label="site">
         {FOOTER_LINKS.map((link) => <a key={link.href} href={link.href}>{link.label[0].toUpperCase() + link.label.slice(1)}</a>)}
       </nav>
-      <Text variant="support" muted>© 2026 oro Digital Inc.</Text>
+      <Text variant="support" muted>© 2026 Oro Digital Inc.</Text>
     </footer>
   )
 }

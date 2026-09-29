@@ -105,7 +105,7 @@ export default function FilmPoster({
           borderColor: dark ? 'var(--oro-cream-45)' : 'var(--oro-cream-70)',
         }}
       >
-        <svg width={playSize * 0.32} height={playSize * 0.32} viewBox="0 0 24 24" fill="var(--oro-cream)" stroke="none" aria-hidden="true">
+        <svg data-button-icon width={playSize * 0.32} height={playSize * 0.32} viewBox="0 0 24 24" fill="var(--oro-cream)" stroke="none" aria-hidden="true">
           <path d="M7 4.5v15l13-7.5z" />
         </svg>
       </button>

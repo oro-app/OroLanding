@@ -231,7 +231,7 @@ async function writeLlms(newsletters) {
     '- oro is available on iOS, with Android in progress.',
     '- oro does not sell closet data.',
     '- oro includes virtual try-on for previewing outfits.',
-    '- Publisher: oro Digital Inc.',
+    '- Publisher: Oro Digital Inc.',
     '',
     '## Common Questions',
     '',

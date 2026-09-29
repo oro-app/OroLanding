@@ -438,7 +438,9 @@
   stroke: var(--color-fg-faint);
   fill: none;
   stroke-width: 2;
-  transition: transform 0.2s ease;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .gs-select-chevron { transition: transform 0.2s ease; }
 }
 .gs-select-trigger[aria-expanded='true'] .gs-select-chevron { transform: rotate(180deg); }
 

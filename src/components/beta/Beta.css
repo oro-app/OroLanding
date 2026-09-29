@@ -34,12 +34,13 @@
 .beta-checklist { list-style: none; margin: var(--oro-space-5) 0 0; padding: 0; display: grid; gap: var(--oro-space-1); color: var(--oro-color-muted); }
 .beta-checklist li { display: flex; align-items: baseline; gap: var(--oro-space-3); }
 .beta-checkmark { color: var(--oro-color-accent); flex-shrink: 0; }
-.beta-chapter--benefits .beta-chapter-copy { max-width: 500px; }
+.beta-chapter--benefits .beta-chapter-content { max-width: 650px; text-align: left; }
+.beta-chapter--benefits .beta-chapter-copy { max-width: none; margin-top: var(--oro-space-6); gap: var(--oro-space-4); }
+.oro-editorial .beta-chapter--benefits h3.beta-perks-title { width: 100%; margin: 0; color: var(--oro-color-ink); font-family: var(--oro-font-family-body); font-size: var(--oro-type-label-size); font-weight: var(--oro-font-weight-control); letter-spacing: 0; text-align: left; }
 .beta-benefit-list { width: 100%; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); text-align: left; }
 .beta-benefit-list li { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: baseline; gap: var(--oro-space-4); padding-block: var(--oro-space-3); font-size: var(--oro-type-label-size); }
 .beta-benefit-list li + li { border-top: 1px solid color-mix(in srgb, var(--oro-color-selected-border) 35%, transparent); }
 .beta-benefit-list li > span { color: var(--oro-color-display); font-size: var(--oro-type-support-size); font-variant-numeric: tabular-nums; }
-.beta-benefit-list li:first-child strong { color: var(--oro-color-accent); }
 .beta-page--form, .beta-page--coming-soon { min-height: 100svh; min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: 0; }
 .beta-coming-soon .beta-form-heading { max-width: 580px; margin: auto; gap: var(--oro-space-6); }
 .beta-coming-soon .oro-button { justify-self: center; }

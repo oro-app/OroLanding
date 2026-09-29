@@ -5,7 +5,7 @@ import { postOnboarding } from './onboardingApi'
 import GoldBackground from '../GoldBackground'
 import './GetStarted.css'
 
-const FIRST_MESSAGE = 'Hey oro! Your newest Oronaut has landed 🚀'
+const FIRST_MESSAGE = 'Hey oro! Your newest oronaut has landed 🚀'
 
 function textingLink() {
   const apple = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)
@@ -322,7 +322,7 @@ export default function GetStarted() {
       {/* Top bar: back + progress. Only shown on the question screens. */}
       {onQuestion && (
         <div className="gs-bar">
-          <Button variant="tertiary" onClick={back} disabled={loading} aria-label="Go back">←</Button>
+          <Button variant="tertiary" onClick={back} disabled={loading} aria-label="Go back"><span data-button-icon="left" aria-hidden="true">←</span></Button>
           <div className="gs-progress" aria-hidden="true">
             <span
               className="gs-progress-fill"
@@ -516,7 +516,7 @@ export default function GetStarted() {
 
           {view === 'done' && (
             <div className="gs-terminal">
-              <p className="gs-eyebrow">Welcome, Oronaut.</p>
+              <p className="gs-eyebrow">Welcome, oronaut.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">You’re all set.</Heading>
               <p className="gs-terminal-sub">Your beta setup is complete. Send oro your first text to get started.</p>
               <a className="oro-button oro-button--primary gs-cta" href={textingLink()}>Start texting oro</a>
@@ -583,7 +583,7 @@ function Welcome({ onStart }) {
         </span>
       </Heading>
       <div className="gs-welcome-details">
-        <p className="gs-welcome-greeting">Welcome to the first crew of Oronauts.</p>
+        <p className="gs-welcome-greeting">Welcome to the first crew of oronauts.</p>
         <p className="gs-welcome-sub">
           We’re so glad you’re here. You’ll get to try oro early, meet the people building it,
           and help shape what it becomes.
@@ -758,7 +758,7 @@ function Select({ label, value, options, onChange }) {
         <span className={selectedIndex >= 0 ? undefined : 'gs-select-placeholder'}>
           {selectedLabel}
         </span>
-        <svg className="gs-select-chevron" viewBox="0 0 16 16" aria-hidden="true">
+        <svg className="gs-select-chevron" data-button-icon="down" viewBox="0 0 16 16" aria-hidden="true">
           <polyline points="3,6 8,11 13,6" />
         </svg>
       </button>

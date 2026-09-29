@@ -42,7 +42,7 @@ export default function HowItWorks() {
             link. .hiw-cta-btn carries no styles — it is a layout hook only. */}
         <Cta size="statement" inverse className="hiw-cta-btn" href="/try-oro" onClick={handleTryOro}>
           try oro
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg data-button-icon="right" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
         </Cta>

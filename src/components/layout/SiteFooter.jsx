@@ -6,7 +6,7 @@ import { trackCtaClick } from '../../lib/analytics'
 // dropdowns use), so footer and navbar are always identical.
 function Arrow() {
   return (
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg data-button-icon="right" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M5 12h14M13 5l7 7-7 7" />
     </svg>
   )
@@ -24,7 +24,7 @@ export default function SiteFooter() {
           <a
             className="site-footer-tryoro"
             href="/try-oro"
-           
+
             rel="noopener noreferrer"
             onClick={() => {
               trackCtaClick('try_oro_click', {
@@ -46,7 +46,7 @@ export default function SiteFooter() {
                 key={link.label}
                 className="site-footer-link"
                 href={link.href}
-               
+
                 rel="noopener noreferrer"
               >
                 {link.label}
@@ -57,7 +57,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="site-footer-bottom">
-        <span>© 2026 oro Digital Inc.</span>
+        <span>© 2026 Oro Digital Inc.</span>
       </div>
     </footer>
   )

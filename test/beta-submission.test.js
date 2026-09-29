@@ -50,9 +50,9 @@ test('HTTP submission saves a literal row with canonical contact details and ind
   assert.equal(row.futureBeta, false)
   assert.equal(row.marketing, true)
   assert.equal(row.usualHelpOther, '')
-  assert.equal(row.age, '')
-  assert.equal(row.gender, '')
-  assert.equal(row.form_version, '2026-09-28.1')
+  assert.equal(row.age, 'Prefer not to say')
+  assert.equal(row.gender, 'Prefer not to say')
+  assert.equal(row.form_version, '2026-09-28.4')
   assert.equal(row.consent_recorded_at, row.received_at)
   assert.equal(state.appends[0].options.valueInputOption, 'RAW')
   assert.equal(state.locked, false)
@@ -79,15 +79,16 @@ test('concurrent same-key retries return the original receipt; changed answers c
   const replies = await Promise.all(Array.from({ length: 4 }, async () => (await post(body)).json()))
   assert.equal(new Set(replies.map((reply) => reply.request_id)).size, 1)
   assert.equal(state.appendCalls, 1)
-  assert.equal((await post({ ...body, answers: { ...body.answers, hopes: 'Updated' } })).status, 409)
+  assert.equal((await post({ ...body, answers: { ...body.answers, location: 'Updated' } })).status, 409)
   assert.equal(state.appendCalls, 1)
-  assert.equal((await post(makeSubmission({ ...body.answers, hopes: 'Updated' }))).status, 200)
+  assert.equal((await post(makeSubmission({ ...body.answers, location: 'Updated' }))).status, 200)
   assert.equal(state.appendCalls, 2)
 })
 
-test('optional consent defaults false and hidden follow-ups cannot reach the Sheet', () => {
-  const { answers, errors } = normalizeAnswers({ ...exampleAnswers, futureBeta: undefined, marketing: undefined, usualHelpOther: 'x'.repeat(5000) })
+test('optional and removed answers may be blank while hidden follow-ups cannot reach the Sheet', () => {
+  const { answers, errors } = normalizeAnswers({ ...exampleAnswers, challenges: '', hopes: '', week: '', futureBeta: undefined, marketing: undefined, usualHelpOther: 'x'.repeat(5000) })
   assert.deepEqual(errors, {})
+  assert.equal(answers.challenges, '')
   assert.equal(answers.futureBeta, false)
   assert.equal(answers.marketing, false)
   assert.equal(answers.usualHelpOther, '')
@@ -100,11 +101,11 @@ test('malformed answers, phone numbers, stale forms and privileged fields do not
   for (const patch of [
     { phone: '+11111111111' }, { phone: '4165550123 ext. 10' }, { terms: false }, { marketing: 'true' },
     { usedOro: 'Maybe' }, { usualHelp: ['Ask a friend', 'Ask a friend'] }, { usualHelp: 'Ask a friend' },
-    { source: 'Other', sourceOther: '' }, { age: '35+' }, { email: 'nope' }, { name: 'x'.repeat(101) },
+    { source: 'Other', sourceOther: '' }, { age: '' }, { age: '35+' }, { gender: '' }, { email: 'nope' }, { name: 'x'.repeat(101) },
     { occasion: 'Dinner' }, { uncertainty: 'Shoes' }, { approved: true },
   ]) assert.equal((await post({ ...valid, answers: { ...exampleAnswers, ...patch } })).status, 400)
   for (const patch of [{ cohort: 'other' }, { sheet_id: 'other' }, { submission_key: 'bad' }, { form_version: 'old' }, { consent_version: 'old' }, { answers: null }]) assert.equal((await post({ ...valid, ...patch })).status, 400)
-  assert.equal((await post({ ...valid, answers: { ...exampleAnswers, week: 'x'.repeat(66000) } })).status, 413)
+  assert.equal((await post({ ...valid, answers: { ...exampleAnswers, location: 'x'.repeat(66000) } })).status, 413)
   assert.equal(state.appendCalls, 0)
 })
 

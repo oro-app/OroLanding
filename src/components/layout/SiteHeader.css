@@ -67,12 +67,14 @@
 .site-header-group:focus-within .site-header-group-trigger {
   color: var(--color-fg);
 }
-.site-header-caret {
-  transition: transform 180ms ease;
-}
-.site-header-group:hover .site-header-caret,
-.site-header-group:focus-within .site-header-caret {
-  transform: rotate(180deg);
+@media (prefers-reduced-motion: no-preference) {
+  .site-header-caret {
+    transition: transform 180ms ease;
+  }
+  .site-header-group:hover .site-header-caret,
+  .site-header-group:focus-within .site-header-caret {
+    transform: rotate(180deg);
+  }
 }
 
 .site-header-menu {

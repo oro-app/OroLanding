@@ -8,7 +8,7 @@ import { saveBetaRequest, submissionMessages } from './betaSubmission'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
-const storySteps = ['landing', 'beta-details', 'invite']
+const storySteps = ['landing', 'beta-details']
 
 function Choices({ name, value, update, error, multiple = false, optional = false, disabled = false }) {
   return (
@@ -78,7 +78,7 @@ export default function Beta() {
     fetch('/api/beta-request', { signal: controller.signal, cache: 'no-store' })
       .then((response) => response.ok ? response.json() : null)
       .then((result) => { if (!controller.signal.aborted) setEnabled(result?.enabled === true) })
-      .catch(() => {})
+      .catch(() => { })
     return () => controller.abort()
   }, [])
 
@@ -205,30 +205,28 @@ export default function Beta() {
     field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name', wrapperClassName: 'beta-name-field' }),
     <>
       <div className="beta-contact-fields">{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}{field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123' })}</div>
-      {field('instagram', 'Instagram handle', { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle (optional)', maxLength: 31, hint: 'Leave your handle if you’d like an invite to the original Oronauts Instagram group chat :)' })}
+      {field('instagram', 'Instagram handle', { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle (optional)', maxLength: 31, hint: 'Leave your handle if you’d like an invite to the original oronauts Instagram group chat :)' })}
     </>,
     options('usedOro'),
     options('outfitDays'),
-    field('challenges', 'Your experience', { multiline: true }),
+    field('challenges', <>Your experience <span className="beta-optional">(optional)</span></>, { multiline: true, optional: true }),
     <>{options('usualHelp', { multiple: true })}{answers.usualHelp.includes('Other') && <div className="beta-follow-up">{field('usualHelpOther', 'What else do you do?')}</div>}</>,
-    field('hopes', 'What you have in mind', { multiline: true }),
-    field('week', 'Your plans', { multiline: true, hint: 'Tell us everything! School, work, seeing friends, any plans or events - anything you’ll be getting dressed for.' }),
     field('location', 'City and province', { placeholder: 'Toronto, Ontario' }),
-    options('age', { optional: true }),
-    <>{options('gender', { optional: true })}{answers.gender === 'I’d like to self-describe' && <div className="beta-follow-up">{field('genderDescription', <>How would you describe your gender? <span className="beta-optional">Optional</span></>, { optional: true })}</div>}</>,
+    options('age'),
+    <>{options('gender')}{answers.gender === 'I’d like to self-describe' && <div className="beta-follow-up">{field('genderDescription', <>How would you describe your gender? <span className="beta-optional">Optional</span></>, { optional: true })}</div>}</>,
     <>{options('source')}{answers.source === 'Other' && <div className="beta-follow-up">{field('sourceOther', 'Where did you hear about it?')}</div>}</>,
   ]
 
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <HomeHeader />
-      {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is sent or saved</span><button onClick={() => setView(view === 'receipt' ? 'form' : 'receipt')}>{view === 'receipt' ? 'Back to form' : 'Preview confirmation'} <span aria-hidden="true">↗</span></button></div></div>}
-      {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} previewForm={allowForm} initialPage={storyStep} onNavigate={navigateStory} />}
+      {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is sent or saved</span><button onClick={() => setView(view === 'receipt' ? 'form' : 'receipt')}>{view === 'receipt' ? 'Back to form' : 'Preview confirmation'} <span data-button-icon="up-right" aria-hidden="true">↗</span></button></div></div>}
+      {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} initialPage={storyStep} onNavigate={navigateStory} />}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-panel beta-form-heading">
           <Heading ref={comingSoonRef} tabIndex={-1} as="h1" variant="title" id="coming-soon-title">Invites open <em>soon.</em></Heading>
-          <Text muted>We’re getting ready to welcome our first Oronauts. Check back soon to request your invite.</Text>
+          <Text muted>We’re getting ready to welcome our first oronauts. Check back soon to request your invite.</Text>
           <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <ButtonArrow direction="up-right" /></a>
         </div>
       </section>}
@@ -244,16 +242,10 @@ export default function Beta() {
           <form ref={formRef} onSubmit={submit} aria-busy={saving} noValidate className="beta-form" aria-label="Beta invite request">
             {!finalStep && <fieldset className="beta-question" aria-labelledby="request-title"><div className="beta-question-body">{questionContent[step]}</div></fieldset>}
             {finalStep && <div className="beta-consent" id="before-send">
-              <Text variant="support" muted>We’ll review your responses and email you if you’re selected.</Text>
               {status === 'unavailable' && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title="This draft isn’t connected yet.">Nothing was submitted. Your answers are still here. Use “Preview confirmation” above to review the receipt design.</Notice></div>}
               {message && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title={message[0]}>{message[1]}</Notice></div>}
-              <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Request an invite'} <ButtonArrow direction="up-right" /></Button>
-              <div className="beta-consent-options">
-                <p>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a>.</p>
-                <label><input type="checkbox" disabled={saving} name="futureBeta" checked={answers.futureBeta} onChange={(event) => update('futureBeta', event.target.checked)} /><span>If I’m not invited to this beta, oro can email or text me about future beta opportunities. I can unsubscribe at any time.</span></label>
-                <p>I’d like to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</p>
-              </div>
-              <Text variant="support" muted>Read our <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a> to learn how we handle your information.</Text>
+              <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Join the beta'} <ButtonArrow direction="up-right" /></Button>
+              <Text variant="support" muted>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>, and to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</Text>
             </div>}
             <div className="beta-step-actions"><button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving} onClick={() => step > 0 ? openStep(step - 1) : openStory(1)}><ButtonArrow direction="left" size={18} /></button>{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><ButtonArrow size={18} /></button>}</div>
           </form>
