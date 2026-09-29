@@ -83,7 +83,7 @@
 .beta-field-footer { display: flex; align-items: baseline; justify-content: space-between; gap: var(--oro-space-4); color: var(--oro-color-muted); font-size: var(--oro-type-support-size); margin-top: var(--oro-space-2); }
 .beta-field-footer > span { margin-left: auto; white-space: nowrap; }
 .beta-field-footer .oro-field__error { margin-top: 0; }
-.beta-follow-up { padding-left: var(--oro-space-4); border-left: 2px solid var(--oro-color-selected-border); }
+.beta-follow-up { padding-left: var(--oro-space-4); }
 .beta-consent { display: grid; gap: var(--oro-space-4); }
 .beta-consent > .oro-text { text-align: center; }
 .beta-consent-options { display: grid; gap: 2px; margin: 0; }
