@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import lookDay from '../../assets/home/look-day.webp'
 import lookNight from '../../assets/home/look-night.webp'
 import oroMascot from '../../assets/logos/oro_logo.webp'
@@ -66,6 +66,36 @@ export default function MessageThread({ startDelay = 0 }) {
   const [cycle, setCycle] = useState(0)
   const [staticThread, setStaticThread] = useState(false)
   const timers = useRef([])
+  const frameRef = useRef(null)
+
+  useLayoutEffect(() => {
+    const frame = frameRef.current
+    const scaleLayer = frame?.firstElementChild
+    const container = frame?.parentElement
+    if (!frame || !scaleLayer || !container) return undefined
+
+    const resize = () => {
+      const widthScale = container.clientWidth / scaleLayer.offsetWidth
+      const heightScale = getComputedStyle(container).position === 'sticky'
+        ? container.clientHeight / scaleLayer.offsetHeight
+        : 1
+      const scale = Math.min(1, widthScale, heightScale)
+
+      frame.style.width = `${scaleLayer.offsetWidth * scale}px`
+      frame.style.height = `${scaleLayer.offsetHeight * scale}px`
+      frame.style.setProperty('--mt-device-scale', scale)
+    }
+
+    resize()
+    const observer = new ResizeObserver(resize)
+    observer.observe(container)
+    window.visualViewport?.addEventListener('resize', resize)
+
+    return () => {
+      observer.disconnect()
+      window.visualViewport?.removeEventListener('resize', resize)
+    }
+  }, [])
 
   useEffect(() => {
     if (prefersReducedMotion()) {
@@ -102,46 +132,50 @@ export default function MessageThread({ startDelay = 0 }) {
   }
 
   return (
-    <div className="mt-device" role="region" aria-label="Example conversation with Oro">
-      <div className="mt-notch" />
-      <div className="mt-screen">
-        <div className="mt-statusbar">
-          <span>8:42</span>
-          <span className="mt-status-right">
-            <span className="mt-signal">
-              <i /><i /><i /><i />
-            </span>
-            <span className="mt-battery" />
-          </span>
-        </div>
+    <div className="mt-device-frame" ref={frameRef}>
+      <div className="mt-device-scale">
+        <div className="mt-device" role="region" aria-label="Example conversation with Oro">
+          <div className="mt-notch" />
+          <div className="mt-screen">
+            <div className="mt-statusbar">
+              <span>8:42</span>
+              <span className="mt-status-right">
+                <span className="mt-signal">
+                  <i /><i /><i /><i />
+                </span>
+                <span className="mt-battery" />
+              </span>
+            </div>
 
-        <div className="mt-contact">
-          <span className="mt-back" aria-hidden="true">‹</span>
-          <div className="mt-contact-id">
-            <img className="mt-avatar" src={oroMascot} alt="" />
-            <span className="mt-contact-name">oro</span>
-          </div>
-          <span />
-        </div>
-
-        <div className="mt-thread" key={cycle}>
-          <p className="mt-stamp"><b>Today</b> 8:42 AM</p>
-
-          {STEPS.map((item, index) => {
-            if (!isVisible(item, index)) return null
-            if (item.typing) return <TypingBubble key={item.typing} />
-            if (item.image) {
-              return <img key={item.at} className="mt-look" src={item.image} alt={item.alt} />
-            }
-            return (
-              <div key={item.at} className={`mt-row mt-row--${item.from}`}>
-                <div className={`mt-bubble mt-bubble--${item.from}`}>{item.text}</div>
-                <Tail from={item.from} />
+            <div className="mt-contact">
+              <span className="mt-back" aria-hidden="true">‹</span>
+              <div className="mt-contact-id">
+                <img className="mt-avatar" src={oroMascot} alt="" />
+                <span className="mt-contact-name">oro</span>
               </div>
-            )
-          })}
+              <span />
+            </div>
 
-          <p className="mt-receipt" style={{ visibility: receipt ? 'visible' : 'hidden' }}>Delivered</p>
+            <div className="mt-thread" key={cycle}>
+              <p className="mt-stamp"><b>Today</b> 8:42 AM</p>
+
+              {STEPS.map((item, index) => {
+                if (!isVisible(item, index)) return null
+                if (item.typing) return <TypingBubble key={item.typing} />
+                if (item.image) {
+                  return <img key={item.at} className="mt-look" src={item.image} alt={item.alt} />
+                }
+                return (
+                  <div key={item.at} className={`mt-row mt-row--${item.from}`}>
+                    <div className={`mt-bubble mt-bubble--${item.from}`}>{item.text}</div>
+                    <Tail from={item.from} />
+                  </div>
+                )
+              })}
+
+              <p className="mt-receipt" style={{ visibility: receipt ? 'visible' : 'hidden' }}>Delivered</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -37,8 +37,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-phone-column { grid-column: 2; grid-row: 1; padding-bottom: var(--oro-space-24); }
 .home-phone-sticky { position: sticky; isolation: isolate; top: var(--halo-header-height); height: calc(100dvh - var(--halo-header-height)); display: flex; align-items: center; justify-content: center; }
 .home-phone-glow { position: absolute; z-index: -1; inset: -10% -20%; border-radius: 50%; pointer-events: none; filter: blur(24px); background: radial-gradient(ellipse at 50% 40%, var(--oro-color-glow), transparent 66%), radial-gradient(ellipse at 70% 65%, var(--oro-color-warm-glow), transparent 62%); }
-.home-phone-sticky .mt-device { max-width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; }
-.home-phone-sticky .mt-screen { height: clamp(420px, calc(100dvh - var(--halo-header-height) - 88px), 600px); }
+.home-phone-sticky .mt-device { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; }
 .home-closer { text-align: center; border-top: var(--oro-border-width) solid var(--oro-color-border); padding-block: var(--oro-space-24); }
 .home-closer .halo-cta { margin-top: var(--oro-space-8); }
 .halo-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--oro-space-8); padding-block: var(--oro-space-6); border-top: var(--oro-border-width) solid var(--oro-color-border); }

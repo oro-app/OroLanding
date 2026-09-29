@@ -2,6 +2,22 @@
    literals: flipping them with the site theme would stop the phone reading as
    a phone. */
 
+.mt-device-frame,
+.mt-device-scale {
+  width: 296px;
+  height: 622px;
+}
+
+.mt-device-frame {
+  --mt-device-scale: 1;
+  flex: none;
+}
+
+.mt-device-scale {
+  transform: scale(var(--mt-device-scale));
+  transform-origin: top left;
+}
+
 .mt-device {
   position: relative;
   width: 296px;
@@ -28,7 +44,7 @@
   border-radius: 35px;
   overflow: hidden;
   background: #1b1221;
-  height: clamp(420px, calc(100dvh - var(--site-header-height) - 88px), 600px);
+  height: 600px;
   display: flex;
   flex-direction: column;
 }
