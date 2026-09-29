@@ -28,7 +28,7 @@ for (const width of [1440, 390, 320]) {
     }
     await expect(page.getByRole('button', { name: 'Request an invite', exact: true })).toBeVisible()
     await page.getByRole('link', { name: 'Skip to the form' }).click()
-    await expect(page.getByRole('heading', { name: 'First, what’s your name?' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible()
     await expect(page.getByRole('form').getByRole('group')).toHaveCount(1)
     await expect(page.locator('.beta-question-card')).toHaveCount(0)
     await expect(page.getByRole('radio')).toHaveCount(0)
@@ -177,7 +177,7 @@ test('only terms disable submit; previews preserve answers and no data is sent',
 test('final submission returns to an invalid earlier question', async ({ page }) => {
   await page.goto('/beta#before-send')
   await page.getByRole('button', { name: 'Request an invite', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'First, what’s your name?' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible()
   await expect(page.getByLabel('Your name', { exact: true })).toBeFocused()
 })
 
@@ -203,7 +203,7 @@ test('the opening title types without shifting and reduced motion reveals it imm
   }
   await expect(page.locator('.beta-lead')).toHaveCSS('opacity', '1')
   await page.getByRole('link', { name: 'Skip to the form' }).click()
-  await expect(page.getByRole('heading', { name: 'First, what’s your name?' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible()
 })
 
 test('pages after the opening rise into view without typing text', async ({ page }) => {
@@ -282,7 +282,7 @@ test('keyboard navigation moves focus and long pages remain scrollable', async (
   await page.keyboard.press('End')
   await expect(page.locator('#request-an-invite-title')).toBeFocused()
   await page.getByRole('button', { name: 'Request an invite', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'First, what’s your name?' })).toBeFocused()
+  await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeFocused()
   await expect(page.getByLabel('Your name', { exact: true })).toBeVisible()
 })
 
@@ -296,7 +296,7 @@ test('scrolling forward from the final invitation page opens the form', async ({
   await expect(page.getByRole('button', { name: 'Request an invite', exact: true })).toBeVisible()
   await stage.hover()
   await page.mouse.wheel(0, 120)
-  await expect(page.getByRole('heading', { name: 'First, what’s your name?' })).toBeFocused()
+  await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeFocused()
 })
 
 test.describe('touch invitation navigation', () => {
@@ -318,7 +318,7 @@ test.describe('touch invitation navigation', () => {
     await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
     expect(await page.evaluate(() => window.scrollY)).toBe(0)
     await page.getByRole('link', { name: 'Skip to the form' }).click()
-    await expect(page.getByRole('heading', { name: 'First, what’s your name?' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible()
   })
 })
 

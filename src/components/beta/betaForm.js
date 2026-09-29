@@ -17,7 +17,7 @@ export function visibleAnswers(answers) {
 }
 
 export const formSteps = [
-  { hash: '#request', title: 'First, what’s your name?', fields: ['name'] },
+  { hash: '#request', title: 'What should we call you?', fields: ['name'] },
   { hash: '#contact', title: 'How can we reach you?', fields: ['email', 'phone', 'instagram'] },
   { hash: '#used-oro', title: 'Have you used the oro app before?', fields: ['usedOro'] },
   { hash: '#your-style', title: 'In the past 7 days, on how many days did you want help choosing or improving an outfit?', fields: ['outfitDays'] },
