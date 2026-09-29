@@ -1,5 +1,6 @@
 import { Button, Chip, Heading, TextField as KitTextField } from 'oro-kit'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { getCountries, getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js/max'
 import ButtonArrow from '../ButtonArrow'
 import { postOnboarding } from './onboardingApi'
 import GoldBackground from '../GoldBackground'
@@ -13,6 +14,21 @@ function textingLink() {
 }
 
 const QUESTIONS = ['name', 'birthday', 'province', 'hear', 'phone']
+
+const countryNames = new Intl.DisplayNames(['en'], { type: 'region' })
+const PHONE_COUNTRIES = getCountries().map((country) => ({
+  country,
+  label: `${countryNames.of(country)} (+${getCountryCallingCode(country)})`,
+})).sort((a, b) => a.label.localeCompare(b.label, 'en'))
+
+function phoneFields(phone, country) {
+  const phoneCountry = PHONE_COUNTRIES.some((option) => option.country === country) ? country : 'CA'
+  const parsed = parsePhoneNumberFromString(phone, { defaultCountry: phoneCountry, extract: false })
+  if (phone.trim().startsWith('+') && parsed?.country && parsed.isValid() && !parsed.ext) {
+    return { phone: parsed.formatNational(), phoneCountry: parsed.country }
+  }
+  return { phone, phoneCountry }
+}
 
 const PROVINCES = [
   ['AB', 'Alberta'],
@@ -94,7 +110,7 @@ export default function GetStarted() {
   const [view, setView] = useState('welcome')
   const [form, setForm] = useState(() => {
     if (typeof window === 'undefined') {
-      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '' }
+      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' }
     }
 
     try {
@@ -110,13 +126,17 @@ export default function GetStarted() {
         province: locations.some(([code]) => code === saved?.province) ? saved.province : '',
         hear: Array.isArray(saved?.hear) ? saved.hear.filter((item) => typeof item === 'string') : [],
         hearOther: typeof saved?.hearOther === 'string' ? saved.hearOther.slice(0, 100) : '',
-        phone: typeof saved?.phone === 'string' ? saved.phone : '',
+        ...phoneFields(typeof saved?.phone === 'string' ? saved.phone : '', saved?.phoneCountry || country),
       }
     } catch {
-      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '' }
+      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' }
     }
   })
   const [code, setCode] = useState('')
+  const phoneNumber = useMemo(() => {
+    const parsed = parsePhoneNumberFromString(form.phone, { defaultCountry: form.phoneCountry, extract: false })
+    return parsed?.isValid() && !parsed.ext ? parsed : null
+  }, [form.phone, form.phoneCountry])
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -165,7 +185,7 @@ export default function GetStarted() {
       case 'province': return (form.country === 'CA' ? PROVINCES : form.country === 'US' ? US_STATES : [])
         .some(([code]) => code === form.province)
       case 'hear': return form.hear.length > 0
-      case 'phone': return form.phone.length > 0
+      case 'phone': return form.phone.trim().length > 0
       case 'otp': return code.length === 6 && verifyLeft === 0
       default: return true
     }
@@ -179,7 +199,7 @@ export default function GetStarted() {
   }
 
   const restart = () => {
-    setForm({ name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '' })
+    setForm({ name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' })
     setCode('')
     setResendLeft(0)
     goTo('welcome', 'back')
@@ -204,6 +224,10 @@ export default function GetStarted() {
 
   const startSignup = async ({ resend = false } = {}) => {
     if (loading || resendLeft > 0) return
+    if (!phoneNumber) {
+      setError('Enter a valid phone number and check the selected country code.')
+      return
+    }
     setLoading(true)
     setError('')
     setNotice('')
@@ -217,7 +241,7 @@ export default function GetStarted() {
           ...form.hear,
           form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
         ].filter(Boolean).join(', '),
-        phone: form.phone.trim(),
+        phone: phoneNumber.number,
       })
       const { status, result, detail, retryAfter } = response
       if (status === 200 && result === 'otp_sent') {
@@ -235,7 +259,7 @@ export default function GetStarted() {
         setResendLeft(retryAfter)
         setError('Too many tries. Please wait before requesting another code.')
       } else if (status === 400 || status === 422) {
-        setError(/phone/i.test(detail) ? 'Check your phone number, including its country code.' : 'Check your answers and try again.')
+        setError(/phone/i.test(detail) ? 'Check your phone number and the selected country code.' : 'Check your answers and try again.')
       } else {
         setError('We couldn’t confirm that a code was sent. Please try again.')
       }
@@ -247,12 +271,12 @@ export default function GetStarted() {
   }
 
   const verifyCode = async () => {
-    if (loading || verifyLeft > 0) return
+    if (loading || verifyLeft > 0 || !phoneNumber) return
     setLoading(true)
     setError('')
     setNotice('')
     try {
-      const response = await postOnboarding('verify', { phone: form.phone.trim(), code: code.trim() })
+      const response = await postOnboarding('verify', { phone: phoneNumber.number, code: code.trim() })
       if (response.status === 200 && response.result === 'verified') {
         try {
           localStorage.removeItem(DRAFT_KEY)
@@ -422,7 +446,7 @@ export default function GetStarted() {
                     key={code}
                     selected={form.country === code}
                     onClick={() => {
-                      setForm((current) => ({ ...current, country: code, province: '' }))
+                      setForm((current) => ({ ...current, country: code, province: '', phoneCountry: current.phone ? current.phoneCountry : code }))
                     }}
                   >
                     {name}
@@ -451,28 +475,51 @@ export default function GetStarted() {
               error={error}
               footer={<ConsentNote />}
             >
-              <TextField
-                label="Phone number"
-                disabled={loading}
-                aria-invalid={Boolean(error)}
-                aria-describedby={error ? "gs-error" : undefined}
-                type="tel"
-                value={form.phone}
-                onChange={(value) => { set('phone')(value); setResendLeft(0) }}
-                onEnter={advance}
-                placeholder="+1 555 000 0000"
-                inputMode="tel"
-                maxLength={32}
-                autoComplete="tel"
-                autoCapitalize="none"
-              />
+              <div className="gs-phone-fields">
+                <div className="oro-field">
+                  <label className="oro-field__label" htmlFor="gs-phone-country">Country code</label>
+                  <select
+                    id="gs-phone-country"
+                    className="oro-input gs-phone-country"
+                    value={form.phoneCountry}
+                    disabled={loading}
+                    onChange={(event) => {
+                      set('phoneCountry')(event.target.value)
+                      setResendLeft(0)
+                      setError('')
+                    }}
+                  >
+                    {PHONE_COUNTRIES.map(({ country, label }) => <option key={country} value={country}>{label}</option>)}
+                  </select>
+                </div>
+                <TextField
+                  label="Phone number"
+                  disabled={loading}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={error ? 'gs-phone-hint gs-error' : 'gs-phone-hint'}
+                  type="tel"
+                  value={form.phone}
+                  onChange={(value) => {
+                    setForm((current) => ({ ...current, ...phoneFields(value, current.phoneCountry) }))
+                    setResendLeft(0)
+                    setError('')
+                  }}
+                  onEnter={advance}
+                  placeholder={getCountryCallingCode(form.phoneCountry) === '1' ? '416 555 0123' : 'Your phone number'}
+                  inputMode="tel"
+                  maxLength={32}
+                  autoComplete="tel-national"
+                  autoCapitalize="none"
+                />
+              </div>
+              <p className="gs-phone-hint" id="gs-phone-hint">No need to type the country code.</p>
             </Question>
           )}
 
           {view === 'otp' && (
             <Question
               label="We just texted you."
-              hint={`Enter the code we sent to ${form.phone.trim()}.`}
+              hint={`Enter the code we sent to ${phoneNumber?.formatInternational() || form.phone.trim()}.`}
               canContinue={canContinue}
               onContinue={advance}
               cta={loading ? 'Checking' : verifyLeft > 0 ? `Try again in ${verifyLeft}s` : 'Verify'}

@@ -12,7 +12,8 @@ const legalPagePlugin = {
   name: 'legal-page-rewrites',
   configurePreviewServer(server) {
     server.middlewares.use((req, _res, next) => {
-      if (req.url.split('?')[0] === '/feedback') req.url = req.url.replace('/feedback', '/feedback/')
+      const pathname = req.url.split('?')[0]
+      if (['/beta', '/feedback'].includes(pathname)) req.url = req.url.replace(pathname, `${pathname}/`)
       next()
     })
   },

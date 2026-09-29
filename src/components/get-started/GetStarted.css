@@ -190,6 +190,21 @@
 }
 .gs-q-field { margin-top: 40px; }
 
+.gs-phone-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 16px;
+}
+.gs-phone-country { font-family: inherit; }
+.gs-phone-hint {
+  margin: 10px 0 0;
+  color: var(--oro-color-muted);
+  font-size: var(--oro-type-label-size);
+}
+@media (max-width: 520px) {
+  .gs-phone-fields { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ── input ────────────────────────────────────────────────────────────── */
 .gs-input {
   width: 100%;
