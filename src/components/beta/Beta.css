@@ -49,6 +49,7 @@
 .beta-form-panel { width: min(100%, 680px); margin: auto; }
 .beta-form-heading { display: grid; gap: var(--oro-space-3); margin-bottom: var(--oro-space-8); text-align: center; }
 .beta-form-heading:has(+ .beta-form .beta-choice-hint) { margin-bottom: var(--oro-space-3); }
+.beta-form-heading:has(+ .beta-form #before-send) { margin-bottom: var(--oro-space-12); }
 .beta-form-heading .oro-heading { font-size: var(--oro-type-section-size); line-height: var(--oro-type-section-line-height); text-wrap: balance; }
 .halo-site .beta-form-heading h1:focus-visible { outline: none; }
 .beta-form { width: min(100%, 560px); margin-inline: auto; min-width: 0; display: grid; gap: var(--oro-space-6); }
