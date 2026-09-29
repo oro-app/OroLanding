@@ -19,7 +19,8 @@ for (const place of ['header', 'hero', 'closer']) {
     await page.locator(`.halo-cta--${place}`).click()
     await expect(page).toHaveURL(/\/beta$/)
     await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Skip to the form' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Blog' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Get started' })).toBeVisible()
   })
 }
 

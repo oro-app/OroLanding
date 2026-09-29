@@ -202,7 +202,7 @@ test('the opening title types without shifting and reduced motion reveals it imm
     await expect(letter).toHaveCSS('animation-name', 'none')
   }
   await expect(page.locator('.beta-lead')).toHaveCSS('opacity', '1')
-  await page.getByRole('link', { name: 'Skip to the form' }).click()
+  await page.goto('/beta?step=request')
   await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible()
 })
 
@@ -317,7 +317,7 @@ test.describe('touch invitation navigation', () => {
     await swipe(360, 640)
     await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
     expect(await page.evaluate(() => window.scrollY)).toBe(0)
-    await page.getByRole('link', { name: 'Skip to the form' }).click()
+    await page.goto('/beta?step=request')
     await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible()
   })
 })

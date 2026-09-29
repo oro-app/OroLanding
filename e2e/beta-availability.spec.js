@@ -31,11 +31,13 @@ for (const width of [1440, 390]) {
   })
 }
 
-test('@smoke beta header and direct form links cannot open the unfinished form', async ({ page }) => {
-  await page.getByRole('link', { name: 'Beta invites' }).click()
-  await expect(page.getByRole('heading', { name: 'Invites open soon.' })).toBeVisible()
+test('@smoke beta uses the home header and direct form links cannot open the unfinished form', async ({ page }) => {
+  await expect(page.getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/from-the-closet')
+  await expect(page.getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '/beta')
   for (const step of formSteps) {
     await page.goto(`/beta${step.hash}`)
+    await expect(page.getByRole('link', { name: 'Blog' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Get started' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Invites open soon.' })).toBeVisible()
     await expect(page.locator('form, input, textarea, .beta-draft-bar, .beta-receipt')).toHaveCount(0)
   }

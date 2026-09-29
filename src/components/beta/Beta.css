@@ -1,11 +1,10 @@
 .beta-page { padding-bottom: var(--oro-space-16); }
 .beta-page strong { font-weight: var(--oro-font-weight-heading); color: var(--oro-color-ink); }
-.beta-header { top: 0; }
 .beta-draft-bar { border-bottom: 1px solid var(--oro-color-border); background: var(--oro-color-soft); font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }
 .beta-draft-bar > div { display: flex; justify-content: space-between; align-items: center; gap: var(--oro-space-4); min-height: 44px; }
 .beta-draft-bar button { min-height: 44px; color: var(--oro-color-accent); font: inherit; background: none; border: 0; cursor: pointer; }
 .beta-page--story { height: 100svh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding-bottom: 0; }
-.beta-page--story > :is(.beta-header, .beta-draft-bar) { flex-shrink: 0; }
+.beta-page--story > :is(.halo-header, .beta-draft-bar) { flex-shrink: 0; }
 .halo-site:has(.beta-page--story, .beta-page--form, .beta-page--coming-soon) > .halo-footer { display: none; }
 .beta-story { position: relative; isolation: isolate; flex: 1; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr); --beta-page-direction: 1; }
 .beta-story[data-direction='-1'] { --beta-page-direction: -1; }
