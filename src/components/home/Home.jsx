@@ -5,6 +5,7 @@ import MessageThread from './MessageThread'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
 import oroHurray from '../../assets/mascot/oro_hurray.webp'
+import oroThumbsUp from '../../assets/mascot/oro_thumbs_up.webp'
 
 const REASONS = ['It knows your closet', 'It answers in a minute', 'It tells you why']
 const HEADLINE = 'The #1 AI stylist you can text'
@@ -55,7 +56,7 @@ export default function Home() {
               From everyday plans to big moments, Oro helps you find a look you’ll feel good in.
             </Text>
           </section>
-          <section className="home-panel" aria-labelledby="home-reasons-title" data-home-reveal>
+          <section className="home-panel home-reasons-panel" aria-labelledby="home-reasons-title" data-home-reveal>
             <Heading as="h2" variant="title" id="home-reasons-title" className="home-stagger">Why it works</Heading>
             <ul className="home-reasons">
               {REASONS.map((reason, index) => (
@@ -67,6 +68,16 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+            <img
+              className="home-mascot home-mascot--thumbs-up home-stagger"
+              src={oroThumbsUp}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width="1536"
+              height="1536"
+              style={{ '--home-delay': '510ms' }}
+            />
           </section>
         </div>
         <div className="home-phone-column">
