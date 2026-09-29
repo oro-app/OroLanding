@@ -27,9 +27,6 @@
 .beta-chapter-copy > .oro-text, .beta-lead { text-wrap: pretty; }
 .beta-chapter .oro-heading { text-wrap: balance; }
 .beta-sr-only, .beta-name-field > .oro-field__label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
-.beta-type-word { white-space: nowrap; }
-.beta-type-char { position: relative; }
-.beta-type-with-caret .beta-type-char::after { content: ''; position: absolute; right: -.045em; top: .14em; width: 2px; height: .8em; border-radius: 1px; background: currentColor; opacity: 0; }
 .beta-page .beta-lead { margin: var(--oro-space-8) auto 0; max-width: 580px; }
 .beta-chapter-content > .beta-story-next { margin-top: var(--oro-space-8); }
 .beta-story-date { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--oro-space-3); letter-spacing: .08em; }
@@ -103,9 +100,8 @@
   .beta-story[data-phase='leaving'] :is(.beta-chapter-content, .beta-story-date) { animation: beta-page-out 140ms ease-in both; }
   .beta-chapter:not(.beta-chapter--hero) .beta-chapter-content > .oro-heading { animation: beta-title-in 280ms ease-out both; }
   .beta-chapter:not(.beta-chapter--hero) .beta-chapter-copy { animation: beta-body-in 450ms cubic-bezier(.22, 1, .36, 1) 240ms both; }
-  .beta-type-char { animation: beta-type-on 40ms linear both; animation-delay: var(--type-delay); }
-  .beta-type-with-caret .beta-type-char::after { animation: beta-type-caret var(--type-hold) step-end both; animation-delay: var(--type-delay); }
-  .beta-type-with-caret .beta-type-char--last::after { animation: beta-caret-settle 500ms step-end 2 both; animation-delay: var(--type-delay); }
+  .beta-story .home-type-char { animation: homeTypeChar 1ms linear var(--home-char-delay) both; }
+  .beta-story .home-type-char::after { content: ''; position: absolute; right: -0.045em; top: 0.12em; bottom: 0.12em; width: 2px; background: var(--oro-color-champagne); opacity: 0; animation: homeTypeCaret 34ms linear var(--home-char-delay) both; }
   .beta-chapter--hero .beta-lead, .beta-story-date { animation: beta-copy-in 240ms ease-out 1050ms both; }
   .beta-form-panel { animation: beta-step-in 180ms ease-out both; }
   .beta-form-progress > span { transition: width 180ms ease-out; }
@@ -114,9 +110,6 @@
 @keyframes beta-title-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes beta-body-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes beta-copy-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes beta-type-on { from { opacity: 0; } 20%, 100% { opacity: 1; } }
-@keyframes beta-type-caret { 0%, 90% { opacity: 1; } 91%, 100% { opacity: 0; } }
-@keyframes beta-caret-settle { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 @keyframes beta-step-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .beta-option { transition: none; } .beta-chapter-content { opacity: 1; transform: none; filter: none; } }
 @media (max-width: 760px) {

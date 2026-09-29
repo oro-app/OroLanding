@@ -4,6 +4,8 @@ import ButtonArrow from '../ButtonArrow'
 import { Button, Heading, Text } from 'oro-kit'
 import { useBetaPages } from './useBetaPages'
 
+const TYPE_STEP = 34
+
 function textContent(children) {
   return Children.toArray(children).map((child) => {
     if (typeof child === 'string' || typeof child === 'number') return String(child)
@@ -12,26 +14,24 @@ function textContent(children) {
   }).join('')
 }
 
-function TypedText({ children, duration = 1400, delay = '180ms', caret = false }) {
+function TypedText({ children }) {
   const text = textContent(children)
-  const length = [...text].length
-  const interval = duration / Math.max(length - 1, 1)
   let position = 0
   const render = (nodes) => Children.map(nodes, (node) => {
     if (typeof node === 'string' || typeof node === 'number') {
       return String(node).split(/(\s+)/).map((word, wordIndex) => {
-        if (/^\s+$/.test(word)) { position += word.length; return word }
-        return <span key={wordIndex} className="beta-type-word">{[...word].map((letter) => {
+        if (/^\s+$/.test(word)) return word
+        return <span key={wordIndex} className="home-type-word">{[...word].map((letter) => {
           const index = position++
-          return <span key={index} className={`beta-type-char${index === length - 1 ? ' beta-type-char--last' : ''}`} style={{ '--type-delay': `calc(${delay} + ${index * interval}ms)`, '--type-hold': `${interval}ms` }}>{letter}</span>
+          return <span key={index} className="home-type-char" style={{ '--home-char-delay': `${80 + index * TYPE_STEP}ms` }}>{letter}</span>
         })}</span>
       })
     }
     if (!isValidElement(node)) return node
-    if (node.type === 'br') { position++; return node }
+    if (node.type === 'br') return node
     return cloneElement(node, {}, render(node.props.children))
   })
-  return <span className={caret ? 'beta-typed-text beta-type-with-caret' : 'beta-typed-text'}><span className="beta-sr-only">{text}</span><span aria-hidden="true">{render(children)}</span></span>
+  return <span><span className="beta-sr-only">{text}</span><span aria-hidden="true">{render(children)}</span></span>
 }
 
 function Chapter({ id, title, children, className = '' }) {
@@ -48,7 +48,7 @@ function Chapter({ id, title, children, className = '' }) {
 function TypingTitle() {
   return (
     <Heading as="h1" variant="display" id="beta-title" tabIndex={-1} className="beta-typing-title">
-      <TypedText duration={1000} delay="180ms" caret>Help us make<br />Oro <em>yours.</em></TypedText>
+      <TypedText>Help us make<br />Oro <em>yours.</em></TypedText>
     </Heading>
   )
 }
