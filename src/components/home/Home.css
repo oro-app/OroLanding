@@ -17,7 +17,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-site .halo-cta--header { gap: var(--oro-space-2); }
 
 .home-grid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 0 var(--oro-space-16); }
-.home-copy { grid-column: 1; grid-row: 1; padding-bottom: var(--oro-space-24); }
+.home-copy { grid-column: 1; grid-row: 1; padding-bottom: calc(50dvh + var(--oro-space-24)); }
 .home-panel { max-width: 560px; }
 .home-panel:first-child { min-height: calc(100dvh - var(--halo-header-height)); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-block: var(--oro-space-16); }
 .home-panel + .home-panel { margin-top: var(--oro-space-24); }
