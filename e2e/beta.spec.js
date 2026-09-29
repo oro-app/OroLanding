@@ -133,7 +133,7 @@ test('optional choices clear and hidden follow-ups do not block continuing', asy
   await expect(page.getByRole('button', { name: 'Request an invite', exact: true })).toBeVisible()
 })
 
-test('only terms disable submit; previews preserve answers and no data is sent', async ({ page }) => {
+test('consent notices are text; previews preserve answers and no data is sent', async ({ page }) => {
   test.setTimeout(60000)
   const outbound = []
   page.on('request', (request) => {
@@ -144,19 +144,15 @@ test('only terms disable submit; previews preserve answers and no data is sent',
   await page.addInitScript(() => localStorage.setItem('oro_cookie_consent', 'accepted'))
   await page.goto('/beta#request')
   await fillRequired(page)
-  const terms = page.getByRole('checkbox', { name: /By submitting this request/ })
   const futureBeta = page.getByRole('checkbox', { name: /If I’m not invited/ })
-  const marketing = page.getByRole('checkbox', { name: /I’d like to receive marketing/ })
   const submit = page.getByRole('button', { name: 'Request an invite', exact: true })
-  await expect(terms).toBeChecked()
+  await expect(page.getByText(/By submitting this request/)).toBeVisible()
+  await expect(page.getByText(/I’d like to receive marketing/)).toBeVisible()
+  await expect(page.getByRole('checkbox', { name: /By submitting this request/ })).toHaveCount(0)
+  await expect(page.getByRole('checkbox', { name: /I’d like to receive marketing/ })).toHaveCount(0)
   await expect(futureBeta).toBeChecked()
-  await expect(marketing).toBeChecked()
-  await marketing.uncheck()
   await futureBeta.uncheck()
   await expect(submit).toBeEnabled()
-  await terms.uncheck()
-  await expect(submit).toBeDisabled()
-  await terms.check()
   await submit.click()
   await expect(page.getByText('This draft isn’t connected yet.')).toBeVisible()
   await page.getByRole('button', { name: /Preview confirmation/ }).click()
@@ -164,7 +160,6 @@ test('only terms disable submit; previews preserve answers and no data is sent',
   await expect(page.getByText('Confirmation preview · No request has been saved')).toBeVisible()
   await page.getByRole('button', { name: 'Back to the draft', exact: true }).click()
   await expect(futureBeta).not.toBeChecked()
-  await expect(marketing).not.toBeChecked()
   for (let index = 0; index < 5; index++) await page.getByRole('button', { name: 'Back', exact: true }).click()
   await expect(page.getByLabel('Your plans', { exact: true })).toHaveValue('School and dinner with friends')
   for (let index = 0; index < 7; index++) await page.getByRole('button', { name: 'Back', exact: true }).click()

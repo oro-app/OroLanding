@@ -25,7 +25,7 @@ test('confirmed save shows a receipt, locks duplicate clicks and preserves indep
   await page.getByRole('checkbox', { name: /If I’m not invited/ }).uncheck()
   await page.getByRole('button', { name: 'Request an invite', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Saving your request…' })).toBeDisabled()
-  await expect(page.getByRole('checkbox', { name: /I’d like to receive marketing/ })).toBeDisabled()
+  await expect(page.getByRole('checkbox', { name: /If I’m not invited/ })).toBeDisabled()
   await expect(page.getByRole('button', { name: 'Back', exact: true })).toBeDisabled()
   await expect(page.getByRole('heading', { name: 'Request received :)' })).toHaveCount(0)
   release()
