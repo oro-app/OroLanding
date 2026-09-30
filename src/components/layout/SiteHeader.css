@@ -17,12 +17,12 @@
   background: color-mix(in srgb, var(--color-bg) 85%, transparent);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-fg-line);
-  clip-path: inset(0 50% 0 50%);
+  opacity: 0;
   pointer-events: none;
 }
-.site-header--scrolled::before { clip-path: inset(0); }
+.site-header--scrolled::before { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .site-header::before { transition: clip-path 420ms ease; }
+  .site-header::before { transition: opacity 420ms ease; }
 }
 
 .site-header-inner {
