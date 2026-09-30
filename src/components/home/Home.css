@@ -99,7 +99,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-header-inner { min-height: 64px; }
   .halo-nav { gap: var(--oro-space-5); }
   .home-panel { max-width: 600px; }
-  .home-panel .oro-heading--title { font-size: var(--oro-type-section-size); }
+  .home-panel .oro-heading--title, .home-feature-copy .oro-heading--title { font-size: var(--oro-type-section-size); }
   .halo-footer:not(.halo-footer--landing) { flex-wrap: wrap; gap: var(--oro-space-4) var(--oro-space-6); }
   .halo-footer:not(.halo-footer--landing) > .oro-text { flex-basis: 100%; }
   .halo-footer-links { column-gap: var(--oro-space-4); row-gap: 0; }
