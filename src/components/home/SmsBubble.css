@@ -1,0 +1,65 @@
+.sms-bubble {
+  position: relative;
+  isolation: isolate;
+  width: fit-content;
+  max-width: min(100%, 340px);
+  padding: 14px 18px;
+  border-radius: 22px;
+  font-family: var(--oro-font-family-body);
+  font-size: clamp(16px, 1.5vw, 18px);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  box-shadow: 0 8px 24px rgb(11 11 11 / 10%);
+}
+
+.sms-bubble::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  bottom: -8px;
+  width: 18px;
+  height: 18px;
+  background: inherit;
+  pointer-events: none;
+}
+
+.sms-bubble--left::after {
+  left: 10px;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.sms-bubble--right::after {
+  right: 10px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.sms-bubble--cream {
+  background: var(--oro-paper);
+  color: var(--oro-text-editorial);
+}
+
+.sms-bubble--light-purple {
+  background: #e9ddf1;
+  color: var(--oro-text-editorial);
+}
+
+.sms-bubble--dark-purple {
+  background: var(--oro-plum-soft);
+  color: var(--oro-cream);
+}
+
+.sms-bubble img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+.sms-bubble:has(> img) { padding: 6px; }
+
+.sms-bubble p { margin: 0 0 12px; }
+
+@media (forced-colors: active) {
+  .sms-bubble { border: 1px solid CanvasText; }
+  .sms-bubble::after { display: none; }
+}

@@ -7,6 +7,7 @@ Google Analytics is configured in `analytics.js`. Events only emit after the use
 | Page views | `page_view` | Initial load on every route, accepted cookie banner, browser history/hash changes | `page_title`, `page_location`, `page_path`, `route_type`, `newsletter_slug`, `consent_source` |
 | Page navigation/link changes | `page_navigation` | Internal and external link clicks on every route | `from_path`, `to_path`, `destination_url`, `link_text`, `link_target`, `navigation_type`, `is_external`, `transport_type` |
 | Get started CTA | `get_started_click` | Current homepage header, hero, and closing "start the conversation" links | `location`, `destination`, `time_from_landing_ms`, `is_first_cta_click` |
+| Style goal choices | `style_goal_plan_better_outfits`, `style_goal_look_professional_at_work`, `style_goal_expand_my_wardrobe`, `style_goal_evolve_my_style`, `style_goal_wear_my_clothes_more` | Matching "What's your style goal?" footer link on the homepage | `goal`, `location`, `destination`, `time_from_landing_ms`, `is_first_cta_click` |
 | Newsletter open | `newsletter_open` | Newsletter article route when a valid newsletter loads | `newsletter_slug`, `newsletter_title`, `newsletter_date` |
 | Newsletter percent read | `percent_read` | Newsletter article scroll depth at 25%, 50%, 75%, and 100% | `percent_read`, `newsletter_slug`, `newsletter_title` |
 | Mailing-list CTA | `join_mailing_list_click` | Journal archive subscribe form | `location`, `time_from_landing_ms`, `is_first_cta_click` |

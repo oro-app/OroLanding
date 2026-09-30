@@ -1,5 +1,5 @@
 import { ORO_PHOTOS } from '../../lib/placeholderPhotos'
-import monPhoto from '../../assets/fits/mon.webp'
+import monPhoto from '../../assets/fit-gen-demo/tryon.webp'
 import tuePhoto from '../../assets/fits/tue.webp'
 import wedPhoto from '../../assets/fits/wed.webp'
 import thuPhoto from '../../assets/fits/thu.webp'

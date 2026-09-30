@@ -1,0 +1,2 @@
+.style-advice-demo .product-demo-message:first-child .sms-bubble::after { display: none; }
+.style-advice-demo-reply--continued .sms-bubble::after { display: none; }

@@ -6,10 +6,10 @@ test('home page loads cleanly @smoke', async ({ page }) => {
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()) })
   await page.goto('/')
   await expect(page).toHaveTitle(/oro/i)
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('The #1 AI stylist you can text')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('The AI fashion assistant you can text')
   await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', 'Fraunces, Georgia, serif')
   await expect(page.getByText(/600\+/)).toHaveCount(0)
-  await expect(page.getByText('Currently in beta.')).toBeVisible()
+  await expect(page.getByText(/Getting dressed is one text away/)).toBeVisible()
   expect(errors).toEqual([])
 })
 
@@ -65,16 +65,13 @@ test('Halo stays light without changing a saved dark preference', async ({ page 
 test('enabling reduced motion immediately reveals all page content', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
-  await expect(page.locator('#home-reasons-title')).toHaveCSS('opacity', '0')
+  await expect(page.locator('.home-feature-copy').first()).toHaveCSS('opacity', '0')
   await page.emulateMedia({ reducedMotion: 'reduce' })
   const movingElements = page.locator('.home-type-char, .home-enter, .home-stagger')
   for (const element of await movingElements.all()) {
     await expect(element).toHaveCSS('opacity', '1')
     await expect(element).toHaveCSS('transform', 'none')
     await expect(element).toHaveCSS('animation-name', 'none')
-  }
-  for (const check of await page.locator('.home-check path').all()) {
-    await expect(check).toHaveCSS('stroke-dashoffset', '0px')
   }
 })
 

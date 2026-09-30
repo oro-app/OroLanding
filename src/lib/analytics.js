@@ -8,6 +8,7 @@ const SOCIAL_HOST_PLATFORMS = [
   { platform: 'instagram', hostPattern: /(^|\.)instagram\.com$/i },
   { platform: 'tiktok', hostPattern: /(^|\.)tiktok\.com$/i },
   { platform: 'linkedin', hostPattern: /(^|\.)linkedin\.com$/i },
+  { platform: 'x', hostPattern: /(^|\.)x\.com$/i },
   { platform: 'linktree', hostPattern: /(^|\.)linktr\.ee$/i },
 ];
 

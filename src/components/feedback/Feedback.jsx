@@ -68,7 +68,7 @@ export default function Feedback() {
   const status = state.status === 'missing_token' ? 'missing' : state.status
   return (
     <section className="feedback-page ph-no-capture" data-private="true" aria-labelledby="feedback-title">
-      <a className="halo-logo-link" href="/" aria-label="oro home"><img className="halo-logo" src="/static/oro-logo.png" alt="oro" width="80" height="32" /></a>
+      <a className="halo-logo-link" href="/" aria-label="oro home"><img className="halo-logo" src="/static/oro-logo.webp" alt="oro" width="1672" height="941" /></a>
       <Heading as="h1" variant="title" id="feedback-title">Beta feedback</Heading>
       {status === 'open' && <Text>{state.form.survey_kind} feedback · {label}{state.form.survey_kind === 'daily' && ` (${context.timezone})`}</Text>}
       {status === 'open'
