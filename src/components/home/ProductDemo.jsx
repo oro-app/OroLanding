@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
-import outfit from '../../assets/fits/mon.webp'
-import tryOn from '../../assets/fits/tue.webp'
+import outfit from '../../assets/fit-gen-demo/collage.webp'
+import tryOn from '../../assets/fit-gen-demo/tryon.webp'
 import SmsBubble from './SmsBubble'
 import './ProductDemo.css'
 
@@ -41,7 +41,7 @@ export default function ProductDemo() {
           <li className="product-demo-message">
             <SmsBubble>
               <span className="sr-only">Oro: </span>
-              <img src={outfit} alt="White cherry-print top, cream cardigan, and light blue jeans" loading="lazy" decoding="async" width="480" height="640" />
+              <img src={outfit} alt="Outfit collage with a cream cardigan, cherry-print top, flared jeans, red belt, silver hoops, and white sneakers" loading="lazy" decoding="async" width="1086" height="1448" />
             </SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
@@ -53,7 +53,7 @@ export default function ProductDemo() {
           <li className="product-demo-message">
             <SmsBubble>
               <span className="sr-only">Oro: </span>
-              <img src={tryOn} alt="Try-on placeholder showing a black cropped top and black trousers" loading="lazy" decoding="async" width="480" height="640" />
+              <img src={tryOn} alt="Try-on with a cream cardigan, cherry-print top, red belt, and light blue flared jeans" loading="lazy" decoding="async" width="480" height="640" />
             </SmsBubble>
           </li>
         </ol>
