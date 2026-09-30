@@ -33,7 +33,7 @@ export default function ProductDemo() {
         <h2 id="product-demo-title" className="sr-only">Get dressed in a conversation</h2>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="light-purple" side="right"><span className="sr-only">You: </span>What should I wear to brunch with friends?</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>What should I wear to brunch with friends?</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble><span className="sr-only">Oro: </span>Try this look.</SmsBubble>
@@ -45,7 +45,7 @@ export default function ProductDemo() {
             </SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="light-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me.</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me.</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble><span className="sr-only">Oro: </span>Here’s your try-on.</SmsBubble>
