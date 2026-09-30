@@ -182,7 +182,6 @@ test('draft refresh restores the step and a new invitation starts empty', async 
   await button(page).click()
   await page.getByRole('textbox').fill('  saved in this tab  ')
   await page.reload()
-  await page.clock.fastForward(15000)
   await expect(page.getByRole('textbox')).toHaveValue('  saved in this tab  ')
   await page.evaluate(() => { location.hash = 'token=another-invitation' })
   await expect(page.getByRole('heading', { name: prompt('daily', 'D3'), exact: true })).toBeVisible()

@@ -51,6 +51,7 @@ export function createFeedbackReader(token, onChange) {
         timer = setTimeout(check, Math.min(delay, 2147483647))
       } else {
         backoff = 60
+        if (status === 'open') writeFeedbackSession({ ...current, nextCheckAt: undefined })
       }
       onChange(result.ok ? { status, form: result.form } : { status })
     } catch {

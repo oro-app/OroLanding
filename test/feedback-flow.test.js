@@ -54,17 +54,24 @@ test('drafts persist before sending; confirmed receipt clears all private state'
   assert.deepEqual(JSON.parse(fixture.requests.mock.calls[1].arguments[1].body), { survey_version: 1, answers: { F1: { text: 'answer' } } })
 })
 
-test('local draft restores after a new browser flow', async (t) => {
+test('local draft rehydrates across repeated remounts and keeps later edits', async (t) => {
   const fixture = setup(t, async () => Response.json(form()))
   let flow = fixture.start()
   await settle()
   flow.update({ F1: { text: 'kept locally' } }, 'review')
+  assert.deepEqual(fixture.state().draft, { F1: { text: 'kept locally' } })
   assert.equal(fixture.storage.value.draft, undefined)
   flow.stop()
   flow = fixture.start()
   await settle()
   assert.deepEqual(fixture.state().draft, { F1: { text: 'kept locally' } })
   assert.equal(fixture.state().step, 'review')
+  flow.update({ F1: { text: 'updated after remount' } }, 'F1')
+  flow.stop()
+  flow = fixture.start()
+  await settle()
+  assert.deepEqual(fixture.state().draft, { F1: { text: 'updated after remount' } })
+  assert.equal(fixture.state().step, 'F1')
 })
 
 test('lost PUT response survives reload and retries the exact UUID/body only after GET reconciliation', async (t) => {
@@ -190,7 +197,6 @@ test('storage failure prevents PUT; stale responses cannot clear a replacement i
   assert.equal(fixture.requests.mock.callCount(), 1)
   fixture.storage.setItem = set
   const next = fixture.start()
-  t.mock.timers.tick(15000)
   await settle()
   next.submit()
   const submissionId = fixture.storage.value.attempt.id
