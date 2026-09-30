@@ -21,7 +21,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 
 .home-copy { padding-bottom: var(--oro-space-24); }
 .home-panel { max-width: 560px; min-height: calc(100dvh - var(--halo-header-height)); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-block: var(--oro-space-16); }
-.home-panel:first-child { max-width: 100%; min-height: min(calc(100dvh - var(--halo-header-height)), 800px); max-height: 800px; margin-inline: auto; align-items: center; text-align: center; }
+.home-panel:first-child { max-width: 100%; min-height: min(calc(100dvh - var(--halo-header-height)), 720px); max-height: 720px; margin-inline: auto; align-items: center; text-align: center; }
 .home-panel:first-child .home-action { align-items: center; }
 .home-moments-panel { min-height: auto; margin-inline: auto; align-items: center; text-align: center; }
 .home-panel .oro-heading { text-wrap: balance; }
