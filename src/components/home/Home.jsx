@@ -70,7 +70,7 @@ export default function Home() {
           <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal>
             <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself.<br />{' '}Feel ready for anything.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
-              From everyday plans to big moments, oro helps you find a look you’ll feel good in.
+              From everyday plans to big moments,<br />{' '}oro helps you find a look you’ll feel good in.
             </Text>
           </section>
           <section className="home-features" aria-label="Oro features">
