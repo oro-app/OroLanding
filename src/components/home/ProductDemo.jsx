@@ -21,7 +21,7 @@ export default function ProductDemo() {
         entry.target.dataset.revealState = 'shown'
         observer.unobserve(entry.target)
       })
-    }, { threshold: 0.2, rootMargin: '0px 0px -5% 0px' })
+    }, { threshold: 0.2, rootMargin: '0px 0px -18% 0px' })
 
     messages.forEach((message) => observer.observe(message))
     return () => observer.disconnect()

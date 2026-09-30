@@ -14,20 +14,20 @@
 .sms-bubble::after {
   content: '';
   position: absolute;
-  bottom: -8px;
+  bottom: 0;
   width: 18px;
   height: 18px;
   background: inherit;
 }
 
 .sms-bubble--left::after {
-  left: 10px;
-  clip-path: polygon(0 0, 100% 0, 0 100%);
+  left: -7px;
+  clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%, 40% 60%);
 }
 
 .sms-bubble--right::after {
-  right: 10px;
-  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  right: -7px;
+  clip-path: polygon(0 0, 60% 0, 60% 60%, 100% 100%, 0 100%);
 }
 
 .sms-bubble--cream {
