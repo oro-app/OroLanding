@@ -3,9 +3,7 @@
 .product-demo {
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  padding-block: clamp(24px, 4vw, 56px) clamp(120px, 18vw, 240px);
-  background: var(--oro-plum-deep);
-  color: var(--oro-cream);
+  padding-block: clamp(24px, 4vw, 56px) clamp(56px, 8vw, 112px);
 }
 
 .product-demo-inner { max-width: 780px; }
@@ -13,7 +11,7 @@
 .product-demo-thread {
   display: flex;
   flex-direction: column;
-  gap: clamp(140px, 27vh, 320px);
+  gap: clamp(32px, 6vh, 72px);
   margin: 0;
   padding: 0;
   list-style: none;

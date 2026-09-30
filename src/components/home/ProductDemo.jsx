@@ -36,9 +36,11 @@ export default function ProductDemo() {
             <SmsBubble tone="light-purple" side="right"><span className="sr-only">You: </span>What should I wear to brunch with friends?</SmsBubble>
           </li>
           <li className="product-demo-message">
+            <SmsBubble><span className="sr-only">Oro: </span>Try this look.</SmsBubble>
+          </li>
+          <li className="product-demo-message">
             <SmsBubble>
               <span className="sr-only">Oro: </span>
-              <p>Try this look.</p>
               <img src={outfit} alt="White cherry-print top, cream cardigan, and light blue jeans" loading="lazy" decoding="async" width="480" height="640" />
             </SmsBubble>
           </li>
@@ -46,9 +48,11 @@ export default function ProductDemo() {
             <SmsBubble tone="light-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me.</SmsBubble>
           </li>
           <li className="product-demo-message">
+            <SmsBubble><span className="sr-only">Oro: </span>Here’s your try-on.</SmsBubble>
+          </li>
+          <li className="product-demo-message">
             <SmsBubble>
               <span className="sr-only">Oro: </span>
-              <p>Here’s your try-on.</p>
               <img src={tryOn} alt="Try-on placeholder showing a black cropped top and black trousers" loading="lazy" decoding="async" width="480" height="640" />
             </SmsBubble>
           </li>
