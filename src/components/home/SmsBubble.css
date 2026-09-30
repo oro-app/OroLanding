@@ -8,6 +8,7 @@
   font-size: clamp(16px, 1.5vw, 18px);
   line-height: 1.35;
   overflow-wrap: anywhere;
+  box-shadow: 0 8px 24px rgb(11 11 11 / 10%);
 }
 
 .sms-bubble::after {
@@ -32,7 +33,6 @@
 .sms-bubble--cream {
   background: var(--oro-paper);
   color: var(--oro-text-editorial);
-  box-shadow: 0 8px 24px rgb(11 11 11 / 10%);
 }
 
 .sms-bubble--light-purple {
