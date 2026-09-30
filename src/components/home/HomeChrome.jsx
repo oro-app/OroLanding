@@ -64,7 +64,7 @@ export function HomeFooter({ landing = false }) {
           <div className="halo-footer-goal-options">
             {styleGoals.map((goal) => (
               <a key={goal} href="/beta?step=request"
-                onClick={() => trackCtaClick('style_goal_click', { goal, location: 'footer', destination: 'beta_request', transport_type: 'beacon' })}>
+                onClick={() => trackCtaClick(`style_goal_${goal.replaceAll(' ', '_')}`, { goal, location: 'footer', destination: 'beta_request', transport_type: 'beacon' })}>
                 {goal}
               </a>
             ))}
