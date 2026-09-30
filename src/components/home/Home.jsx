@@ -11,16 +11,16 @@ import oroTexting from '../../assets/mascot/oro_texting.png'
 
 const FEATURES = [
   {
-    title: 'Digital wardrobe',
-    description: 'Add the pieces you own so oro can put together outfits from your actual closet.',
+    title: 'Share your wardrobe',
+    description: 'Add your clothes so oro can put together outfits from the closet you already own.',
     image: wardrobeDemo,
     imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
     width: 1312,
     height: 1199,
   },
   {
-    title: 'Iterate on an outfit with oro',
-    description: 'Ask for a change, swap a piece, or try another direction. Keep refining until it feels right.',
+    title: 'Ask for a change',
+    description: 'Swap a piece, or try another direction. Keep refining until it feels right to you.',
     image: iterateDemo,
     imageAlt: 'Outfit suggestions in a text conversation, including a request to swap jeans for a skirt.',
     width: 1078,
@@ -69,8 +69,8 @@ export default function Home() {
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
             <Text muted className="home-description home-enter">
-              Getting dressed starts with a conversation. Text oro, your personal style assistant,
-              for an outfit that feels like you.
+              Getting dressed is one text away.
+              Oro helps you put together outfits you love from the clothes you already own.
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">Join the beta</HomeCta>

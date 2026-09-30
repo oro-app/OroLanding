@@ -42,7 +42,7 @@ export default function StyleAdviceDemo() {
         <h2 id="style-advice-demo-title" className="sr-only">Get style advice from oro</h2>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>What do you think of this outfit? Any styling advice?</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>Thoughts on this fit?</SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
             <SmsBubble tone="dark-purple" side="right">
@@ -51,10 +51,10 @@ export default function StyleAdviceDemo() {
             </SmsBubble>
           </li>
           <li className="product-demo-message style-advice-demo-reply--continued">
-            <SmsBubble><span className="sr-only">Oro: </span>The berry bag gives the soft pink and white a great pop of color.</SmsBubble>
+            <SmsBubble><span className="sr-only">Oro: </span>Pink and white is always such a cute color combo! </SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>I'd keep the sneakers for daytime. If you want to dress it up, try ballet flats instead.</SmsBubble>
+            <SmsBubble><span className="sr-only">Oro: </span>I'd keep the sneakers for daytime. If you want to dress it up, try ballet flats instead :)</SmsBubble>
           </li>
         </ol>
       </div>

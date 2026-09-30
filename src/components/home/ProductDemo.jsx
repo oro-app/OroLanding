@@ -48,7 +48,7 @@ export default function ProductDemo() {
             <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>It looks perfect on you :)</SmsBubble>
+            <SmsBubble><span className="sr-only">Oro: </span>It looks stunning on you :)</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble>
