@@ -40,11 +40,6 @@
 .oro-editorial .beta-story-halo::before { opacity: .35; }
 .oro-editorial .beta-story-halo::after { opacity: .5; }
 
-.oro-editorial :is(.halo-header, .site-header) {
-  background: color-mix(in srgb, var(--color-bg) 86%, transparent);
-  backdrop-filter: blur(16px);
-}
-
 @media (max-width: 650px) {
   .oro-editorial::before, .legal-page::before {
     background:

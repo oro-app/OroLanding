@@ -1,14 +1,41 @@
 import { Fragment } from 'react'
 import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
-import MessageThread from './MessageThread'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
-import oroHurray from '../../assets/mascot/oro_hurray.webp'
-import oroThumbsUp from '../../assets/mascot/oro_thumbs_up.webp'
+import ProductDemo from './ProductDemo'
+import StyleAdviceDemo from './StyleAdviceDemo'
+import wardrobeDemo from '../../assets/demos/wardrobe.png'
+import iterateDemo from '../../assets/demos/iterate.png'
+import oroTexting from '../../assets/mascot/oro_texting.png'
 
-const REASONS = ['It knows your closet', 'It answers in a minute', 'It tells you why']
-const HEADLINE = 'The #1 AI stylist you can text'
+const FEATURES = [
+  {
+    title: 'Share your wardrobe',
+    description: 'Add your clothes so oro can put together outfits from the closet you already own.',
+    image: wardrobeDemo,
+    imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
+    width: 1312,
+    height: 1199,
+  },
+  {
+    title: 'Ask for a change',
+    description: 'Swap a piece, or try another direction. Keep refining until it feels right to you.',
+    image: iterateDemo,
+    imageAlt: 'Outfit suggestions in a text conversation, including a request to swap jeans for a skirt.',
+    width: 1078,
+    height: 1459,
+  },
+  {
+    title: 'Memory about you',
+    description: 'oro remembers the pieces you wear and the preferences you share, so suggestions feel more like you over time.',
+    image: oroTexting,
+    imageAlt: 'oro looking at a phone with a clothing idea in a speech bubble.',
+    width: 1500,
+    height: 1500,
+  },
+]
+const HEADLINE = 'The AI fashion assistant you can text'
 const TYPE_STEP = 34
 
 function TypedHeadline() {
@@ -23,7 +50,7 @@ function TypedHeadline() {
               style={{ '--home-char-delay': `${80 + index++ * TYPE_STEP}ms` }}>{char}</span>
           ))}
         </Word>
-        {wordIndex < words.length - 1 && ' '}
+        {wordIndex === 3 ? <br /> : wordIndex < words.length - 1 ? ' ' : null}
       </Fragment>
     )
   })
@@ -42,55 +69,34 @@ export default function Home() {
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
             <Text muted className="home-description home-enter">
-              Standing in front of your closet again? Ask oro, and head out feeling good
-              about what you’re wearing.
+              Getting dressed is one text away.
+              Oro helps you put together outfits you love from the clothes you already own.
             </Text>
             <div className="home-action">
-              <HomeCta place="hero" className="home-enter">Start the conversation</HomeCta>
+              <HomeCta place="hero" className="home-enter">Join the beta</HomeCta>
             </div>
           </section>
-          <section className="home-panel" aria-labelledby="home-moments-title" data-home-reveal>
+          <ProductDemo />
+          <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal>
             <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself.<br />{' '}Feel ready for anything.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
-              From everyday plans to big moments, oro helps you find a look you’ll feel good in.
+              From everyday plans to big moments,<br />{' '}oro helps you find a look you’ll feel good in.
             </Text>
           </section>
-          <section className="home-panel home-reasons-panel" aria-labelledby="home-reasons-title" data-home-reveal>
-            <Heading as="h2" variant="title" id="home-reasons-title" className="home-stagger">Why it works</Heading>
-            <ul className="home-reasons">
-              {REASONS.map((reason, index) => (
-                <li key={reason} className="home-stagger" style={{ '--home-delay': `${180 + index * 110}ms` }}>
-                  <svg className="home-check" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                    <path d="M4 10.5 8 14.5 16 5.5" pathLength="1" />
-                  </svg>
-                  {reason}
-                </li>
-              ))}
-            </ul>
-            <img
-              className="home-mascot home-mascot--thumbs-up home-stagger"
-              src={oroThumbsUp}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              width="1536"
-              height="1536"
-              style={{ '--home-delay': '510ms' }}
-            />
+          <section className="home-features" aria-label="Oro features">
+            {FEATURES.map((feature, index) => (
+              <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal>
+                <div className="home-feature-copy home-stagger">
+                  <Heading as="h2" variant="title">{feature.title}</Heading>
+                  <Text muted className="home-description">{feature.description}</Text>
+                </div>
+                <img className="home-feature-media home-stagger" src={feature.image} alt={feature.imageAlt} loading="lazy" decoding="async" width={feature.width} height={feature.height} />
+              </article>
+            ))}
           </section>
-        </div>
-        <div className="home-phone-column">
-          <div className="home-phone-sticky">
-            <div className="home-phone-glow" aria-hidden="true" />
-            <MessageThread startDelay={1100} />
-          </div>
+          <StyleAdviceDemo />
         </div>
       </div>
-      <section className="home-closer halo-container" aria-labelledby="closer-title" data-home-reveal>
-        <img className="home-mascot home-mascot--hurray home-stagger" src={oroHurray} alt="" loading="lazy" decoding="async" />
-        <Heading as="h2" variant="title" id="closer-title" className="home-stagger">Whatever the day,<br /><em>you’re dressed for it.</em></Heading>
-        <HomeCta place="closer" className="home-stagger">Start the conversation</HomeCta>
-      </section>
     </div>
   )
 }

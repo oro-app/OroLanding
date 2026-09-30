@@ -111,6 +111,11 @@ button:active, .btn:active {
   transform: scale(0.98);
 }
 
+/* Text controls use their label alone; named icon-only controls keep their icon. */
+:where(a, button):not([aria-label]) [data-button-icon] {
+  display: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   :where(button, a) [data-button-icon] {
     transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);

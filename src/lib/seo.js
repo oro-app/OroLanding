@@ -36,7 +36,7 @@ export const ROUTE_SEO = {
     path: '/',
     title: SITE_TITLE,
     description: DEFAULT_DESCRIPTION,
-    h1: 'The #1 AI stylist you can text',
+    h1: 'The #1 AI fashion stylist you can text',
     summary:
       'oro helps you find your look, whatever your plans. Ask oro, and head out feeling good about what you’re wearing.',
     priority: '1.0',

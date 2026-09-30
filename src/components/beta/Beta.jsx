@@ -3,6 +3,7 @@ import { Button, Heading, Notice, Text, TextField } from 'oro-kit'
 import ButtonArrow from '../ButtonArrow'
 import { HomeHeader } from '../home/HomeChrome'
 import BetaIntroduction from './BetaIntroduction'
+import { clearBetaDraft, readBetaDraft, writeBetaDraft } from './betaDraft'
 import { choices, emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { saveBetaRequest, submissionMessages } from './betaSubmission'
 import './Beta.css'
@@ -47,12 +48,13 @@ function WrittenAnswer({ name, label, value, update, error, hint, multiline = fa
 }
 
 export default function Beta() {
-  const [answers, setAnswers] = useState(emptyAnswers)
+  const [draft] = useState(readBetaDraft)
+  const [answers, setAnswers] = useState(draft?.answers ?? emptyAnswers)
   const [attemptedSteps, setAttemptedSteps] = useState([])
   const [status, setStatus] = useState('idle')
   const [enabled, setEnabled] = useState(false)
   const [requestId, setRequestId] = useState(null)
-  const submissionKey = useRef(null)
+  const submissionKey = useRef(draft?.submissionKey ?? null)
   const submitting = useRef(false)
   const allowForm = previewForm || enabled
   const entryView = allowForm ? 'form' : 'coming-soon'
@@ -72,6 +74,10 @@ export default function Beta() {
   const errors = attemptedSteps.includes(step)
     ? Object.fromEntries(Object.entries(validateAnswers(answers)).filter(([name]) => stepInfo.fields.includes(name)))
     : {}
+
+  useEffect(() => {
+    if (answers !== emptyAnswers) writeBetaDraft(answers, submissionKey.current)
+  }, [answers])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -187,11 +193,13 @@ export default function Beta() {
     if (!finalStep) { openStep(step + 1); return }
     if (!enabled) { setStatus('unavailable'); return }
     if (!submissionKey.current || status === 'submission_conflict') submissionKey.current = crypto.randomUUID()
+    writeBetaDraft(answers, submissionKey.current)
     submitting.current = true
     setStatus('saving')
     const result = await saveBetaRequest(answers, submissionKey.current)
     submitting.current = false
     if (result.requestId) {
+      clearBetaDraft()
       setRequestId(result.requestId)
       setStatus('idle')
       setView('receipt')
@@ -220,7 +228,7 @@ export default function Beta() {
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <HomeHeader />
-      {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is sent or saved</span><button onClick={() => setView(view === 'receipt' ? 'form' : 'receipt')}>{view === 'receipt' ? 'Back to form' : 'Preview confirmation'} <span data-button-icon="up-right" aria-hidden="true">↗</span></button></div></div>}
+      {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is submitted</span><button onClick={() => setView(view === 'receipt' ? 'form' : 'receipt')}>{view === 'receipt' ? 'Back to form' : 'Preview confirmation'} <span data-button-icon="up-right" aria-hidden="true">↗</span></button></div></div>}
       {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} initialPage={storyStep} onNavigate={navigateStory} />}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
         <div className="beta-story-halo" aria-hidden="true" />

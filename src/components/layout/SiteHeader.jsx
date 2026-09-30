@@ -1,4 +1,5 @@
 import { useTheme } from '../../context/ThemeContext'
+import useScrolled from '../../hooks/useScrolled'
 import { NAV_COLUMNS } from '../../lib/siteLinks'
 
 // Redesigned site header — sticky, hairline bottom border, theme-aware via
@@ -26,20 +27,13 @@ function MoonIcon() {
   )
 }
 
-function NavArrow() {
-  return (
-    <svg className="site-header-caret" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M6 9l6 6 6-6" />
-    </svg>
-  )
-}
-
 export default function SiteHeader() {
   const { theme, toggleTheme } = useTheme()
+  const scrolled = useScrolled()
   const nextTheme = theme === 'dark' ? 'light' : 'dark'
 
   return (
-    <header className="site-header">
+    <header className={`site-header${scrolled ? ' site-header--scrolled' : ''}`}>
       <div className="site-header-inner">
         <a href="/" className="site-header-logo-link" aria-label="oro home">
         <img
@@ -57,7 +51,6 @@ export default function SiteHeader() {
           <div className="site-header-group" key={col.head}>
             <button type="button" className="site-header-group-trigger" aria-haspopup="true">
               {col.head}
-              <NavArrow />
             </button>
             <div className="site-header-menu" role="menu">
               {col.links.map((link) => (

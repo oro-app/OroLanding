@@ -27,7 +27,12 @@
   height: 1px;
   background: linear-gradient(90deg, transparent 15%, var(--oro-color-champagne), transparent 85%);
   opacity: 0.4;
+  clip-path: inset(0 50% 0 50%);
   pointer-events: none;
+}
+.oro-editorial .halo-header--scrolled::after { clip-path: inset(0); }
+@media (prefers-reduced-motion: no-preference) {
+  .oro-editorial .halo-header::after { transition: clip-path 700ms ease; }
 }
 
 .oro-editorial .home-closer {
