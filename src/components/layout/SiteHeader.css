@@ -22,7 +22,7 @@
 }
 .site-header--scrolled::before { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .site-header::before { transition: opacity 420ms ease; }
+  .site-header::before { transition: opacity 700ms ease; }
 }
 
 .site-header-inner {

@@ -9,7 +9,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-header::before { content: ''; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--oro-color-canvas) 85%, transparent); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; }
 .halo-header--scrolled::before { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .halo-header::before { transition: opacity 420ms ease; }
+  .halo-header::before { transition: opacity 700ms ease; }
 }
 .halo-header-inner { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: var(--oro-space-6); }
 .halo-logo-link { display: inline-flex; align-items: center; min-height: var(--oro-control-min-height); }
