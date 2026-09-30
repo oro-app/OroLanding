@@ -34,7 +34,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-feature + .home-feature { border-top: 1px solid var(--oro-color-border); }
 .home-feature--media-left { grid-template-areas: "media copy"; }
 .home-feature-copy { grid-area: copy; text-align: left; }
-.home-feature-media { grid-area: media; display: block; width: 100%; height: clamp(240px, 30vw, 360px); object-fit: cover; }
+.home-feature-media { grid-area: media; display: block; width: 100%; height: clamp(240px, 30vw, 360px); object-fit: contain; }
 .home-feature-copy .home-description { margin-top: var(--oro-space-6); }
 .halo-footer:not(.halo-footer--landing) { display: flex; align-items: center; justify-content: space-between; gap: var(--oro-space-8); padding-block: var(--oro-space-6); border-top: var(--oro-border-width) solid var(--oro-color-border); }
 .halo-footer-links { display: flex; flex-wrap: wrap; gap: var(--oro-space-5); font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }

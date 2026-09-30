@@ -5,24 +5,34 @@ import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
 import ProductDemo from './ProductDemo'
 import StyleAdviceDemo from './StyleAdviceDemo'
-import wardrobeDay from '../../assets/why-oro/wardrobe-day.webp'
-import wardrobeNight from '../../assets/why-oro/wardrobe-night.webp'
+import wardrobeDemo from '../../assets/demos/wardrobe.png'
+import iterateDemo from '../../assets/demos/iterate.png'
+import oroTexting from '../../assets/mascot/oro_texting.png'
 
 const FEATURES = [
   {
     title: 'Digital wardrobe',
     description: 'Add the pieces you own so oro can put together outfits from your actual closet.',
-    image: wardrobeDay,
+    image: wardrobeDemo,
+    imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
+    width: 1312,
+    height: 1199,
   },
   {
     title: 'Iterate on an outfit with oro',
     description: 'Ask for a change, swap a piece, or try another direction. Keep refining until it feels right.',
-    image: wardrobeNight,
+    image: iterateDemo,
+    imageAlt: 'Outfit suggestions in a text conversation, including a request to swap jeans for a skirt.',
+    width: 1078,
+    height: 1459,
   },
   {
     title: 'Memory about you',
     description: 'oro remembers the pieces you wear and the preferences you share, so suggestions feel more like you over time.',
-    image: wardrobeDay,
+    image: oroTexting,
+    imageAlt: 'oro looking at a phone with a clothing idea in a speech bubble.',
+    width: 1500,
+    height: 1500,
   },
 ]
 const HEADLINE = 'The AI fashion assistant you can text'
@@ -80,7 +90,7 @@ export default function Home() {
                   <Heading as="h2" variant="title">{feature.title}</Heading>
                   <Text muted className="home-description">{feature.description}</Text>
                 </div>
-                <img className="home-feature-media home-stagger" src={feature.image} alt="" loading="lazy" decoding="async" width="768" height="1024" />
+                <img className="home-feature-media home-stagger" src={feature.image} alt={feature.imageAlt} loading="lazy" decoding="async" width={feature.width} height={feature.height} />
               </article>
             ))}
           </section>
