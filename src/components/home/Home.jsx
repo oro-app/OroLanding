@@ -4,6 +4,7 @@ import { Heading, Text } from 'oro-kit'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
 import ProductDemo from './ProductDemo'
+import StyleAdviceDemo from './StyleAdviceDemo'
 import wardrobeDay from '../../assets/why-oro/wardrobe-day.webp'
 import wardrobeNight from '../../assets/why-oro/wardrobe-night.webp'
 
@@ -86,6 +87,7 @@ export default function Home() {
               </article>
             ))}
           </section>
+          <StyleAdviceDemo />
         </div>
       </div>
     </div>
