@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import outfitPhoto from '../../assets/fits/fri.webp'
 import SmsBubble from './SmsBubble'
 import './ProductDemo.css'
+import './StyleAdviceDemo.css'
 
 export default function StyleAdviceDemo() {
   const sectionRef = useRef(null)
@@ -27,16 +28,14 @@ export default function StyleAdviceDemo() {
   }, [])
 
   return (
-    <section className="product-demo" aria-labelledby="style-advice-demo-title" ref={sectionRef}>
+    <section className="product-demo style-advice-demo" aria-labelledby="style-advice-demo-title" ref={sectionRef}>
       <div className="halo-container product-demo-inner">
         <h2 id="style-advice-demo-title" className="sr-only">Get style advice from oro</h2>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>What do you think of this outfit? Any styling advice?</SmsBubble>
-          </li>
-          <li className="product-demo-message product-demo-message--user">
             <SmsBubble tone="dark-purple" side="right">
-              <span className="sr-only">You sent a photo: </span>
+              <span className="sr-only">You: </span>
+              <p>What do you think of this outfit? Any styling advice?</p>
               <img src={outfitPhoto} alt="Pink top, white cardigan and pleated skirt, white sneakers, and a berry-colored bag" loading="lazy" decoding="async" width="408" height="560" />
             </SmsBubble>
           </li>
