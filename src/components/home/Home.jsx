@@ -25,7 +25,7 @@ const FEATURES = [
     image: wardrobeDay,
   },
 ]
-const HEADLINE = 'The #1 AI stylist you can text'
+const HEADLINE = 'The AI fashion assistant you can text'
 const TYPE_STEP = 34
 
 function TypedHeadline() {
@@ -40,7 +40,7 @@ function TypedHeadline() {
               style={{ '--home-char-delay': `${80 + index++ * TYPE_STEP}ms` }}>{char}</span>
           ))}
         </Word>
-        {wordIndex < words.length - 1 && ' '}
+        {wordIndex === 3 ? <br /> : wordIndex < words.length - 1 ? ' ' : null}
       </Fragment>
     )
   })
@@ -59,8 +59,8 @@ export default function Home() {
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
             <Text muted className="home-description home-enter">
-              Standing in front of your closet again? Ask oro, and head out feeling good
-              about what you’re wearing.
+              Getting dressed starts with a conversation. Text oro, your personal style assistant,
+              for an outfit that feels like you.
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">Join the beta</HomeCta>

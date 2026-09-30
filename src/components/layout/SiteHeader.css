@@ -16,13 +16,23 @@
   z-index: -1;
   background: color-mix(in srgb, var(--color-bg) 86%, transparent);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--color-fg-line);
+  opacity: 0;
+  pointer-events: none;
+}
+.site-header--scrolled::before { opacity: 1; }
+.site-header::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: var(--color-fg-line);
   clip-path: inset(0 50% 0 50%);
   pointer-events: none;
 }
-.site-header--scrolled::before { clip-path: inset(0); }
+.site-header--scrolled::after { clip-path: inset(0); }
 @media (prefers-reduced-motion: no-preference) {
-  .site-header::before { transition: clip-path 420ms ease; }
+  .site-header::before { transition: opacity 700ms ease; }
+  .site-header::after { transition: clip-path 700ms ease; }
 }
 
 .site-header-inner {

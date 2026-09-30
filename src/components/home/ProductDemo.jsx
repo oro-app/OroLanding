@@ -33,10 +33,10 @@ export default function ProductDemo() {
         <h2 id="product-demo-title" className="sr-only">Get dressed in a conversation</h2>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>What should I wear to brunch with friends?</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I'm going out for brunch with friends</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>Try this look.</SmsBubble>
+            <SmsBubble><span className="sr-only">Oro: </span>I have the perfect look!</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble>
@@ -45,10 +45,10 @@ export default function ProductDemo() {
             </SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me.</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>Here’s your try-on.</SmsBubble>
+            <SmsBubble><span className="sr-only">Oro: </span>It looks perfect on you :)</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble>

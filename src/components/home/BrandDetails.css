@@ -32,7 +32,7 @@
 }
 .oro-editorial .halo-header--scrolled::after { clip-path: inset(0); }
 @media (prefers-reduced-motion: no-preference) {
-  .oro-editorial .halo-header::after { transition: clip-path 420ms ease; }
+  .oro-editorial .halo-header::after { transition: clip-path 700ms ease; }
 }
 
 .oro-editorial .home-closer {
