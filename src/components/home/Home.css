@@ -59,7 +59,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-footer-legal { display: flex; flex-direction: column; align-items: flex-end; min-width: 150px; text-align: right; }
 .halo-footer-legal h3 { margin: 0 0 8px; font-size: var(--oro-type-label-size); font-weight: 600; }
 .halo-footer-legal a { display: inline-flex; align-items: center; min-height: 44px; color: #bdbdbd; font-size: var(--oro-type-label-size); }
-.halo-footer-bottom { display: flex; justify-content: center; gap: 24px; align-items: center; flex-wrap: wrap; min-height: 48px; border-top: 1px solid #666; color: #bdbdbd; font-size: var(--oro-type-support-size); text-align: center; }
+.halo-footer-bottom { display: flex; flex-direction: column; justify-content: center; gap: 4px; align-items: center; min-height: 48px; padding-block: 8px; border-top: 1px solid #666; color: #bdbdbd; font-size: var(--oro-type-support-size); text-align: center; }
 .halo-site .halo-footer--landing a:focus-visible { outline-color: #fff; }
 .halo-site .cookie-consent { background: var(--oro-color-surface); border-color: var(--oro-color-border); box-shadow: var(--oro-shadow-action-hover); animation: none; }
 .halo-site .cookie-consent-copy { font-family: var(--oro-font-family-body); font-size: var(--oro-type-label-size); color: var(--oro-color-muted); }
