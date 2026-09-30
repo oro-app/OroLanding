@@ -1,5 +1,5 @@
+import { useEffect, useState } from 'react'
 import { Text } from 'oro-kit'
-import ButtonArrow from '../ButtonArrow'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 
@@ -12,18 +12,25 @@ export function HomeCta({ place, children, className = '' }) {
     <a href="/beta" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
       onClick={() => trackCtaClick('get_started_click', { location: place, destination: 'beta' })}>
       {children}
-      <ButtonArrow direction="up-right" className="halo-cta-arrow" />
     </a>
   )
 }
 
 export function HomeHeader() {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 0)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <header className="halo-header">
+    <header className={`halo-header${scrolled ? ' halo-header--scrolled' : ''}`}>
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          <a className="halo-nav-journal" href="/from-the-closet">Blog</a>
           <HomeCta place="header">Get started</HomeCta>
         </nav>
       </div>

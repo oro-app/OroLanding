@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
 import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
-import MessageThread from './MessageThread'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
 import oroHurray from '../../assets/mascot/oro_hurray.webp'
@@ -46,7 +45,7 @@ export default function Home() {
               about what you’re wearing.
             </Text>
             <div className="home-action">
-              <HomeCta place="hero" className="home-enter">Start the conversation</HomeCta>
+              <HomeCta place="hero" className="home-enter">Join the beta</HomeCta>
             </div>
           </section>
           <section className="home-panel" aria-labelledby="home-moments-title" data-home-reveal>
@@ -78,12 +77,6 @@ export default function Home() {
               style={{ '--home-delay': '510ms' }}
             />
           </section>
-        </div>
-        <div className="home-phone-column">
-          <div className="home-phone-sticky">
-            <div className="home-phone-glow" aria-hidden="true" />
-            <MessageThread startDelay={1100} />
-          </div>
         </div>
       </div>
       <section className="home-closer halo-container" aria-labelledby="closer-title" data-home-reveal>
