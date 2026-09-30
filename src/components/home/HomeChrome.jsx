@@ -1,4 +1,4 @@
-import { Text } from 'oro-kit'
+import { Heading, Text } from 'oro-kit'
 import ButtonArrow from '../ButtonArrow'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
@@ -55,6 +55,10 @@ export function HomeFooter({ landing = false }) {
   return (
     <footer className="halo-footer halo-footer--landing">
       <div className="halo-container">
+        <section className="halo-footer-closer" aria-labelledby="closer-title">
+          <Heading as="h2" variant="title" id="closer-title">Whatever the day,<br /><em>you’re dressed for it.</em></Heading>
+          <HomeCta place="closer">Join the beta</HomeCta>
+        </section>
         <section className="halo-footer-goals" aria-labelledby="style-goal-title">
           <h2 id="style-goal-title">What’s your style goal?</h2>
           <div className="halo-footer-goal-options">

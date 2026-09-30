@@ -40,7 +40,10 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-footer-links { display: flex; flex-wrap: wrap; gap: var(--oro-space-5); font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }
 .halo-footer-links a { display: inline-flex; align-items: center; min-height: var(--oro-control-min-height); }
 .halo-footer--landing { background: #000; color: #fff; padding-top: clamp(72px, 9vw, 120px); }
-.halo-footer-goals { text-align: center; }
+.halo-footer-closer { text-align: center; }
+.halo-footer-closer .oro-heading { color: #fff; text-wrap: balance; }
+.halo-footer-closer .halo-cta { margin-top: var(--oro-space-8); }
+.halo-footer-goals { margin-top: clamp(88px, 11vw, 144px); text-align: center; }
 .halo-footer-goals h2 { margin: 0; font-family: var(--oro-font-family-wordmark); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: var(--oro-font-weight-heading); line-height: 1.15; }
 .halo-footer-goal-options { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 850px; margin: 36px auto 0; }
 .halo-footer-goal-options a { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 10px 20px; border: 1px solid #888; border-radius: 999px; color: #fff; text-align: center; font-size: var(--oro-type-label-size); }
@@ -53,7 +56,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-footer-social svg { display: block; width: 21px; height: 21px; }
 .halo-footer-social a:hover { background: #333; border-radius: 50%; }
 .halo-footer-legal a:hover { color: #fff; text-decoration: underline; }
-.halo-footer-legal { display: flex; flex-direction: column; align-items: flex-start; min-width: 150px; }
+.halo-footer-legal { display: flex; flex-direction: column; align-items: flex-end; min-width: 150px; text-align: right; }
 .halo-footer-legal h3 { margin: 0 0 8px; font-size: var(--oro-type-label-size); font-weight: 600; }
 .halo-footer-legal a { display: inline-flex; align-items: center; min-height: 44px; color: #bdbdbd; font-size: var(--oro-type-label-size); }
 .halo-footer-bottom { display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 48px; border-top: 1px solid #666; color: #bdbdbd; font-size: var(--oro-type-support-size); }
