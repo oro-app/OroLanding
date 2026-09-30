@@ -14,17 +14,26 @@ export default function StyleAdviceDemo() {
     const messages = [...section.querySelectorAll('.product-demo-message')]
     messages.forEach((message) => { message.dataset.revealState = 'pending' })
     section.dataset.demoMotion = 'ready'
+    let replyTimer
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return
+        if (entry.target === messages[messages.length - 1]) {
+          observer.unobserve(entry.target)
+          replyTimer = window.setTimeout(() => { entry.target.dataset.revealState = 'shown' }, 220)
+          return
+        }
         entry.target.dataset.revealState = 'shown'
         observer.unobserve(entry.target)
       })
     }, { threshold: 0.2, rootMargin: '0px 0px -18% 0px' })
 
     messages.forEach((message) => observer.observe(message))
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      window.clearTimeout(replyTimer)
+    }
   }, [])
 
   return (
