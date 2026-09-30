@@ -20,6 +20,7 @@
 .product-demo-message { display: flex; justify-content: flex-start; }
 .product-demo-message--user { justify-content: flex-end; }
 .product-demo-message:has(img) { margin-top: calc(12px - clamp(24px, 5vh, 56px)); }
+.product-demo-message:has(+ .product-demo-message img) .sms-bubble::after { display: none; }
 .product-demo-message .sms-bubble { max-width: min(78%, 340px); }
 .product-demo-message img { width: 250px; }
 
