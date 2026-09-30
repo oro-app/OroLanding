@@ -72,7 +72,9 @@ export function HomeFooter({ landing = false }) {
         </section>
         <div className="halo-footer-main">
           <div className="halo-footer-brand">
-            <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
+            <a className="halo-logo-link" href="/" aria-label="oro home">
+              <img className="halo-footer-wordmark" src="/static/oro_logo_wordmark_cream.webp" alt="" width="1445" height="675" decoding="async" />
+            </a>
             <nav className="halo-footer-social" aria-label="Social and editorial">
               <a href="https://www.instagram.com/askoro.now" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>
