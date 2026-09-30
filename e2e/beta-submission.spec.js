@@ -35,6 +35,28 @@ test('confirmed save shows a receipt, locks duplicate clicks and preserves indep
   expect(calls).toBe(1)
   expect(body.answers).toMatchObject({ phone: '+14165550123', email: 'beta-test@example.com', futureBeta: false, marketing: true })
   expect(await page.evaluate(() => JSON.stringify({ ...localStorage, ...sessionStorage }))).not.toContain('beta-test@example.com')
+  expect(await page.evaluate(() => localStorage.getItem('oro_beta_request_draft'))).toBeNull()
+})
+
+test('a refreshed form restores answers and retries an uncertain save with the same key', async ({ page }) => {
+  test.setTimeout(60000)
+  const bodies = []
+  await openForm(page, async (route) => {
+    bodies.push(route.request().postDataJSON())
+    if (bodies.length === 1) await route.abort('failed')
+    else await route.fulfill({ json: { ok: true, request_id: requestId, submission_key: bodies[1].submission_key } })
+  })
+  await page.getByRole('button', { name: 'Request an invite', exact: true }).click()
+  await expect(page.getByRole('alert')).toContainText('We couldn’t confirm your request.')
+  await page.reload()
+  await expect(page.getByRole('heading', { name: 'Ready to be one of the first oronauts?' })).toBeVisible()
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(page.getByRole('radio', { name: 'Website', exact: true })).toBeChecked()
+  await page.getByRole('button', { name: 'Continue', exact: true }).click()
+  await page.getByRole('button', { name: 'Request an invite', exact: true }).click()
+  await expect(page.getByText(`Request reference: ${requestId}`)).toBeVisible()
+  expect(bodies[1]).toEqual(bodies[0])
+  expect(await page.evaluate(() => localStorage.getItem('oro_beta_request_draft'))).toBeNull()
 })
 
 test('a lost response keeps answers and retries the same request key', async ({ page }) => {
