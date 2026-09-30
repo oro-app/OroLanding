@@ -99,6 +99,7 @@ export function HomeFooter({ landing = false }) {
         </div>
         <div className="halo-footer-bottom">
           <span>© 2026 Oro Digital Inc.</span>
+          <span aria-hidden="true">·</span>
           <span>Made w luv &lt;3</span>
         </div>
       </div>
