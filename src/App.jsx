@@ -180,7 +180,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && <HomeFooter />}
+        {isHalo && !isFeedback && <HomeFooter landing={isHome} />}
         <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />
       </div>
     </ThemeProvider>
