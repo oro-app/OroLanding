@@ -9,28 +9,28 @@
   font-size: clamp(16px, 1.5vw, 18px);
   line-height: 1.35;
   overflow-wrap: anywhere;
-  filter: drop-shadow(0 8px 12px rgb(11 11 11 / 12%));
+  box-shadow: 0 8px 24px rgb(11 11 11 / 10%);
 }
 
 .sms-bubble::after {
   content: '';
   position: absolute;
   z-index: -1;
-  bottom: 0;
-  width: 32px;
-  height: 22px;
+  bottom: -8px;
+  width: 18px;
+  height: 18px;
   background: inherit;
   pointer-events: none;
 }
 
 .sms-bubble--left::after {
-  left: -8px;
-  clip-path: path('M10 0 H32 V22 Q14 19 0 18 C7 16 10 10 10 0 Z');
+  left: 10px;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 
 .sms-bubble--right::after {
-  right: -8px;
-  clip-path: path('M0 0 H22 C22 10 25 16 32 18 Q18 19 0 22 Z');
+  right: 10px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
 }
 
 .sms-bubble--cream {
@@ -52,7 +52,7 @@
   display: block;
   max-width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: inherit;
 }
 
 .sms-bubble:has(> img) { padding: 6px; }
@@ -60,6 +60,6 @@
 .sms-bubble p { margin: 0 0 12px; }
 
 @media (forced-colors: active) {
-  .sms-bubble { border: 1px solid CanvasText; filter: none; }
+  .sms-bubble { border: 1px solid CanvasText; }
   .sms-bubble::after { display: none; }
 }
