@@ -49,7 +49,7 @@ export default function Home() {
             </div>
           </section>
           <ProductDemo />
-          <section className="home-panel" aria-labelledby="home-moments-title" data-home-reveal>
+          <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal>
             <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself.<br />{' '}Feel ready for anything.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
               From everyday plans to big moments, oro helps you find a look you’ll feel good in.
