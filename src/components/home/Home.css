@@ -30,12 +30,11 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-action { display: flex; flex-direction: column; align-items: flex-start; width: fit-content; max-width: 100%; margin-top: var(--oro-space-8); }
 .home-beta-note { margin-top: var(--oro-space-2); text-align: left; }
 .home-pull { margin-top: var(--oro-space-6); }
-.home-features { padding-top: var(--oro-space-16); }
-.home-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "copy media"; align-items: center; gap: clamp(32px, 6vw, 96px); padding-block: clamp(56px, 8vw, 112px); }
+.home-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "copy media"; align-items: center; gap: clamp(32px, 6vw, 96px); padding-block: clamp(32px, 4vw, 56px); }
 .home-feature + .home-feature { border-top: 1px solid var(--oro-color-border); }
 .home-feature--media-left { grid-template-areas: "media copy"; }
 .home-feature-copy { grid-area: copy; text-align: left; }
-.home-feature-media { grid-area: media; display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.home-feature-media { grid-area: media; display: block; width: 100%; height: clamp(240px, 30vw, 360px); object-fit: cover; }
 .home-feature-copy .home-description { margin-top: var(--oro-space-6); }
 .halo-footer:not(.halo-footer--landing) { display: flex; align-items: center; justify-content: space-between; gap: var(--oro-space-8); padding-block: var(--oro-space-6); border-top: var(--oro-border-width) solid var(--oro-color-border); }
 .halo-footer-links { display: flex; flex-wrap: wrap; gap: var(--oro-space-5); font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }
@@ -106,7 +105,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-footer-links { column-gap: var(--oro-space-4); row-gap: 0; }
 }
 @media (max-width: 600px) {
-  .home-feature, .home-feature--media-left { grid-template-columns: minmax(0, 1fr); grid-template-areas: "copy" "media"; gap: var(--oro-space-8); }
+  .home-feature, .home-feature--media-left { grid-template-columns: minmax(0, 1fr); grid-template-areas: "media" "copy"; gap: var(--oro-space-8); }
   .halo-footer-goal-options { gap: 10px; margin-top: 28px; }
   .halo-footer-goal-options a { width: 100%; }
   .halo-footer-main { margin-top: 80px; padding-bottom: 40px; }

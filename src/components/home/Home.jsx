@@ -73,14 +73,11 @@ export default function Home() {
               From everyday plans to big moments, oro helps you find a look you’ll feel good in.
             </Text>
           </section>
-          <section className="home-features" aria-labelledby="home-reasons-title">
-            <div data-home-reveal>
-              <Heading as="h2" variant="title" id="home-reasons-title" className="home-stagger">Why it works</Heading>
-            </div>
+          <section className="home-features" aria-label="Oro features">
             {FEATURES.map((feature, index) => (
               <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal>
                 <div className="home-feature-copy home-stagger">
-                  <Heading as="h3" variant="title">{feature.title}</Heading>
+                  <Heading as="h2" variant="title">{feature.title}</Heading>
                   <Text muted className="home-description">{feature.description}</Text>
                 </div>
                 <img className="home-feature-media home-stagger" src={feature.image} alt="" loading="lazy" decoding="async" width="768" height="1024" />
