@@ -1,5 +1,6 @@
 .sms-bubble {
   position: relative;
+  isolation: isolate;
   width: fit-content;
   max-width: min(100%, 340px);
   padding: 14px 18px;
@@ -14,20 +15,22 @@
 .sms-bubble::after {
   content: '';
   position: absolute;
+  z-index: -1;
   bottom: 0;
   width: 32px;
   height: 22px;
   background: inherit;
+  pointer-events: none;
 }
 
 .sms-bubble--left::after {
   left: -8px;
-  clip-path: path('M10 0 H32 V22 H0 C9 18 10 12 10 0 Z');
+  clip-path: path('M10 0 H32 V22 Q14 19 0 18 C7 16 10 10 10 0 Z');
 }
 
 .sms-bubble--right::after {
   right: -8px;
-  clip-path: path('M0 0 H22 C22 12 23 18 32 22 H0 Z');
+  clip-path: path('M0 0 H22 C22 10 25 16 32 18 Q18 19 0 22 Z');
 }
 
 .sms-bubble--cream {
@@ -51,6 +54,8 @@
   height: auto;
   border-radius: 12px;
 }
+
+.sms-bubble:has(> img) { padding: 6px; }
 
 .sms-bubble p { margin: 0 0 12px; }
 
