@@ -1,4 +1,4 @@
-:root:has(.halo-site) { --color-bg: var(--oro-color-canvas); --halo-header-height: 65px; }
+:root:has(.halo-site) { --color-bg: var(--oro-color-canvas); --halo-header-height: 64px; }
 body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-site { min-height: 100dvh; }
 .halo-site ::selection { background: var(--oro-color-soft); color: var(--oro-color-ink); }

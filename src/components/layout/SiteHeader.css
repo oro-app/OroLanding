@@ -4,11 +4,25 @@
 .site-header {
   padding: 0 40px;
   font-family: var(--font-sans);
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-fg-line);
   position: sticky;
   top: 0;
   z-index: 20;            /* above page content + the dropdown panels */
+  isolation: isolate;
+}
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-fg-line);
+  clip-path: inset(0 50% 0 50%);
+  pointer-events: none;
+}
+.site-header--scrolled::before { clip-path: inset(0); }
+@media (prefers-reduced-motion: no-preference) {
+  .site-header::before { transition: clip-path 420ms ease; }
 }
 
 .site-header-inner {
@@ -67,16 +81,6 @@
 .site-header-group:focus-within .site-header-group-trigger {
   color: var(--color-fg);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .site-header-caret {
-    transition: transform 180ms ease;
-  }
-  .site-header-group:hover .site-header-caret,
-  .site-header-group:focus-within .site-header-caret {
-    transform: rotate(180deg);
-  }
-}
-
 .site-header-menu {
   position: absolute;
   top: 100%;            /* flush under the trigger — no dead gap to cross */

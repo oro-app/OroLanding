@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
 import { Text } from 'oro-kit'
+import useScrolled from '../../hooks/useScrolled'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 
@@ -17,14 +17,7 @@ export function HomeCta({ place, children, className = '' }) {
 }
 
 export function HomeHeader() {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 0)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  const scrolled = useScrolled()
 
   return (
     <header className={`halo-header${scrolled ? ' halo-header--scrolled' : ''}`}>
