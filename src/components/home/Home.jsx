@@ -3,6 +3,7 @@ import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
+import ProductDemo from './ProductDemo'
 import oroThumbsUp from '../../assets/mascot/oro_thumbs_up.webp'
 
 const REASONS = ['It knows your closet', 'It answers in a minute', 'It tells you why']
@@ -47,6 +48,7 @@ export default function Home() {
               <HomeCta place="hero" className="home-enter">Join the beta</HomeCta>
             </div>
           </section>
+          <ProductDemo />
           <section className="home-panel" aria-labelledby="home-moments-title" data-home-reveal>
             <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself.<br />{' '}Feel ready for anything.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
