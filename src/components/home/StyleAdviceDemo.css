@@ -1,1 +1,3 @@
-.style-advice-demo .product-demo-message:has(img) { margin-top: 0; }
+.style-advice-demo-reply--continued .sms-bubble { border-radius: 999px; }
+.style-advice-demo-reply--continued .sms-bubble::after { display: none; }
+.style-advice-demo-reply--continued + .product-demo-message { margin-top: calc(12px - clamp(24px, 5vh, 56px)); }

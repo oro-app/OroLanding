@@ -33,13 +33,15 @@ export default function StyleAdviceDemo() {
         <h2 id="style-advice-demo-title" className="sr-only">Get style advice from oro</h2>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>What do you think of this outfit? Any styling advice?</SmsBubble>
+          </li>
+          <li className="product-demo-message product-demo-message--user">
             <SmsBubble tone="dark-purple" side="right">
-              <span className="sr-only">You: </span>
-              <p>What do you think of this outfit? Any styling advice?</p>
+              <span className="sr-only">You sent a photo: </span>
               <img src={outfitPhoto} alt="Pink top, white cardigan and pleated skirt, white sneakers, and a berry-colored bag" loading="lazy" decoding="async" width="408" height="560" />
             </SmsBubble>
           </li>
-          <li className="product-demo-message">
+          <li className="product-demo-message style-advice-demo-reply--continued">
             <SmsBubble><span className="sr-only">Oro: </span>The berry bag gives the soft pink and white a great pop of color.</SmsBubble>
           </li>
           <li className="product-demo-message">
