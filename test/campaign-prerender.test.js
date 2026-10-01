@@ -39,3 +39,15 @@ test('both signup entry URLs serve the signup HTML before the homepage fallback'
     assert.equal(config.rewrites[index].destination, '/beta/index.html')
   }
 })
+
+test('all poster openings arrive prerendered with their own copy, styles and noindex', async () => {
+  for (const [campaign, title] of [['general', 'heard you were looking for my number.'], ['career', 'got the interview?'], ['dating', 'first date. third outfit change?']]) {
+    const page = await read(`dist/beta/${campaign === 'general' ? '' : `${campaign}/`}index.html`)
+    const head = page.slice(0, page.indexOf('</head>'))
+    assert.ok(page.includes(`data-campaign="${campaign}"`))
+    assert.ok(page.includes(title))
+    assert.match(head, /name="robots" content="noindex,follow"/)
+    for (const css of manifest['src/components/beta/Beta.jsx'].css) assert.ok(head.includes(`href="/${css}"`))
+    if (campaign !== 'general') assert.doesNotMatch(page, /heard you were looking for my number\./)
+  }
+})

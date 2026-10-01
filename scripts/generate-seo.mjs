@@ -20,7 +20,7 @@ const distDir = path.join(root, 'dist')
 const serverDir = path.join(root, '.seo-server')
 const newsletterDir = path.join(root, 'src', 'content', 'newsletters')
 const STATIC_PAGE_TYPES = ['terms', 'privacy', 'app-terms', 'app-privacy', 'cookies', 'google-play']
-const APP_ROUTE_TYPES = [...PUBLIC_ROUTE_TYPES.filter((type) => !STATIC_PAGE_TYPES.includes(type)), 'beta', 'feedback']
+const APP_ROUTE_TYPES = [...PUBLIC_ROUTE_TYPES.filter((type) => !STATIC_PAGE_TYPES.includes(type)), 'beta', 'beta-career', 'beta-dating', 'feedback']
 
 function escapeHtml(value = '') {
   return String(value)
@@ -265,7 +265,7 @@ async function main() {
     const seo = getSeoForRoute({ type })
     const appHtml = await render(seo.path)
     rnwStyleTag = getRnwStyleTag ? getRnwStyleTag() : ''
-    await writeRoute(type === 'beta' ? betaTemplate : template, seo, appHtml)
+    await writeRoute(type.startsWith('beta') ? betaTemplate : template, seo, appHtml)
   }
 
   for (const type of STATIC_PAGE_TYPES) {
