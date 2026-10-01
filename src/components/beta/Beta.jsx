@@ -49,7 +49,7 @@ export default function Beta() {
   const currentCode = useRef(code)
   const currentStep = useRef(0)
   const allowForm = previewForm || enabled
-  const entryView = allowForm ? 'welcome' : 'coming-soon'
+  const entryView = allowForm || enabled === null ? 'welcome' : 'coming-soon'
   const saving = status === 'saving'
   const message = submissionMessages[status]
   const [view, setView] = useState(entryView)
@@ -95,7 +95,7 @@ export default function Beta() {
         }
         currentStep.current = index
         setStep(index)
-        setView(allowForm ? 'form' : 'coming-soon')
+        setView(allowForm ? 'form' : entryView)
       } else {
         url.searchParams.delete('step')
         url.hash = ''
@@ -310,7 +310,7 @@ export default function Beta() {
           <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <ButtonArrow direction="up-right" /></a>
         </div>
       </section>}
-      {allowForm && view === 'welcome' && <section className="beta-application beta-welcome" aria-labelledby="welcome-title">
+      {view === 'welcome' && <section className="beta-application beta-welcome" aria-labelledby="welcome-title">
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-panel beta-welcome-content">
           <Heading ref={welcomeRef} tabIndex={-1} as="h1" variant="title" id="welcome-title">meet oro.</Heading>
@@ -318,7 +318,7 @@ export default function Beta() {
             <img className="beta-welcome-mascot" src={welcomeMascot} alt="oro waving hello" width="280" height="280" />
           </div>
           <Text className="beta-welcome-copy">your personal ai stylist,<br />right in your texts.</Text>
-          <Button className="beta-welcome-cta" onClick={() => openStep(0)}>want her number? <ButtonArrow /></Button>
+          <Button className="beta-welcome-cta" disabled={!allowForm} onClick={() => openStep(0)}>want her number? <ButtonArrow /></Button>
           <Text className="beta-welcome-note" variant="support" muted>arriving october 8. get in line to meet her.</Text>
         </div>
       </section>}
