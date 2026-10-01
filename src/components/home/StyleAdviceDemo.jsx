@@ -49,7 +49,7 @@ export default function StyleAdviceDemo() {
           <li className="product-demo-message product-demo-message--user">
             <SmsBubble tone="dark-purple" side="right">
               <span className="sr-only">you sent a photo: </span>
-              <img src={outfitPhoto} alt="men’s outfit with a black leather jacket, washed grey cargo jeans, patterned beanie, and dark sneakers" loading="lazy" decoding="async" width="787" height="1400" />
+              <img src={outfitPhoto} alt="men’s outfit with a black leather jacket, washed grey cargo jeans, black knit beanie, and dark sneakers" loading="lazy" decoding="async" width="1024" height="1536" />
             </SmsBubble>
           </li>
           <li className="product-demo-message style-advice-demo-reply--continued">
