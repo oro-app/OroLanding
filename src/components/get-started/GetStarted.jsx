@@ -73,6 +73,11 @@ const HEAR_OPTIONS = [
   ['somewhere else', 'Somewhere else'],
 ]
 
+const NOTIFICATION_HOURS = Array.from({ length: 24 }, (_, hour) => [
+  hour,
+  `${hour % 12 || 12} ${hour < 12 ? 'AM' : 'PM'}`,
+])
+
 // Minimum age — oro is 16+ (hard gate on the Figma flow).
 const MIN_AGE = 16
 
@@ -126,7 +131,9 @@ export default function GetStarted() {
         province: locations.some(([code]) => code === saved?.province) ? saved.province : '',
         hear: Array.isArray(saved?.hear) ? saved.hear.filter((item) => typeof item === 'string') : [],
         hearOther: typeof saved?.hearOther === 'string' ? saved.hearOther.slice(0, 100) : '',
-        notificationHour: saved?.notificationHour === 8 || saved?.notificationHour === 9 ? saved.notificationHour : null,
+        notificationHour: Number.isInteger(saved?.notificationHour) && saved.notificationHour >= 0 && saved.notificationHour <= 23
+          ? saved.notificationHour
+          : null,
         ...phoneFields(typeof saved?.phone === 'string' ? saved.phone : '', saved?.phoneCountry || country),
       }
     } catch {
@@ -186,7 +193,7 @@ export default function GetStarted() {
       case 'province': return (form.country === 'CA' ? PROVINCES : form.country === 'US' ? US_STATES : [])
         .some(([code]) => code === form.province)
       case 'hear': return form.hear.length > 0
-      case 'notification': return form.notificationHour === 8 || form.notificationHour === 9
+      case 'notification': return Number.isInteger(form.notificationHour) && form.notificationHour >= 0 && form.notificationHour <= 23
       case 'phone': return form.phone.trim().length > 0
       case 'otp': return code.length === 6 && verifyLeft === 0
       default: return true
@@ -469,24 +476,16 @@ export default function GetStarted() {
 
           {view === 'notification' && (
             <Question
-              label="What time should Oro get you ready every morning?"
+              label="What time should Oro get you ready every day?"
               canContinue={canContinue}
               onContinue={advance}
             >
-              <fieldset className="gs-time-options" aria-label="Morning notification time">
-                {[8, 9].map((hour) => (
-                  <label className="gs-time-option" key={hour}>
-                    <input
-                      type="radio"
-                      name="notification-hour"
-                      value={hour}
-                      checked={form.notificationHour === hour}
-                      onChange={() => set('notificationHour')(hour)}
-                    />
-                    <span>{hour} AM</span>
-                  </label>
-                ))}
-              </fieldset>
+              <Select
+                label="Notification time"
+                value={form.notificationHour}
+                options={NOTIFICATION_HOURS}
+                onChange={set('notificationHour')}
+              />
             </Question>
           )}
 

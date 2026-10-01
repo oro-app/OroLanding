@@ -17,9 +17,10 @@ const test = base.extend({
 })
 
 async function phoneStep(page, answers = draft) {
-  await page.goto('/get-started')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
   await page.evaluate((answers) => localStorage.setItem('oro_get_started_responses', JSON.stringify(answers)), answers)
-  await page.reload()
+  await page.goto('/get-started')
   await continueToPhone(page)
 }
 
@@ -27,6 +28,26 @@ async function continueToPhone(page) {
   await page.getByRole('button', { name: 'Let’s get you settled' }).click()
   for (let step = 0; step < 5; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByLabel('Phone number', { exact: true })).toBeVisible()
+}
+
+async function notificationStep(page) {
+  const { notificationHour, ...answers } = draft
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await page.evaluate((saved) => localStorage.setItem('oro_get_started_responses', JSON.stringify(saved)), answers)
+  await page.goto('/get-started')
+  await page.getByRole('button', { name: 'Let’s get you settled' }).click()
+  for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'What time should Oro get you ready every day?' })).toBeVisible()
+}
+
+async function selectNotificationHour(page, hour) {
+  const selector = page.getByRole('combobox', { name: 'Notification time' })
+  await selector.focus()
+  await page.keyboard.press('Enter')
+  await page.keyboard.press('Home')
+  for (let current = 0; current < hour; current += 1) await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('Enter')
 }
 
 async function codeStep(page) {
@@ -41,6 +62,7 @@ async function verify(page, code = '123456') {
 }
 
 test('approved setup completes by keyboard with oro-kit controls and clears the draft', async ({ page, api }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/get-started')
   await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
   await page.getByRole('button', { name: 'Let’s get you settled' }).click()
@@ -63,7 +85,7 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await page.getByRole('button', { name: 'A friend', exact: true }).click()
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
-  await page.getByRole('radio', { name: '8 AM', exact: true }).check()
+  await selectNotificationHour(page, 8)
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('CA')
   await page.getByLabel('Phone number', { exact: true }).fill('(416) 555-0123')
@@ -82,29 +104,32 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   expect(await page.evaluate(() => localStorage.getItem('oro_get_started_responses'))).toBeNull()
 })
 
-test('morning notification time is required immediately before phone verification', async ({ page }) => {
-  const { notificationHour, ...answers } = draft
-  await page.goto('/get-started')
-  await page.evaluate((saved) => localStorage.setItem('oro_get_started_responses', JSON.stringify(saved)), answers)
-  await page.reload()
-  await page.getByRole('button', { name: 'Let’s get you settled' }).click()
-  for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
-
-  await expect(page.getByRole('heading', { name: 'What time should Oro get you ready every morning?' })).toBeVisible()
+test('all 24 notification hours are available and a selection is required', async ({ page }) => {
+  await notificationStep(page)
   await expect(page.locator('.gs-progress-current')).toHaveText('5')
   await expect(page.locator('.gs-progress-total')).toHaveText('6')
-  await expect(page.getByRole('radio', { name: '8 AM', exact: true })).not.toBeChecked()
-  await expect(page.getByRole('radio', { name: '9 AM', exact: true })).not.toBeChecked()
+  const selector = page.getByRole('combobox', { name: 'Notification time' })
+  await expect(selector).toContainText('Select…')
   await expect(page.getByRole('button', { name: 'Continue.', exact: true })).toBeDisabled()
 
-  await page.getByRole('radio', { name: '9 AM', exact: true }).check()
+  await selector.click()
+  await expect(page.getByRole('option')).toHaveCount(24)
+  expect(await page.getByRole('option').allTextContents()).toEqual([
+    '12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM',
+    '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM',
+  ])
+  await page.keyboard.press('End')
+  await page.keyboard.press('Enter')
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByLabel('Phone number', { exact: true })).toBeVisible()
 })
 
-for (const hour of [8, 9]) {
-  test(`${hour} AM submits notification_hour: ${hour} without a timezone`, async ({ page, api }) => {
-    await phoneStep(page, { ...draft, notificationHour: hour })
+for (const [label, hour] of [['12 AM', 0], ['8 AM', 8], ['12 PM', 12], ['5 PM', 17], ['11 PM', 23]]) {
+  test(`${label} submits notification_hour: ${hour} without a timezone`, async ({ page, api }) => {
+    await notificationStep(page)
+    await selectNotificationHour(page, hour)
+    await expect(page.getByRole('combobox', { name: 'Notification time' })).toContainText(label)
+    await page.getByRole('button', { name: 'Continue.', exact: true }).click()
     await page.getByRole('button', { name: 'Send verification code.' }).click()
 
     expect(api.requests[0].body.notification_hour).toBe(hour)
@@ -115,12 +140,12 @@ for (const hour of [8, 9]) {
 test('the notification choice survives validation errors and OTP retries', async ({ page, api }) => {
   await page.clock.install()
   api.start = { status: 422, json: { detail: 'Check your answers' } }
-  await phoneStep(page, { ...draft, notificationHour: 9 })
+  await phoneStep(page, { ...draft, notificationHour: 17 })
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await expect(page.getByRole('alert')).toContainText('Check your answers')
 
   await page.getByRole('button', { name: 'Go back' }).click()
-  await expect(page.getByRole('radio', { name: '9 AM', exact: true })).toBeChecked()
+  await expect(page.getByRole('combobox', { name: 'Notification time' })).toContainText('5 PM')
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
 
   api.start = { status: 200, json: { status: 'otp_sent' } }
@@ -128,12 +153,12 @@ test('the notification choice survives validation errors and OTP retries', async
   api.verify = { status: 400, json: { detail: 'Invalid or expired code' } }
   await verify(page, '000000')
   await expect(page.getByRole('alert')).toContainText('didn’t match or has expired')
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('oro_get_started_responses')).notificationHour)).toBe(9)
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('oro_get_started_responses')).notificationHour)).toBe(17)
 
   await page.clock.runFor(61000)
   await page.getByRole('button', { name: 'Resend code', exact: true }).click()
   await expect(page.getByRole('status')).toContainText('New code sent.')
-  expect(api.requests.filter(({ action }) => action === 'start').map(({ body }) => body.notification_hour)).toEqual([9, 9, 9])
+  expect(api.requests.filter(({ action }) => action === 'start').map(({ body }) => body.notification_hour)).toEqual([17, 17, 17])
 })
 
 for (const [country, phone, expected] of [
