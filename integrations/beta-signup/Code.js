@@ -35,7 +35,9 @@ function doPost(event) {
       const matchIndex = rows.findIndex((row, index) => index > 0 && row[phoneIndex] === input.phone)
       if (matchIndex < 0) return jsonResult({ ok: true, found: false })
       const codeIndex = responseHeaders().indexOf('referral_code')
-      return jsonResult({ ok: true, found: true, request_id: rows[matchIndex][0], referral_code: rows[matchIndex][codeIndex], signup_number: matchIndex })
+      const countIndex = responseHeaders().indexOf('referred_signups')
+      const dateIndex = responseHeaders().indexOf('referral_completed_date')
+      return jsonResult({ ok: true, found: true, request_id: rows[matchIndex][0], referral_code: rows[matchIndex][codeIndex], signup_number: matchIndex, referred_signups: Number(rows[matchIndex][countIndex] || 0), referral_completed_date: rows[matchIndex][dateIndex] || '' })
     }
     if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash', 'referral_code', 'campaign_source'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
     const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: input.form_version, consent_version: input.consent_version, answers: input.answers, referral_code: input.referral_code, campaign_source: input.campaign_source })

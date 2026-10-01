@@ -29,8 +29,8 @@ export function createExistingBetaHandler({ env = process.env, fetcher = fetch, 
       const result = await writeToGoogle(config, { action: 'lookup', phone: phone.number }, fetcher)
       if (result?.ok !== true || typeof result.found !== 'boolean') throw new Error('Invalid lookup')
       if (!result.found) return send(200, { ok: true, found: false })
-      if (!UUID4.test(result.request_id || '') || !REFERRAL_CODE.test(result.referral_code || '') || !Number.isSafeInteger(result.signup_number) || result.signup_number < 1) throw new Error('Invalid receipt')
-      return send(200, { ok: true, found: true, request_id: result.request_id, referral_code: result.referral_code, signup_number: result.signup_number })
+      if (!UUID4.test(result.request_id || '') || !REFERRAL_CODE.test(result.referral_code || '') || !Number.isSafeInteger(result.signup_number) || result.signup_number < 1 || !Number.isSafeInteger(result.referred_signups) || result.referred_signups < 0 || typeof result.referral_completed_date !== 'string') throw new Error('Invalid receipt')
+      return send(200, { ok: true, found: true, request_id: result.request_id, referral_code: result.referral_code, signup_number: result.signup_number, referred_signups: result.referred_signups, referral_completed_date: result.referral_completed_date })
     } catch { return send(503, { code: 'temporarily_unavailable' }) }
   }
 }

@@ -37,6 +37,8 @@ export default function Beta() {
   const [requestId, setRequestId] = useState(null)
   const [signupNumber, setSignupNumber] = useState(null)
   const [ownReferralCode, setOwnReferralCode] = useState(null)
+  const [referredSignups, setReferredSignups] = useState(0)
+  const [referralCompletedDate, setReferralCompletedDate] = useState('')
   const [shareMessage, setShareMessage] = useState('')
   const [copied, setCopied] = useState(false)
   const [storyImage, setStoryImage] = useState(null)
@@ -178,6 +180,8 @@ export default function Beta() {
           setRequestId(existing.requestId)
           setSignupNumber(existing.signupNumber)
           setOwnReferralCode(existing.referralCode)
+          setReferredSignups(existing.referredSignups)
+          setReferralCompletedDate(existing.referralCompletedDate)
           setStoryImage(null)
           setVerificationStatus('verified')
           setView('receipt')
@@ -233,6 +237,8 @@ export default function Beta() {
       setRequestId(result.requestId)
       setSignupNumber(result.signupNumber)
       setOwnReferralCode(result.referralCode)
+      setReferredSignups(0)
+      setReferralCompletedDate('')
       setStoryImage(null)
       setStatus('idle')
       setView('receipt')
@@ -241,6 +247,7 @@ export default function Beta() {
 
   const field = (name, label, props = {}) => <WrittenAnswer name={name} label={label} value={answers[name]} update={update} error={errors[name]} disabled={saving} {...props} />
   const inviteLink = ownReferralCode ? `${window.location.origin}/invite?ref=${ownReferralCode}` : ''
+  const referralCompleted = Boolean(referralCompletedDate)
   useEffect(() => {
     if (view !== 'receipt') return
     let active = true
@@ -320,9 +327,10 @@ export default function Beta() {
       </section>}
       {allowForm && view === 'receipt' && <section className="beta-receipt halo-container" ref={receiptRef} tabIndex={-1} aria-labelledby="receipt-title">
         {!requestId && <p className="beta-receipt-preview">Confirmation preview · No request has been saved</p>}
-        <div className="beta-receipt-hero">
+        <div className={`beta-receipt-hero${referralCompleted ? ' beta-receipt-hero--completed' : ''}`}>
           <div className="beta-receipt-intro">
-            <h1 id="receipt-title">i’m {Number.isSafeInteger(signupNumber) && signupNumber > 0 && <><em>#{signupNumber}</em> </>}in line<br />to meet oro</h1>
+            {referralCompleted ? <><h1 id="receipt-title">you’ll be the <em>first</em><br />to meet oro!</h1><p className="beta-referral-complete-copy">Thank you for giving her new friends :)</p><p className="beta-referral-count"><strong>{referredSignups}</strong> {referredSignups === 1 ? 'friend' : 'friends'} referred</p></> : <h1 id="receipt-title">i’m {Number.isSafeInteger(signupNumber) && signupNumber > 0 && <><em>#{signupNumber}</em> </>}in line<br />to meet oro</h1>}
+            {!referralCompleted && <>
             <div className="beta-social-share">
               <span>share to:</span>
               <Button variant="secondary" aria-label="Open Instagram to post your story" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer') }}><InstagramIcon /></Button>
@@ -331,9 +339,10 @@ export default function Beta() {
             </div>
             {inviteLink && <p className="beta-social-share-help">{storyImage ? 'Your image downloads when you open a share link. Add it to your post or story.' : 'The share link is ready. Add the image manually if it becomes available.'}</p>}
             <div className="beta-rewards"><h2>want to meet her sooner?</h2><p>Get 3 friends to sign up with your link and you’ll get immediate access.</p><Button variant="tertiary" className="beta-hero-invite" onClick={copyInvite} disabled={!inviteLink}><span>{copied ? 'copied!' : inviteLink ? 'copy referral link' : 'check back later :('}</span><CopyIcon /></Button></div>
+            </>}
             {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}
           </div>
-          <div className="beta-story-preview">{storyImage ? <img src={storyImage.url} alt="Share image with the cheeky Oro mascot, referral message, and invite link" /> : <div className="beta-story-skeleton" role="status" aria-label={shareMessage.startsWith('Could not prepare') ? 'Image unavailable' : 'Preparing image'} />}<Button variant="tertiary" onClick={saveStory} aria-label="Download image" disabled={!storyImage && !shareMessage.startsWith('Could not prepare')}><DownloadIcon /></Button>{shareMessage.startsWith('Could not') && <p>{shareMessage}</p>}</div>
+          {!referralCompleted && <div className="beta-story-preview">{storyImage ? <img src={storyImage.url} alt="Share image with the cheeky Oro mascot, referral message, and invite link" /> : <div className="beta-story-skeleton" role="status" aria-label={shareMessage.startsWith('Could not prepare') ? 'Image unavailable' : 'Preparing image'} />}<Button variant="tertiary" onClick={saveStory} aria-label="Download image" disabled={!storyImage && !shareMessage.startsWith('Could not prepare')}><DownloadIcon /></Button>{shareMessage.startsWith('Could not') && <p>{shareMessage}</p>}</div>}
         </div>
       </section>}
       {allowForm && view === 'receipt' && <HomeFooter landing closerTitle="good style looks better together" closerText={null} closerAction={<><button type="button" className="oro-button oro-button--primary halo-cta halo-cta--closer" onClick={copyInvite} disabled={!inviteLink}>copy referral link</button><p className="beta-footer-message" role="status">{shareMessage || (!inviteLink && 'check back later :(')}</p></>} />}

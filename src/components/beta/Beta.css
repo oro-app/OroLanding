@@ -106,8 +106,12 @@
 .beta-receipt { max-width: 1120px; min-height: 0; display: grid; gap: 28px; padding-block: 72px 64px; text-align: left; }
 .beta-receipt h1, .beta-receipt h2, .beta-receipt h3 { font-family: Georgia, 'Times New Roman', serif; letter-spacing: -.055em; color: #29163f; }
 .beta-receipt p { margin: 0; color: #51416d; }
+.beta-referral-complete-copy { margin-top: 20px !important; font-size: clamp(20px, 3vw, 28px); }
+.beta-referral-count { display: inline-flex; align-items: baseline; gap: 8px; margin-top: 28px !important; padding: 12px 18px; border-radius: var(--oro-radius-pill); background: var(--oro-color-soft); color: var(--oro-color-accent) !important; font-size: var(--oro-type-label-size); }
+.beta-referral-count strong { font-size: 1.5em; line-height: 1; }
 .beta-receipt-preview { font-size: 14px; }
 .beta-receipt-hero { display: grid; grid-template-columns: minmax(0, 1fr) 260px; align-items: start; gap: 24px; }
+.beta-receipt-hero--completed { grid-template-columns: 1fr; }
 .beta-receipt-intro { min-width: 0; }
 .beta-receipt-hero h1 { margin: 0; font-size: clamp(56px, 8vw, 96px); line-height: .98; }
 .beta-receipt-hero h1 em { color: #d6a032; font-style: normal; }

@@ -277,6 +277,8 @@ test('verified-phone lookup returns an existing receipt without writing', () => 
   assert.equal(existing.found, true)
   assert.equal(existing.signup_number, 1)
   assert.match(existing.referral_code, /^[0-9a-f]{64}$/)
+  assert.equal(existing.referred_signups, 0)
+  assert.equal(existing.referral_completed_date, '')
   assert.deepEqual(google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone: '+14165550124' }), { ok: true, found: false })
   assert.equal(google.state.appendCalls, 1)
 })

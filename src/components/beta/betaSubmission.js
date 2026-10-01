@@ -33,7 +33,7 @@ export async function findExistingBetaRequest(phone, phoneVerification, fetcher 
     })
     const result = await response.json()
     if (response.ok && result.ok === true && result.found === false) return { found: false }
-    if (response.ok && result.ok === true && result.found === true && UUID4.test(result.request_id || '') && /^[0-9a-f]{64}$/.test(result.referral_code || '') && Number.isSafeInteger(result.signup_number) && result.signup_number > 0) return { found: true, requestId: result.request_id, referralCode: result.referral_code, signupNumber: result.signup_number }
+    if (response.ok && result.ok === true && result.found === true && UUID4.test(result.request_id || '') && /^[0-9a-f]{64}$/.test(result.referral_code || '') && Number.isSafeInteger(result.signup_number) && result.signup_number > 0 && Number.isSafeInteger(result.referred_signups) && result.referred_signups >= 0 && typeof result.referral_completed_date === 'string') return { found: true, requestId: result.request_id, referralCode: result.referral_code, signupNumber: result.signup_number, referredSignups: result.referred_signups, referralCompletedDate: result.referral_completed_date }
   } catch { /* Treat an unavailable lookup as non-fatal; the normal form remains available. */ }
   return { found: false }
 }
