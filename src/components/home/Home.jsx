@@ -100,7 +100,7 @@ export default function Home() {
             {FEATURES.map((feature, index) => (
               <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal>
                 <div className="home-feature-copy home-stagger">
-                  <Heading as="h2" variant="title">{feature.title}</Heading>
+                  <Heading as="h2" variant="title">{index === 2 ? <>the more you text her,<br />the better she gets</> : feature.title}</Heading>
                   <Text muted className="home-description">{feature.description}</Text>
                 </div>
                 <img className="home-feature-media home-stagger" src={feature.image} alt={feature.imageAlt} loading="lazy" decoding="async" width={feature.width} height={feature.height} />
