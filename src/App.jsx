@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { isFeedbackPath } from './lib/feedbackSession.js'
+import { getBetaCampaign } from './lib/betaCampaign.js'
 import Home from './components/home/Home'
 import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
 import SiteHeader from './components/layout/SiteHeader'
@@ -20,7 +21,7 @@ const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
 const BetaPage = lazy(() => import('./components/beta/Beta'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
 
-export function getRouteFromPath(pathname = '/') {
+export function getRouteFromPath(pathname = '/', search = '') {
   const path = pathname.replace(/\/+$/, '') || '/'
   if (isFeedbackPath(path)) return { type: 'feedback' }
   const newsletterMatch = path.match(/^\/newsletter\/([^/]+)$/)
@@ -40,14 +41,14 @@ export function getRouteFromPath(pathname = '/') {
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/get-started')     return { type: 'get-started' }
-  if (path === '/beta' || path === '/invite') return { type: 'beta' }
+  if (['/beta', '/invite', '/beta/career', '/beta/dating'].includes(path)) return { type: 'beta', campaign: getBetaCampaign(path, search) }
 
   return { type: 'home' }
 }
 
 function getBrowserRoute() {
   if (typeof window === 'undefined') return { type: 'home' }
-  return getRouteFromPath(window.location.pathname)
+  return getRouteFromPath(window.location.pathname, window.location.search)
 }
 
 function App({ initialRoute }) {
@@ -143,7 +144,7 @@ function App({ initialRoute }) {
             <Suspense fallback={null}><FeedbackPage /></Suspense>
           ) : isBeta ? (
             <Suspense fallback={null}>
-              <BetaPage />
+              <BetaPage campaign={route.campaign || 'general'} />
             </Suspense>
           ) : route.type === 'newsletter' ? (
             <Suspense fallback={<BlogSkeleton variant="article" />}>

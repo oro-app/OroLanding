@@ -10,7 +10,7 @@ import { createReceiptStory } from './receiptStory'
 import StoryImageActions from './StoryImageActions'
 import { messagesInvite } from './referralShare'
 import PhoneAnswer from './PhoneAnswer'
-import welcomeMascot from '../../assets/mascot/oro_hi.webp'
+import BetaWelcome from './BetaWelcome'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
@@ -19,7 +19,7 @@ function WrittenAnswer({ name, label, value, update, error, ...props }) {
   return <TextField id={name} name={name} label={label} value={value} onChange={(event) => update(name, event.target.value)} maxLength={textLimits[name] || 64} required error={error} {...props} />
 }
 
-export default function Beta() {
+export default function Beta({ campaign = 'general' }) {
   const [draft] = useState(readBetaDraft)
   const [attribution] = useState(browserBetaAttribution)
   const campaignSource = draft?.campaignSource || attribution.source
@@ -310,18 +310,7 @@ export default function Beta() {
           <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <ButtonArrow direction="up-right" /></a>
         </div>
       </section>}
-      {view === 'welcome' && <section className="beta-application beta-welcome" aria-labelledby="welcome-title">
-        <div className="beta-story-halo" aria-hidden="true" />
-        <div className="beta-form-panel beta-welcome-content">
-          <Heading ref={welcomeRef} tabIndex={-1} as="h1" variant="title" id="welcome-title">meet oro.</Heading>
-          <div className="beta-welcome-portrait">
-            <img className="beta-welcome-mascot" src={welcomeMascot} alt="oro waving hello" width="280" height="280" />
-          </div>
-          <Text className="beta-welcome-copy">your personal ai stylist,<br />right in your texts.</Text>
-          <Button className="beta-welcome-cta" disabled={!allowForm} onClick={() => openStep(0)}>want her number? <ButtonArrow /></Button>
-          <Text className="beta-welcome-note" variant="support" muted>arriving october 8. get in line to meet her.</Text>
-        </div>
-      </section>}
+      {view === 'welcome' && <BetaWelcome campaign={campaign} enabled={allowForm} onStart={() => openStep(0)} titleRef={welcomeRef} />}
       {allowForm && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-progress" role="progressbar" aria-label="Invite request progress" aria-valuemin={0} aria-valuemax={formSteps.length} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${formSteps.length}`}><span style={{ width: `${(step + 1) / formSteps.length * 100}%` }} /></div>

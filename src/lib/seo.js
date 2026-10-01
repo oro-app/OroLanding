@@ -32,6 +32,16 @@ export const ROUTE_SEO = {
     h1: 'help us make oro yours.',
     noindex: true,
   },
+  'beta-career': {
+    path: '/beta/career', title: 'meet oro - your personal ai stylist',
+    description: 'get dressed for your next opportunity with oro, right in your texts.',
+    h1: 'meet oro.', noindex: true,
+  },
+  'beta-dating': {
+    path: '/beta/dating', title: 'meet oro - your personal ai stylist',
+    description: 'find a date-night outfit that feels like you with oro, right in your texts.',
+    h1: 'meet oro.', noindex: true,
+  },
   home: {
     path: '/',
     title: SITE_TITLE,
