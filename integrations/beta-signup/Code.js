@@ -178,6 +178,7 @@ function importHistoricalSignups() {
   const pending = []
   for (const cells of historical.sort((a, b) => String(a[oldHeaders.indexOf('received_at')]).localeCompare(String(b[oldHeaders.indexOf('received_at')])))) {
     if (!cells.some((value) => value !== '')) continue
+    if (cells[0] === 'ORGANIC BETA SIGNUPS START BELOW' && cells.slice(1).every((value) => value === '')) continue
     const row = headers.map((header) => cells[oldHeaders.indexOf(header)] ?? '')
     const normalized = BetaContract.normalizeAnswers({ phone: String(row[phoneIndex]) })
     if (normalized.errors.phone || !BetaContract.UUID4.test(row[0]) || !Number.isFinite(Date.parse(row[3]))) throw new Error('Historical signup needs review')
