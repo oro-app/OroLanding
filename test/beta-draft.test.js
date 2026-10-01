@@ -17,8 +17,8 @@ test('beta draft restores supported answers and retry key, then clears on confir
 
   const key = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
   const answers = { ...emptyAnswers, name: 'Jamie', email: 'jamie@example.com', usualHelp: ['Other'], futureBeta: false }
-  writeBetaDraft(answers, key)
-  assert.deepEqual(readBetaDraft(), { answers, submissionKey: key })
+  writeBetaDraft(answers, key, 'ig-founder')
+  assert.deepEqual(readBetaDraft(), { answers, submissionKey: key, campaignSource: 'ig-founder' })
 
   const saved = JSON.parse(values.get('oro_beta_request_draft'))
   saved.answers.usualHelp = ['Other', 'Unknown']
@@ -29,6 +29,7 @@ test('beta draft restores supported answers and retry key, then clears on confir
   assert.deepEqual(readBetaDraft(), {
     answers: { ...answers, name: '', usualHelp: ['Other'] },
     submissionKey: null,
+    campaignSource: 'ig-founder',
   })
 
   saved.formVersion = 'outdated'

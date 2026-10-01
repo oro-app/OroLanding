@@ -5,6 +5,7 @@ export const CONSENT_VERSION = '2026-09-24.1'
 export const UUID4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 export const MAX_BODY_BYTES = 64 * 1024
 export const REFERRAL_CODE = /^[0-9a-f]{64}$/
+export const CAMPAIGN_SOURCE = /^(?:reddit-[1-9][0-9]*|(?:poster|ig|x|linkedin)-[a-z0-9]+(?:-[a-z0-9]+)*)$/
 export const choices = {
   usedOro: ['Yes', 'No'],
   outfitDays: ['0 days', '1–2 days', '3–4 days', '5–7 days', 'I don’t remember'],
@@ -67,12 +68,12 @@ export function normalizeAnswers(input) {
 }
 
 export function validateSubmission(body) {
-  if (!isObject(body) || Object.keys(body).some((key) => !['submission_key', 'form_version', 'consent_version', 'answers', 'referral_code'].includes(key)) || typeof body.submission_key !== 'string' || !UUID4.test(body.submission_key) || (body.referral_code !== undefined && (typeof body.referral_code !== 'string' || !REFERRAL_CODE.test(body.referral_code)))) return { code: 'invalid_request' }
+  if (!isObject(body) || Object.keys(body).some((key) => !['submission_key', 'form_version', 'consent_version', 'answers', 'referral_code', 'campaign_source'].includes(key)) || typeof body.submission_key !== 'string' || !UUID4.test(body.submission_key) || (body.referral_code !== undefined && (typeof body.referral_code !== 'string' || !REFERRAL_CODE.test(body.referral_code))) || (body.campaign_source !== undefined && (typeof body.campaign_source !== 'string' || !CAMPAIGN_SOURCE.test(body.campaign_source)))) return { code: 'invalid_request' }
   if (body.form_version !== FORM_VERSION || body.consent_version !== CONSENT_VERSION) return { code: 'outdated_form' }
   const result = normalizeAnswers(body.answers)
   return Object.keys(result.errors).length ? { code: 'invalid_answers', errors: result.errors } : { answers: result.answers }
 }
 
-export function canonicalPayload(answers, cohort, referralCode = '') {
-  return JSON.stringify({ cohort, form_version: FORM_VERSION, consent_version: CONSENT_VERSION, answers, referral_code: referralCode })
+export function canonicalPayload(answers, cohort, referralCode = '', campaignSource = '') {
+  return JSON.stringify({ cohort, form_version: FORM_VERSION, consent_version: CONSENT_VERSION, answers, referral_code: referralCode, campaign_source: campaignSource })
 }

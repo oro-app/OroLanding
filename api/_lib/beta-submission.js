@@ -62,11 +62,11 @@ export function createBetaHandler({ env = process.env, fetcher = fetch, checkLim
       const validated = validateSubmission(submission)
       if (validated.code) return send(400, validated)
       if (!verifyPhoneProof(validated.answers.phone, phoneVerification, config.secret)) return send(400, { code: 'phone_not_verified' })
-      const payloadHash = createHash('sha256').update(canonicalPayload(validated.answers, config.cohort, body.referral_code || '')).digest('hex')
+      const payloadHash = createHash('sha256').update(canonicalPayload(validated.answers, config.cohort, body.referral_code || '', body.campaign_source || '')).digest('hex')
       const result = await writeToGoogle(config, { ...submission, answers: validated.answers, payload_hash: payloadHash }, fetcher)
       if (result?.code === 'submission_conflict') return send(409, { code: 'submission_conflict' })
-      if (result?.ok !== true || !UUID4.test(result.request_id || '') || result.submission_key !== body.submission_key || result.payload_hash !== payloadHash || !REFERRAL_CODE.test(result.referral_code || '')) throw new Error('Unconfirmed save')
-      return send(200, { ok: true, request_id: result.request_id, submission_key: body.submission_key, referral_code: result.referral_code })
+      if (result?.ok !== true || !UUID4.test(result.request_id || '') || result.submission_key !== body.submission_key || result.payload_hash !== payloadHash || !REFERRAL_CODE.test(result.referral_code || '') || !Number.isSafeInteger(result.signup_number) || result.signup_number < 1) throw new Error('Unconfirmed save')
+      return send(200, { ok: true, request_id: result.request_id, submission_key: body.submission_key, referral_code: result.referral_code, signup_number: result.signup_number })
     } catch {
       return send(503, { code: 'temporarily_unavailable' })
     }

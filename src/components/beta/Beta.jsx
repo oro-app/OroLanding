@@ -5,7 +5,7 @@ import { HomeHeader } from '../home/HomeChrome'
 import { clearBetaDraft, readBetaDraft, writeBetaDraft } from './betaDraft'
 import { emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { saveBetaRequest, submissionMessages } from './betaSubmission'
-import { REFERRAL_CODE } from '../../lib/betaContract'
+import { CAMPAIGN_SOURCE, REFERRAL_CODE } from '../../lib/betaContract'
 import { downloadReceiptStory } from './receiptStory'
 import textingMascot from '../../assets/mascot/oro_texting.webp'
 import sleepingMascot from '../../assets/mascot/oro_sleeping.webp'
@@ -18,6 +18,12 @@ function WrittenAnswer({ name, label, value, update, error, ...props }) {
 
 export default function Beta() {
   const [draft] = useState(readBetaDraft)
+  const [campaignSource] = useState(() => {
+    if (draft?.campaignSource) return draft.campaignSource
+    if (typeof window === 'undefined') return ''
+    const source = new URL(window.location.href).searchParams.get('src') || ''
+    return CAMPAIGN_SOURCE.test(source) ? source : ''
+  })
   const [answers, setAnswers] = useState(draft?.answers ?? emptyAnswers)
   const [code, setCode] = useState('')
   const [phoneProof, setPhoneProof] = useState('')
@@ -58,8 +64,8 @@ export default function Beta() {
     : {}
 
   useEffect(() => {
-    if (answers !== emptyAnswers) writeBetaDraft(answers, submissionKey.current)
-  }, [answers])
+    if (answers !== emptyAnswers) writeBetaDraft(answers, submissionKey.current, campaignSource)
+  }, [answers, campaignSource])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -194,10 +200,10 @@ export default function Beta() {
     if (finalStep && !phoneProof) { openStep(1); return }
     if (!finalStep) { openStep(step + 1); return }
     if (!submissionKey.current || status === 'submission_conflict') submissionKey.current = crypto.randomUUID()
-    writeBetaDraft(answers, submissionKey.current)
+    writeBetaDraft(answers, submissionKey.current, campaignSource)
     submitting.current = true
     setStatus('saving')
-    const result = await saveBetaRequest(answers, submissionKey.current, fetch, incomingReferralCode, phoneProof)
+    const result = await saveBetaRequest(answers, submissionKey.current, fetch, incomingReferralCode, phoneProof, campaignSource)
     submitting.current = false
     if (result.requestId) {
       clearBetaDraft()

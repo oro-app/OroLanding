@@ -32,7 +32,7 @@ function envelope(submission = makeSubmission()) {
   const answers = normalizeAnswers(submission.answers).answers
   const { phone_verification, ...saved } = submission
   return { ...saved, answers, cohort: environment.BETA_COHORT, secret: environment.BETA_SUBMISSION_SECRET,
-    payload_hash: createHash('sha256').update(canonicalPayload(answers, environment.BETA_COHORT, submission.referral_code || '')).digest('hex') }
+    payload_hash: createHash('sha256').update(canonicalPayload(answers, environment.BETA_COHORT, submission.referral_code || '', submission.campaign_source || '')).digest('hex') }
 }
 
 test('HTTP submission saves a literal row with canonical contact details and independent consents', async (t) => {
@@ -42,6 +42,7 @@ test('HTTP submission saves a literal row with canonical contact details and ind
   assert.equal(response.headers.get('cache-control'), 'no-store')
   const receipt = await response.json()
   assert.ok(UUID4.test(receipt.request_id))
+  assert.equal(receipt.signup_number, 1)
   const row = Object.fromEntries(state.rows[0].map((header, index) => [header, state.rows[1][index]]))
   assert.equal(row.request_id, receipt.request_id)
   assert.equal(row.email, 'beta-test@example.com')
@@ -60,6 +61,7 @@ test('HTTP submission saves a literal row with canonical contact details and ind
   assert.equal(row.referral_completed_date, '')
   assert.equal(row.accepted, false)
   assert.equal(row.referral_code, createHmac('sha256', environment.BETA_SUBMISSION_SECRET).update(row.phone).digest('hex'))
+  assert.equal(row.campaign_source, 'direct')
   assert.equal(state.appends[0].options.valueInputOption, 'RAW')
   assert.equal(state.locked, false)
 })
@@ -77,6 +79,7 @@ test('a lost HTTP acknowledgement is recovered by the browser retry without anot
   assert.equal((await saveBetaRequest(exampleAnswers, key, browserFetch, '', proof)).code, 'temporarily_unavailable')
   const saved = await saveBetaRequest(exampleAnswers, key, browserFetch, '', proof)
   assert.equal(saved.requestId, state.rows[1][0])
+  assert.equal(saved.signupNumber, 1)
   assert.equal(state.appendCalls, 1)
 })
 
@@ -85,11 +88,31 @@ test('concurrent same-key retries return the original receipt; changed answers c
   const body = makeSubmission()
   const replies = await Promise.all(Array.from({ length: 4 }, async () => (await post(body)).json()))
   assert.equal(new Set(replies.map((reply) => reply.request_id)).size, 1)
+  assert.deepEqual(replies.map((reply) => reply.signup_number), [1, 1, 1, 1])
   assert.equal(state.appendCalls, 1)
   assert.equal((await post({ ...body, answers: { ...body.answers, location: 'Updated' } })).status, 409)
   assert.equal(state.appendCalls, 1)
-  assert.equal((await post(makeSubmission({ ...body.answers, location: 'Updated' }))).status, 200)
+  const next = await post(makeSubmission({ ...body.answers, location: 'Updated' }))
+  assert.equal(next.status, 200)
+  assert.equal((await next.json()).signup_number, 2)
   assert.equal(state.appendCalls, 2)
+  assert.equal((await (await post(body)).json()).signup_number, 1)
+})
+
+test('campaign links save validated source separately from self-reported source and referral', async (t) => {
+  const { post, state } = await serve(t)
+  for (const source of ['reddit-12', 'poster-job', 'ig-founder', 'ig-company', 'x-creator-name', 'linkedin-creator-name']) {
+    const body = makeSubmission({ ...exampleAnswers, phone: `41655501${String(24 + state.appendCalls).padStart(2, '0')}` })
+    body.campaign_source = source
+    assert.equal((await post(body)).status, 200)
+    const row = Object.fromEntries(state.rows[0].map((header, index) => [header, state.rows.at(-1)[index]]))
+    assert.equal(row.campaign_source, source)
+    assert.equal(row.source, 'Website')
+  }
+  for (const source of ['reddit-name', 'poster-', 'ig-FounDER', 'tiktok-creator', '=evil', 'linkedin-name/other']) {
+    assert.equal((await post({ ...makeSubmission(), campaign_source: source })).status, 400)
+  }
+  assert.equal(state.appendCalls, 6)
 })
 
 test('submission requires a code proof for the same phone number', async (t) => {
@@ -154,6 +177,7 @@ test('browser submission forwards the referral code and receives its own link co
   }
   const saved = await saveBetaRequest({ ...exampleAnswers, phone: '4165550132' }, key, browserFetch, referralCode, signPhoneProof('+14165550132', environment.BETA_SUBMISSION_SECRET))
   assert.ok(UUID4.test(saved.requestId))
+  assert.equal(saved.signupNumber, 2)
   assert.match(saved.referralCode, /^[0-9a-f]{64}$/)
 })
 
@@ -173,7 +197,7 @@ test('malformed answers, phone numbers, stale forms and privileged fields do not
   for (const patch of [
     { phone: '+11111111111' }, { phone: '4165550123 ext. 10' }, { terms: false }, { marketing: 'true' },
     { usedOro: 'Maybe' }, { usualHelp: ['Ask a friend', 'Ask a friend'] }, { usualHelp: 'Ask a friend' },
-    { source: 'Other', sourceOther: '' }, { age: '' }, { age: '35+' }, { gender: '' }, { email: 'nope' }, { name: 'x'.repeat(101) },
+    { source: 'Other', sourceOther: '' }, { age: '35+' }, { email: 'nope' }, { name: 'x'.repeat(101) },
     { occasion: 'Dinner' }, { uncertainty: 'Shoes' }, { approved: true },
   ]) assert.equal((await post({ ...valid, answers: { ...exampleAnswers, ...patch } })).status, 400)
   for (const patch of [{ cohort: 'other' }, { sheet_id: 'other' }, { submission_key: 'bad' }, { form_version: 'old' }, { consent_version: 'old' }, { answers: null }]) assert.equal((await post({ ...valid, ...patch })).status, 400)
@@ -264,10 +288,21 @@ test('existing response sheets can be backfilled with stable referral codes', ()
   const google = googleWriter()
   assert.equal(google.post(envelope()).ok, true)
   const code = google.state.rows[1][google.state.rows[0].indexOf('referral_code')]
-  google.state.rows.forEach((row) => row.splice(-5))
+  google.state.rows.forEach((row) => row.splice(-6))
   google.context.setupReferralColumns()
   assert.equal(google.state.rows[1][google.state.rows[0].indexOf('referral_code')], code)
   assert.equal(google.state.rows[1][google.state.rows[0].indexOf('accepted')], false)
   google.context.setupReferralColumns()
   assert.equal(google.state.rows[0].filter((header) => header === 'referral_code').length, 1)
+})
+
+test('existing response sheets get a campaign column with unknown historical sources', () => {
+  const google = googleWriter()
+  assert.equal(google.post(envelope()).ok, true)
+  google.state.rows.forEach((row) => row.pop())
+  google.context.setupCampaignSourceColumn()
+  assert.equal(google.state.rows[0].at(-1), 'campaign_source')
+  assert.equal(google.state.rows[1].at(-1), 'unknown')
+  google.context.setupCampaignSourceColumn()
+  assert.equal(google.state.rows[0].filter((header) => header === 'campaign_source').length, 1)
 })

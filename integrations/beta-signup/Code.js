@@ -3,7 +3,7 @@ const METADATA_HEADERS = ['request_id', 'submission_key', 'payload_hash', 'recei
 const REFERRAL_HEADERS = ['referred_signups', 'referral_completed_date', 'accepted', 'referral_code', 'referred_by']
 
 function responseHeaders() {
-  return METADATA_HEADERS.concat(BetaContract.answerFields, REFERRAL_HEADERS)
+  return METADATA_HEADERS.concat(BetaContract.answerFields, REFERRAL_HEADERS, ['campaign_source'])
 }
 
 function jsonResult(value) {
@@ -27,10 +27,10 @@ function doPost(event) {
     if (input.action === 'count' && Object.keys(input).every((key) => ['secret', 'action'].includes(key))) {
       return jsonResult({ ok: true, count: readResponses(sheetId).length - 1 })
     }
-    if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash', 'referral_code'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
-    const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: input.form_version, consent_version: input.consent_version, answers: input.answers, referral_code: input.referral_code })
+    if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash', 'referral_code', 'campaign_source'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
+    const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: input.form_version, consent_version: input.consent_version, answers: input.answers, referral_code: input.referral_code, campaign_source: input.campaign_source })
     if (validated.code) return jsonResult({ ok: false, code: validated.code })
-    const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, BetaContract.canonicalPayload(validated.answers, cohort, input.referral_code || ''), Utilities.Charset.UTF_8)
+    const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, BetaContract.canonicalPayload(validated.answers, cohort, input.referral_code || '', input.campaign_source || ''), Utilities.Charset.UTF_8)
       .map((byte) => ('0' + ((byte + 256) % 256).toString(16)).slice(-2)).join('')
     if (digest !== input.payload_hash) return jsonResult({ ok: false, code: 'invalid_request' })
     lock = LockService.getScriptLock()
@@ -49,7 +49,7 @@ function doPost(event) {
     const referralCode = earlierSignup ? earlierSignup[codeIndex] : codeForPhone(validated.answers.phone, secret)
     const receivedAt = new Date().toISOString()
     const row = [Utilities.getUuid(), input.submission_key, digest, receivedAt, cohort, BetaContract.FORM_VERSION, BetaContract.CONSENT_VERSION, receivedAt]
-      .concat(BetaContract.answerFields.map((name) => Array.isArray(validated.answers[name]) ? JSON.stringify(validated.answers[name]) : validated.answers[name]), [0, '', false, referralCode, referrer ? input.referral_code : ''])
+      .concat(BetaContract.answerFields.map((name) => Array.isArray(validated.answers[name]) ? JSON.stringify(validated.answers[name]) : validated.answers[name]), [0, '', false, referralCode, referrer ? input.referral_code : '', input.campaign_source || 'direct'])
     try {
       // RAW keeps phone numbers and answers starting with = or + as literal text.
       Sheets.Spreadsheets.Values.append({ values: [row] }, sheetId, "'Responses'!A1", { valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' })
@@ -90,7 +90,7 @@ function findReceipt(rows, key, hash) {
   if (!matches.length) return null
   if (matches.length !== 1 || !BetaContract.UUID4.test(matches[0][0])) throw new Error('Invalid receipt')
   if (matches[0][2] !== hash) return { ok: false, code: 'submission_conflict' }
-  return { ok: true, request_id: matches[0][0], submission_key: key, payload_hash: hash, referral_code: matches[0][responseHeaders().indexOf('referral_code')] }
+  return { ok: true, request_id: matches[0][0], submission_key: key, payload_hash: hash, referral_code: matches[0][responseHeaders().indexOf('referral_code')], signup_number: rows.indexOf(matches[0]) }
 }
 
 function reconcileReferrals(sheetId, rows) {
@@ -135,7 +135,7 @@ function setupReferralColumns() {
   if (!sheet) throw new Error('Responses sheet is missing')
   const oldHeaders = METADATA_HEADERS.concat(BetaContract.answerFields)
   const current = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
-  if (JSON.stringify(current) === JSON.stringify(responseHeaders())) return
+  if (JSON.stringify(current) === JSON.stringify(responseHeaders()) || JSON.stringify(current) === JSON.stringify(oldHeaders.concat(REFERRAL_HEADERS))) return
   if (JSON.stringify(current) !== JSON.stringify(oldHeaders)) throw new Error('Unexpected response headers')
   sheet.getRange(1, oldHeaders.length + 1, 1, REFERRAL_HEADERS.length).setValues([REFERRAL_HEADERS])
   if (sheet.getLastRow() > 1) {
@@ -144,4 +144,17 @@ function setupReferralColumns() {
     sheet.getRange(2, oldHeaders.length + 1, phones.length, REFERRAL_HEADERS.length)
       .setValues(phones.map(([phone]) => [0, '', false, codeForPhone(phone, secret), '']))
   }
+}
+
+function setupCampaignSourceColumn() {
+  const sheetId = PropertiesService.getScriptProperties().getProperty('BETA_SHEET_ID')
+  const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(SHEET_NAME)
+  if (!sheet) throw new Error('Responses sheet is missing')
+  const oldHeaders = METADATA_HEADERS.concat(BetaContract.answerFields, REFERRAL_HEADERS)
+  const current = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+  if (JSON.stringify(current) === JSON.stringify(responseHeaders())) return
+  if (JSON.stringify(current) !== JSON.stringify(oldHeaders)) throw new Error('Unexpected response headers')
+  sheet.getRange(1, oldHeaders.length + 1, 1, 1).setValues([['campaign_source']])
+  if (sheet.getLastRow() > 1) sheet.getRange(2, oldHeaders.length + 1, sheet.getLastRow() - 1, 1)
+    .setValues(Array.from({ length: sheet.getLastRow() - 1 }, () => ['unknown']))
 }

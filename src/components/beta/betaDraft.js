@@ -1,4 +1,4 @@
-import { CONSENT_VERSION, FORM_VERSION, UUID4 } from '../../lib/betaContract.js'
+import { CAMPAIGN_SOURCE, CONSENT_VERSION, FORM_VERSION, UUID4 } from '../../lib/betaContract.js'
 import { choices, emptyAnswers, textLimits } from './betaForm.js'
 
 const draftKey = 'oro_beta_request_draft'
@@ -20,12 +20,12 @@ export function readBetaDraft() {
       else if (name in textLimits) answers[name] = typeof value === 'string' ? value.slice(0, textLimits[name]) : ''
       else answers[name] = typeof value === 'boolean' ? value : emptyAnswers[name]
     }
-    return { answers, submissionKey: UUID4.test(saved.submissionKey || '') ? saved.submissionKey : null }
+    return { answers, submissionKey: UUID4.test(saved.submissionKey || '') ? saved.submissionKey : null, campaignSource: CAMPAIGN_SOURCE.test(saved.campaignSource || '') ? saved.campaignSource : '' }
   } catch { return null }
 }
 
-export function writeBetaDraft(answers, submissionKey) {
-  try { localStorage.setItem(draftKey, JSON.stringify({ formVersion: FORM_VERSION, consentVersion: CONSENT_VERSION, answers, submissionKey })) } catch { /* The form still works if storage is unavailable. */ }
+export function writeBetaDraft(answers, submissionKey, campaignSource = '') {
+  try { localStorage.setItem(draftKey, JSON.stringify({ formVersion: FORM_VERSION, consentVersion: CONSENT_VERSION, answers, submissionKey, campaignSource })) } catch { /* The form still works if storage is unavailable. */ }
 }
 
 export function clearBetaDraft() {

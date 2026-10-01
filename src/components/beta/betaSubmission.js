@@ -1,14 +1,14 @@
 import { CONSENT_VERSION, FORM_VERSION, UUID4, normalizeAnswers } from '../../lib/betaContract.js'
 
-export async function saveBetaRequest(answers, key, fetcher = fetch, referralCode = '', phoneVerification = '') {
+export async function saveBetaRequest(answers, key, fetcher = fetch, referralCode = '', phoneVerification = '', campaignSource = '') {
   try {
     const response = await fetcher('/api/beta-request', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ submission_key: key, form_version: FORM_VERSION, consent_version: CONSENT_VERSION, answers: normalizeAnswers(answers).answers, phone_verification: phoneVerification, ...(referralCode ? { referral_code: referralCode } : {}) }),
+      body: JSON.stringify({ submission_key: key, form_version: FORM_VERSION, consent_version: CONSENT_VERSION, answers: normalizeAnswers(answers).answers, phone_verification: phoneVerification, ...(referralCode ? { referral_code: referralCode } : {}), ...(campaignSource ? { campaign_source: campaignSource } : {}) }),
       signal: AbortSignal.timeout(25000),
     })
     const result = await response.json()
-    if (response.ok && result.ok === true && result.submission_key === key && UUID4.test(result.request_id || '')) return { requestId: result.request_id, referralCode: result.referral_code }
+    if (response.ok && result.ok === true && result.submission_key === key && UUID4.test(result.request_id || '') && Number.isSafeInteger(result.signup_number) && result.signup_number > 0) return { requestId: result.request_id, referralCode: result.referral_code, signupNumber: result.signup_number }
     if (!response.ok && ['submission_conflict', 'signup_closed', 'rate_limited', 'outdated_form', 'invalid_answers', 'phone_not_verified'].includes(result.code)) return { code: result.code }
   } catch { /* A lost response may follow a successful save, so retry with the same key. */ }
   return { code: 'temporarily_unavailable' }
