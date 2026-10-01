@@ -25,7 +25,7 @@ function doPost(event) {
     const sheetId = properties.getProperty('BETA_SHEET_ID')
     if (!secret || secret.length < 32 || !cohort || !sheetId || input.secret !== secret) return jsonResult({ ok: false, code: 'unauthorized' })
     if (input.action === 'count' && Object.keys(input).every((key) => ['secret', 'action'].includes(key))) {
-      return jsonResult({ ok: true, count: readResponses(sheetId).length - 1 })
+      return jsonResult({ ok: true, count: orderedSignups(readResponses(sheetId)).length })
     }
     if (input.action === 'lookup' && input.cohort === cohort && Object.keys(input).every((key) => ['secret', 'cohort', 'action', 'phone'].includes(key)) && /^\+[1-9]\d{6,14}$/.test(input.phone)) {
       lock = LockService.getScriptLock()
@@ -156,6 +156,47 @@ function columnLetter(number) {
 }
 
 function setupResponseSheet() {
+  const lock = LockService.getScriptLock()
+  if (!lock.tryLock(5000)) throw new Error('Signup sheet is busy; retry setup')
+  try { upgradeResponseSheet(); importHistoricalSignups() }
+  finally { lock.releaseLock() }
+}
+
+function importHistoricalSignups() {
+  const properties = PropertiesService.getScriptProperties()
+  const sheetId = properties.getProperty('BETA_SHEET_ID')
+  const archive = SpreadsheetApp.openById(sheetId).getSheetByName('Responses backup')
+  if (!archive || archive.getLastRow() < 2) return
+  const historical = archive.getDataRange().getValues()
+  const oldHeaders = historical.shift()
+  const headers = responseHeaders()
+  const rows = readResponses(sheetId)
+  const phoneIndex = headers.indexOf('phone')
+  const codeIndex = headers.indexOf('referral_code')
+  const countIndex = headers.indexOf('referred_signups')
+  const byPhone = new Map(orderedSignups(rows).map((row) => [row[phoneIndex], row]))
+  const pending = []
+  for (const cells of historical.sort((a, b) => String(a[oldHeaders.indexOf('received_at')]).localeCompare(String(b[oldHeaders.indexOf('received_at')])))) {
+    if (!cells.some((value) => value !== '')) continue
+    const row = headers.map((header) => cells[oldHeaders.indexOf(header)] ?? '')
+    const normalized = BetaContract.normalizeAnswers({ phone: String(row[phoneIndex]) })
+    if (normalized.errors.phone || !BetaContract.UUID4.test(row[0]) || !Number.isFinite(Date.parse(row[3]))) throw new Error('Historical signup needs review')
+    row[phoneIndex] = normalized.answers.phone
+    row[3] = new Date(row[3]).toISOString()
+    const existing = byPhone.get(row[phoneIndex])
+    if (existing && String(existing[3]) <= row[3]) continue
+    row[codeIndex] = codeForPhone(row[phoneIndex], properties.getProperty('BETA_SUBMISSION_SECRET'))
+    row[countIndex] = existing?.[countIndex] || 0
+    row[countIndex + 1] = existing?.[countIndex + 1] || ''
+    row[countIndex + 2] = existing?.[countIndex + 2] || false
+    row[headers.indexOf('campaign_source')] = row[headers.indexOf('campaign_source')] || 'unknown'
+    pending.push(row)
+    byPhone.set(row[phoneIndex], row)
+  }
+  if (pending.length) Sheets.Spreadsheets.Values.append({ values: pending }, sheetId, "'Responses'!A1", { valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' })
+}
+
+function upgradeResponseSheet() {
   const sheetId = PropertiesService.getScriptProperties().getProperty('BETA_SHEET_ID')
   const book = SpreadsheetApp.openById(sheetId)
   const sheet = book.getSheetByName(SHEET_NAME) || book.insertSheet(SHEET_NAME)

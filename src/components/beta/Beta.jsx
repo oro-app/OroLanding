@@ -5,11 +5,12 @@ import { HomeFooter, HomeHeader } from '../home/HomeChrome'
 import { clearBetaDraft, readBetaDraft, writeBetaDraft } from './betaDraft'
 import { emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { findExistingBetaRequest, saveBetaRequest, submissionMessages } from './betaSubmission'
-import { CAMPAIGN_SOURCE, REFERRAL_CODE } from '../../lib/betaContract'
+import { browserBetaAttribution, clearBetaAttribution } from '../../lib/betaAttribution'
 import { createReceiptStory } from './receiptStory'
 import StoryImageActions from './StoryImageActions'
 import { messagesInvite } from './referralShare'
 import PhoneAnswer from './PhoneAnswer'
+import welcomeMascot from '../../assets/mascot/oro_hi.webp'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
@@ -20,12 +21,8 @@ function WrittenAnswer({ name, label, value, update, error, ...props }) {
 
 export default function Beta() {
   const [draft] = useState(readBetaDraft)
-  const [campaignSource] = useState(() => {
-    if (draft?.campaignSource) return draft.campaignSource
-    if (typeof window === 'undefined') return ''
-    const source = new URL(window.location.href).searchParams.get('src') || ''
-    return CAMPAIGN_SOURCE.test(source) ? source : ''
-  })
+  const [attribution] = useState(browserBetaAttribution)
+  const campaignSource = draft?.campaignSource || attribution.source
   const [answers, setAnswers] = useState(draft?.answers ?? emptyAnswers)
   const [code, setCode] = useState('')
   const [phoneProof, setPhoneProof] = useState('')
@@ -43,11 +40,7 @@ export default function Beta() {
   const [messagesHref, setMessagesHref] = useState('')
   const [storyImage, setStoryImage] = useState(null)
   const [storyRetry, setStoryRetry] = useState(0)
-  const [incomingReferralCode] = useState(() => {
-    if (typeof window === 'undefined') return ''
-    const code = new URL(window.location.href).searchParams.get('ref') || ''
-    return REFERRAL_CODE.test(code) ? code : ''
-  })
+  const incomingReferralCode = attribution.referral
   const submissionKey = useRef(draft?.submissionKey ?? null)
   const copyTimeout = useRef(null)
   const submitting = useRef(false)
@@ -184,6 +177,7 @@ export default function Beta() {
         const existing = await findExistingBetaRequest(phone, result.proof)
         if (existing.found) {
           clearBetaDraft()
+          clearBetaAttribution()
           setPhoneProof(result.proof)
           setRequestId(existing.requestId)
           setSignupNumber(existing.signupNumber)
@@ -242,6 +236,7 @@ export default function Beta() {
     submitting.current = false
     if (result.requestId) {
       clearBetaDraft()
+      clearBetaAttribution()
       setRequestId(result.requestId)
       setSignupNumber(result.signupNumber)
       setOwnReferralCode(result.referralCode)
@@ -317,10 +312,11 @@ export default function Beta() {
         <div className="beta-form-progress" role="progressbar" aria-label="Invite request progress" aria-valuemin={0} aria-valuemax={formSteps.length} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${formSteps.length}`}><span style={{ width: `${(step + 1) / formSteps.length * 100}%` }} /></div>
         <div className="beta-form-panel" key={step}>
           <div className="beta-form-heading">
+            {step === 0 && <img className="beta-welcome-mascot" src={welcomeMascot} alt="oro waving hello" width="88" height="88" />}
             <Heading ref={stepTitleRef} tabIndex={-1} as="h1" variant="title" id="request-title">{stepInfo.title}</Heading>
             {stepInfo.optional && <Text variant="support" muted>Optional</Text>}
             {stepInfo.description && <Text muted>{stepInfo.description}</Text>}
-            {step === 0 && <Text muted>already signed up? enter your number below. we’ll text you a code to check your place.</Text>}
+            {step === 0 && <Text variant="support" muted>arriving october 8. get in line to meet her.</Text>}
           </div>
           <form ref={formRef} onSubmit={submit} aria-busy={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} noValidate className="beta-form" aria-label="Invite request">
             <fieldset className="beta-question" aria-labelledby="request-title"><div className="beta-question-body">{questionContent[step]}</div></fieldset>
