@@ -124,37 +124,27 @@ function setupResponseSheet() {
   const sheetId = PropertiesService.getScriptProperties().getProperty('BETA_SHEET_ID')
   const book = SpreadsheetApp.openById(sheetId)
   const sheet = book.getSheetByName(SHEET_NAME) || book.insertSheet(SHEET_NAME)
-  if (sheet.getLastRow() !== 0) throw new Error('Responses already exists; leave its rows and headers unchanged.')
-  sheet.getRange(1, 1, 1, responseHeaders().length).setValues([responseHeaders()])
-  sheet.setFrozenRows(1)
-}
-
-function setupReferralColumns() {
-  const sheetId = PropertiesService.getScriptProperties().getProperty('BETA_SHEET_ID')
-  const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(SHEET_NAME)
-  if (!sheet) throw new Error('Responses sheet is missing')
+  if (sheet.getLastRow() === 0) {
+    sheet.getRange(1, 1, 1, responseHeaders().length).setValues([responseHeaders()])
+    sheet.setFrozenRows(1)
+    return
+  }
   const oldHeaders = METADATA_HEADERS.concat(BetaContract.answerFields)
   const current = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
-  if (JSON.stringify(current) === JSON.stringify(responseHeaders()) || JSON.stringify(current) === JSON.stringify(oldHeaders.concat(REFERRAL_HEADERS))) return
-  if (JSON.stringify(current) !== JSON.stringify(oldHeaders)) throw new Error('Unexpected response headers')
-  sheet.getRange(1, oldHeaders.length + 1, 1, REFERRAL_HEADERS.length).setValues([REFERRAL_HEADERS])
-  if (sheet.getLastRow() > 1) {
-    const phones = sheet.getRange(2, oldHeaders.indexOf('phone') + 1, sheet.getLastRow() - 1, 1).getValues()
-    const secret = PropertiesService.getScriptProperties().getProperty('BETA_SUBMISSION_SECRET')
-    sheet.getRange(2, oldHeaders.length + 1, phones.length, REFERRAL_HEADERS.length)
-      .setValues(phones.map(([phone]) => [0, '', false, codeForPhone(phone, secret), '']))
-  }
-}
-
-function setupCampaignSourceColumn() {
-  const sheetId = PropertiesService.getScriptProperties().getProperty('BETA_SHEET_ID')
-  const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(SHEET_NAME)
-  if (!sheet) throw new Error('Responses sheet is missing')
-  const oldHeaders = METADATA_HEADERS.concat(BetaContract.answerFields, REFERRAL_HEADERS)
-  const current = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
   if (JSON.stringify(current) === JSON.stringify(responseHeaders())) return
-  if (JSON.stringify(current) !== JSON.stringify(oldHeaders)) throw new Error('Unexpected response headers')
-  sheet.getRange(1, oldHeaders.length + 1, 1, 1).setValues([['campaign_source']])
-  if (sheet.getLastRow() > 1) sheet.getRange(2, oldHeaders.length + 1, sheet.getLastRow() - 1, 1)
+  if (JSON.stringify(current) === JSON.stringify(oldHeaders)) {
+    const count = sheet.getLastRow() - 1
+    const phones = count ? sheet.getRange(2, oldHeaders.indexOf('phone') + 1, count, 1).getValues() : []
+    const secret = PropertiesService.getScriptProperties().getProperty('BETA_SUBMISSION_SECRET')
+    if (!secret || secret.length < 32) throw new Error('BETA_SUBMISSION_SECRET is missing')
+    sheet.getRange(1, oldHeaders.length + 1, 1, REFERRAL_HEADERS.length).setValues([REFERRAL_HEADERS])
+    if (count) sheet.getRange(2, oldHeaders.length + 1, count, REFERRAL_HEADERS.length)
+      .setValues(phones.map(([phone]) => [0, '', false, codeForPhone(phone, secret), '']))
+  } else if (JSON.stringify(current) !== JSON.stringify(oldHeaders.concat(REFERRAL_HEADERS))) {
+    throw new Error('Unexpected response headers')
+  }
+  const sourceColumn = oldHeaders.length + REFERRAL_HEADERS.length + 1
+  sheet.getRange(1, sourceColumn, 1, 1).setValues([['campaign_source']])
+  if (sheet.getLastRow() > 1) sheet.getRange(2, sourceColumn, sheet.getLastRow() - 1, 1)
     .setValues(Array.from({ length: sheet.getLastRow() - 1 }, () => ['unknown']))
 }
