@@ -7,7 +7,7 @@ import ProductDemo from './ProductDemo'
 import StyleAdviceDemo from './StyleAdviceDemo'
 import wardrobeDemo from '../../assets/demos/wardrobe.png'
 import iterateDemo from '../../assets/demos/iterate.png'
-import oroTexting from '../../assets/mascot/oro_texting.png'
+import jotting from '../../assets/mascot/jotting.webp'
 
 const FEATURES = [
   {
@@ -29,8 +29,8 @@ const FEATURES = [
   {
     title: 'the more you text her, the better she gets',
     description: 'she remembers that you hate jewelry, get cold easily, always reach for those jeans, and have pilates Sunday morning.',
-    image: oroTexting,
-    imageAlt: 'oro looking at a phone with a clothing idea in a speech bubble.',
+    image: jotting,
+    imageAlt: 'Oro jotting notes in a notepad.',
     width: 1500,
     height: 1500,
   },
