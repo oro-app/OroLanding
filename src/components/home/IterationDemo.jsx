@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import jeansLook from '../../assets/fit-gen-demo/mens-jeans.webp'
-import trousersLook from '../../assets/fit-gen-demo/mens-trousers.webp'
+import cargosLook from '../../assets/fit-gen-demo/mens-cargos.webp'
 import jotting from '../../assets/mascot/jotting.webp'
 import aww from '../../assets/mascot/aww.webp'
 import SmsBubble from './SmsBubble'
@@ -41,19 +41,19 @@ export default function IterationDemo({ title, description }) {
           <li className="product-demo-message">
             <SmsBubble avatar={jotting}>
               <span className="sr-only">oro: </span>
-              <img src={jeansLook} alt="men’s outfit with an oatmeal knit, blue jeans, and brown suede loafers" loading="lazy" decoding="async" width="1086" height="1448" />
+              <img src={jeansLook} alt="men’s streetwear look with a brown leather jacket, graphic tee, baggy jeans, silver sneakers, burgundy beanie, crossbody bag, sunglasses, belt, and silver jewelry" loading="lazy" decoding="async" width="1086" height="1448" />
             </SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>can we swap the jeans for something smarter?</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>can we try cargos instead?</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">oro: </span>try charcoal trousers. keep the knit and loafers.</SmsBubble>
+            <SmsBubble><span className="sr-only">oro: </span>olive cargos. so good with the brown leather.</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble avatar={aww}>
               <span className="sr-only">oro: </span>
-              <img src={trousersLook} alt="the same men’s outfit, with charcoal tailored trousers replacing the jeans" loading="lazy" decoding="async" width="1086" height="1448" />
+              <img src={cargosLook} alt="the same layered streetwear look and accessories, with olive cargos replacing the jeans" loading="lazy" decoding="async" width="1086" height="1448" />
             </SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
