@@ -270,6 +270,17 @@ test('Apps Script rejects incorrect secrets, cohorts, hashes and schema drift be
   assert.equal(google.state.locked, false)
 })
 
+test('verified-phone lookup returns an existing receipt without writing', () => {
+  const google = googleWriter()
+  assert.equal(google.post(envelope()).ok, true)
+  const existing = google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone: '+14165550123' })
+  assert.equal(existing.found, true)
+  assert.equal(existing.signup_number, 1)
+  assert.match(existing.referral_code, /^[0-9a-f]{64}$/)
+  assert.deepEqual(google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone: '+14165550124' }), { ok: true, found: false })
+  assert.equal(google.state.appendCalls, 1)
+})
+
 test('Apps Script recovers a write whose acknowledgement failed and rejects a locked or unconfirmed write', () => {
   const google = googleWriter()
   google.state.throwAfterAppend = true

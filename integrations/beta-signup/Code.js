@@ -27,6 +27,16 @@ function doPost(event) {
     if (input.action === 'count' && Object.keys(input).every((key) => ['secret', 'action'].includes(key))) {
       return jsonResult({ ok: true, count: readResponses(sheetId).length - 1 })
     }
+    if (input.action === 'lookup' && input.cohort === cohort && Object.keys(input).every((key) => ['secret', 'cohort', 'action', 'phone'].includes(key)) && /^\+[1-9]\d{6,14}$/.test(input.phone)) {
+      lock = LockService.getScriptLock()
+      if (!lock.tryLock(5000)) return jsonResult({ ok: false, code: 'temporarily_unavailable' })
+      const rows = readResponses(sheetId)
+      const phoneIndex = responseHeaders().indexOf('phone')
+      const matchIndex = rows.findIndex((row, index) => index > 0 && row[phoneIndex] === input.phone)
+      if (matchIndex < 0) return jsonResult({ ok: true, found: false })
+      const codeIndex = responseHeaders().indexOf('referral_code')
+      return jsonResult({ ok: true, found: true, request_id: rows[matchIndex][0], referral_code: rows[matchIndex][codeIndex], signup_number: matchIndex })
+    }
     if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash', 'referral_code', 'campaign_source'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
     const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: input.form_version, consent_version: input.consent_version, answers: input.answers, referral_code: input.referral_code, campaign_source: input.campaign_source })
     if (validated.code) return jsonResult({ ok: false, code: validated.code })

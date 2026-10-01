@@ -20,7 +20,7 @@ export function readConfig(env) {
   return { enabled: Boolean(enabled), url, secret, cohort, rateLimitId, host, origins }
 }
 
-async function writeToGoogle(config, payload, fetcher) {
+export async function writeToGoogle(config, payload, fetcher) {
   const signal = AbortSignal.timeout(12000)
   let response = await fetcher(config.url, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },

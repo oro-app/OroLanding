@@ -4,7 +4,7 @@ import ButtonArrow from '../ButtonArrow'
 import { HomeFooter, HomeHeader } from '../home/HomeChrome'
 import { clearBetaDraft, readBetaDraft, writeBetaDraft } from './betaDraft'
 import { emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
-import { saveBetaRequest, submissionMessages } from './betaSubmission'
+import { findExistingBetaRequest, saveBetaRequest, submissionMessages } from './betaSubmission'
 import { CAMPAIGN_SOURCE, REFERRAL_CODE } from '../../lib/betaContract'
 import { createReceiptStory, downloadReceiptStory } from './receiptStory'
 import './Beta.css'
@@ -170,7 +170,21 @@ export default function Beta() {
       const result = await response.json()
       if (currentPhone.current !== phone || currentCode.current !== submittedCode || currentStep.current !== sourceStep) return false
       if (response.ok && result.ok && action === 'start') { setVerificationStatus('sent'); return true }
-      if (response.ok && result.ok && action === 'check' && result.proof) { setPhoneProof(result.proof); setVerificationStatus('verified'); return true }
+      if (response.ok && result.ok && action === 'check' && result.proof) {
+        const existing = await findExistingBetaRequest(phone, result.proof)
+        if (existing.found) {
+          clearBetaDraft()
+          setPhoneProof(result.proof)
+          setRequestId(existing.requestId)
+          setSignupNumber(existing.signupNumber)
+          setOwnReferralCode(existing.referralCode)
+          setStoryImage(null)
+          setVerificationStatus('verified')
+          setView('receipt')
+          return { ok: true, existing: true }
+        }
+        setPhoneProof(result.proof); setVerificationStatus('verified'); return { ok: true, existing: false }
+      }
       setVerificationStatus(result.code === 'invalid_code' ? 'invalid' : result.code === 'rate_limited' ? 'rate_limited' : 'unavailable')
     } catch { if (currentPhone.current === phone && currentStep.current === sourceStep) setVerificationStatus('unavailable') }
     finally { verifying.current = false }
@@ -201,7 +215,8 @@ export default function Beta() {
     }
     if (step === 1) {
       if (previewForm && !enabled) { openStep(2); return }
-      if (await verifyPhone('check')) openStep(2)
+      const verification = await verifyPhone('check')
+      if (verification?.ok && !verification.existing) openStep(2)
       return
     }
     if (finalStep && !enabled) { setStatus('unavailable'); return }
