@@ -8,6 +8,7 @@ import { canonicalPayload, FORM_VERSION, normalizeAnswers, UUID4 } from '../src/
 import { saveBetaRequest } from '../src/components/beta/betaSubmission.js'
 import { signPhoneProof } from '../api/_lib/beta-phone-proof.js'
 import { exampleAnswers, environment, makeSubmission, googleWriter } from './beta-fixture.js'
+import { messagesInvite } from '../src/components/beta/referralShare.js'
 
 async function serve(t, options = {}) {
   const google = googleWriter()
@@ -94,7 +95,7 @@ test('concurrent same-key retries return the original receipt; changed answers c
   assert.equal(state.appendCalls, 1)
   const next = await post(makeSubmission({ ...body.answers, location: 'Updated' }))
   assert.equal(next.status, 200)
-  assert.equal((await next.json()).signup_number, 2)
+  assert.equal((await next.json()).signup_number, 1)
   assert.equal(state.appendCalls, 2)
   assert.equal((await (await post(body)).json()).signup_number, 1)
 })
@@ -163,6 +164,51 @@ test('self referrals, unknown codes, and retries do not award credit', async (t)
   assert.equal(state.rows[1][state.rows[0].indexOf('referred_signups')], 1)
   assert.equal(state.rows.length, 5)
   assert.equal((await post({ ...makeSubmission(), referral_code: 'invalid' })).status, 400)
+})
+
+test('one visible line orders qualified people by their third referral, then original signup time', () => {
+  const google = googleWriter()
+  let now = Date.parse('2026-10-01T12:00:00Z')
+  google.context.Date = class extends Date { constructor() { super(now++) } }
+  const firstRequest = makeSubmission()
+  google.post(envelope(firstRequest))
+  const save = (phone, ref) => google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone }), referral_code: ref }))
+  const lookup = (phone) => google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone })
+  const second = save('+14165550124')
+  const third = save('+14165550125')
+  for (const phone of ['+14165550126', '+14165550127', '+14165550128']) save(phone, third.referral_code)
+  assert.equal(lookup('+14165550125').signup_number, 1)
+  assert.equal(lookup('+14165550123').signup_number, 2)
+  assert.equal(lookup('+14165550124').signup_number, 3)
+  const qualifiedAt = lookup('+14165550125').referral_completed_date
+  for (const phone of ['+14165550129', '+14165550130', '+14165550131']) save(phone, second.referral_code)
+  assert.equal(lookup('+14165550124').signup_number, 2)
+  assert.equal(lookup('+14165550123').signup_number, 3)
+  assert.equal(google.post(envelope(firstRequest)).signup_number, 3)
+  save('+14165550132', third.referral_code)
+  assert.equal(lookup('+14165550125').signup_number, 1)
+  assert.equal(lookup('+14165550125').referred_signups, 4)
+  assert.equal(lookup('+14165550125').referral_completed_date, qualifiedAt)
+  assert.equal(save('+14165550125').signup_number, 1)
+  assert.equal(save('+14165550133').signup_number, 11)
+  const headers = google.state.rows[0]
+  const owner = google.state.rows.find((row) => row[headers.indexOf('phone')] === '+14165550125')
+  owner[headers.indexOf('referral_completed_date')] = ''
+  owner[headers.indexOf('referred_signups')] = 0
+  assert.equal(lookup('+14165550125').referral_completed_date, qualifiedAt)
+  assert.equal(lookup('+14165550125').signup_number, 1)
+  assert.equal(owner[headers.indexOf('accepted')], false)
+})
+
+test('Messages invitations preserve the referral link and desktop falls back to copying', () => {
+  const link = 'https://askoro.now/invite?ref=abc&src=ig-sunny'
+  for (const [agent, prefix] of [['iPhone', 'sms:&body='], ['Android', 'sms:?body=']]) {
+    const uri = messagesInvite(link, agent)
+    assert.ok(uri.startsWith(prefix))
+    assert.equal(decodeURIComponent(uri.slice(prefix.length)), `thought you'd like oro too :) join me in line: ${link}`)
+  }
+  assert.equal(messagesInvite(link, 'Macintosh'), '')
+  assert.equal(messagesInvite('', 'iPhone'), '')
 })
 
 test('browser submission forwards the referral code and receives its own link code', async (t) => {

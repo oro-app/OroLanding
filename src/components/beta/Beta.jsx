@@ -7,12 +7,10 @@ import { emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm
 import { findExistingBetaRequest, saveBetaRequest, submissionMessages } from './betaSubmission'
 import { CAMPAIGN_SOURCE, REFERRAL_CODE } from '../../lib/betaContract'
 import { createReceiptStory, downloadReceiptStory } from './receiptStory'
+import { messagesInvite } from './referralShare'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
-function InstagramIcon() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg> }
-function XIcon() { return <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.1l-4.8-7.5L5.5 22H2.4l7.3-8.4L2 2h6.2l4.3 6.8L18.9 2Zm-1.1 18h1.7L7.2 3.9H5.4L17.8 20Z" /></svg> }
-function FacebookIcon() { return <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.7 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5H17V3.6c-.3 0-1.4-.1-2.6-.1-2.6 0-4.3 1.6-4.3 4.5v1.9H7.3V13h2.8v8h3.6Z" /></svg> }
 function CopyIcon() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="8" y="4" width="11" height="13" rx="2" /><path d="M16 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2" /></svg> }
 function DownloadIcon() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3" /></svg> }
 function WrittenAnswer({ name, label, value, update, error, ...props }) {
@@ -41,6 +39,7 @@ export default function Beta() {
   const [referralCompletedDate, setReferralCompletedDate] = useState('')
   const [shareMessage, setShareMessage] = useState('')
   const [copied, setCopied] = useState(false)
+  const [messagesHref, setMessagesHref] = useState('')
   const [storyImage, setStoryImage] = useState(null)
   const [incomingReferralCode] = useState(() => {
     if (typeof window === 'undefined') return ''
@@ -248,9 +247,10 @@ export default function Beta() {
   const field = (name, label, props = {}) => <WrittenAnswer name={name} label={label} value={answers[name]} update={update} error={errors[name]} disabled={saving} {...props} />
   const inviteLink = ownReferralCode ? `${window.location.origin}/invite?ref=${ownReferralCode}` : ''
   const referralCompleted = Boolean(referralCompletedDate)
+  useEffect(() => { setMessagesHref(messagesInvite(inviteLink, navigator.userAgent)) }, [inviteLink])
   const previewReceipt = (completed = false) => {
     setRequestId(null)
-    setSignupNumber(completed ? 1 : null)
+    setSignupNumber(completed ? 11 : null)
     setOwnReferralCode(null)
     setReferredSignups(completed ? 3 : 0)
     setReferralCompletedDate(completed ? 'preview' : '')
@@ -284,10 +284,6 @@ export default function Beta() {
     try { downloadReceiptStory(storyImage?.blob ?? await createReceiptStory(inviteLink, signupNumber)); setShareMessage('Story image downloaded.') }
     catch { setShareMessage('Could not download the story image. Please try again.') }
   }
-  function downloadForShare() {
-    downloadReceiptStory(storyImage.blob)
-    setShareMessage('Image downloaded. Add it to your post or story.')
-  }
   const questionContent = [
     <>{field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123', disabled: verificationStatus === 'sending' })}{['unavailable', 'rate_limited'].includes(verificationStatus) && step === 0 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before requesting another code.' : 'We couldn’t send a code. Try again.'}</p>}</>,
     <>
@@ -319,6 +315,7 @@ export default function Beta() {
             <Heading ref={stepTitleRef} tabIndex={-1} as="h1" variant="title" id="request-title">{stepInfo.title}</Heading>
             {stepInfo.optional && <Text variant="support" muted>Optional</Text>}
             {stepInfo.description && <Text muted>{stepInfo.description}</Text>}
+            {step === 0 && <Text muted>already signed up? verify your number to check your place.</Text>}
           </div>
           <form ref={formRef} onSubmit={submit} aria-busy={saving} noValidate className="beta-form" aria-label="Invite request">
             <fieldset className="beta-question" aria-labelledby="request-title"><div className="beta-question-body">{questionContent[step]}</div></fieldset>
@@ -337,23 +334,23 @@ export default function Beta() {
         {!requestId && <p className="beta-receipt-preview">Confirmation preview · No request has been saved</p>}
         <div className={`beta-receipt-hero${referralCompleted ? ' beta-receipt-hero--completed' : ''}`}>
           <div className="beta-receipt-intro">
-            {referralCompleted ? <><h1 id="receipt-title">you’ll be the <em>first</em><br />to meet oro!</h1><p className="beta-referral-complete-copy">Thank you for giving her new friends :)</p><p className="beta-referral-count"><strong>{referredSignups}</strong> {referredSignups === 1 ? 'friend' : 'friends'} referred</p></> : <h1 id="receipt-title">i’m {Number.isSafeInteger(signupNumber) && signupNumber > 0 && <><em>#{signupNumber}</em> </>}in line<br />to meet oro</h1>}
-            {!referralCompleted && <>
-            <div className="beta-social-share">
-              <span>share to:</span>
-              <Button variant="secondary" aria-label="Open Instagram to post your story" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer') }}><InstagramIcon /></Button>
-              <Button variant="secondary" aria-label="Share to X" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open(`https://x.com/intent/tweet?text=${encodeURIComponent('i’m in line to meet oro ✨ come join me?')}&url=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><XIcon /></Button>
-              <Button variant="secondary" aria-label="Share to Facebook" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><FacebookIcon /></Button>
+            {referralCompleted ? <><h1 id="receipt-title">look who’s <em>moving up.</em></h1><p className="beta-referral-complete-copy">thanks for bringing your friends. you’re now <strong>#{signupNumber} in line</strong> to meet oro.</p></> : <h1 id="receipt-title">i’m {Number.isSafeInteger(signupNumber) && signupNumber > 0 && <><em>#{signupNumber}</em> </>}in line<br />to meet oro</h1>}
+            <p className="beta-referral-count" role="status">{referredSignups === 0 ? '0 of 3 friends have joined' : `${referredSignups} ${referredSignups === 1 ? 'friend' : 'friends'} joined.${referredSignups < 3 ? ` ${3 - referredSignups} to go.` : ''}`}</p>
+            {!referralCompleted && <div className="beta-rewards">
+              <h2>want to move up?</h2>
+              <p>know someone who’d love oro? share your invite. when 3 sign up through your link, we’ll move you to the front.</p>
+            </div>}
+            <div className="beta-referral-actions">
+              {messagesHref && <a className="oro-button oro-button--primary" href={messagesHref}>share in messages</a>}
+              <Button variant="tertiary" className="beta-hero-invite" onClick={copyInvite} disabled={!inviteLink}><span>{copied ? 'copied!' : 'copy my invite link'}</span><CopyIcon /></Button>
+              <a className="beta-resend" href="/beta?step=phone">check my place</a>
             </div>
-            {inviteLink && <p className="beta-social-share-help">{storyImage ? 'Your image downloads when you open a share link. Add it to your post or story.' : 'The share link is ready. Add the image manually if it becomes available.'}</p>}
-            <div className="beta-rewards"><h2>want to meet her sooner?</h2><p>Get 3 friends to sign up with your link and you’ll get immediate access.</p><Button variant="tertiary" className="beta-hero-invite" onClick={copyInvite} disabled={!inviteLink}><span>{copied ? 'copied!' : inviteLink ? 'copy referral link' : 'check back later :('}</span><CopyIcon /></Button></div>
-            </>}
             {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}
           </div>
           {!referralCompleted && <div className="beta-story-preview">{storyImage ? <img src={storyImage.url} alt="Share image with the cheeky Oro mascot, referral message, and invite link" /> : <div className="beta-story-skeleton" role="status" aria-label={shareMessage.startsWith('Could not prepare') ? 'Image unavailable' : 'Preparing image'} />}<Button variant="tertiary" onClick={saveStory} aria-label="Download image" disabled={!storyImage && !shareMessage.startsWith('Could not prepare')}><DownloadIcon /></Button>{shareMessage.startsWith('Could not') && <p>{shareMessage}</p>}</div>}
         </div>
       </section>}
-      {allowForm && view === 'receipt' && <HomeFooter landing closerTitle="good style looks better together" closerText={null} closerAction={<><button type="button" className="oro-button oro-button--primary halo-cta halo-cta--closer" onClick={copyInvite} disabled={!inviteLink}>copy referral link</button><p className="beta-footer-message" role="status">{shareMessage || (!inviteLink && 'check back later :(')}</p></>} />}
+      {allowForm && view === 'receipt' && <HomeFooter landing closerTitle="good style looks better together" closerText={null} closerAction={<><button type="button" className="oro-button oro-button--primary halo-cta halo-cta--closer" onClick={copyInvite} disabled={!inviteLink}>copy my invite link</button><p className="beta-footer-message" role="status">{shareMessage || (!inviteLink && 'check back later :(')}</p></>} />}
     </div>
   )
 }
