@@ -131,7 +131,14 @@ export default function Beta() {
     })
     return () => cancelAnimationFrame(frame)
   }, [view, step])
-  useEffect(() => { if (view === 'receipt') receiptRef.current?.focus() }, [view])
+  useEffect(() => {
+    if (view !== 'receipt') return
+    const frame = requestAnimationFrame(() => {
+      receiptRef.current?.focus({ preventScroll: true })
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [view])
   useEffect(() => {
     if (view !== 'coming-soon') return
     comingSoonRef.current?.focus({ preventScroll: true })
@@ -341,7 +348,7 @@ export default function Beta() {
         {!requestId && <p className="beta-receipt-preview">Confirmation preview · No request has been saved</p>}
         <div className={`beta-receipt-hero${referralCompleted ? ' beta-receipt-hero--completed' : ''}`}>
           <div className="beta-receipt-intro">
-            {referralCompleted ? <><h1 id="receipt-title">look who’s <em>moving up.</em></h1><p className="beta-referral-complete-copy">thanks for bringing your friends. you’re now <strong>#{signupNumber} in line</strong> to meet oro.</p></> : <h1 id="receipt-title">i’m {Number.isSafeInteger(signupNumber) && signupNumber > 0 && <><em>#{signupNumber}</em> </>}in line<br />to meet oro</h1>}
+            {referralCompleted ? <><h1 id="receipt-title">look who’s <em>moving up.</em></h1><p className="beta-referral-complete-copy">thanks for bringing your friends. you’re now <strong>#{signupNumber} in line</strong> to meet oro.</p></> : <h1 id="receipt-title">you’re {Number.isSafeInteger(signupNumber) && signupNumber > 0 && <><em>#{signupNumber}</em> </>}in line<br />to meet oro</h1>}
             <p className="beta-referral-count" role="status">{referredSignups === 0 ? '0 of 3 friends have joined' : `${referredSignups} ${referredSignups === 1 ? 'friend' : 'friends'} joined.${referredSignups < 3 ? ` ${3 - referredSignups} to go.` : ''}`}</p>
             {!referralCompleted && <div className="beta-rewards">
               <h2>want to move up?</h2>
@@ -349,7 +356,7 @@ export default function Beta() {
             </div>}
             <div className="beta-referral-actions">
               {messagesHref && <a className="oro-button oro-button--primary" href={messagesHref}>share in messages</a>}
-              <Button variant="tertiary" className="beta-hero-invite" onClick={copyInvite} disabled={!inviteLink}><span>{copied ? 'copied!' : 'copy my invite link'}</span><CopyIcon /></Button>
+              <Button variant="secondary" className="beta-hero-invite" onClick={copyInvite} disabled={!inviteLink}><span>{copied ? 'copied!' : 'copy my invite link'}</span><CopyIcon /></Button>
               <a className="beta-resend" href="/beta?step=phone">check my place</a>
             </div>
             {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}

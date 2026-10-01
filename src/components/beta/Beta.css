@@ -124,9 +124,9 @@
 .beta-social-share .oro-button { width: 44px; height: 44px; min-height: 44px; margin-top: 0; padding: 0; }
 .beta-social-share svg { width: 22px; height: 22px; }
 .beta-social-share-help { max-width: 340px; margin-top: var(--oro-space-2) !important; font-size: var(--oro-type-support-size); }
-.beta-hero-invite.oro-button--tertiary { justify-content: space-between; align-items: center; width: min(100%, 420px); min-height: 48px; padding: var(--oro-space-3) var(--oro-space-5); border-radius: var(--oro-radius-pill); background: var(--oro-color-soft); color: var(--oro-color-accent); font-size: var(--oro-type-label-size); }
+.beta-hero-invite.oro-button--secondary { background: var(--oro-color-soft); color: var(--oro-color-accent); }
 .beta-hero-invite svg { width: 18px; height: 18px; flex: none; }
-.beta-hero-invite.oro-button--tertiary:disabled { background: var(--oro-color-disabled-surface); color: var(--oro-color-disabled-text); cursor: default; transform: none; }
+.beta-hero-invite.oro-button--secondary:disabled { background: var(--oro-color-disabled-surface); color: var(--oro-color-disabled-text); cursor: default; transform: none; }
 .beta-story-preview { display: grid; justify-self: center; justify-items: center; align-content: start; gap: 6px; }
 .beta-story-preview :is(img, .beta-story-skeleton) { width: 230px; max-width: 100%; aspect-ratio: 9 / 16; border-radius: 16px; }
 .beta-story-preview img { display: block; height: auto; box-shadow: 0 8px 24px #29163f20; }
@@ -137,7 +137,8 @@
 .beta-rewards p { font-size: 15px; }
 .beta-rewards { display: grid; gap: 12px; margin-top: var(--oro-space-16); }
 .beta-rewards .beta-hero-invite { margin-top: 4px; }
-.beta-referral-actions { display: grid; justify-items: start; gap: 12px; margin-top: 20px; }
+.beta-referral-actions { display: grid; width: min(100%, 440px); gap: 12px; margin-top: 24px; }
+.beta-referral-actions > .oro-button { width: 100%; min-height: 64px; margin: 0; padding: 18px 24px; gap: 12px; font-size: 18px; font-weight: 600; }
 .beta-referral-actions .beta-resend { justify-self: start; }
 .beta-request-reference { font-size: 12px; }
 .beta-footer-message { min-height: 1.5em; margin: 12px 0 0; color: #fff; font-size: 14px; }
