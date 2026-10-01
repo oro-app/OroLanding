@@ -8,6 +8,7 @@ import { findExistingBetaRequest, saveBetaRequest, submissionMessages } from './
 import { CAMPAIGN_SOURCE, REFERRAL_CODE } from '../../lib/betaContract'
 import { createReceiptStory, downloadReceiptStory } from './receiptStory'
 import { messagesInvite } from './referralShare'
+import PhoneAnswer from './PhoneAnswer'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
@@ -285,7 +286,7 @@ export default function Beta() {
     catch { setShareMessage('Could not download the story image. Please try again.') }
   }
   const questionContent = [
-    <>{field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123', disabled: verificationStatus === 'sending' })}{['unavailable', 'rate_limited'].includes(verificationStatus) && step === 0 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before requesting another code.' : 'We couldn’t send a code. Try again.'}</p>}</>,
+    <><PhoneAnswer value={answers.phone} update={update} error={errors.phone} disabled={verificationStatus === 'sending'} />{['unavailable', 'rate_limited'].includes(verificationStatus) && step === 0 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before requesting another code.' : 'We couldn’t send a code. Try again.'}</p>}</>,
     <>
       <Text muted>Enter the code we sent to {answers.phone}.</Text>
       <WrittenAnswer name="code" label="Verification code" value={code} update={(_, value) => { const next = value.replace(/\D/g, '').slice(0, 10); currentCode.current = next; setCode(next); setVerificationStatus('sent') }} error={verificationStatus === 'invalid' ? 'That code is incorrect or has expired. Try again or request a new code.' : undefined} type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]*" disabled={verificationStatus === 'checking' || verificationStatus === 'sending'} />
@@ -315,9 +316,9 @@ export default function Beta() {
             <Heading ref={stepTitleRef} tabIndex={-1} as="h1" variant="title" id="request-title">{stepInfo.title}</Heading>
             {stepInfo.optional && <Text variant="support" muted>Optional</Text>}
             {stepInfo.description && <Text muted>{stepInfo.description}</Text>}
-            {step === 0 && <Text muted>already signed up? verify your number to check your place.</Text>}
+            {step === 0 && <Text muted>already signed up? enter your number below. we’ll text you a code to check your place.</Text>}
           </div>
-          <form ref={formRef} onSubmit={submit} aria-busy={saving} noValidate className="beta-form" aria-label="Invite request">
+          <form ref={formRef} onSubmit={submit} aria-busy={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} noValidate className="beta-form" aria-label="Invite request">
             <fieldset className="beta-question" aria-labelledby="request-title"><div className="beta-question-body">{questionContent[step]}</div></fieldset>
             {finalStep && <div className="beta-consent" id="before-send">
               {status === 'unavailable' && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title="This draft isn’t connected yet.">Nothing was submitted. Your answers are still here. Use “Preview confirmation” above to review the receipt design.</Notice></div>}
@@ -325,7 +326,13 @@ export default function Beta() {
               <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Request an invite'} <ButtonArrow direction="up-right" /></Button>
               <Text variant="support" muted>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>, and to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</Text>
             </div>}
-            <div className="beta-step-actions">{step > 0 && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue" disabled={verificationStatus === 'sending' || verificationStatus === 'checking'}><ButtonArrow size={18} /></button>}</div>
+            <div className="beta-step-actions">
+              {step > 0 && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}
+              {!finalStep && <Button type="submit" className="beta-form-next" disabled={verificationStatus === 'sending' || verificationStatus === 'checking'}>
+                {verificationStatus === 'sending' ? 'sending your code…' : verificationStatus === 'checking' ? 'checking your code…' : step === 0 ? 'send my code' : 'verify my number'}
+                <ButtonArrow size={18} />
+              </Button>}
+            </div>
           </form>
           <Text variant="support" muted className="beta-form-help">Questions? <a href="mailto:sunny@buildingoro.ca">Email us</a></Text>
         </div>
