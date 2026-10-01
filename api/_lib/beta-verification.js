@@ -18,7 +18,7 @@ export function createBetaVerificationHandler({ env = process.env, fetcher = fet
     const service = env.TWILIO_VERIFY_SERVICE_SID || ''
     if (!/^AC[0-9a-f]{32}$/i.test(account) || !token || !/^VA[0-9a-f]{32}$/i.test(service)) return send(503, { code: 'temporarily_unavailable' })
     try {
-      const limit = await checkLimit(config.rateLimitId, { headers: { ...req.headers, host: config.host } })
+      const limit = await checkLimit(config.rateLimitId, { headers: { ...req.headers, host: new URL(req.headers.origin).host } })
       if (limit.error) return send(503, { code: 'temporarily_unavailable' })
       if (limit.rateLimited) { res.setHeader('Retry-After', '60'); return send(429, { code: 'rate_limited' }) }
       let body = req.body
