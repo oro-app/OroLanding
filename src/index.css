@@ -58,6 +58,16 @@ a, button, input {
   transition: all 0.25s ease;
 }
 
+.oro-lowercase,
+.oro-lowercase :where(button, select, option),
+.oro-lowercase :where(input, textarea)::placeholder {
+  text-transform: lowercase;
+}
+
+.oro-lowercase :where(input, textarea) {
+  text-transform: none;
+}
+
 /* Keyboard focus — gold ring reads on both plum and cream (see design-system
    hover/focus convention). Only :focus-visible, so mouse clicks stay clean. */
 a:focus-visible,
