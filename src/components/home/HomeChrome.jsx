@@ -24,7 +24,6 @@ export function HomeHeader() {
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          <a href="/#product-demo-title">how it works</a>
           <HomeCta place="header">want her number?</HomeCta>
         </nav>
       </div>
