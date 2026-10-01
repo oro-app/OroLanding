@@ -404,6 +404,38 @@ test('archive validation stops before importing any incomplete historical signup
   assert.equal(google.state.locked, false)
 })
 
+test('removing a test identity from responses and history lets it rejoin after every real signup', () => {
+  const google = googleWriter()
+  const testPhone = '+14165550123'
+  const original = google.post(envelope())
+  const phoneIndex = google.state.rows[0].indexOf('phone')
+  google.state.rows[1][3] = '2020-01-01T12:00:00.000Z'
+  for (let index = 0; index < 37; index++) {
+    assert.equal(google.post(envelope(makeSubmission({ ...exampleAnswers, phone: `+14165550${150 + index}` }))).ok, true)
+    google.state.rows.at(-1)[3] = new Date(Date.UTC(2020, 0, 2, 0, index)).toISOString()
+  }
+  google.state.archive = google.state.rows.map((row) => row.slice(0, -6))
+  const lookup = () => google.post({ action: 'lookup', secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, phone: testPhone })
+  assert.equal(lookup().signup_number, 1)
+
+  google.state.rows = google.state.rows.filter((row, index) => index === 0 || row[phoneIndex] !== testPhone)
+  google.state.archive = google.state.archive.filter((row, index) => index === 0 || row[phoneIndex] !== testPhone)
+  google.context.setupResponseSheet()
+  google.context.setupResponseSheet()
+  assert.deepEqual(lookup(), { ok: true, found: false })
+  assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).count, 37)
+
+  const freshSubmission = envelope()
+  const freshReceipt = google.post(freshSubmission)
+  assert.equal(freshReceipt.signup_number, 38)
+  assert.notEqual(freshReceipt.request_id, original.request_id)
+  assert.equal(lookup().signup_number, 38)
+  assert.deepEqual(google.post(freshSubmission), freshReceipt)
+  google.context.setupResponseSheet()
+  assert.equal(lookup().signup_number, 38)
+  assert.equal(google.state.rows.length, 39)
+})
+
 test('the existing production form shares the upgraded sheet without losing receipts or referral identity', () => {
   const google = googleWriter()
   google.state.rows[0] = google.state.rows[0].slice(0, -6)
