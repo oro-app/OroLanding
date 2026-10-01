@@ -1,56 +1,23 @@
 import { useEffect, useRef, useState } from 'react'
+import { parsePhoneNumberFromString } from 'libphonenumber-js/max'
 import { Button, Heading, Notice, Text, TextField } from 'oro-kit'
 import ButtonArrow from '../ButtonArrow'
 import { HomeHeader } from '../home/HomeChrome'
-import BetaIntroduction from './BetaIntroduction'
 import { clearBetaDraft, readBetaDraft, writeBetaDraft } from './betaDraft'
-import { choices, emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
+import { emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { saveBetaRequest, submissionMessages } from './betaSubmission'
 import { REFERRAL_CODE } from '../../lib/betaContract'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
-const storySteps = ['landing', 'beta-details']
-
-function Choices({ name, value, update, error, multiple = false, optional = false, disabled = false }) {
-  return (
-    <>
-      <Text variant="support" muted className="beta-choice-hint">{multiple ? 'Select all that apply.' : 'Choose one.'}</Text>
-      <div className="beta-choices">
-        {choices[name].map((option, index) => (
-          <label className="beta-option" key={option}>
-            <input type={multiple ? 'checkbox' : 'radio'} id={`${name}-${index}`} name={name} value={option}
-              disabled={disabled} required={!optional && !multiple}
-              checked={multiple ? value.includes(option) : value === option}
-              aria-invalid={error ? true : undefined} aria-describedby={error ? `${name}-error` : undefined}
-              onChange={() => update(name, multiple ? (value.includes(option) ? value.filter((item) => item !== option) : [...value, option]) : option)} />
-            <span>{option}</span>
-          </label>
-        ))}
-      </div>
-      {optional && value && <Button variant="tertiary" disabled={disabled} onClick={() => { update(name, ''); document.getElementById(`${name}-0`)?.focus() }}>Clear answer</Button>}
-      {error && <p id={`${name}-error`} className="oro-field__error">{error}</p>}
-    </>
-  )
-}
-
-function WrittenAnswer({ name, label, value, update, error, hint, multiline = false, optional = false, ...props }) {
-  const common = { id: name, name, value, onChange: (event) => update(name, event.target.value), maxLength: textLimits[name] || 2000, required: !optional, ...props }
-  if (!multiline) return <TextField {...common} label={label} hint={hint} error={error} />
-  return (
-    <div className="oro-field">
-      <label className="oro-field__label" htmlFor={name}>{label}</label>
-      <textarea {...common} className="oro-input beta-textarea" rows={4} aria-invalid={error ? true : undefined}
-        aria-describedby={[hint && `${name}-hint`, error && `${name}-error`, `${name}-count`].filter(Boolean).join(' ')} />
-      {hint && <p className="oro-field__hint" id={`${name}-hint`}>{hint}</p>}
-      <div className="beta-field-footer">{error && <p className="oro-field__error" id={`${name}-error`}>{error}</p>}<span id={`${name}-count`}>{value.length.toLocaleString()} / 2,000</span></div>
-    </div>
-  )
+function WrittenAnswer({ name, label, value, update, error, ...props }) {
+  return <TextField id={name} name={name} label={label} value={value} onChange={(event) => update(name, event.target.value)} maxLength={textLimits[name] || 64} required error={error} {...props} />
 }
 
 export default function Beta() {
   const [draft] = useState(readBetaDraft)
   const [answers, setAnswers] = useState(draft?.answers ?? emptyAnswers)
+  const [confirmPhone, setConfirmPhone] = useState('')
   const [attemptedSteps, setAttemptedSteps] = useState([])
   const [status, setStatus] = useState('idle')
   const [enabled, setEnabled] = useState(false)
@@ -67,9 +34,8 @@ export default function Beta() {
   const entryView = allowForm ? 'form' : 'coming-soon'
   const saving = status === 'saving'
   const message = submissionMessages[status]
-  const [view, setView] = useState('story')
+  const [view, setView] = useState(entryView)
   const [step, setStep] = useState(0)
-  const [storyStep, setStoryStep] = useState(0)
   const formRef = useRef(null)
   const stepTitleRef = useRef(null)
   const receiptRef = useRef(null)
@@ -110,14 +76,11 @@ export default function Beta() {
         setStep(index)
         setView(entryView)
       } else {
-        const storyIndex = Math.max(storySteps.indexOf(requestedStep), 0)
-        if (storySteps[storyIndex] !== requestedStep) {
-          url.searchParams.set('step', storySteps[storyIndex])
-          url.hash = ''
-          window.history.replaceState(null, '', `${url.pathname}${url.search}`)
-        }
-        setStoryStep(storyIndex)
-        setView('story')
+        url.searchParams.set('step', formSteps[0].hash.slice(1))
+        url.hash = ''
+        window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+        setStep(0)
+        setView(entryView)
       }
     }
     syncLocation()
@@ -152,6 +115,7 @@ export default function Beta() {
   function update(name, value) {
     if (submitting.current) return
     setAnswers((current) => ({ ...current, [name]: value }))
+    if (name === 'phone') setConfirmPhone('')
     setStatus('idle')
   }
 
@@ -163,21 +127,6 @@ export default function Beta() {
     window.history.pushState(null, '', `${url.pathname}${url.search}`)
     setStep(index)
     setView(entryView)
-  }
-
-  function navigateStory(index) {
-    const url = new URL(window.location.href)
-    url.searchParams.set('step', storySteps[index])
-    url.hash = ''
-    window.history.pushState(null, '', `${url.pathname}${url.search}`)
-  }
-
-  function openStory(index = storySteps.length - 1) {
-    if (submitting.current) return
-    navigateStory(index)
-    setStoryStep(index)
-    setView('story')
-    window.scrollTo({ top: 0, behavior: 'instant' })
   }
 
   async function submit(event) {
@@ -197,6 +146,16 @@ export default function Beta() {
       })
       return
     }
+    if (step === 1) {
+      const entered = parsePhoneNumberFromString(confirmPhone.trim(), { defaultCountry: 'CA', extract: false })
+      const original = parsePhoneNumberFromString(answers.phone.trim(), { defaultCountry: 'CA', extract: false })
+      if (!entered?.isValid() || entered.ext || entered.number !== original?.number) {
+        setAttemptedSteps((current) => [...new Set([...current, step])])
+        requestAnimationFrame(() => formRef.current?.querySelector('[name="confirmPhone"]')?.focus())
+        return
+      }
+    }
+    if (finalStep && !confirmPhone) { openStep(1); return }
     if (!finalStep) { openStep(step + 1); return }
     if (!enabled) { setStatus('unavailable'); return }
     if (!submissionKey.current || status === 'submission_conflict') submissionKey.current = crypto.randomUUID()
@@ -215,29 +174,16 @@ export default function Beta() {
   }
 
   const field = (name, label, props = {}) => <WrittenAnswer name={name} label={label} value={answers[name]} update={update} error={errors[name]} disabled={saving} {...props} />
-  const options = (name, props = {}) => <Choices name={name} value={answers[name]} update={update} error={errors[name]} disabled={saving} {...props} />
-
   const questionContent = [
-    field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name', wrapperClassName: 'beta-name-field' }),
-    <>
-      <div className="beta-contact-fields">{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}{field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123' })}</div>
-      {field('instagram', 'Instagram handle', { optional: true, autoCapitalize: 'none', autoCorrect: 'off', placeholder: '@yourhandle (optional)', maxLength: 31, hint: 'Leave your handle if you’d like an invite to the original oronauts Instagram group chat :)' })}
-    </>,
-    options('usedOro'),
-    options('outfitDays'),
-    field('challenges', <>Your experience <span className="beta-optional">(optional)</span></>, { multiline: true, optional: true }),
-    <>{options('usualHelp', { multiple: true })}{answers.usualHelp.includes('Other') && <div className="beta-follow-up">{field('usualHelpOther', 'What else do you do?')}</div>}</>,
-    field('location', 'City and province', { placeholder: 'Toronto, Ontario' }),
-    options('age'),
-    <>{options('gender')}{answers.gender === 'I’d like to self-describe' && <div className="beta-follow-up">{field('genderDescription', <>How would you describe your gender? <span className="beta-optional">Optional</span></>, { optional: true })}</div>}</>,
-    <>{options('source')}{answers.source === 'Other' && <div className="beta-follow-up">{field('sourceOther', 'Where did you hear about it?')}</div>}</>,
+    field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123' }),
+    <WrittenAnswer name="confirmPhone" label="Re-enter your phone number" value={confirmPhone} update={(_, value) => setConfirmPhone(value)} error={attemptedSteps.includes(1) && (!confirmPhone || parsePhoneNumberFromString(confirmPhone.trim(), { defaultCountry: 'CA', extract: false })?.number !== parsePhoneNumberFromString(answers.phone.trim(), { defaultCountry: 'CA', extract: false })?.number) ? 'Enter the same phone number to confirm it.' : undefined} type="tel" inputMode="tel" autoComplete="off" placeholder="+1 416 555 0123" />,
+    <>{field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name' })}{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}</>,
   ]
 
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <HomeHeader />
       {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is submitted</span><button onClick={() => setView(view === 'receipt' ? 'form' : 'receipt')}>{view === 'receipt' ? 'Back to form' : 'Preview confirmation'} <span data-button-icon="up-right" aria-hidden="true">↗</span></button></div></div>}
-      {view === 'story' && <BetaIntroduction onStart={() => openStep(step)} initialPage={storyStep} onNavigate={navigateStory} />}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-panel beta-form-heading">
@@ -256,14 +202,14 @@ export default function Beta() {
             {stepInfo.description && <Text muted>{stepInfo.description}</Text>}
           </div>
           <form ref={formRef} onSubmit={submit} aria-busy={saving} noValidate className="beta-form" aria-label="Beta invite request">
-            {!finalStep && <fieldset className="beta-question" aria-labelledby="request-title"><div className="beta-question-body">{questionContent[step]}</div></fieldset>}
+            <fieldset className="beta-question" aria-labelledby="request-title"><div className="beta-question-body">{questionContent[step]}</div></fieldset>
             {finalStep && <div className="beta-consent" id="before-send">
               {status === 'unavailable' && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title="This draft isn’t connected yet.">Nothing was submitted. Your answers are still here. Use “Preview confirmation” above to review the receipt design.</Notice></div>}
               {message && <div ref={statusRef} tabIndex={-1}><Notice tone="error" title={message[0]}>{message[1]}</Notice></div>}
               <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Join the beta'} <ButtonArrow direction="up-right" /></Button>
               <Text variant="support" muted>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>, and to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</Text>
             </div>}
-            <div className="beta-step-actions"><button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving} onClick={() => step > 0 ? openStep(step - 1) : openStory(1)}><ButtonArrow direction="left" size={18} /></button>{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><ButtonArrow size={18} /></button>}</div>
+            <div className="beta-step-actions">{step > 0 && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><ButtonArrow size={18} /></button>}</div>
           </form>
           <Text variant="support" muted className="beta-form-help">Questions? <a href="mailto:sunny@buildingoro.ca">Email us</a></Text>
         </div>

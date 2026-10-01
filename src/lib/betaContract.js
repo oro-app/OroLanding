@@ -1,6 +1,6 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js/max'
 
-export const FORM_VERSION = '2026-09-28.4'
+export const FORM_VERSION = '2026-09-30.1'
 export const CONSENT_VERSION = '2026-09-24.1'
 export const UUID4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 export const MAX_BODY_BYTES = 64 * 1024
@@ -19,7 +19,7 @@ export const textLimits = {
   genderDescription: 2000, sourceOther: 2000,
 }
 export const answerFields = [...Object.keys(textLimits), ...Object.keys(choices), 'terms', 'futureBeta', 'marketing']
-const requiredText = ['name', 'email', 'phone', 'location']
+const requiredText = ['name', 'email', 'phone']
 
 export function isObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -46,10 +46,10 @@ export function normalizeAnswers(input) {
     const value = input[name] ?? (name === 'usualHelp' ? [] : '')
     if (name === 'usualHelp') {
       answers[name] = Array.isArray(value) ? options.filter((option) => value.includes(option)) : []
-      if (!Array.isArray(value) || !value.length || value.length > options.length || new Set(value).size !== value.length || value.some((option) => !options.includes(option))) errors[name] = 'Choose at least one of the listed answers.'
+      if (!Array.isArray(value) || value.length > options.length || new Set(value).size !== value.length || value.some((option) => !options.includes(option))) errors[name] = 'Choose only the listed answers.'
     } else {
       answers[name] = typeof value === 'string' ? value : ''
-      if (!options.includes(value)) errors[name] = 'Choose one of the listed answers.'
+      if (value && !options.includes(value)) errors[name] = 'Choose one of the listed answers.'
     }
   }
   for (const [name, shown] of Object.entries({

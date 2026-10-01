@@ -17,17 +17,9 @@ export function visibleAnswers(answers) {
 }
 
 export const formSteps = [
-  { hash: '#request', title: 'What should we call you?', fields: ['name'] },
-  { hash: '#contact', title: 'How can we reach you?', fields: ['email', 'phone', 'instagram'] },
-  { hash: '#used-oro', title: 'Have you used the oro app before?', fields: ['usedOro'] },
-  { hash: '#your-style', title: 'In the past 7 days, on how many days did you want help choosing or improving an outfit?', fields: ['outfitDays'] },
-  { hash: '#style-challenges', title: 'What do you find difficult about putting outfits together, if anything?', fields: ['challenges'] },
-  { hash: '#usual-help', title: 'What do you usually do when you’re unsure about an outfit?', fields: ['usualHelp', 'usualHelpOther'] },
-  { hash: '#your-city', title: 'What city and province do you live in?', fields: ['location'] },
-  { hash: '#your-age', title: 'What’s your age range?', fields: ['age'] },
-  { hash: '#your-gender', title: 'What’s your gender?', fields: ['gender', 'genderDescription'] },
-  { hash: '#heard-about-oro', title: 'How did you hear about oro’s beta?', fields: ['source', 'sourceOther'] },
-  { hash: '#before-send', title: 'Ready to be one of the first oronauts?', fields: ['terms'] },
+  { hash: '#phone', title: 'What’s your phone number?', fields: ['phone'] },
+  { hash: '#verify-phone', title: 'Confirm your phone number', fields: [] },
+  { hash: '#contact', title: 'What’s your name and email?', fields: ['name', 'email'] },
 ]
 
 export function validateAnswers(answers) {
