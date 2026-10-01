@@ -20,17 +20,16 @@ test('poster openings follow the current link while saved source and referral st
   assert.equal(getBetaCampaign('/', '?src=poster-career'), 'general')
 })
 
-test('query rewrites match the client campaign before generic signup HTML', () => {
-  const { rewrites } = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8'))
-  const generic = rewrites.findIndex((rule) => rule.source === '/beta')
-  const conditional = rewrites.filter((rule) => rule.has?.some(({ key }) => key === 'src'))
+test('query redirects select the campaign before Vercel serves the existing generic HTML', () => {
+  const { redirects } = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8'))
+  const conditional = redirects.filter((rule) => rule.has?.some(({ key }) => key === 'src'))
   assert.equal(conditional.length, 2)
   for (const rule of conditional) {
-    assert.ok(rewrites.indexOf(rule) < generic)
+    assert.equal(rule.permanent, false)
     assert.equal(rule.source, '/:entry(beta|invite)')
     const pattern = new RegExp(rule.has[0].value)
     for (const source of ['poster-career', 'poster-dating-uw-1', 'poster-career-', 'ig-sunny']) {
-      if (pattern.test(source)) assert.equal(rule.destination, `/beta/${getBetaCampaign('/beta', `?src=${source}`)}/index.html`)
+      if (pattern.test(source)) assert.equal(rule.destination, `/beta/${getBetaCampaign('/beta', `?src=${source}`)}`)
     }
   }
 })
