@@ -6,7 +6,7 @@ import { useHomeMotion } from './useHomeMotion'
 import ProductDemo from './ProductDemo'
 import StyleAdviceDemo from './StyleAdviceDemo'
 import wardrobeDemo from '../../assets/demos/wardrobe.png'
-import iterateDemo from '../../assets/demos/iterate.png'
+import IterationDemo from './IterationDemo'
 import jotting from '../../assets/mascot/jotting.webp'
 
 const FEATURES = [
@@ -21,10 +21,7 @@ const FEATURES = [
   {
     title: 'don’t like it? tell her.',
     description: 'make it warmer. less basic. swap the jeans. start over. keep going until it actually feels like you.',
-    image: iterateDemo,
-    imageAlt: 'Outfit suggestions in a text conversation, including a request to swap jeans for a skirt.',
-    width: 1078,
-    height: 1459,
+    demo: true,
   },
   {
     title: 'the more you text her, the better she gets',
@@ -96,7 +93,9 @@ export default function Home() {
             </Text>
           </section>
           <section className="home-features" aria-label="oro features">
-            {FEATURES.map((feature, index) => (
+            {FEATURES.map((feature, index) => feature.demo ? (
+              <IterationDemo key={feature.title} title={feature.title} description={feature.description} />
+            ) : (
               <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal>
                 <div className="home-feature-copy home-stagger">
                   <Heading as="h2" variant="title">{index === 2 ? <>the more you text her,<br />the better she gets</> : feature.title}</Heading>
