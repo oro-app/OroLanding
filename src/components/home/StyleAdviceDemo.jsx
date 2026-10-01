@@ -53,10 +53,10 @@ export default function StyleAdviceDemo() {
             </SmsBubble>
           </li>
           <li className="product-demo-message style-advice-demo-reply--continued">
-            <SmsBubble><span className="sr-only">oro: </span>the leather jacket and washed grey cargos work so well together!</SmsBubble>
+            <SmsBubble><span className="sr-only">oro: </span>the worn leather and washed denim work really well together. the texture keeps the dark colours from feeling flat.</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble avatar={thinking}><span className="sr-only">oro: </span>i’d keep the beanie and sneakers for a relaxed look. swap in black boots when you want to dress it up :)</SmsBubble>
+            <SmsBubble avatar={thinking}><span className="sr-only">oro: </span>i’d give the tee a small front tuck. it’s hiding your waistband, so showing a little of it would make your legs look longer and balance the roomy jacket.</SmsBubble>
           </li>
         </ol>
       </div>
