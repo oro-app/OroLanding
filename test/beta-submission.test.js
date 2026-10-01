@@ -454,6 +454,11 @@ test('the existing production form shares the upgraded sheet without losing rece
   assert.equal(found.signup_number, 1)
   const friend = google.post(envelope(makeSubmission({ ...exampleAnswers, phone: '+14165550124' })))
   assert.equal(friend.signup_number, 2)
+  google.context.setupReferrerNames()
+  const legacyNext = { ...payload, submission_key: makeSubmission().submission_key }
+  assert.equal(google.post(legacyNext).ok, true)
+  assert.equal(google.state.rows.at(-1).length, 35)
+  assert.equal(google.state.rows.at(-1)[34], '')
   assert.equal(google.post({ ...payload, payload_hash: '0'.repeat(64) }).code, 'invalid_request')
   assert.equal(google.post({ ...payload, campaign_source: 'ig-sunny' }).code, 'outdated_form')
   assert.equal(google.post({ ...payload, secret: 'wrong' }).code, 'unauthorized')
@@ -465,4 +470,70 @@ test('legacy compatibility in the authenticated writer does not bypass the campa
   assert.equal(response.status, 400)
   assert.equal((await response.json()).code, 'outdated_form')
   assert.equal(state.rows.length, 1)
+})
+
+test('referrer-name setup backfills only valid owners without changing existing signup data', () => {
+  const google = googleWriter()
+  const owner = google.post(envelope(makeSubmission({ ...exampleAnswers, name: '=Jamie' })))
+  const friend = { ...makeSubmission({ ...exampleAnswers, phone: '+14165550124' }), referral_code: owner.referral_code, campaign_source: 'ig-sunny' }
+  assert.equal(google.post(envelope(friend)).ok, true)
+  const headers = google.state.rows[0]
+  const byIndex = headers.indexOf('referred_by')
+  const lookup = () => google.post({ action: 'lookup', secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, phone: '+14165550124' })
+  const beforeLookup = lookup()
+  assert.equal(headers.length, 34)
+  const before = structuredClone(google.state.rows)
+  google.context.setupReferrerNames()
+  assert.equal(google.state.columns, 35)
+  assert.equal(headers.at(-1), 'referrer_name')
+  assert.equal(google.state.rows[1][34], '')
+  assert.equal(google.state.rows[2][34], '=Jamie')
+  assert.deepEqual(google.state.rows.map((row) => row.slice(0, 34)), before)
+  assert.equal(google.state.updates.at(-1).options.valueInputOption, 'RAW')
+  assert.deepEqual(lookup(), beforeLookup)
+  const migrated = structuredClone(google.state.rows)
+  google.context.setupReferrerNames()
+  google.context.setupResponseSheet()
+  assert.deepEqual(google.state.rows, migrated)
+  google.state.rows[1][byIndex] = owner.referral_code
+  google.state.rows[2][byIndex] = 'unknown'
+  google.context.setupReferrerNames()
+  assert.deepEqual(google.state.rows.slice(1).map((row) => row[34]), ['', ''])
+  headers[34] = 'unexpected_column'
+  assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).ok, false)
+})
+
+test('future referrals include the owner name while retries and non-referrals stay unchanged', () => {
+  const google = googleWriter()
+  google.context.setupReferrerNames()
+  const owner = google.post(envelope())
+  const friend = envelope({ ...makeSubmission({ ...exampleAnswers, phone: '+14165550124' }), referral_code: owner.referral_code, campaign_source: 'ig-sunny' })
+  const receipt = google.post(friend)
+  assert.equal(receipt.ok, true)
+  assert.equal(google.state.rows[2][34], 'Jamie')
+  assert.equal(google.state.rows[2][33], 'ig-sunny')
+  assert.deepEqual(google.post(friend), receipt)
+  assert.equal(google.state.rows.length, 3)
+  for (const [phone, code] of [['+14165550123', owner.referral_code], ['+14165550125', 'a'.repeat(64)], ['+14165550126', undefined]]) {
+    assert.equal(google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone }), referral_code: code })).ok, true)
+    assert.equal(google.state.rows.at(-1)[34], '')
+  }
+  assert.equal(google.state.rows[1][28], 1)
+  assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).count, 4)
+})
+
+test('referrer names use the original signup when older history was appended later', () => {
+  const google = googleWriter()
+  google.context.setupReferrerNames()
+  const owner = google.post(envelope())
+  const original = structuredClone(google.state.rows[1])
+  original[0] = makeSubmission().submission_key
+  original[1] = makeSubmission().submission_key
+  original[3] = '2020-01-01T00:00:00.000Z'
+  original[8] = 'Original Jamie'
+  google.state.rows.push(original)
+  assert.equal(google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone: '+14165550124' }), referral_code: owner.referral_code })).ok, true)
+  assert.equal(google.state.rows.at(-1)[34], 'Original Jamie')
+  google.context.setupReferrerNames()
+  assert.equal(google.state.rows.at(-1)[34], 'Original Jamie')
 })

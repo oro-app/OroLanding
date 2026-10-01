@@ -65,11 +65,12 @@ function doPost(event) {
     const codeIndex = responseHeaders().indexOf('referral_code')
     const earlierSignup = rows.slice(1).find((row) => row[phoneIndex] === validated.answers.phone)
     const firstSignup = !earlierSignup
-    const referrer = firstSignup && rows.slice(1).find((row) => row[codeIndex] === input.referral_code && row[phoneIndex] !== validated.answers.phone)
+    const referrer = firstSignup && orderedSignups(rows).find((row) => row[codeIndex] === input.referral_code && row[phoneIndex] !== validated.answers.phone)
     const referralCode = earlierSignup ? earlierSignup[codeIndex] : codeForPhone(validated.answers.phone, secret)
     const receivedAt = new Date().toISOString()
     const row = [Utilities.getUuid(), input.submission_key, digest, receivedAt, cohort, input.form_version, input.consent_version, receivedAt]
       .concat(BetaContract.answerFields.map((name) => Array.isArray(validated.answers[name]) ? JSON.stringify(validated.answers[name]) : validated.answers[name]), [0, '', false, referralCode, referrer ? input.referral_code : '', input.campaign_source || 'direct'])
+    if (rows[0].includes('referrer_name')) row.push(referrer ? referrer[responseHeaders().indexOf('name')] || '' : '')
     try {
       // RAW keeps phone numbers and answers starting with = or + as literal text.
       Sheets.Spreadsheets.Values.append({ values: [row] }, sheetId, "'Responses'!A1", { valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' })
@@ -101,8 +102,13 @@ function codeForPhone(phone, secret) {
 
 function readResponses(sheetId) {
   const rows = Sheets.Spreadsheets.Values.get(sheetId, "'Responses'!A:AZ", { valueRenderOption: 'UNFORMATTED_VALUE' }).values || []
-  if (JSON.stringify(rows[0]) !== JSON.stringify(responseHeaders())) throw new Error('Sheet not configured')
+  if (!hasResponseHeaders(rows[0])) throw new Error('Sheet not configured')
   return rows
+}
+
+function hasResponseHeaders(headers) {
+  return [responseHeaders(), responseHeaders().concat('referrer_name')]
+    .some((expected) => JSON.stringify(headers) === JSON.stringify(expected))
 }
 
 function findReceipt(rows, key, hash) {
@@ -168,6 +174,31 @@ function setupResponseSheet() {
   finally { lock.releaseLock() }
 }
 
+// Run after all web-app deployments support the optional column, so older readers stay compatible during rollout.
+function setupReferrerNames() {
+  const lock = LockService.getScriptLock()
+  if (!lock.tryLock(5000)) throw new Error('Signup sheet is busy; retry setup')
+  try {
+    upgradeResponseSheet()
+    const sheetId = PropertiesService.getScriptProperties().getProperty('BETA_SHEET_ID')
+    const rows = readResponses(sheetId)
+    const headers = responseHeaders()
+    const codeIndex = headers.indexOf('referral_code')
+    const byIndex = headers.indexOf('referred_by')
+    const nameIndex = headers.indexOf('name')
+    const phoneIndex = headers.indexOf('phone')
+    const owners = new Map(orderedSignups(rows).map((row) => [row[codeIndex], row]))
+    const values = [['referrer_name'], ...rows.slice(1).map((row) => {
+      const owner = row[byIndex] && owners.get(row[byIndex])
+      return [owner && owner[phoneIndex] !== row[phoneIndex] ? owner[nameIndex] || '' : '']
+    })]
+    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(SHEET_NAME)
+    const column = headers.length + 1
+    if (sheet.getMaxColumns() < column) sheet.insertColumnsAfter(sheet.getMaxColumns(), column - sheet.getMaxColumns())
+    Sheets.Spreadsheets.Values.update({ values }, sheetId, "'Responses'!" + columnLetter(column) + '1', { valueInputOption: 'RAW' })
+  } finally { lock.releaseLock() }
+}
+
 function importHistoricalSignups() {
   const properties = PropertiesService.getScriptProperties()
   const sheetId = properties.getProperty('BETA_SHEET_ID')
@@ -214,7 +245,7 @@ function upgradeResponseSheet() {
   }
   const oldHeaders = METADATA_HEADERS.concat(BetaContract.answerFields)
   const current = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
-  if (JSON.stringify(current) === JSON.stringify(responseHeaders())) return
+  if (hasResponseHeaders(current)) return
   if (JSON.stringify(current) === JSON.stringify(oldHeaders)) {
     const count = sheet.getLastRow() - 1
     const phones = count ? sheet.getRange(2, oldHeaders.indexOf('phone') + 1, count, 1).getValues() : []

@@ -25,7 +25,7 @@ export const makeSubmission = (answers = exampleAnswers, key = randomUUID()) => 
 })
 
 export function googleWriter() {
-  const state = { rows: [], archive: [], appendCalls: 0, lockBusy: false, locked: false, throwAfterAppend: false, readFailure: false, dropWrite: false, appends: [], properties: {
+  const state = { rows: [], archive: [], columns: 34, updates: [], appendCalls: 0, lockBusy: false, locked: false, throwAfterAppend: false, readFailure: false, dropWrite: false, appends: [], properties: {
     BETA_SUBMISSION_SECRET: environment.BETA_SUBMISSION_SECRET, BETA_COHORT: environment.BETA_COHORT, BETA_SHEET_ID: 'test-sheet',
   } }
   const context = vm.createContext({
@@ -36,6 +36,8 @@ export function googleWriter() {
     SpreadsheetApp: { openById: () => ({ getSheetByName: (name) => name === 'Responses backup' ? { getLastRow: () => state.archive.length, getDataRange: () => ({ getValues: () => structuredClone(state.archive) }) } : ({
       getLastRow: () => state.rows.length,
       getLastColumn: () => state.rows[0].length,
+      getMaxColumns: () => state.columns,
+      insertColumnsAfter: (_after, count) => { state.columns += count },
       getRange(row, column, height, width) { return {
         getValues: () => Array.from({ length: height }, (_, offset) => Array.from({ length: width }, (_, index) => state.rows[row - 1 + offset]?.[column - 1 + index] ?? '')),
         setValues(values) { values.forEach((cells, offset) => { const target = state.rows[row - 1 + offset]; cells.forEach((value, index) => { target[column - 1 + index] = value }) }) },
@@ -57,7 +59,8 @@ export function googleWriter() {
         const match = /^([A-Z]+)(\d+)$/.exec(cell)
         const column = [...match[1]].reduce((value, letter) => value * 26 + letter.charCodeAt(0) - 64, 0) - 1
         const row = Number(match[2]) - 1
-        body.values[0].forEach((value, index) => { state.rows[row][column + index] = value })
+        state.updates.push({ body, range, options })
+        body.values.forEach((cells, offset) => cells.forEach((value, index) => { state.rows[row + offset][column + index] = value }))
         return { updatedRows: 1 }
       },
     } } },
