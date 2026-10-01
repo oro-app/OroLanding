@@ -24,6 +24,8 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-panel:first-child { max-width: 100%; min-height: min(calc(100dvh - var(--halo-header-height)), 720px); max-height: 720px; margin-inline: auto; align-items: center; text-align: center; }
 .home-panel:first-child .home-action { align-items: center; }
 .home-moments-panel { min-height: auto; margin-inline: auto; align-items: center; text-align: center; }
+.home-social-proof { display: flex; flex-direction: column; align-items: center; padding-block: var(--oro-space-16); text-align: center; }
+.halo-footer-closer > .oro-text { margin-block: var(--oro-space-4) var(--oro-space-6); color: #fff; }
 .home-panel .oro-heading { text-wrap: balance; }
 .home-panel .oro-heading--title { max-width: 460px; }
 .home-description { margin-top: var(--oro-space-6); max-width: 440px; text-wrap: pretty; }

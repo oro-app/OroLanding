@@ -11,31 +11,31 @@ import oroTexting from '../../assets/mascot/oro_texting.png'
 
 const FEATURES = [
   {
-    title: 'Share your wardrobe',
-    description: 'Add your clothes so oro can put together outfits from the closet you already own.',
+    title: 'show her your closet',
+    description: 'send Oro photos of your clothes once. she’ll remember what you own and build outfits from your actual wardrobe.',
     image: wardrobeDemo,
     imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
     width: 1312,
     height: 1199,
   },
   {
-    title: 'Ask for a change',
-    description: 'Swap a piece, or try another direction. Keep refining until it feels right to you.',
+    title: 'don’t like it? tell her.',
+    description: 'make it warmer. less basic. swap the jeans. start over. keep going until it actually feels like you.',
     image: iterateDemo,
     imageAlt: 'Outfit suggestions in a text conversation, including a request to swap jeans for a skirt.',
     width: 1078,
     height: 1459,
   },
   {
-    title: 'Memory about you',
-    description: 'oro remembers the pieces you wear and the preferences you share, so suggestions feel more like you over time.',
+    title: 'the more you text her, the better she gets',
+    description: 'she remembers that you hate jewelry, get cold easily, always reach for those jeans, and have pilates Sunday morning.',
     image: oroTexting,
     imageAlt: 'oro looking at a phone with a clothing idea in a speech bubble.',
     width: 1500,
     height: 1500,
   },
 ]
-const HEADLINE = 'The AI fashion assistant you can text'
+const HEADLINE = 'want Oro’s number?'
 const TYPE_STEP = 34
 
 function TypedHeadline() {
@@ -50,7 +50,7 @@ function TypedHeadline() {
               style={{ '--home-char-delay': `${80 + index++ * TYPE_STEP}ms` }}>{char}</span>
           ))}
         </Word>
-        {wordIndex === 3 ? <br /> : wordIndex < words.length - 1 ? ' ' : null}
+        {wordIndex < words.length - 1 ? ' ' : null}
       </Fragment>
     )
   })
@@ -69,18 +69,19 @@ export default function Home() {
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
             <Text muted className="home-description home-enter">
-              Getting dressed is one text away.
-              Oro helps you put together outfits you love from the clothes you already own.
+              give us your number. we’ll give you hers.<br />
+              your personal stylist over text, for outfits, second opinions, and figuring out what to wear.
             </Text>
             <div className="home-action">
-              <HomeCta place="hero" className="home-enter">Join the beta</HomeCta>
+              <HomeCta place="hero" className="home-enter">get her number</HomeCta>
+              <Text variant="support" muted className="home-beta-note home-enter">1,482 people are trying to get Oro’s number</Text>
             </div>
           </section>
           <ProductDemo />
           <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal>
-            <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself.<br />{' '}Feel ready for anything.</Heading>
+            <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">she gets your style. and your life.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
-              From everyday plans to big moments,<br />{' '}oro helps you find a look you’ll feel good in.
+              Oro learns what you wear, what you like, and what you have going on, so her advice gets more personal the more you text.
             </Text>
           </section>
           <section className="home-features" aria-label="Oro features">
@@ -95,6 +96,10 @@ export default function Home() {
             ))}
           </section>
           <StyleAdviceDemo />
+          <section className="home-social-proof home-moments-panel" aria-labelledby="home-social-title" data-home-reveal>
+            <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
+            <Text muted className="home-description home-stagger">1,482 people are already trying to get it.</Text>
+          </section>
         </div>
       </div>
     </div>

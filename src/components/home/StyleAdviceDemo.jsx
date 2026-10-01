@@ -39,7 +39,8 @@ export default function StyleAdviceDemo() {
   return (
     <section className="product-demo style-advice-demo" aria-labelledby="style-advice-demo-title" ref={sectionRef}>
       <div className="halo-container product-demo-inner">
-        <h2 id="style-advice-demo-title" className="sr-only">Get style advice from oro</h2>
+        <h2 id="style-advice-demo-title" className="home-demo-title">send her the fit pic</h2>
+        <p className="home-demo-description">running late? deciding between two outfits? wondering if something looks off? send Oro a photo and get a second opinion.</p>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
             <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>Thoughts on this fit?</SmsBubble>
