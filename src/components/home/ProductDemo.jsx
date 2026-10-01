@@ -33,7 +33,7 @@ export default function ProductDemo() {
     <section className="product-demo" aria-labelledby="product-demo-title" ref={sectionRef}>
       <div className="halo-container product-demo-inner">
         <h2 id="product-demo-title" className="home-demo-title">text her when you don’t know what to wear</h2>
-        <p className="home-demo-description">tell Oro where you’re going, what you already own, or how you want to feel. she’ll help you figure out the rest.</p>
+        <p className="home-demo-description">tell Oro where you’re going, she’ll figure out the rest.</p>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
             <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I'm going out for brunch with friends</SmsBubble>

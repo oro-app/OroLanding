@@ -28,7 +28,7 @@ const FEATURES = [
   },
   {
     title: 'the more you text her, the better she gets',
-    description: 'she remembers that you hate jewelry, get cold easily, always reach for those jeans, and have pilates Sunday morning.',
+    description: 'she knows you don’t like jewelry, get cold easily, love those jeans, and have Pilates on Sunday mornings.',
     image: jotting,
     imageAlt: 'Oro jotting notes in a notepad.',
     width: 1500,
@@ -81,8 +81,7 @@ export default function Home() {
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
             <Text muted className="home-description home-enter">
-              give us your number. we’ll give you hers.<br />
-              your personal fashion stylist over text, for outfits, second opinions, and figuring out what to wear.
+              your personal fashion stylist over text, here to help you decide what to wear.
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">get her number</HomeCta>
@@ -93,7 +92,7 @@ export default function Home() {
           <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal>
             <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">she gets your style. and your life.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
-              Oro learns what you wear, what you like, and what you have going on, so her advice gets more personal the more you text.
+              Oro learns what you wear and what you like, so her advice gets more personal the more you text.
             </Text>
           </section>
           <section className="home-features" aria-label="Oro features">

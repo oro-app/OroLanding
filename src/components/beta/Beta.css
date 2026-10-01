@@ -63,7 +63,7 @@
 .beta-form-help { margin-top: var(--oro-space-6); text-align: center; }
 .beta-resend { min-height: 44px; justify-self: center; padding: var(--oro-space-2); border: 0; background: transparent; color: var(--oro-color-accent); font: inherit; text-decoration: underline; cursor: pointer; }
 .beta-resend:focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
-.beta-form-help a, .beta-consent a, .beta-receipt a { color: var(--oro-color-accent); text-decoration: underline; text-underline-offset: 3px; }
+.beta-form-help a, .beta-consent a, .beta-receipt a:not(.oro-button) { color: var(--oro-color-accent); text-decoration: underline; text-underline-offset: 3px; }
 .beta-question { border: 0; margin: 0; padding: 0; min-width: 0; scroll-margin-top: var(--oro-space-8); }
 .beta-question-body { display: grid; gap: var(--oro-space-5); }
 .beta-question-body > .oro-button--tertiary { justify-self: center; }
@@ -102,8 +102,41 @@
 .beta-referral-link { max-width: 100%; display: grid; gap: var(--oro-space-2); }
 .beta-referral-link a { color: var(--oro-color-accent); overflow-wrap: anywhere; min-height: 44px; }
 .beta-referral-link a:focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
-@media (hover: hover) { .beta-option:hover { background: var(--oro-color-soft); } }
+.beta-page--receipt { padding-bottom: 0; }
+.beta-receipt { max-width: 1120px; min-height: 0; display: grid; gap: 28px; padding-block: 72px 64px; text-align: left; }
+.beta-receipt h1, .beta-receipt h2, .beta-receipt h3 { font-family: Georgia, 'Times New Roman', serif; letter-spacing: -.055em; color: #29163f; }
+.beta-receipt p { margin: 0; color: #51416d; }
+.beta-receipt-preview { font-size: 14px; }
+.beta-receipt-hero { display: grid; grid-template-columns: minmax(0, 1fr) 260px; align-items: start; gap: 24px; }
+.beta-receipt-intro { min-width: 0; }
+.beta-receipt-hero h1 { margin: 0; font-size: clamp(56px, 8vw, 96px); line-height: .98; }
+.beta-receipt-hero h1 em { color: #d6a032; font-style: normal; }
+.beta-social-share { display: flex; flex-wrap: wrap; align-items: center; gap: var(--oro-space-2); margin-top: var(--oro-space-3); color: var(--oro-color-muted); font-size: var(--oro-type-label-size); }
+.beta-social-share > span { display: inline-flex; align-items: center; min-height: 44px; }
+.beta-social-share .oro-button { width: 44px; height: 44px; min-height: 44px; margin-top: 0; padding: 0; }
+.beta-social-share svg { width: 22px; height: 22px; }
+.beta-social-share-help { max-width: 340px; margin-top: var(--oro-space-2) !important; font-size: var(--oro-type-support-size); }
+.beta-hero-invite.oro-button--tertiary { justify-content: space-between; align-items: center; width: min(100%, 420px); min-height: 48px; padding: var(--oro-space-3) var(--oro-space-5); border-radius: var(--oro-radius-pill); background: var(--oro-color-soft); color: var(--oro-color-accent); font-size: var(--oro-type-label-size); }
+.beta-hero-invite svg { width: 18px; height: 18px; flex: none; }
+.beta-hero-invite.oro-button--tertiary:disabled { background: var(--oro-color-disabled-surface); color: var(--oro-color-disabled-text); cursor: default; transform: none; }
+.beta-story-preview { display: grid; justify-self: center; justify-items: center; align-content: start; gap: 6px; }
+.beta-story-preview img { width: min(100%, 230px); max-height: 330px; object-fit: contain; border-radius: 16px; box-shadow: 0 8px 24px #29163f20; }
+.beta-story-skeleton { width: min(100%, 185px); aspect-ratio: 9 / 16; border-radius: 16px; background: var(--oro-color-soft); }
+.beta-story-preview .oro-button--tertiary { width: 44px; min-height: 44px; padding: 0; }
+.beta-story-preview .oro-button--tertiary svg { width: 20px; height: 20px; }
+.beta-rewards h2 { margin: 0; font-size: clamp(24px, 3vw, 32px); line-height: 1; }
+.beta-rewards p { font-size: 15px; }
+.beta-rewards { display: grid; gap: 12px; margin-top: var(--oro-space-16); }
+.beta-rewards .beta-hero-invite { margin-top: 4px; }
+.beta-request-reference { font-size: 12px; }
+.beta-footer-message { min-height: 1.5em; margin: 12px 0 0; color: #fff; font-size: 14px; }
+.beta-page--receipt .halo-footer-closer .halo-cta:disabled { opacity: .6; cursor: default; transform: none; }
+@media (max-width: 700px) { .beta-receipt { padding-block: 42px 44px; } .beta-receipt-hero { grid-template-columns: 1fr; min-height: 0; } .beta-receipt-hero h1 { font-size: clamp(48px, 9vw, 68px); } }
+@media (hover: hover) { .beta-option:hover { background: var(--oro-color-soft); } .beta-social-share .oro-button:hover:not(:disabled) { box-shadow: 0 0 0 3px var(--oro-color-soft), var(--oro-shadow-action-hover); } .beta-social-share .oro-button--secondary:hover:not(:disabled) { border-color: var(--oro-color-accent); background: color-mix(in srgb, var(--oro-color-soft) 90%, var(--oro-color-accent)); } .beta-hero-invite.oro-button--tertiary:hover:not(:disabled) { background: color-mix(in srgb, var(--oro-color-soft) 90%, var(--oro-color-accent)); color: var(--oro-color-accent-hover); } }
+@media (forced-colors: active) { .beta-story-preview button, .beta-hero-invite, .beta-social-share .oro-button { border: 1px solid ButtonText; } }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .beta-social-share .oro-button:hover:not(:disabled) { transform: translateY(-2px); } }
 @media (prefers-reduced-motion: no-preference) {
+  .beta-social-share .oro-button { transition: background-color var(--oro-motion-duration) var(--oro-motion-easing), border-color var(--oro-motion-duration) var(--oro-motion-easing), box-shadow var(--oro-motion-duration) var(--oro-motion-easing), transform var(--oro-motion-duration) var(--oro-motion-easing); }
   .beta-story[data-phase='leaving'] :is(.beta-chapter-content, .beta-story-date) { animation: beta-page-out 140ms ease-in both; }
   .beta-chapter:not(.beta-chapter--hero) .beta-chapter-content > .oro-heading { animation: beta-title-in 280ms ease-out both; }
   .beta-chapter:not(.beta-chapter--hero) .beta-chapter-copy { animation: beta-body-in 450ms cubic-bezier(.22, 1, .36, 1) 240ms both; }

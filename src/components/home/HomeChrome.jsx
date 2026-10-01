@@ -32,7 +32,7 @@ export function HomeHeader() {
   )
 }
 
-export function HomeFooter({ landing = false }) {
+export function HomeFooter({ landing = false, closerTitle = 'want her number?', closerText = "give us yours and you'll have hers", closerAction }) {
   if (!landing) {
     return (
       <footer className="halo-footer halo-container">
@@ -49,9 +49,9 @@ export function HomeFooter({ landing = false }) {
     <footer className="halo-footer halo-footer--landing">
       <div className="halo-container">
         <section className="halo-footer-closer" aria-labelledby="closer-title">
-          <Heading as="h2" variant="title" id="closer-title">want her number?</Heading>
-          <Text muted>give us yours. we’ll text you when it’s your turn.</Text>
-          <HomeCta place="closer">get her number</HomeCta>
+          <Heading as="h2" variant="title" id="closer-title">{closerTitle}</Heading>
+          {closerText && <Text muted>{closerText}</Text>}
+          {closerAction || <HomeCta place="closer">get her number</HomeCta>}
         </section>
         <div className="halo-footer-main">
           <div className="halo-footer-brand">

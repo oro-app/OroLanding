@@ -40,7 +40,7 @@ export function getRouteFromPath(pathname = '/') {
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/get-started')     return { type: 'get-started' }
-  if (path === '/beta')            return { type: 'beta' }
+  if (path === '/beta' || path === '/invite') return { type: 'beta' }
 
   return { type: 'home' }
 }
@@ -180,7 +180,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && <HomeFooter landing={isHome} />}
+        {isHalo && !isFeedback && !isBeta && <HomeFooter landing={isHome} />}
         <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />
       </div>
     </ThemeProvider>
