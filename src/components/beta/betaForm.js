@@ -18,7 +18,7 @@ export function visibleAnswers(answers) {
 
 export const formSteps = [
   { hash: '#phone', title: 'where should oro text you?', fields: ['phone'] },
-  { hash: '#verify-phone', title: 'Confirm your phone number', fields: [] },
+  { hash: '#verify-phone', title: 'Verify your phone number', fields: [] },
   { hash: '#contact', title: 'what should she call you?', fields: ['name', 'email'] },
 ]
 

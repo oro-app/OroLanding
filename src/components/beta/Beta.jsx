@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { parsePhoneNumberFromString } from 'libphonenumber-js/max'
 import { Button, Heading, Notice, Text, TextField } from 'oro-kit'
 import ButtonArrow from '../ButtonArrow'
 import { HomeHeader } from '../home/HomeChrome'
@@ -7,6 +6,9 @@ import { clearBetaDraft, readBetaDraft, writeBetaDraft } from './betaDraft'
 import { emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { saveBetaRequest, submissionMessages } from './betaSubmission'
 import { REFERRAL_CODE } from '../../lib/betaContract'
+import { downloadReceiptStory } from './receiptStory'
+import textingMascot from '../../assets/mascot/oro_texting.webp'
+import sleepingMascot from '../../assets/mascot/oro_sleeping.webp'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
@@ -17,12 +19,15 @@ function WrittenAnswer({ name, label, value, update, error, ...props }) {
 export default function Beta() {
   const [draft] = useState(readBetaDraft)
   const [answers, setAnswers] = useState(draft?.answers ?? emptyAnswers)
-  const [confirmPhone, setConfirmPhone] = useState('')
+  const [code, setCode] = useState('')
+  const [phoneProof, setPhoneProof] = useState('')
+  const [verificationStatus, setVerificationStatus] = useState('idle')
   const [attemptedSteps, setAttemptedSteps] = useState([])
   const [status, setStatus] = useState('idle')
   const [enabled, setEnabled] = useState(false)
   const [requestId, setRequestId] = useState(null)
   const [ownReferralCode, setOwnReferralCode] = useState(null)
+  const [shareMessage, setShareMessage] = useState('')
   const [incomingReferralCode] = useState(() => {
     if (typeof window === 'undefined') return ''
     const code = new URL(window.location.href).searchParams.get('ref') || ''
@@ -30,6 +35,10 @@ export default function Beta() {
   })
   const submissionKey = useRef(draft?.submissionKey ?? null)
   const submitting = useRef(false)
+  const verifying = useRef(false)
+  const currentPhone = useRef(answers.phone)
+  const currentCode = useRef(code)
+  const currentStep = useRef(0)
   const allowForm = previewForm || enabled
   const entryView = allowForm ? 'form' : 'coming-soon'
   const saving = status === 'saving'
@@ -73,12 +82,14 @@ export default function Beta() {
           url.hash = ''
           window.history.replaceState(null, '', `${url.pathname}${url.search}`)
         }
+        currentStep.current = index
         setStep(index)
         setView(entryView)
       } else {
         url.searchParams.set('step', formSteps[0].hash.slice(1))
         url.hash = ''
         window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+        currentStep.current = 0
         setStep(0)
         setView(entryView)
       }
@@ -115,7 +126,7 @@ export default function Beta() {
   function update(name, value) {
     if (submitting.current) return
     setAnswers((current) => ({ ...current, [name]: value }))
-    if (name === 'phone') setConfirmPhone('')
+    if (name === 'phone') { currentPhone.current = value; currentCode.current = ''; setCode(''); setPhoneProof(''); setVerificationStatus('idle') }
     setStatus('idle')
   }
 
@@ -125,8 +136,31 @@ export default function Beta() {
     url.searchParams.set('step', formSteps[index].hash.slice(1))
     url.hash = ''
     window.history.pushState(null, '', `${url.pathname}${url.search}`)
+    currentStep.current = index
     setStep(index)
     setView(entryView)
+  }
+
+  async function verifyPhone(action) {
+    if (verifying.current) return false
+    verifying.current = true
+    const phone = answers.phone
+    const submittedCode = code
+    const sourceStep = step
+    setVerificationStatus(action === 'start' ? 'sending' : 'checking')
+    try {
+      const response = await fetch('/api/beta-verify', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, phone, ...(action === 'check' ? { code: submittedCode } : {}) }),
+      })
+      const result = await response.json()
+      if (currentPhone.current !== phone || currentCode.current !== submittedCode || currentStep.current !== sourceStep) return false
+      if (response.ok && result.ok && action === 'start') { setVerificationStatus('sent'); return true }
+      if (response.ok && result.ok && action === 'check' && result.proof) { setPhoneProof(result.proof); setVerificationStatus('verified'); return true }
+      setVerificationStatus(result.code === 'invalid_code' ? 'invalid' : result.code === 'rate_limited' ? 'rate_limited' : 'unavailable')
+    } catch { if (currentPhone.current === phone && currentStep.current === sourceStep) setVerificationStatus('unavailable') }
+    finally { verifying.current = false }
+    return false
   }
 
   async function submit(event) {
@@ -146,23 +180,24 @@ export default function Beta() {
       })
       return
     }
-    if (step === 1) {
-      const entered = parsePhoneNumberFromString(confirmPhone.trim(), { defaultCountry: 'CA', extract: false })
-      const original = parsePhoneNumberFromString(answers.phone.trim(), { defaultCountry: 'CA', extract: false })
-      if (!entered?.isValid() || entered.ext || entered.number !== original?.number) {
-        setAttemptedSteps((current) => [...new Set([...current, step])])
-        requestAnimationFrame(() => formRef.current?.querySelector('[name="confirmPhone"]')?.focus())
-        return
-      }
+    if (step === 0) {
+      if (previewForm && !enabled) { openStep(1); return }
+      if (await verifyPhone('start')) openStep(1)
+      return
     }
-    if (finalStep && !confirmPhone) { openStep(1); return }
+    if (step === 1) {
+      if (previewForm && !enabled) { openStep(2); return }
+      if (await verifyPhone('check')) openStep(2)
+      return
+    }
+    if (finalStep && !enabled) { setStatus('unavailable'); return }
+    if (finalStep && !phoneProof) { openStep(1); return }
     if (!finalStep) { openStep(step + 1); return }
-    if (!enabled) { setStatus('unavailable'); return }
     if (!submissionKey.current || status === 'submission_conflict') submissionKey.current = crypto.randomUUID()
     writeBetaDraft(answers, submissionKey.current)
     submitting.current = true
     setStatus('saving')
-    const result = await saveBetaRequest(answers, submissionKey.current, fetch, incomingReferralCode)
+    const result = await saveBetaRequest(answers, submissionKey.current, fetch, incomingReferralCode, phoneProof)
     submitting.current = false
     if (result.requestId) {
       clearBetaDraft()
@@ -174,9 +209,23 @@ export default function Beta() {
   }
 
   const field = (name, label, props = {}) => <WrittenAnswer name={name} label={label} value={answers[name]} update={update} error={errors[name]} disabled={saving} {...props} />
+  const inviteLink = ownReferralCode ? `${window.location.origin}/beta?ref=${ownReferralCode}` : ''
+  async function copyInvite() {
+    try { await navigator.clipboard.writeText(inviteLink); setShareMessage('Invite link copied.') }
+    catch { setShareMessage('Could not copy the link. Select the link above to copy it.') }
+  }
+  async function saveStory() {
+    try { await downloadReceiptStory(inviteLink); setShareMessage('Story image downloaded.') }
+    catch { setShareMessage('Could not create the story image. Please try again.') }
+  }
   const questionContent = [
-    field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123' }),
-    <WrittenAnswer name="confirmPhone" label="Re-enter your phone number" value={confirmPhone} update={(_, value) => setConfirmPhone(value)} error={attemptedSteps.includes(1) && (!confirmPhone || parsePhoneNumberFromString(confirmPhone.trim(), { defaultCountry: 'CA', extract: false })?.number !== parsePhoneNumberFromString(answers.phone.trim(), { defaultCountry: 'CA', extract: false })?.number) ? 'Enter the same phone number to confirm it.' : undefined} type="tel" inputMode="tel" autoComplete="off" placeholder="+1 416 555 0123" />,
+    <>{field('phone', 'Phone number', { type: 'tel', inputMode: 'tel', autoComplete: 'tel', placeholder: '+1 416 555 0123', disabled: verificationStatus === 'sending' })}{['unavailable', 'rate_limited'].includes(verificationStatus) && step === 0 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before requesting another code.' : 'We couldn’t send a code. Try again.'}</p>}</>,
+    <>
+      <Text muted>Enter the code we sent to {answers.phone}.</Text>
+      <WrittenAnswer name="code" label="Verification code" value={code} update={(_, value) => { const next = value.replace(/\D/g, '').slice(0, 10); currentCode.current = next; setCode(next); setVerificationStatus('sent') }} error={verificationStatus === 'invalid' ? 'That code is incorrect or has expired. Try again or request a new code.' : undefined} type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]*" disabled={verificationStatus === 'checking' || verificationStatus === 'sending'} />
+      {['unavailable', 'rate_limited'].includes(verificationStatus) && step === 1 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before trying again.' : 'We couldn’t check the code. Try again.'}</p>}
+      <button type="button" className="beta-resend" disabled={verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => verifyPhone('start')}>Send a new code</button>
+    </>,
     <>{field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name' })}{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}</>,
   ]
 
@@ -209,19 +258,27 @@ export default function Beta() {
               <Button type="submit" className="beta-submit" disabled={!answers.terms || saving}>{saving ? 'Saving your request…' : status === 'submission_conflict' ? 'Send updated request' : 'Join the beta'} <ButtonArrow direction="up-right" /></Button>
               <Text variant="support" muted>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>, and to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</Text>
             </div>}
-            <div className="beta-step-actions">{step > 0 && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue"><ButtonArrow size={18} /></button>}</div>
+            <div className="beta-step-actions">{step > 0 && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}{!finalStep && <button type="submit" className="beta-page-arrow beta-form-next" aria-label="Continue" disabled={verificationStatus === 'sending' || verificationStatus === 'checking'}><ButtonArrow size={18} /></button>}</div>
           </form>
           <Text variant="support" muted className="beta-form-help">Questions? <a href="mailto:sunny@buildingoro.ca">Email us</a></Text>
         </div>
       </section>}
       {allowForm && view === 'receipt' && <section className="beta-receipt halo-container" ref={receiptRef} tabIndex={-1} aria-labelledby="receipt-title">
-        {!requestId && <Text variant="label" muted>Confirmation preview · No request has been saved</Text>}
-        <span className="beta-receipt-icon" aria-hidden="true">✓</span>
-        <Heading as="h1" variant="display" id="receipt-title">Request <em>received :)</em></Heading>
-        <Text muted>Thanks for helping us make oro yours. We’ll review your responses and email you if you’re selected for the September 26–October 1 beta. We’ll also let you know when oro is officially available to the public.</Text>
-        <Text variant="label" muted>Questions or concerns? Email <a href="mailto:sunny@buildingoro.ca">sunny@buildingoro.ca</a>.</Text>
-        {requestId ? <Text variant="support" muted>Request reference: {requestId}</Text> : <Button variant="secondary" onClick={() => setView('form')}>Back to the draft</Button>}
-        {requestId && ownReferralCode && <div className="beta-referral-link"><Text>Invite friends with your referral link. After three friends sign up, your request gets priority review.</Text><a href={`${window.location.origin}/beta?ref=${ownReferralCode}`}>{`${window.location.origin}/beta?ref=${ownReferralCode}`}</a></div>}
+        {!requestId && <p className="beta-receipt-preview">Confirmation preview · No request has been saved</p>}
+        <div className="beta-receipt-hero">
+          <div><h1 id="receipt-title">you’re <em>in line</em><br />to meet Oro.</h1><p className="beta-receipt-lead">want it sooner? bring your friends.</p><p>Every signup gets a personal invite link.</p></div>
+          <img src={textingMascot} alt="Oro excitedly texting a friend" />
+        </div>
+        <div className="beta-invite-panel">
+          <div className="beta-invite-content">
+            <h2><span aria-hidden="true">↗</span> your personal invite link</h2>
+            {inviteLink ? <><a className="beta-invite-url" href={inviteLink}>{inviteLink}</a><div className="beta-invite-actions"><button type="button" onClick={copyInvite}>copy link</button><button type="button" onClick={saveStory}>share to story ↓</button><a href={`sms:?body=${encodeURIComponent(`Join me on Oro: ${inviteLink}`)}`}>text a friend</a></div><p className="beta-share-message" role="status">{shareMessage}</p></> : <><p>Your invite link will appear after your request is saved.</p><Button variant="secondary" onClick={() => setView('form')}>Back to the draft</Button></>}
+          </div>
+          <div className="beta-invite-card" aria-hidden="true"><span>✦ oro</span><strong>i’m in line for Oro’s beta</strong><img src={textingMascot} alt="" /><small>real style advice, over text ♡</small></div>
+        </div>
+        <div className="beta-rewards"><div><h2>unlock rewards as you refer friends</h2><p>The more friends you bring, the sooner we can review your request.</p></div><div className="beta-reward-card"><span>3</span><h3>3 referrals</h3><p>Priority review for your beta request.</p><span className="beta-reward-sparkle" aria-hidden="true">✦</span></div></div>
+        <div className="beta-receipt-footer"><img src={sleepingMascot} alt="Oro resting" /><div><h2>good style looks<br />better <em>together</em> ♡</h2><p>Tell your friends and get closer to real style advice over text.</p></div></div>
+        {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}
       </section>}
     </div>
   )

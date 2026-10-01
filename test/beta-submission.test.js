@@ -6,6 +6,7 @@ import { createHash, createHmac } from 'node:crypto'
 import { createBetaHandler } from '../api/_lib/beta-submission.js'
 import { canonicalPayload, FORM_VERSION, normalizeAnswers, UUID4 } from '../src/lib/betaContract.js'
 import { saveBetaRequest } from '../src/components/beta/betaSubmission.js'
+import { signPhoneProof } from '../api/_lib/beta-phone-proof.js'
 import { exampleAnswers, environment, makeSubmission, googleWriter } from './beta-fixture.js'
 
 async function serve(t, options = {}) {
@@ -29,7 +30,8 @@ async function serve(t, options = {}) {
 
 function envelope(submission = makeSubmission()) {
   const answers = normalizeAnswers(submission.answers).answers
-  return { ...submission, answers, cohort: environment.BETA_COHORT, secret: environment.BETA_SUBMISSION_SECRET,
+  const { phone_verification, ...saved } = submission
+  return { ...saved, answers, cohort: environment.BETA_COHORT, secret: environment.BETA_SUBMISSION_SECRET,
     payload_hash: createHash('sha256').update(canonicalPayload(answers, environment.BETA_COHORT, submission.referral_code || '')).digest('hex') }
 }
 
@@ -71,8 +73,9 @@ test('a lost HTTP acknowledgement is recovered by the browser retry without anot
     if (++attempts === 1) throw new Error('network connection lost after save')
     return response
   }
-  assert.equal((await saveBetaRequest(exampleAnswers, key, browserFetch)).code, 'temporarily_unavailable')
-  const saved = await saveBetaRequest(exampleAnswers, key, browserFetch)
+  const proof = signPhoneProof('+14165550123', environment.BETA_SUBMISSION_SECRET)
+  assert.equal((await saveBetaRequest(exampleAnswers, key, browserFetch, '', proof)).code, 'temporarily_unavailable')
+  const saved = await saveBetaRequest(exampleAnswers, key, browserFetch, '', proof)
   assert.equal(saved.requestId, state.rows[1][0])
   assert.equal(state.appendCalls, 1)
 })
@@ -87,6 +90,14 @@ test('concurrent same-key retries return the original receipt; changed answers c
   assert.equal(state.appendCalls, 1)
   assert.equal((await post(makeSubmission({ ...body.answers, location: 'Updated' }))).status, 200)
   assert.equal(state.appendCalls, 2)
+})
+
+test('submission requires a code proof for the same phone number', async (t) => {
+  const { post, state } = await serve(t)
+  const valid = makeSubmission()
+  assert.equal((await post({ ...valid, phone_verification: '' })).status, 400)
+  assert.equal((await post({ ...valid, answers: { ...valid.answers, phone: '4165550124' } })).status, 400)
+  assert.equal(state.appendCalls, 0)
 })
 
 test('three distinct referred phone signups set priority date once', async (t) => {
@@ -141,7 +152,7 @@ test('browser submission forwards the referral code and receives its own link co
     assert.equal(body.referral_code, referralCode)
     return post(body)
   }
-  const saved = await saveBetaRequest({ ...exampleAnswers, phone: '4165550132' }, key, browserFetch, referralCode)
+  const saved = await saveBetaRequest({ ...exampleAnswers, phone: '4165550132' }, key, browserFetch, referralCode, signPhoneProof('+14165550132', environment.BETA_SUBMISSION_SECRET))
   assert.ok(UUID4.test(saved.requestId))
   assert.match(saved.referralCode, /^[0-9a-f]{64}$/)
 })

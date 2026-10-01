@@ -61,6 +61,8 @@
 .beta-form-back { grid-column: 1; justify-self: start; width: 52px; height: 52px; }
 .beta-form-next { grid-column: 2; width: 52px; height: 52px; }
 .beta-form-help { margin-top: var(--oro-space-6); text-align: center; }
+.beta-resend { min-height: 44px; justify-self: center; padding: var(--oro-space-2); border: 0; background: transparent; color: var(--oro-color-accent); font: inherit; text-decoration: underline; cursor: pointer; }
+.beta-resend:focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
 .beta-form-help a, .beta-consent a, .beta-receipt a { color: var(--oro-color-accent); text-decoration: underline; text-underline-offset: 3px; }
 .beta-question { border: 0; margin: 0; padding: 0; min-width: 0; scroll-margin-top: var(--oro-space-8); }
 .beta-question-body { display: grid; gap: var(--oro-space-5); }

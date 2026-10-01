@@ -53,6 +53,11 @@ In the OroLanding Vercel project, configure the server environment for the inten
 | `BETA_COHORT` | Exact match to the Google property and eventual `BETA_ONBOARDING_COHORT` |
 | `BETA_RATE_LIMIT_ID` | The SDK rule ID configured below, e.g. `beta-request` |
 | `BETA_ALLOWED_ORIGINS` | Comma-separated full origins, e.g. `https://askoro.now,https://www.askoro.now`; no paths or trailing slashes. Include the old website origins only if that deployment will also accept requests. |
+| `TWILIO_ACCOUNT_SID` | Account SID for the existing Twilio account (`AC...`) |
+| `TWILIO_AUTH_TOKEN` | Server-only auth token for that account |
+| `TWILIO_VERIFY_SERVICE_SID` | Verify Service SID (`VA...`); an existing suitable Verify Service can be reused |
+
+The phone step uses Twilio Verify to send an SMS code. It does not require a new Twilio phone number. Configure the Verify Service's SMS channel and allowed countries in Twilio before opening signups. The beta server accepts a request only when its phone has a code verification proof issued within the last hour. The proof is kept in browser memory and is never written to the Sheet. The existing rate limit covers sending codes, checking codes, and submitting requests.
 
 Enable Vercel's automatically exposed system environment variables. `VERCEL=1`, `VERCEL_URL` and `NODE_ENV=production` are required; these are provided by Vercel, not browser configuration. The exact `VERCEL_URL` origin is also accepted for that deployment. Custom preview aliases need an explicit allowed origin. Do not promote a build made with `VERCEL_ENV=preview` into production; create a production build so the design-preview controls are excluded.
 

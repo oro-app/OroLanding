@@ -1,7 +1,8 @@
 import vm from 'node:vm'
 import { readFileSync } from 'node:fs'
 import { createHash, createHmac, randomUUID } from 'node:crypto'
-import { CONSENT_VERSION, FORM_VERSION } from '../src/lib/betaContract.js'
+import { CONSENT_VERSION, FORM_VERSION, normalizeAnswers } from '../src/lib/betaContract.js'
+import { signPhoneProof } from '../api/_lib/beta-phone-proof.js'
 
 export const exampleAnswers = {
   name: 'Jamie', email: ' BETA-TEST@example.com ', phone: '(416) 555-0123', instagram: '@example',
@@ -16,9 +17,11 @@ export const environment = {
   BETA_COHORT: 'september-2026', BETA_SUBMISSION_SECRET: 'test-only-secret-that-is-long-enough',
   BETA_APPS_SCRIPT_URL: 'https://script.google.com/macros/s/test/exec', BETA_RATE_LIMIT_ID: 'beta-request',
   BETA_ALLOWED_ORIGINS: 'https://www.askoro.now',
+  TWILIO_ACCOUNT_SID: `AC${'a'.repeat(32)}`, TWILIO_AUTH_TOKEN: 'test-token', TWILIO_VERIFY_SERVICE_SID: `VA${'b'.repeat(32)}`,
 }
 export const makeSubmission = (answers = exampleAnswers, key = randomUUID()) => ({
   submission_key: key, form_version: FORM_VERSION, consent_version: CONSENT_VERSION, answers,
+  phone_verification: signPhoneProof(normalizeAnswers(answers).answers.phone, environment.BETA_SUBMISSION_SECRET),
 })
 
 export function googleWriter() {

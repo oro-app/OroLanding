@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { MAX_BODY_BYTES, REFERRAL_CODE, UUID4, canonicalPayload, validateSubmission } from '../../src/lib/betaContract.js'
+import { verifyPhoneProof } from './beta-phone-proof.js'
 
 export function readConfig(env) {
   const url = env.BETA_APPS_SCRIPT_URL || ''
@@ -13,6 +14,8 @@ export function readConfig(env) {
     && /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url)
     && secret.length >= 32 && /^[a-zA-Z0-9_-]{1,80}$/.test(cohort)
     && /^[a-zA-Z0-9_-]{1,100}$/.test(rateLimitId) && /^[a-zA-Z0-9.-]+\.vercel\.app$/.test(host)
+    && /^AC[0-9a-f]{32}$/i.test(env.TWILIO_ACCOUNT_SID || '') && Boolean(env.TWILIO_AUTH_TOKEN)
+    && /^VA[0-9a-f]{32}$/i.test(env.TWILIO_VERIFY_SERVICE_SID || '')
     && origins.every((origin) => { try { return new URL(origin).origin === origin && origin.startsWith('https://') } catch { return false } })
   return { enabled: Boolean(enabled), url, secret, cohort, rateLimitId, host, origins }
 }
@@ -55,10 +58,12 @@ export function createBetaHandler({ env = process.env, fetcher = fetch, checkLim
         try { body = JSON.parse(body.toString()) } catch { return send(400, { code: 'invalid_request' }) }
       }
       if (Buffer.byteLength(JSON.stringify(body) || '') > MAX_BODY_BYTES) return send(413, { code: 'request_too_large' })
-      const validated = validateSubmission(body)
+      const { phone_verification: phoneVerification, ...submission } = body || {}
+      const validated = validateSubmission(submission)
       if (validated.code) return send(400, validated)
+      if (!verifyPhoneProof(validated.answers.phone, phoneVerification, config.secret)) return send(400, { code: 'phone_not_verified' })
       const payloadHash = createHash('sha256').update(canonicalPayload(validated.answers, config.cohort, body.referral_code || '')).digest('hex')
-      const result = await writeToGoogle(config, { ...body, answers: validated.answers, payload_hash: payloadHash }, fetcher)
+      const result = await writeToGoogle(config, { ...submission, answers: validated.answers, payload_hash: payloadHash }, fetcher)
       if (result?.code === 'submission_conflict') return send(409, { code: 'submission_conflict' })
       if (result?.ok !== true || !UUID4.test(result.request_id || '') || result.submission_key !== body.submission_key || result.payload_hash !== payloadHash || !REFERRAL_CODE.test(result.referral_code || '')) throw new Error('Unconfirmed save')
       return send(200, { ok: true, request_id: result.request_id, submission_key: body.submission_key, referral_code: result.referral_code })
