@@ -377,7 +377,7 @@ test('historical signups join the queue once, retaining their original date and 
   archived[3] = '2026-09-01T12:00:00.000Z'
   archived[oldHeaders.indexOf('phone')] = '+14165550124'
   archived[oldHeaders.indexOf('marketing')] = false
-  google.state.archive = [oldHeaders, archived, [...archived]]
+  google.state.archive = [oldHeaders, archived, ['ORGANIC BETA SIGNUPS START BELOW'], [...archived]]
   const original = structuredClone(google.state.archive)
   google.context.setupResponseSheet()
   google.context.setupResponseSheet()
