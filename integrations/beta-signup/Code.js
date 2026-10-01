@@ -30,7 +30,9 @@ function doPost(event) {
     if (input.action === 'lookup' && input.cohort === cohort && Object.keys(input).every((key) => ['secret', 'cohort', 'action', 'phone'].includes(key)) && /^\+[1-9]\d{6,14}$/.test(input.phone)) {
       lock = LockService.getScriptLock()
       if (!lock.tryLock(5000)) return jsonResult({ ok: false, code: 'temporarily_unavailable' })
-      const rows = readResponses(sheetId)
+      const savedRows = readResponses(sheetId)
+      reconcileReferrals(sheetId, savedRows)
+      const rows = [savedRows[0], ...orderedSignups(savedRows)]
       const phoneIndex = responseHeaders().indexOf('phone')
       const matchIndex = rows.findIndex((row, index) => index > 0 && row[phoneIndex] === input.phone)
       if (matchIndex < 0) return jsonResult({ ok: true, found: false })
@@ -51,7 +53,7 @@ function doPost(event) {
     const previous = findReceipt(rows, input.submission_key, digest)
     if (previous) {
       if (previous.ok) reconcileReferrals(sheetId, rows)
-      return jsonResult(previous)
+      return jsonResult(previous.ok ? findReceipt(rows, input.submission_key, digest) : previous)
     }
     const phoneIndex = responseHeaders().indexOf('phone')
     const codeIndex = responseHeaders().indexOf('referral_code')
@@ -70,7 +72,7 @@ function doPost(event) {
       const recovered = findReceipt(rows, input.submission_key, digest)
       if (recovered) {
         if (recovered.ok) reconcileReferrals(sheetId, rows)
-        return jsonResult(recovered)
+        return jsonResult(recovered.ok ? findReceipt(rows, input.submission_key, digest) : recovered)
       }
       throw new Error('Save unconfirmed')
     }
@@ -78,7 +80,7 @@ function doPost(event) {
     const receipt = findReceipt(rows, input.submission_key, digest)
     if (!receipt) throw new Error('Save unconfirmed')
     if (receipt.ok) reconcileReferrals(sheetId, rows)
-    return jsonResult(receipt)
+    return jsonResult(receipt.ok ? findReceipt(rows, input.submission_key, digest) : receipt)
   } catch {
     return jsonResult({ ok: false, code: 'temporarily_unavailable' })
   } finally {
@@ -102,7 +104,24 @@ function findReceipt(rows, key, hash) {
   if (!matches.length) return null
   if (matches.length !== 1 || !BetaContract.UUID4.test(matches[0][0])) throw new Error('Invalid receipt')
   if (matches[0][2] !== hash) return { ok: false, code: 'submission_conflict' }
-  return { ok: true, request_id: matches[0][0], submission_key: key, payload_hash: hash, referral_code: matches[0][responseHeaders().indexOf('referral_code')], signup_number: rows.indexOf(matches[0]) }
+  const phoneIndex = responseHeaders().indexOf('phone')
+  const position = orderedSignups(rows).findIndex((row) => row[phoneIndex] === matches[0][phoneIndex]) + 1
+  return { ok: true, request_id: matches[0][0], submission_key: key, payload_hash: hash, referral_code: matches[0][responseHeaders().indexOf('referral_code')], signup_number: position }
+}
+
+function orderedSignups(rows) {
+  const phoneIndex = responseHeaders().indexOf('phone')
+  const dateIndex = responseHeaders().indexOf('referral_completed_date')
+  const byPhone = new Map()
+  const chronological = rows.slice(1).sort((a, b) => String(a[3]).localeCompare(String(b[3])))
+  for (const row of chronological) {
+    if (!byPhone.has(row[phoneIndex])) byPhone.set(row[phoneIndex], row)
+  }
+  return [...byPhone.values()].sort((a, b) => {
+    const aDate = a[dateIndex] || ''
+    const bDate = b[dateIndex] || ''
+    return Number(Boolean(bDate)) - Number(Boolean(aDate)) || String(aDate || a[3]).localeCompare(String(bDate || b[3]))
+  })
 }
 
 function reconcileReferrals(sheetId, rows) {
@@ -112,17 +131,21 @@ function reconcileReferrals(sheetId, rows) {
   const byIndex = headers.indexOf('referred_by')
   const countIndex = headers.indexOf('referred_signups')
   const dateIndex = headers.indexOf('referral_completed_date')
-  const codes = new Set(rows.slice(1).map((row) => row[byIndex]).filter(Boolean))
+  const signups = orderedSignups(rows)
+  const codes = new Set(signups.map((row) => row[byIndex]).filter(Boolean))
   for (const code of codes) {
-    const ownerIndex = rows.findIndex((row, index) => index > 0 && row[codeIndex] === code)
+    const owner = signups.find((row) => row[codeIndex] === code)
+    const ownerIndex = rows.indexOf(owner)
     if (ownerIndex < 0) continue
-    const phones = new Set(rows.slice(1).filter((row) => row[byIndex] === code).map((row) => row[phoneIndex]))
-    const count = phones.size
-    const owner = rows[ownerIndex]
+    const referrals = signups.filter((row) => row[byIndex] === code && row[phoneIndex] !== owner[phoneIndex])
+      .sort((a, b) => String(a[3]).localeCompare(String(b[3])))
+    const count = referrals.length
     if (Number(owner[countIndex] || 0) === count && (count < 3 || owner[dateIndex])) continue
-    const date = owner[dateIndex] || (count >= 3 ? new Date().toISOString() : '')
+    const date = owner[dateIndex] || (count >= 3 ? referrals[2][3] : '')
     const column = countIndex + 1
     Sheets.Spreadsheets.Values.update({ values: [[count, date]] }, sheetId, "'Responses'!" + columnLetter(column) + (ownerIndex + 1) + ':' + columnLetter(column + 1) + (ownerIndex + 1), { valueInputOption: 'RAW' })
+    owner[countIndex] = count
+    owner[dateIndex] = date
   }
 }
 
