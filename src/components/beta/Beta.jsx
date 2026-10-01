@@ -248,6 +248,14 @@ export default function Beta() {
   const field = (name, label, props = {}) => <WrittenAnswer name={name} label={label} value={answers[name]} update={update} error={errors[name]} disabled={saving} {...props} />
   const inviteLink = ownReferralCode ? `${window.location.origin}/invite?ref=${ownReferralCode}` : ''
   const referralCompleted = Boolean(referralCompletedDate)
+  const previewReceipt = (completed = false) => {
+    setRequestId(null)
+    setSignupNumber(completed ? 1 : null)
+    setOwnReferralCode(null)
+    setReferredSignups(completed ? 3 : 0)
+    setReferralCompletedDate(completed ? 'preview' : '')
+    setView('receipt')
+  }
   useEffect(() => {
     if (view !== 'receipt') return
     let active = true
@@ -294,7 +302,7 @@ export default function Beta() {
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <HomeHeader />
-      {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is submitted</span><button onClick={() => setView(view === 'receipt' ? 'form' : 'receipt')}>{view === 'receipt' ? 'Back to form' : 'Preview confirmation'} <span data-button-icon="up-right" aria-hidden="true">↗</span></button></div></div>}
+      {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is submitted</span>{view === 'receipt' ? <button onClick={() => setView('form')}>Back to form <span data-button-icon="up-right" aria-hidden="true">↗</span></button> : <><button onClick={() => previewReceipt()}>Preview confirmation <span data-button-icon="up-right" aria-hidden="true">↗</span></button>{import.meta.env.DEV && <button onClick={() => previewReceipt(true)}>Preview referral milestone <span data-button-icon="up-right" aria-hidden="true">↗</span></button>}</>}</div></div>}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-panel beta-form-heading">
