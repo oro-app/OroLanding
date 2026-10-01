@@ -49,7 +49,7 @@ export default function Beta() {
   const currentCode = useRef(code)
   const currentStep = useRef(0)
   const allowForm = previewForm || enabled
-  const entryView = allowForm ? 'form' : 'coming-soon'
+  const entryView = allowForm ? 'welcome' : 'coming-soon'
   const saving = status === 'saving'
   const message = submissionMessages[status]
   const [view, setView] = useState(entryView)
@@ -59,6 +59,7 @@ export default function Beta() {
   const receiptRef = useRef(null)
   const statusRef = useRef(null)
   const comingSoonRef = useRef(null)
+  const welcomeRef = useRef(null)
   const pendingFocus = useRef(null)
   const stepInfo = formSteps[step]
   const finalStep = step === formSteps.length - 1
@@ -94,12 +95,12 @@ export default function Beta() {
         }
         currentStep.current = index
         setStep(index)
-        setView(entryView)
+        setView(allowForm ? 'form' : 'coming-soon')
       } else {
-        url.searchParams.set('step', formSteps[0].hash.slice(1))
+        url.searchParams.delete('step')
         url.hash = ''
         window.history.replaceState(null, '', `${url.pathname}${url.search}`)
-        currentStep.current = 0
+        currentStep.current = -1
         setStep(0)
         setView(entryView)
       }
@@ -111,7 +112,7 @@ export default function Beta() {
       window.removeEventListener('popstate', syncLocation)
       window.removeEventListener('hashchange', syncLocation)
     }
-  }, [entryView])
+  }, [entryView, allowForm])
 
   useEffect(() => {
     if (view !== 'form') return
@@ -134,8 +135,9 @@ export default function Beta() {
     return () => cancelAnimationFrame(frame)
   }, [view])
   useEffect(() => {
-    if (view !== 'coming-soon') return
-    comingSoonRef.current?.focus({ preventScroll: true })
+    if (view !== 'coming-soon' && view !== 'welcome') return
+    const heading = view === 'welcome' ? welcomeRef : comingSoonRef
+    heading.current?.focus({ preventScroll: true })
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [view])
   useEffect(() => { if (status !== 'idle' && !saving) statusRef.current?.focus() }, [status, saving])
@@ -150,12 +152,13 @@ export default function Beta() {
   function openStep(index) {
     if (submitting.current) return
     const url = new URL(window.location.href)
-    url.searchParams.set('step', formSteps[index].hash.slice(1))
+    if (index < 0) url.searchParams.delete('step')
+    else url.searchParams.set('step', formSteps[index].hash.slice(1))
     url.hash = ''
     window.history.pushState(null, '', `${url.pathname}${url.search}`)
     currentStep.current = index
-    setStep(index)
-    setView(entryView)
+    setStep(Math.max(0, index))
+    setView(index < 0 ? entryView : 'form')
   }
 
   async function verifyPhone(action) {
@@ -307,16 +310,24 @@ export default function Beta() {
           <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <ButtonArrow direction="up-right" /></a>
         </div>
       </section>}
+      {allowForm && view === 'welcome' && <section className="beta-application beta-welcome" aria-labelledby="welcome-title">
+        <div className="beta-story-halo" aria-hidden="true" />
+        <div className="beta-form-panel beta-welcome-content">
+          <Heading ref={welcomeRef} tabIndex={-1} as="h1" variant="title" id="welcome-title">meet oro.</Heading>
+          <img className="beta-welcome-mascot" src={welcomeMascot} alt="oro waving hello" width="280" height="280" />
+          <Text className="beta-welcome-copy">your personal ai stylist,<br />right in your texts.</Text>
+          <Button className="beta-welcome-cta" onClick={() => openStep(0)}>want her number? <ButtonArrow /></Button>
+          <Text variant="support" muted>arriving october 8. get in line to meet her.</Text>
+        </div>
+      </section>}
       {allowForm && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-progress" role="progressbar" aria-label="Invite request progress" aria-valuemin={0} aria-valuemax={formSteps.length} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${formSteps.length}`}><span style={{ width: `${(step + 1) / formSteps.length * 100}%` }} /></div>
         <div className="beta-form-panel" key={step}>
           <div className="beta-form-heading">
-            {step === 0 && <img className="beta-welcome-mascot" src={welcomeMascot} alt="oro waving hello" width="88" height="88" />}
             <Heading ref={stepTitleRef} tabIndex={-1} as="h1" variant="title" id="request-title">{stepInfo.title}</Heading>
             {stepInfo.optional && <Text variant="support" muted>Optional</Text>}
             {stepInfo.description && <Text muted>{stepInfo.description}</Text>}
-            {step === 0 && <Text variant="support" muted>arriving october 8. get in line to meet her.</Text>}
           </div>
           <form ref={formRef} onSubmit={submit} aria-busy={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} noValidate className="beta-form" aria-label="Invite request">
             <fieldset className="beta-question" aria-labelledby="request-title"><div className="beta-question-body">{questionContent[step]}</div></fieldset>
@@ -327,7 +338,7 @@ export default function Beta() {
               <Text variant="support" muted>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>, and to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</Text>
             </div>}
             <div className="beta-step-actions">
-              {step > 0 && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}
+              <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>
               {!finalStep && <Button type="submit" className="beta-form-next" disabled={verificationStatus === 'sending' || verificationStatus === 'checking'}>
                 {verificationStatus === 'sending' ? 'sending your code…' : verificationStatus === 'checking' ? 'checking your code…' : step === 0 ? 'send my code' : 'verify my number'}
                 <ButtonArrow size={18} />
