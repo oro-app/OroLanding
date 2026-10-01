@@ -35,7 +35,7 @@ const FEATURES = [
     height: 1500,
   },
 ]
-const HEADLINE = 'want Oro’s number?'
+const HEADLINE = 'The AI fashion assistant you can text'
 const TYPE_STEP = 34
 
 function TypedHeadline() {
@@ -50,7 +50,7 @@ function TypedHeadline() {
               style={{ '--home-char-delay': `${80 + index++ * TYPE_STEP}ms` }}>{char}</span>
           ))}
         </Word>
-        {wordIndex < words.length - 1 ? ' ' : null}
+        {wordIndex === 3 ? <br /> : wordIndex < words.length - 1 ? ' ' : null}
       </Fragment>
     )
   })
@@ -82,7 +82,7 @@ export default function Home() {
             </Heading>
             <Text muted className="home-description home-enter">
               give us your number. we’ll give you hers.<br />
-              your personal stylist over text, for outfits, second opinions, and figuring out what to wear.
+              your personal fashion stylist over text, for outfits, second opinions, and figuring out what to wear.
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">get her number</HomeCta>
