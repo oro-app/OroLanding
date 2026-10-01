@@ -30,6 +30,7 @@ function doPost(event) {
     if (input.action === 'lookup' && input.cohort === cohort && Object.keys(input).every((key) => ['secret', 'cohort', 'action', 'phone'].includes(key)) && /^\+[1-9]\d{6,14}$/.test(input.phone)) {
       lock = LockService.getScriptLock()
       if (!lock.tryLock(5000)) return jsonResult({ ok: false, code: 'temporarily_unavailable' })
+      upgradeResponseSheet()
       const savedRows = readResponses(sheetId)
       reconcileReferrals(sheetId, savedRows)
       const rows = [savedRows[0], ...orderedSignups(savedRows)]
@@ -42,13 +43,18 @@ function doPost(event) {
       return jsonResult({ ok: true, found: true, request_id: rows[matchIndex][0], referral_code: rows[matchIndex][codeIndex], signup_number: matchIndex, referred_signups: Number(rows[matchIndex][countIndex] || 0), referral_completed_date: rows[matchIndex][dateIndex] || '' })
     }
     if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash', 'referral_code', 'campaign_source'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
-    const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: input.form_version, consent_version: input.consent_version, answers: input.answers, referral_code: input.referral_code, campaign_source: input.campaign_source })
+    const legacyForm = input.form_version === '2026-09-28.4' && input.referral_code === undefined && input.campaign_source === undefined
+    const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: legacyForm ? BetaContract.FORM_VERSION : input.form_version, consent_version: input.consent_version, answers: input.answers, referral_code: input.referral_code, campaign_source: input.campaign_source })
     if (validated.code) return jsonResult({ ok: false, code: validated.code })
-    const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, BetaContract.canonicalPayload(validated.answers, cohort, input.referral_code || '', input.campaign_source || ''), Utilities.Charset.UTF_8)
+    const canonical = legacyForm
+      ? JSON.stringify({ cohort, form_version: input.form_version, consent_version: input.consent_version, answers: validated.answers })
+      : BetaContract.canonicalPayload(validated.answers, cohort, input.referral_code || '', input.campaign_source || '')
+    const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, canonical, Utilities.Charset.UTF_8)
       .map((byte) => ('0' + ((byte + 256) % 256).toString(16)).slice(-2)).join('')
     if (digest !== input.payload_hash) return jsonResult({ ok: false, code: 'invalid_request' })
     lock = LockService.getScriptLock()
     if (!lock.tryLock(5000)) return jsonResult({ ok: false, code: 'temporarily_unavailable' })
+    upgradeResponseSheet()
     let rows = readResponses(sheetId)
     const previous = findReceipt(rows, input.submission_key, digest)
     if (previous) {
@@ -62,7 +68,7 @@ function doPost(event) {
     const referrer = firstSignup && rows.slice(1).find((row) => row[codeIndex] === input.referral_code && row[phoneIndex] !== validated.answers.phone)
     const referralCode = earlierSignup ? earlierSignup[codeIndex] : codeForPhone(validated.answers.phone, secret)
     const receivedAt = new Date().toISOString()
-    const row = [Utilities.getUuid(), input.submission_key, digest, receivedAt, cohort, BetaContract.FORM_VERSION, BetaContract.CONSENT_VERSION, receivedAt]
+    const row = [Utilities.getUuid(), input.submission_key, digest, receivedAt, cohort, input.form_version, input.consent_version, receivedAt]
       .concat(BetaContract.answerFields.map((name) => Array.isArray(validated.answers[name]) ? JSON.stringify(validated.answers[name]) : validated.answers[name]), [0, '', false, referralCode, referrer ? input.referral_code : '', input.campaign_source || 'direct'])
     try {
       // RAW keeps phone numbers and answers starting with = or + as literal text.
