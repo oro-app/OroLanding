@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 import outfitPhoto from '../../assets/fits/fri.webp'
+import amazed from '../../assets/mascot/amazed.webp'
+import thinking from '../../assets/mascot/thinking.webp'
 import SmsBubble from './SmsBubble'
 import './ProductDemo.css'
 import './StyleAdviceDemo.css'
@@ -52,10 +54,10 @@ export default function StyleAdviceDemo() {
             </SmsBubble>
           </li>
           <li className="product-demo-message style-advice-demo-reply--continued">
-            <SmsBubble><span className="sr-only">Oro: </span>Pink and white is always such a cute color combo! </SmsBubble>
+            <SmsBubble avatar={amazed}><span className="sr-only">Oro: </span>Pink and white is always such a cute color combo! </SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>I'd keep the sneakers for daytime. If you want to dress it up, try ballet flats instead :)</SmsBubble>
+            <SmsBubble avatar={thinking}><span className="sr-only">Oro: </span>I'd keep the sneakers for daytime. If you want to dress it up, try ballet flats instead :)</SmsBubble>
           </li>
         </ol>
       </div>

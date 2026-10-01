@@ -21,9 +21,17 @@
 
 .product-demo-message { display: flex; justify-content: flex-start; }
 .product-demo-message--user { justify-content: flex-end; }
-.product-demo-message:has(+ .product-demo-message img) .sms-bubble::after { display: none; }
+.product-demo-message:has(+ .product-demo-message .sms-bubble > img) .sms-bubble::after { display: none; }
 .product-demo-message .sms-bubble { max-width: min(78%, 340px); }
 .product-demo-message img { width: 250px; }
+.product-demo-message .sms-avatar {
+  flex: none;
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  margin-right: 8px;
+  object-fit: contain;
+}
 
 .product-demo[data-demo-motion="ready"] .product-demo-message[data-reveal-state="pending"] {
   opacity: 0;

@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react'
 import outfit from '../../assets/fit-gen-demo/collage.webp'
 import tryOn from '../../assets/fit-gen-demo/tryon.webp'
+import amazed from '../../assets/mascot/amazed.webp'
+import aww from '../../assets/mascot/aww.webp'
+import cheeky from '../../assets/mascot/cheeky.webp'
+import jotting from '../../assets/mascot/jotting.webp'
 import SmsBubble from './SmsBubble'
 import './ProductDemo.css'
 
@@ -37,10 +41,10 @@ export default function ProductDemo() {
             <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I'm going out for brunch with friends</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>I have the perfect look!</SmsBubble>
+            <SmsBubble avatar={amazed}><span className="sr-only">Oro: </span>I have the perfect look!</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble>
+            <SmsBubble avatar={jotting}>
               <span className="sr-only">Oro: </span>
               <img src={outfit} alt="Outfit collage with a cream cardigan, cherry-print top, flared jeans, red belt, silver hoops, and white sneakers" loading="lazy" decoding="async" width="1086" height="1448" />
             </SmsBubble>
@@ -49,10 +53,10 @@ export default function ProductDemo() {
             <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>It looks stunning on you :)</SmsBubble>
+            <SmsBubble avatar={aww}><span className="sr-only">Oro: </span>It looks stunning on you :)</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble>
+            <SmsBubble avatar={cheeky}>
               <span className="sr-only">Oro: </span>
               <img src={tryOn} alt="Try-on with a cream cardigan, cherry-print top, red belt, and light blue flared jeans" loading="lazy" decoding="async" width="480" height="640" />
             </SmsBubble>
