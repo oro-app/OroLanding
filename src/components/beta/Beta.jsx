@@ -269,13 +269,13 @@ export default function Beta() {
     let imageUrl
     setStoryImage(null)
     setShareMessage('')
-    createReceiptStory(inviteLink, signupNumber).then((blob) => {
+    createReceiptStory(signupNumber).then((blob) => {
       if (!active) return
       imageUrl = URL.createObjectURL(blob)
       setStoryImage({ blob, url: imageUrl })
     }).catch(() => { if (active) { setStoryImage(null); setShareMessage('Could not prepare the share image. Please try again.') } })
     return () => { active = false; if (imageUrl) URL.revokeObjectURL(imageUrl) }
-  }, [view, inviteLink, signupNumber, storyRetry])
+  }, [view, signupNumber, storyRetry])
   async function copyInvite() {
     if (!inviteLink) return
     try {
@@ -368,7 +368,7 @@ export default function Beta() {
             {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}
           </div>
           {!referralCompleted && <div className="beta-story-preview">
-            {storyImage ? <img src={storyImage.url} alt="Share image with the cheeky Oro mascot, referral message, and invite link" /> : <div className="beta-story-skeleton" role="status" aria-label={shareMessage.startsWith('Could not prepare') ? 'Image unavailable' : 'Preparing image'} />}
+            {storyImage ? <img src={storyImage.url} alt="Share image with your place in line, the cheeky Oro mascot, and an invitation to DM for an invite" /> : <div className="beta-story-skeleton" role="status" aria-label={shareMessage.startsWith('Could not prepare') ? 'Image unavailable' : 'Preparing image'} />}
             <StoryImageActions blob={storyImage?.blob} failed={shareMessage.startsWith('Could not prepare')} onRetry={() => setStoryRetry((value) => value + 1)} />
             {shareMessage.startsWith('Could not prepare') && <p>{shareMessage}</p>}
           </div>}

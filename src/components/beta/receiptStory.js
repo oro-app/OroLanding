@@ -1,6 +1,6 @@
 import mascot from '../../assets/mascot/cheeky.webp'
 
-export async function createReceiptStory(inviteLink, signupNumber) {
+export async function createReceiptStory(signupNumber) {
   const image = new Image()
   image.src = mascot
   const logo = new Image()
@@ -39,19 +39,14 @@ export async function createReceiptStory(inviteLink, signupNumber) {
   ctx.roundRect(64, 1360, 952, 390, 40)
   ctx.fill()
   ctx.fillStyle = '#2b1646'
-  ctx.font = 'bold 57px Georgia, serif'
-  ctx.fillText('good style looks', 118, 1450)
-  ctx.fillText('better together', 118, 1510)
-  ctx.font = '34px Arial, sans-serif'
-  ctx.fillText('use my personal invite link:', 118, 1580)
+  ctx.font = 'bold 72px Georgia, serif'
+  ctx.fillText('want her number?', 118, 1470)
+  ctx.font = '44px Arial, sans-serif'
+  ctx.fillText('dm me for my invite.', 118, 1545)
   ctx.fillStyle = '#49346c'
-  ctx.font = '30px Arial, sans-serif'
-  if (inviteLink) {
-    const url = new URL(inviteLink)
-    ctx.fillText(url.host + url.pathname, 118, 1640, 844)
-    ctx.fillText(url.search.slice(0, 45), 118, 1680, 844)
-    ctx.fillText(url.search.slice(45), 118, 1720, 844)
-  } else ctx.fillText('your link appears here', 118, 1640)
+  ctx.font = '36px Arial, sans-serif'
+  ctx.fillText('your personal ai stylist,', 118, 1635)
+  ctx.fillText('right in your texts.', 118, 1685)
   ctx.drawImage(logo, 70, 1780, 180, 101)
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
