@@ -5,7 +5,7 @@ export const CONSENT_VERSION = '2026-09-24.1'
 export const UUID4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 export const MAX_BODY_BYTES = 64 * 1024
 export const REFERRAL_CODE = /^[0-9a-f]{64}$/
-export const CAMPAIGN_SOURCE = /^(?:reddit-[1-9][0-9]*|poster-[a-z0-9]+(?:-[a-z0-9]+)*|(?:ig|x|linkedin)-(?:angela|sunny|oro|[a-z0-9]+(?:-[a-z0-9]+)+))$/
+export const CAMPAIGN_SOURCE = /^(?:reddit-[1-9][0-9]*|(?:poster|ig|x|linkedin)-[a-z0-9]+(?:-[a-z0-9]+)*)$/
 export const choices = {
   usedOro: ['Yes', 'No'],
   outfitDays: ['0 days', '1–2 days', '3–4 days', '5–7 days', 'I don’t remember'],

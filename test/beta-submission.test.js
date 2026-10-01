@@ -102,7 +102,7 @@ test('concurrent same-key retries return the original receipt; changed answers c
 
 test('campaign links save validated source separately from self-reported source and referral', async (t) => {
   const { post, state } = await serve(t)
-  for (const source of ['reddit-12', 'poster-job', 'ig-angela', 'ig-sunny', 'ig-oro', 'ig-creator-name', 'x-angela', 'x-sunny', 'x-oro', 'x-creator-name', 'linkedin-angela', 'linkedin-sunny', 'linkedin-oro', 'linkedin-creator-name']) {
+  for (const source of ['reddit-12', 'poster-job', 'ig-angela', 'ig-sunny', 'ig-oro', 'ig-creator-name', 'x-angela', 'x-sunny', 'x-oro', 'x-creator-name', 'linkedin-angela', 'linkedin-sunny', 'linkedin-oro', 'linkedin-creator-name', 'ig-carmen', 'x-patrick', 'linkedin-arav']) {
     const body = makeSubmission({ ...exampleAnswers, phone: `41655501${String(24 + state.appendCalls).padStart(2, '0')}` })
     body.campaign_source = source
     assert.equal((await post(body)).status, 200)
@@ -110,10 +110,10 @@ test('campaign links save validated source separately from self-reported source 
     assert.equal(row.campaign_source, source)
     assert.equal(row.source, 'Website')
   }
-  for (const source of ['reddit-name', 'poster-', 'ig-founder', 'x-company', 'linkedin-founder', 'ig-FounDER', 'tiktok-creator', '=evil', 'linkedin-name/other']) {
+  for (const source of ['reddit-name', 'poster-', 'ig-', 'x--company', 'linkedin-founder-', 'ig-FounDER', 'tiktok-creator', '=evil', 'linkedin-name/other']) {
     assert.equal((await post({ ...makeSubmission(), campaign_source: source })).status, 400)
   }
-  assert.equal(state.appendCalls, 14)
+  assert.equal(state.appendCalls, 17)
 })
 
 test('submission requires a code proof for the same phone number', async (t) => {
@@ -365,4 +365,41 @@ test('existing response sheets get a campaign column with unknown historical sou
   assert.equal(google.state.rows[1].at(-1), 'unknown')
   google.context.setupResponseSheet()
   assert.equal(google.state.rows[0].filter((header) => header === 'campaign_source').length, 1)
+})
+
+test('historical signups join the queue once, retaining their original date and consent', () => {
+  const google = googleWriter()
+  google.post(envelope())
+  const oldHeaders = google.state.rows[0].slice(0, -6)
+  const archived = google.state.rows[1].slice(0, -6)
+  archived[0] = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'
+  archived[1] = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc'
+  archived[3] = '2026-09-01T12:00:00.000Z'
+  archived[oldHeaders.indexOf('phone')] = '+14165550124'
+  archived[oldHeaders.indexOf('marketing')] = false
+  google.state.archive = [oldHeaders, archived, [...archived]]
+  const original = structuredClone(google.state.archive)
+  google.context.setupResponseSheet()
+  google.context.setupResponseSheet()
+  assert.equal(google.state.rows.length, 3)
+  assert.deepEqual(google.state.archive, original)
+  const lookup = (phone) => google.post({ action: 'lookup', secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, phone })
+  assert.equal(lookup('+14165550124').signup_number, 1)
+  assert.equal(lookup('+14165550123').signup_number, 2)
+  assert.equal(google.state.rows[2][oldHeaders.indexOf('marketing')], false)
+  assert.equal(google.state.rows[2].at(-1), 'unknown')
+  google.post(envelope(makeSubmission({ ...exampleAnswers, phone: '+14165550124' })))
+  assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).count, 2)
+  const owner = lookup('+14165550124')
+  for (const phone of ['+14165550125', '+14165550126', '+14165550127']) google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone }), referral_code: owner.referral_code }))
+  assert.equal(lookup('+14165550124').referred_signups, 3)
+  assert.ok(lookup('+14165550124').referral_completed_date)
+})
+
+test('archive validation stops before importing any incomplete historical signup', () => {
+  const google = googleWriter()
+  google.state.archive = [['phone', 'received_at'], ['+14165550124', '2026-09-01T12:00:00.000Z']]
+  assert.throws(() => google.context.setupResponseSheet(), /Historical signup needs review/)
+  assert.equal(google.state.rows.length, 1)
+  assert.equal(google.state.locked, false)
 })

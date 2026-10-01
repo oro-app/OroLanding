@@ -10,10 +10,10 @@ function response() {
   return { headers: {}, setHeader(name, value) { this.headers[name] = value }, status(code) { this.code = code; return this }, json(body) { this.body = body; return this } }
 }
 
-test('the writer counts saved response rows and rejects unauthenticated reads', () => {
+test('the writer counts distinct phones and rejects unauthenticated reads', () => {
   const google = googleWriter()
   assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).count, 0)
-  google.state.rows.push(['first'], ['second'])
+  google.state.rows.push(...['+14165550123', '+14165550124', '+14165550123'].map((phone) => google.state.rows[0].map((header) => header === 'phone' ? phone : '')))
   assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).count, 2)
   assert.equal(google.post({ action: 'count' }).code, 'unauthorized')
 })

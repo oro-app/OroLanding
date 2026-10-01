@@ -17,7 +17,7 @@ export function visibleAnswers(answers) {
 }
 
 export const formSteps = [
-  { hash: '#phone', title: 'where should oro text you?', fields: ['phone'] },
+  { hash: '#phone', title: 'meet oro.', description: 'your personal ai stylist, right in your texts. outfit ideas, honest fit checks, and help figuring out what to wear.', fields: ['phone'] },
   { hash: '#verify-phone', title: 'Verify your phone number', fields: [] },
   { hash: '#contact', title: 'what should she call you?', fields: ['name', 'email'] },
 ]

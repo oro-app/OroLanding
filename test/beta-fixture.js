@@ -25,7 +25,7 @@ export const makeSubmission = (answers = exampleAnswers, key = randomUUID()) => 
 })
 
 export function googleWriter() {
-  const state = { rows: [], appendCalls: 0, lockBusy: false, locked: false, throwAfterAppend: false, readFailure: false, dropWrite: false, appends: [], properties: {
+  const state = { rows: [], archive: [], appendCalls: 0, lockBusy: false, locked: false, throwAfterAppend: false, readFailure: false, dropWrite: false, appends: [], properties: {
     BETA_SUBMISSION_SECRET: environment.BETA_SUBMISSION_SECRET, BETA_COHORT: environment.BETA_COHORT, BETA_SHEET_ID: 'test-sheet',
   } }
   const context = vm.createContext({
@@ -33,7 +33,7 @@ export function googleWriter() {
     PropertiesService: { getScriptProperties: () => ({ getProperty: (key) => state.properties[key] }) },
     Utilities: { getUuid: randomUUID, DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' }, computeDigest: (algorithm, value) => [...createHash(algorithm).update(value).digest()], computeHmacSha256Signature: (value, secret) => [...createHmac('sha256', secret).update(value).digest()] },
     LockService: { getScriptLock: () => ({ tryLock() { state.locked = !state.lockBusy; return state.locked }, hasLock: () => state.locked, releaseLock() { state.locked = false } }) },
-    SpreadsheetApp: { openById: () => ({ getSheetByName: () => ({
+    SpreadsheetApp: { openById: () => ({ getSheetByName: (name) => name === 'Responses backup' ? { getLastRow: () => state.archive.length, getDataRange: () => ({ getValues: () => structuredClone(state.archive) }) } : ({
       getLastRow: () => state.rows.length,
       getLastColumn: () => state.rows[0].length,
       getRange(row, column, height, width) { return {
