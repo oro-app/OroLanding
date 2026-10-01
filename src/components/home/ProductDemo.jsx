@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react'
 import outfit from '../../assets/fit-gen-demo/collage.webp'
 import tryOn from '../../assets/fit-gen-demo/tryon.webp'
-import amazed from '../../assets/mascot/amazed.webp'
-import aww from '../../assets/mascot/aww.webp'
 import cheeky from '../../assets/mascot/cheeky.webp'
 import jotting from '../../assets/mascot/jotting.webp'
 import SmsBubble from './SmsBubble'
@@ -41,7 +39,7 @@ export default function ProductDemo() {
             <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I'm going out for brunch with friends</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble avatar={amazed}><span className="sr-only">Oro: </span>I have the perfect look!</SmsBubble>
+            <SmsBubble><span className="sr-only">Oro: </span>I have the perfect look!</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble avatar={jotting}>
@@ -53,7 +51,7 @@ export default function ProductDemo() {
             <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble avatar={aww}><span className="sr-only">Oro: </span>It looks stunning on you :)</SmsBubble>
+            <SmsBubble><span className="sr-only">Oro: </span>It looks stunning on you :)</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble avatar={cheeky}>
