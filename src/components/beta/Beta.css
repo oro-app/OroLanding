@@ -124,8 +124,9 @@
 .beta-hero-invite svg { width: 18px; height: 18px; flex: none; }
 .beta-hero-invite.oro-button--tertiary:disabled { background: var(--oro-color-disabled-surface); color: var(--oro-color-disabled-text); cursor: default; transform: none; }
 .beta-story-preview { display: grid; justify-self: center; justify-items: center; align-content: start; gap: 6px; }
-.beta-story-preview img { width: min(100%, 230px); max-height: 330px; object-fit: contain; border-radius: 16px; box-shadow: 0 8px 24px #29163f20; }
-.beta-story-skeleton { width: min(100%, 185px); aspect-ratio: 9 / 16; border-radius: 16px; background: var(--oro-color-soft); }
+.beta-story-preview :is(img, .beta-story-skeleton) { width: 230px; max-width: 100%; aspect-ratio: 9 / 16; border-radius: 16px; }
+.beta-story-preview img { display: block; height: auto; box-shadow: 0 8px 24px #29163f20; }
+.beta-story-skeleton { background: var(--oro-color-soft); }
 .beta-story-preview .oro-button--tertiary { width: 44px; min-height: 44px; padding: 0; }
 .beta-story-preview .oro-button--tertiary svg { width: 20px; height: 20px; }
 .beta-rewards h2 { margin: 0; font-size: clamp(24px, 3vw, 32px); line-height: 1; }
@@ -136,7 +137,7 @@
 .beta-footer-message { min-height: 1.5em; margin: 12px 0 0; color: #fff; font-size: 14px; }
 .beta-page--receipt .halo-footer-closer .halo-cta:disabled { opacity: .6; cursor: default; transform: none; }
 @media (max-width: 700px) { .beta-receipt { padding-block: 42px 44px; } .beta-receipt-hero { grid-template-columns: 1fr; min-height: 0; } .beta-receipt-hero h1 { font-size: clamp(48px, 9vw, 68px); } }
-@media (hover: hover) { .beta-option:hover { background: var(--oro-color-soft); } .beta-social-share .oro-button:hover:not(:disabled) { box-shadow: 0 0 0 3px var(--oro-color-soft), var(--oro-shadow-action-hover); } .beta-social-share .oro-button--secondary:hover:not(:disabled) { border-color: var(--oro-color-accent); background: color-mix(in srgb, var(--oro-color-soft) 90%, var(--oro-color-accent)); } .beta-hero-invite.oro-button--tertiary:hover:not(:disabled) { background: color-mix(in srgb, var(--oro-color-soft) 90%, var(--oro-color-accent)); color: var(--oro-color-accent-hover); } }
+@media (hover: hover) { .beta-option:hover { background: var(--oro-color-soft); } .beta-social-share .oro-button:hover:not(:disabled) { box-shadow: 0 0 0 3px var(--oro-color-soft), var(--oro-shadow-action-hover); } .beta-social-share .oro-button--secondary:hover:not(:disabled) { border-color: var(--oro-color-accent); } }
 @media (forced-colors: active) { .beta-story-preview button, .beta-hero-invite, .beta-social-share .oro-button { border: 1px solid ButtonText; } }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) { .beta-social-share .oro-button:hover:not(:disabled) { transform: translateY(-2px); } }
 @media (prefers-reduced-motion: no-preference) {
