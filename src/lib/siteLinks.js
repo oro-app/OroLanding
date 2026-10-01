@@ -8,7 +8,6 @@ export const NAV_COLUMNS = [
     head: 'product',
     links: [
       { label: 'try oro',      href: '/try-oro' },
-      { label: 'how it works', href: '/how-it-works' },
       { label: 'why oro?',     href: '/why-oro' },
     ],
   },
