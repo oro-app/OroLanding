@@ -8,9 +8,9 @@ const html = await read('dist/beta/index.html')
 const manifest = JSON.parse(await read('dist/.vite/manifest.json'))
 const config = JSON.parse(await read('vercel.json'))
 
-test('preview signup HTML starts on the welcome screen without a temporary status banner', () => {
+test('signup HTML starts on the welcome screen without a temporary status banner', () => {
   assert.match(html, /class="beta-page beta-page--welcome /,
-    'Build first with VERCEL_ENV=preview npm run build')
+    'Build first with npm run build in preview or production mode')
   assert.match(html, /id="welcome-title"/)
   assert.doesNotMatch(html, /class="beta-draft-bar"/)
   assert.doesNotMatch(html, /beta-coming-soon/)
