@@ -314,10 +314,12 @@ export default function Beta() {
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-panel beta-welcome-content">
           <Heading ref={welcomeRef} tabIndex={-1} as="h1" variant="title" id="welcome-title">meet oro.</Heading>
-          <img className="beta-welcome-mascot" src={welcomeMascot} alt="oro waving hello" width="280" height="280" />
+          <div className="beta-welcome-portrait">
+            <img className="beta-welcome-mascot" src={welcomeMascot} alt="oro waving hello" width="280" height="280" />
+          </div>
           <Text className="beta-welcome-copy">your personal ai stylist,<br />right in your texts.</Text>
           <Button className="beta-welcome-cta" onClick={() => openStep(0)}>want her number? <ButtonArrow /></Button>
-          <Text variant="support" muted>arriving october 8. get in line to meet her.</Text>
+          <Text className="beta-welcome-note" variant="support" muted>arriving october 8. get in line to meet her.</Text>
         </div>
       </section>}
       {allowForm && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
