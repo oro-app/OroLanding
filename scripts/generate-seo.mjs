@@ -250,6 +250,9 @@ async function main() {
   const manifest = JSON.parse(await fs.readFile(path.join(distDir, '.vite', 'manifest.json'), 'utf8'))
   const legalStylesheet = manifest['src/legal.css']?.file
   const headingsStylesheet = manifest['src/serif-headings.css']?.file
+  const betaStylesheets = manifest['src/components/beta/Beta.jsx']?.css
+  if (!betaStylesheets?.length) throw new Error('Missing signup stylesheets in the client build manifest')
+  const betaTemplate = template.replace('</head>', `${betaStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!headingsStylesheet) throw new Error('Missing preview heading stylesheet in the client build manifest')
   if (!legalStylesheet) throw new Error('Missing legal page stylesheet in the client build manifest')
   const newsletterEntries = await getNewsletterEntries()
@@ -262,7 +265,7 @@ async function main() {
     const seo = getSeoForRoute({ type })
     const appHtml = await render(seo.path)
     rnwStyleTag = getRnwStyleTag ? getRnwStyleTag() : ''
-    await writeRoute(template, seo, appHtml)
+    await writeRoute(type === 'beta' ? betaTemplate : template, seo, appHtml)
   }
 
   for (const type of STATIC_PAGE_TYPES) {
