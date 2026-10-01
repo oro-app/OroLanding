@@ -101,7 +101,7 @@ test('concurrent same-key retries return the original receipt; changed answers c
 
 test('campaign links save validated source separately from self-reported source and referral', async (t) => {
   const { post, state } = await serve(t)
-  for (const source of ['reddit-12', 'poster-job', 'ig-founder', 'ig-company', 'x-creator-name', 'linkedin-creator-name']) {
+  for (const source of ['reddit-12', 'poster-job', 'ig-angela', 'ig-sunny', 'ig-oro', 'ig-creator-name', 'x-angela', 'x-sunny', 'x-oro', 'x-creator-name', 'linkedin-angela', 'linkedin-sunny', 'linkedin-oro', 'linkedin-creator-name']) {
     const body = makeSubmission({ ...exampleAnswers, phone: `41655501${String(24 + state.appendCalls).padStart(2, '0')}` })
     body.campaign_source = source
     assert.equal((await post(body)).status, 200)
@@ -109,10 +109,10 @@ test('campaign links save validated source separately from self-reported source 
     assert.equal(row.campaign_source, source)
     assert.equal(row.source, 'Website')
   }
-  for (const source of ['reddit-name', 'poster-', 'ig-FounDER', 'tiktok-creator', '=evil', 'linkedin-name/other']) {
+  for (const source of ['reddit-name', 'poster-', 'ig-founder', 'x-company', 'linkedin-founder', 'ig-FounDER', 'tiktok-creator', '=evil', 'linkedin-name/other']) {
     assert.equal((await post({ ...makeSubmission(), campaign_source: source })).status, 400)
   }
-  assert.equal(state.appendCalls, 6)
+  assert.equal(state.appendCalls, 14)
 })
 
 test('submission requires a code proof for the same phone number', async (t) => {
