@@ -2,9 +2,9 @@ import { PRODUCT_FAQS } from './faqs.js'
 
 export const SITE_URL = 'https://www.askoro.now'
 export const SITE_NAME = 'oro'
-export const SITE_TITLE = 'oro - Your AI stylist, one text away'
+export const SITE_TITLE = 'oro - your ai stylist, one text away'
 export const DEFAULT_DESCRIPTION =
-  'Nothing to wear? Ask oro and discover the gold in your wardrobe.'
+  'nothing to wear? ask oro and discover the gold in your wardrobe.'
 export const DEFAULT_IMAGE = '/favicon.webp'
 export const DEFAULT_IMAGE_META = {
   type: 'image/webp',
@@ -20,33 +20,33 @@ const WEBSITE_ID = `${SITE_URL}/#website`
 export const ROUTE_SEO = {
   feedback: {
     path: '/feedback',
-    title: 'Beta feedback - oro',
-    description: 'Share your oro beta experience using your personal invitation.',
-    h1: 'Beta feedback',
+    title: 'beta feedback - oro',
+    description: 'share your oro beta experience using your personal invitation.',
+    h1: 'beta feedback',
     noindex: true,
   },
   beta: {
     path: '/beta',
-    title: 'Help us make oro yours. - oro beta',
-    description: 'Help shape the earliest oro experience. Meet the beta and our first oronauts.',
-    h1: 'Help us make oro yours.',
+    title: 'help us make oro yours. - oro beta',
+    description: 'help shape the earliest oro experience. meet the beta and our first oronauts.',
+    h1: 'help us make oro yours.',
     noindex: true,
   },
   home: {
     path: '/',
     title: SITE_TITLE,
     description: DEFAULT_DESCRIPTION,
-    h1: 'The #1 AI fashion stylist you can text',
+    h1: 'the ai fashion assistant you can text',
     summary:
-      'oro helps you find your look, whatever your plans. Ask oro, and head out feeling good about what you’re wearing.',
+      'oro helps you find your look, whatever your plans. ask oro, and head out feeling good about what you’re wearing.',
     priority: '1.0',
   },
   'try-oro': {
     path: '/try-oro',
-    title: 'Try oro - AI outfit planner and virtual stylist app',
+    title: 'try oro - ai outfit planner and virtual stylist app',
     description:
-      'Download oro to get outfit ideas from your own clothes, preview looks with virtual try-on, and get dressed faster.',
-    h1: 'Try oro.',
+      'download oro to get outfit ideas from your own clothes, preview looks with virtual try-on, and get dressed faster.',
+    h1: 'try oro.',
     summary:
       'oro is free to start and builds outfits from your actual wardrobe in under a minute.',
     priority: '0.9',
@@ -54,21 +54,21 @@ export const ROUTE_SEO = {
   },
   'how-it-works': {
     path: '/how-it-works',
-    title: 'How oro Works - Outfit ideas from your own closet',
+    title: 'how oro works - outfit ideas from your own closet',
     description:
-      'See how oro turns your wardrobe, plans, taste, weather, and virtual try-on into outfit recommendations.',
-    h1: 'How oro works.',
+      'see how oro turns your wardrobe, plans, taste, weather, and virtual try-on into outfit recommendations.',
+    h1: 'how oro works.',
     summary:
-      'Add your closet, tell oro where you are going, preview the outfit, and leave with a look made from clothes you own.',
+      'add your closet, tell oro where you are going, preview the outfit, and leave with a look made from clothes you own.',
     priority: '0.8',
     faqs: PRODUCT_FAQS,
   },
   'why-oro': {
     path: '/why-oro',
-    title: 'Why oro - Personal styling without buying more clothes',
+    title: 'why oro - personal styling without buying more clothes',
     description:
       'oro is built around your closet, your taste, your body, and your week, so style recommendations feel personal.',
-    h1: 'Why oro?',
+    h1: 'why oro?',
     summary:
       'oro thinks through color, silhouette, occasion, weather, and taste so your wardrobe is easier to use.',
     priority: '0.8',
@@ -86,32 +86,32 @@ export const ROUTE_SEO = {
   },
   manifesto: {
     path: '/honestly',
-    title: 'Honestly - What oro believes about style',
+    title: 'honestly - what oro believes about style',
     description:
-      'Six short beliefs behind oro: personal style, confidence, better outfits, and making the most of your wardrobe.',
-    h1: 'Honestly.',
+      'six short beliefs behind oro: personal style, confidence, better outfits, and making the most of your wardrobe.',
+    h1: 'honestly.',
     summary:
       'oro believes fashion should work for your life, and that the best outfit may already be in your wardrobe.',
     priority: '0.6',
   },
   contact: {
     path: '/contact',
-    title: 'Contact oro - Help, press, partnerships, and feedback',
+    title: 'contact oro - help, press, partnerships, and feedback',
     description:
-      'Contact oro for support, press, partnerships, careers, feedback, or questions about the AI stylist app.',
-    h1: 'Contact oro.',
+      'contact oro for support, press, partnerships, careers, feedback, or questions about the ai stylist app.',
+    h1: 'contact oro.',
     summary:
-      'A real person at oro reads support questions, press notes, partnership inquiries, and product feedback.',
+      'a real person at oro reads support questions, press notes, partnership inquiries, and product feedback.',
     priority: '0.5',
   },
   'get-started': {
     path: '/get-started',
-    title: 'Complete Your Beta Setup - oro',
+    title: 'complete your beta setup - oro',
     description:
-      'Invited to the oro beta? Answer a few quick questions and verify the phone number on your approved invitation.',
-    h1: 'Let’s get you set up.',
+      'invited to the oro beta? answer a few quick questions and verify the phone number on your approved invitation.',
+    h1: 'let’s get you set up.',
     summary:
-      'Approved beta testers complete their oro setup by answering a few questions and verifying their phone number.',
+      'approved beta testers complete their oro setup by answering a few questions and verifying their phone number.',
     priority: '0.8',
   },
   'app-terms': {

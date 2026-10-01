@@ -1,9 +1,11 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js/max'
 
-export const FORM_VERSION = '2026-09-28.4'
+export const FORM_VERSION = '2026-09-30.1'
 export const CONSENT_VERSION = '2026-09-24.1'
 export const UUID4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 export const MAX_BODY_BYTES = 64 * 1024
+export const REFERRAL_CODE = /^[0-9a-f]{64}$/
+export const CAMPAIGN_SOURCE = /^(?:reddit-[1-9][0-9]*|(?:poster|ig|x|linkedin)-[a-z0-9]+(?:-[a-z0-9]+)*)$/
 export const choices = {
   usedOro: ['Yes', 'No'],
   outfitDays: ['0 days', '1–2 days', '3–4 days', '5–7 days', 'I don’t remember'],
@@ -18,7 +20,7 @@ export const textLimits = {
   genderDescription: 2000, sourceOther: 2000,
 }
 export const answerFields = [...Object.keys(textLimits), ...Object.keys(choices), 'terms', 'futureBeta', 'marketing']
-const requiredText = ['name', 'email', 'phone', 'location']
+const requiredText = ['name', 'email', 'phone']
 
 export function isObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -45,10 +47,10 @@ export function normalizeAnswers(input) {
     const value = input[name] ?? (name === 'usualHelp' ? [] : '')
     if (name === 'usualHelp') {
       answers[name] = Array.isArray(value) ? options.filter((option) => value.includes(option)) : []
-      if (!Array.isArray(value) || !value.length || value.length > options.length || new Set(value).size !== value.length || value.some((option) => !options.includes(option))) errors[name] = 'Choose at least one of the listed answers.'
+      if (!Array.isArray(value) || value.length > options.length || new Set(value).size !== value.length || value.some((option) => !options.includes(option))) errors[name] = 'Choose only the listed answers.'
     } else {
       answers[name] = typeof value === 'string' ? value : ''
-      if (!options.includes(value)) errors[name] = 'Choose one of the listed answers.'
+      if (value && !options.includes(value)) errors[name] = 'Choose one of the listed answers.'
     }
   }
   for (const [name, shown] of Object.entries({
@@ -66,12 +68,12 @@ export function normalizeAnswers(input) {
 }
 
 export function validateSubmission(body) {
-  if (!isObject(body) || Object.keys(body).some((key) => !['submission_key', 'form_version', 'consent_version', 'answers'].includes(key)) || typeof body.submission_key !== 'string' || !UUID4.test(body.submission_key)) return { code: 'invalid_request' }
+  if (!isObject(body) || Object.keys(body).some((key) => !['submission_key', 'form_version', 'consent_version', 'answers', 'referral_code', 'campaign_source'].includes(key)) || typeof body.submission_key !== 'string' || !UUID4.test(body.submission_key) || (body.referral_code !== undefined && (typeof body.referral_code !== 'string' || !REFERRAL_CODE.test(body.referral_code))) || (body.campaign_source !== undefined && (typeof body.campaign_source !== 'string' || !CAMPAIGN_SOURCE.test(body.campaign_source)))) return { code: 'invalid_request' }
   if (body.form_version !== FORM_VERSION || body.consent_version !== CONSENT_VERSION) return { code: 'outdated_form' }
   const result = normalizeAnswers(body.answers)
   return Object.keys(result.errors).length ? { code: 'invalid_answers', errors: result.errors } : { answers: result.answers }
 }
 
-export function canonicalPayload(answers, cohort) {
-  return JSON.stringify({ cohort, form_version: FORM_VERSION, consent_version: CONSENT_VERSION, answers })
+export function canonicalPayload(answers, cohort, referralCode = '', campaignSource = '') {
+  return JSON.stringify({ cohort, form_version: FORM_VERSION, consent_version: CONSENT_VERSION, answers, referral_code: referralCode, campaign_source: campaignSource })
 }

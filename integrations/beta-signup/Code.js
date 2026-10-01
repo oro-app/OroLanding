@@ -1,8 +1,9 @@
 const SHEET_NAME = 'Responses'
 const METADATA_HEADERS = ['request_id', 'submission_key', 'payload_hash', 'received_at', 'cohort', 'form_version', 'consent_version', 'consent_recorded_at']
+const REFERRAL_HEADERS = ['referred_signups', 'referral_completed_date', 'accepted', 'referral_code', 'referred_by']
 
 function responseHeaders() {
-  return METADATA_HEADERS.concat(BetaContract.answerFields)
+  return METADATA_HEADERS.concat(BetaContract.answerFields, REFERRAL_HEADERS, ['campaign_source'])
 }
 
 function jsonResult(value) {
@@ -23,30 +24,70 @@ function doPost(event) {
     const cohort = properties.getProperty('BETA_COHORT')
     const sheetId = properties.getProperty('BETA_SHEET_ID')
     if (!secret || secret.length < 32 || !cohort || !sheetId || input.secret !== secret) return jsonResult({ ok: false, code: 'unauthorized' })
-    if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
-    const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: input.form_version, consent_version: input.consent_version, answers: input.answers })
+    if (input.action === 'count' && Object.keys(input).every((key) => ['secret', 'action'].includes(key))) {
+      return jsonResult({ ok: true, count: orderedSignups(readResponses(sheetId)).length })
+    }
+    if (input.action === 'lookup' && input.cohort === cohort && Object.keys(input).every((key) => ['secret', 'cohort', 'action', 'phone'].includes(key)) && /^\+[1-9]\d{6,14}$/.test(input.phone)) {
+      lock = LockService.getScriptLock()
+      if (!lock.tryLock(5000)) return jsonResult({ ok: false, code: 'temporarily_unavailable' })
+      upgradeResponseSheet()
+      const savedRows = readResponses(sheetId)
+      reconcileReferrals(sheetId, savedRows)
+      const rows = [savedRows[0], ...orderedSignups(savedRows)]
+      const phoneIndex = responseHeaders().indexOf('phone')
+      const matchIndex = rows.findIndex((row, index) => index > 0 && row[phoneIndex] === input.phone)
+      if (matchIndex < 0) return jsonResult({ ok: true, found: false })
+      const codeIndex = responseHeaders().indexOf('referral_code')
+      const countIndex = responseHeaders().indexOf('referred_signups')
+      const dateIndex = responseHeaders().indexOf('referral_completed_date')
+      return jsonResult({ ok: true, found: true, request_id: rows[matchIndex][0], referral_code: rows[matchIndex][codeIndex], signup_number: matchIndex, referred_signups: Number(rows[matchIndex][countIndex] || 0), referral_completed_date: rows[matchIndex][dateIndex] || '' })
+    }
+    if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash', 'referral_code', 'campaign_source'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
+    const legacyForm = input.form_version === '2026-09-28.4' && input.referral_code === undefined && input.campaign_source === undefined
+    const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: legacyForm ? BetaContract.FORM_VERSION : input.form_version, consent_version: input.consent_version, answers: input.answers, referral_code: input.referral_code, campaign_source: input.campaign_source })
     if (validated.code) return jsonResult({ ok: false, code: validated.code })
-    const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, BetaContract.canonicalPayload(validated.answers, cohort), Utilities.Charset.UTF_8)
+    const canonical = legacyForm
+      ? JSON.stringify({ cohort, form_version: input.form_version, consent_version: input.consent_version, answers: validated.answers })
+      : BetaContract.canonicalPayload(validated.answers, cohort, input.referral_code || '', input.campaign_source || '')
+    const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, canonical, Utilities.Charset.UTF_8)
       .map((byte) => ('0' + ((byte + 256) % 256).toString(16)).slice(-2)).join('')
     if (digest !== input.payload_hash) return jsonResult({ ok: false, code: 'invalid_request' })
     lock = LockService.getScriptLock()
     if (!lock.tryLock(5000)) return jsonResult({ ok: false, code: 'temporarily_unavailable' })
-    const previous = findReceipt(sheetId, input.submission_key, digest)
-    if (previous) return jsonResult(previous)
+    upgradeResponseSheet()
+    let rows = readResponses(sheetId)
+    const previous = findReceipt(rows, input.submission_key, digest)
+    if (previous) {
+      if (previous.ok) reconcileReferrals(sheetId, rows)
+      return jsonResult(previous.ok ? findReceipt(rows, input.submission_key, digest) : previous)
+    }
+    const phoneIndex = responseHeaders().indexOf('phone')
+    const codeIndex = responseHeaders().indexOf('referral_code')
+    const earlierSignup = rows.slice(1).find((row) => row[phoneIndex] === validated.answers.phone)
+    const firstSignup = !earlierSignup
+    const referrer = firstSignup && orderedSignups(rows).find((row) => row[codeIndex] === input.referral_code && row[phoneIndex] !== validated.answers.phone)
+    const referralCode = earlierSignup ? earlierSignup[codeIndex] : codeForPhone(validated.answers.phone, secret)
     const receivedAt = new Date().toISOString()
-    const row = [Utilities.getUuid(), input.submission_key, digest, receivedAt, cohort, BetaContract.FORM_VERSION, BetaContract.CONSENT_VERSION, receivedAt]
-      .concat(BetaContract.answerFields.map((name) => Array.isArray(validated.answers[name]) ? JSON.stringify(validated.answers[name]) : validated.answers[name]))
+    const row = [Utilities.getUuid(), input.submission_key, digest, receivedAt, cohort, input.form_version, input.consent_version, receivedAt]
+      .concat(BetaContract.answerFields.map((name) => Array.isArray(validated.answers[name]) ? JSON.stringify(validated.answers[name]) : validated.answers[name]), [0, '', false, referralCode, referrer ? input.referral_code : '', input.campaign_source || 'direct'])
+    if (rows[0].includes('referrer_name')) row.push(referrer ? referrer[responseHeaders().indexOf('name')] || '' : '')
     try {
       // RAW keeps phone numbers and answers starting with = or + as literal text.
       Sheets.Spreadsheets.Values.append({ values: [row] }, sheetId, "'Responses'!A1", { valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' })
     } catch {
-      const recovered = findReceipt(sheetId, input.submission_key, digest)
-      if (recovered) return jsonResult(recovered)
+      rows = readResponses(sheetId)
+      const recovered = findReceipt(rows, input.submission_key, digest)
+      if (recovered) {
+        if (recovered.ok) reconcileReferrals(sheetId, rows)
+        return jsonResult(recovered.ok ? findReceipt(rows, input.submission_key, digest) : recovered)
+      }
       throw new Error('Save unconfirmed')
     }
-    const receipt = findReceipt(sheetId, input.submission_key, digest)
+    rows = readResponses(sheetId)
+    const receipt = findReceipt(rows, input.submission_key, digest)
     if (!receipt) throw new Error('Save unconfirmed')
-    return jsonResult(receipt)
+    if (receipt.ok) reconcileReferrals(sheetId, rows)
+    return jsonResult(receipt.ok ? findReceipt(rows, input.submission_key, digest) : receipt)
   } catch {
     return jsonResult({ ok: false, code: 'temporarily_unavailable' })
   } finally {
@@ -54,21 +95,170 @@ function doPost(event) {
   }
 }
 
-function findReceipt(sheetId, key, hash) {
+function codeForPhone(phone, secret) {
+  return Utilities.computeHmacSha256Signature(phone, secret, Utilities.Charset.UTF_8)
+    .map((byte) => ('0' + ((byte + 256) % 256).toString(16)).slice(-2)).join('')
+}
+
+function readResponses(sheetId) {
   const rows = Sheets.Spreadsheets.Values.get(sheetId, "'Responses'!A:AZ", { valueRenderOption: 'UNFORMATTED_VALUE' }).values || []
-  if (JSON.stringify(rows[0]) !== JSON.stringify(responseHeaders())) throw new Error('Sheet not configured')
+  if (!hasResponseHeaders(rows[0])) throw new Error('Sheet not configured')
+  return rows
+}
+
+function hasResponseHeaders(headers) {
+  return [responseHeaders(), responseHeaders().concat('referrer_name')]
+    .some((expected) => JSON.stringify(headers) === JSON.stringify(expected))
+}
+
+function findReceipt(rows, key, hash) {
   const matches = rows.slice(1).filter((row) => row[1] === key)
   if (!matches.length) return null
   if (matches.length !== 1 || !BetaContract.UUID4.test(matches[0][0])) throw new Error('Invalid receipt')
   if (matches[0][2] !== hash) return { ok: false, code: 'submission_conflict' }
-  return { ok: true, request_id: matches[0][0], submission_key: key, payload_hash: hash }
+  const phoneIndex = responseHeaders().indexOf('phone')
+  const position = orderedSignups(rows).findIndex((row) => row[phoneIndex] === matches[0][phoneIndex]) + 1
+  return { ok: true, request_id: matches[0][0], submission_key: key, payload_hash: hash, referral_code: matches[0][responseHeaders().indexOf('referral_code')], signup_number: position }
+}
+
+function orderedSignups(rows) {
+  const phoneIndex = responseHeaders().indexOf('phone')
+  const dateIndex = responseHeaders().indexOf('referral_completed_date')
+  const byPhone = new Map()
+  const chronological = rows.slice(1).sort((a, b) => String(a[3]).localeCompare(String(b[3])))
+  for (const row of chronological) {
+    if (!byPhone.has(row[phoneIndex])) byPhone.set(row[phoneIndex], row)
+  }
+  return [...byPhone.values()].sort((a, b) => {
+    const aDate = a[dateIndex] || ''
+    const bDate = b[dateIndex] || ''
+    return Number(Boolean(bDate)) - Number(Boolean(aDate)) || String(aDate || a[3]).localeCompare(String(bDate || b[3]))
+  })
+}
+
+function reconcileReferrals(sheetId, rows) {
+  const headers = responseHeaders()
+  const phoneIndex = headers.indexOf('phone')
+  const codeIndex = headers.indexOf('referral_code')
+  const byIndex = headers.indexOf('referred_by')
+  const countIndex = headers.indexOf('referred_signups')
+  const dateIndex = headers.indexOf('referral_completed_date')
+  const signups = orderedSignups(rows)
+  const codes = new Set(signups.map((row) => row[byIndex]).filter(Boolean))
+  for (const code of codes) {
+    const owner = signups.find((row) => row[codeIndex] === code)
+    const ownerIndex = rows.indexOf(owner)
+    if (ownerIndex < 0) continue
+    const referrals = signups.filter((row) => row[byIndex] === code && row[phoneIndex] !== owner[phoneIndex])
+      .sort((a, b) => String(a[3]).localeCompare(String(b[3])))
+    const count = referrals.length
+    if (Number(owner[countIndex] || 0) === count && (count < 3 || owner[dateIndex])) continue
+    const date = owner[dateIndex] || (count >= 3 ? referrals[2][3] : '')
+    const column = countIndex + 1
+    Sheets.Spreadsheets.Values.update({ values: [[count, date]] }, sheetId, "'Responses'!" + columnLetter(column) + (ownerIndex + 1) + ':' + columnLetter(column + 1) + (ownerIndex + 1), { valueInputOption: 'RAW' })
+    owner[countIndex] = count
+    owner[dateIndex] = date
+  }
+}
+
+function columnLetter(number) {
+  let letters = ''
+  while (number) { number--; letters = String.fromCharCode(65 + number % 26) + letters; number = Math.floor(number / 26) }
+  return letters
 }
 
 function setupResponseSheet() {
+  const lock = LockService.getScriptLock()
+  if (!lock.tryLock(5000)) throw new Error('Signup sheet is busy; retry setup')
+  try { upgradeResponseSheet(); importHistoricalSignups() }
+  finally { lock.releaseLock() }
+}
+
+// Run after all web-app deployments support the optional column, so older readers stay compatible during rollout.
+function setupReferrerNames() {
+  const lock = LockService.getScriptLock()
+  if (!lock.tryLock(5000)) throw new Error('Signup sheet is busy; retry setup')
+  try {
+    upgradeResponseSheet()
+    const sheetId = PropertiesService.getScriptProperties().getProperty('BETA_SHEET_ID')
+    const rows = readResponses(sheetId)
+    const headers = responseHeaders()
+    const codeIndex = headers.indexOf('referral_code')
+    const byIndex = headers.indexOf('referred_by')
+    const nameIndex = headers.indexOf('name')
+    const phoneIndex = headers.indexOf('phone')
+    const owners = new Map(orderedSignups(rows).map((row) => [row[codeIndex], row]))
+    const values = [['referrer_name'], ...rows.slice(1).map((row) => {
+      const owner = row[byIndex] && owners.get(row[byIndex])
+      return [owner && owner[phoneIndex] !== row[phoneIndex] ? owner[nameIndex] || '' : '']
+    })]
+    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(SHEET_NAME)
+    const column = headers.length + 1
+    if (sheet.getMaxColumns() < column) sheet.insertColumnsAfter(sheet.getMaxColumns(), column - sheet.getMaxColumns())
+    Sheets.Spreadsheets.Values.update({ values }, sheetId, "'Responses'!" + columnLetter(column) + '1', { valueInputOption: 'RAW' })
+  } finally { lock.releaseLock() }
+}
+
+function importHistoricalSignups() {
+  const properties = PropertiesService.getScriptProperties()
+  const sheetId = properties.getProperty('BETA_SHEET_ID')
+  const archive = SpreadsheetApp.openById(sheetId).getSheetByName('Responses backup')
+  if (!archive || archive.getLastRow() < 2) return
+  const historical = archive.getDataRange().getValues()
+  const oldHeaders = historical.shift()
+  const headers = responseHeaders()
+  const rows = readResponses(sheetId)
+  const phoneIndex = headers.indexOf('phone')
+  const codeIndex = headers.indexOf('referral_code')
+  const countIndex = headers.indexOf('referred_signups')
+  const byPhone = new Map(orderedSignups(rows).map((row) => [row[phoneIndex], row]))
+  const pending = []
+  for (const cells of historical.sort((a, b) => String(a[oldHeaders.indexOf('received_at')]).localeCompare(String(b[oldHeaders.indexOf('received_at')])))) {
+    if (!cells.some((value) => value !== '')) continue
+    if (cells[0] === 'ORGANIC BETA SIGNUPS START BELOW' && cells.slice(1).every((value) => value === '')) continue
+    const row = headers.map((header) => cells[oldHeaders.indexOf(header)] ?? '')
+    const normalized = BetaContract.normalizeAnswers({ phone: String(row[phoneIndex]) })
+    if (normalized.errors.phone || !BetaContract.UUID4.test(row[0]) || !Number.isFinite(Date.parse(row[3]))) throw new Error('Historical signup needs review')
+    row[phoneIndex] = normalized.answers.phone
+    row[3] = new Date(row[3]).toISOString()
+    const existing = byPhone.get(row[phoneIndex])
+    if (existing && String(existing[3]) <= row[3]) continue
+    row[codeIndex] = codeForPhone(row[phoneIndex], properties.getProperty('BETA_SUBMISSION_SECRET'))
+    row[countIndex] = existing?.[countIndex] || 0
+    row[countIndex + 1] = existing?.[countIndex + 1] || ''
+    row[countIndex + 2] = existing?.[countIndex + 2] || false
+    row[headers.indexOf('campaign_source')] = row[headers.indexOf('campaign_source')] || 'unknown'
+    pending.push(row)
+    byPhone.set(row[phoneIndex], row)
+  }
+  if (pending.length) Sheets.Spreadsheets.Values.append({ values: pending }, sheetId, "'Responses'!A1", { valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' })
+}
+
+function upgradeResponseSheet() {
   const sheetId = PropertiesService.getScriptProperties().getProperty('BETA_SHEET_ID')
   const book = SpreadsheetApp.openById(sheetId)
   const sheet = book.getSheetByName(SHEET_NAME) || book.insertSheet(SHEET_NAME)
-  if (sheet.getLastRow() !== 0) throw new Error('Responses already exists; leave its rows and headers unchanged.')
-  sheet.getRange(1, 1, 1, responseHeaders().length).setValues([responseHeaders()])
-  sheet.setFrozenRows(1)
+  if (sheet.getLastRow() === 0) {
+    sheet.getRange(1, 1, 1, responseHeaders().length).setValues([responseHeaders()])
+    sheet.setFrozenRows(1)
+    return
+  }
+  const oldHeaders = METADATA_HEADERS.concat(BetaContract.answerFields)
+  const current = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+  if (hasResponseHeaders(current)) return
+  if (JSON.stringify(current) === JSON.stringify(oldHeaders)) {
+    const count = sheet.getLastRow() - 1
+    const phones = count ? sheet.getRange(2, oldHeaders.indexOf('phone') + 1, count, 1).getValues() : []
+    const secret = PropertiesService.getScriptProperties().getProperty('BETA_SUBMISSION_SECRET')
+    if (!secret || secret.length < 32) throw new Error('BETA_SUBMISSION_SECRET is missing')
+    sheet.getRange(1, oldHeaders.length + 1, 1, REFERRAL_HEADERS.length).setValues([REFERRAL_HEADERS])
+    if (count) sheet.getRange(2, oldHeaders.length + 1, count, REFERRAL_HEADERS.length)
+      .setValues(phones.map(([phone]) => [0, '', false, codeForPhone(phone, secret), '']))
+  } else if (JSON.stringify(current) !== JSON.stringify(oldHeaders.concat(REFERRAL_HEADERS))) {
+    throw new Error('Unexpected response headers')
+  }
+  const sourceColumn = oldHeaders.length + REFERRAL_HEADERS.length + 1
+  sheet.getRange(1, sourceColumn, 1, 1).setValues([['campaign_source']])
+  if (sheet.getLastRow() > 1) sheet.getRange(2, sourceColumn, sheet.getLastRow() - 1, 1)
+    .setValues(Array.from({ length: sheet.getLastRow() - 1 }, () => ['unknown']))
 }

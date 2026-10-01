@@ -3,14 +3,6 @@ import useScrolled from '../../hooks/useScrolled'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 
-const styleGoals = [
-  'plan better outfits',
-  'look professional at work',
-  'expand my wardrobe',
-  'evolve my style',
-  'wear my clothes more',
-]
-
 function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
 }
@@ -32,14 +24,14 @@ export function HomeHeader() {
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          <HomeCta place="header">Get started</HomeCta>
+          <HomeCta place="header">want her number?</HomeCta>
         </nav>
       </div>
     </header>
   )
 }
 
-export function HomeFooter({ landing = false }) {
+export function HomeFooter({ landing = false, closerTitle = 'want her number?', closerText = "give us yours and you'll have hers", closerAction }) {
   if (!landing) {
     return (
       <footer className="halo-footer halo-container">
@@ -56,19 +48,9 @@ export function HomeFooter({ landing = false }) {
     <footer className="halo-footer halo-footer--landing">
       <div className="halo-container">
         <section className="halo-footer-closer" aria-labelledby="closer-title">
-          <Heading as="h2" variant="title" id="closer-title">Whatever the day,<br /><em>you’re dressed for it.</em></Heading>
-          <HomeCta place="closer">Join the beta</HomeCta>
-        </section>
-        <section className="halo-footer-goals" aria-labelledby="style-goal-title">
-          <h2 id="style-goal-title">What’s your style goal?</h2>
-          <div className="halo-footer-goal-options">
-            {styleGoals.map((goal) => (
-              <a key={goal} href="/beta?step=request"
-                onClick={() => trackCtaClick(`style_goal_${goal.replaceAll(' ', '_')}`, { goal, location: 'footer', destination: 'beta_request', transport_type: 'beacon' })}>
-                {goal}
-              </a>
-            ))}
-          </div>
+          <Heading as="h2" variant="title" id="closer-title">{closerTitle}</Heading>
+          {closerText && <Text muted>{closerText}</Text>}
+          {closerAction || <HomeCta place="closer">get her number</HomeCta>}
         </section>
         <div className="halo-footer-main">
           <div className="halo-footer-brand">

@@ -40,7 +40,7 @@ export function getRouteFromPath(pathname = '/') {
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/get-started')     return { type: 'get-started' }
-  if (path === '/beta')            return { type: 'beta' }
+  if (path === '/beta' || path === '/invite') return { type: 'beta' }
 
   return { type: 'home' }
 }
@@ -55,6 +55,7 @@ function App({ initialRoute }) {
   const isHome = route.type === 'home'
   const isBeta = route.type === 'beta'
   const isFeedback = route.type === 'feedback'
+  const isBlog = route.type === 'newsletter' || route.type === 'journal'
   const isPrivateForm = isBeta || isFeedback || route.type === 'get-started'
   const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'newsletter'
   const pageViewParams = {
@@ -134,7 +135,7 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className={`oro-editorial ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
+      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
         {!isBeta && !isFeedback && (isHalo ? <HomeHeader /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
@@ -180,7 +181,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && <HomeFooter landing={isHome} />}
+        {isHalo && !isFeedback && !isBeta && <HomeFooter landing={isHome} />}
         <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />
       </div>
     </ThemeProvider>

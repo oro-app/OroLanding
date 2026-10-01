@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
 import { HomeCta } from './HomeChrome'
@@ -6,36 +6,33 @@ import { useHomeMotion } from './useHomeMotion'
 import ProductDemo from './ProductDemo'
 import StyleAdviceDemo from './StyleAdviceDemo'
 import wardrobeDemo from '../../assets/demos/wardrobe.png'
-import iterateDemo from '../../assets/demos/iterate.png'
-import oroTexting from '../../assets/mascot/oro_texting.png'
+import IterationDemo from './IterationDemo'
+import jotting from '../../assets/mascot/jotting.webp'
 
 const FEATURES = [
   {
-    title: 'Share your wardrobe',
-    description: 'Add your clothes so oro can put together outfits from the closet you already own.',
+    title: 'show her your closet',
+    description: 'send oro photos of your clothes once. she’ll remember what you own and build outfits from your actual wardrobe.',
     image: wardrobeDemo,
     imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
     width: 1312,
     height: 1199,
   },
   {
-    title: 'Ask for a change',
-    description: 'Swap a piece, or try another direction. Keep refining until it feels right to you.',
-    image: iterateDemo,
-    imageAlt: 'Outfit suggestions in a text conversation, including a request to swap jeans for a skirt.',
-    width: 1078,
-    height: 1459,
+    title: 'don’t like it? tell her.',
+    description: 'make it warmer. less basic. swap the jeans. start over. keep going until it actually feels like you.',
+    demo: true,
   },
   {
-    title: 'Memory about you',
-    description: 'oro remembers the pieces you wear and the preferences you share, so suggestions feel more like you over time.',
-    image: oroTexting,
-    imageAlt: 'oro looking at a phone with a clothing idea in a speech bubble.',
+    title: 'the more you text her, the better she gets',
+    description: 'she knows you don’t like jewelry, get cold easily, love those jeans, and have pilates on sunday mornings.',
+    image: jotting,
+    imageAlt: 'oro jotting notes in a notepad.',
     width: 1500,
     height: 1500,
   },
 ]
-const HEADLINE = 'The AI fashion assistant you can text'
+const HEADLINE = 'the ai fashion assistant you can text'
 const TYPE_STEP = 34
 
 function TypedHeadline() {
@@ -58,6 +55,18 @@ function TypedHeadline() {
 
 export default function Home() {
   const motionRef = useHomeMotion()
+  const [entryCount, setEntryCount] = useState(null)
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetch('/api/beta-count', { signal: controller.signal })
+      .then((response) => response.ok ? response.json() : null)
+      .then((result) => {
+        if (Number.isSafeInteger(result?.count) && result.count > 100) setEntryCount(result.count)
+      })
+      .catch(() => {})
+    return () => controller.abort()
+  }, [])
 
   return (
     <div className="halo-home" ref={motionRef}>
@@ -69,25 +78,27 @@ export default function Home() {
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
             <Text muted className="home-description home-enter">
-              Getting dressed is one text away.
-              Oro helps you put together outfits you love from the clothes you already own.
+              your personal fashion stylist over text, here to help you decide what to wear.
             </Text>
             <div className="home-action">
-              <HomeCta place="hero" className="home-enter">Join the beta</HomeCta>
+              <HomeCta place="hero" className="home-enter">get her number</HomeCta>
+              {entryCount !== null && <Text variant="support" muted className="home-beta-note home-enter">{entryCount.toLocaleString()} people are trying to get oro’s number</Text>}
             </div>
           </section>
           <ProductDemo />
           <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal>
-            <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">Look like yourself.<br />{' '}Feel ready for anything.</Heading>
+            <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">she gets your style. and your life.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
-              From everyday plans to big moments,<br />{' '}oro helps you find a look you’ll feel good in.
+              oro learns what you wear and what you like, so her advice gets more personal the more you text.
             </Text>
           </section>
-          <section className="home-features" aria-label="Oro features">
-            {FEATURES.map((feature, index) => (
+          <section className="home-features" aria-label="oro features">
+            {FEATURES.map((feature, index) => feature.demo ? (
+              <IterationDemo key={feature.title} title={feature.title} description={feature.description} />
+            ) : (
               <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal>
                 <div className="home-feature-copy home-stagger">
-                  <Heading as="h2" variant="title">{feature.title}</Heading>
+                  <Heading as="h2" variant="title">{index === 2 ? <>the more you text her,<br />the better she gets</> : feature.title}</Heading>
                   <Text muted className="home-description">{feature.description}</Text>
                 </div>
                 <img className="home-feature-media home-stagger" src={feature.image} alt={feature.imageAlt} loading="lazy" decoding="async" width={feature.width} height={feature.height} />
@@ -95,6 +106,10 @@ export default function Home() {
             ))}
           </section>
           <StyleAdviceDemo />
+          {entryCount !== null && <section className="home-social-proof home-moments-panel" aria-labelledby="home-social-title" data-home-reveal>
+            <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
+            <Text muted className="home-description home-stagger">{entryCount.toLocaleString()} people are already trying to get it.</Text>
+          </section>}
         </div>
       </div>
     </div>

@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react'
-import outfit from '../../assets/fit-gen-demo/collage.webp'
-import tryOn from '../../assets/fit-gen-demo/tryon.webp'
-import aww from '../../assets/mascot/aww.webp'
+import jeansLook from '../../assets/fit-gen-demo/mens-jeans.webp'
+import cargosLook from '../../assets/fit-gen-demo/mens-cargos.webp'
 import jotting from '../../assets/mascot/jotting.webp'
+import aww from '../../assets/mascot/aww.webp'
 import SmsBubble from './SmsBubble'
 import './ProductDemo.css'
 
-export default function ProductDemo() {
+export default function IterationDemo({ title, description }) {
   const sectionRef = useRef(null)
 
   useEffect(() => {
@@ -30,34 +30,34 @@ export default function ProductDemo() {
   }, [])
 
   return (
-    <section className="product-demo" aria-labelledby="product-demo-title" ref={sectionRef}>
+    <section className="product-demo iteration-demo" aria-labelledby="iteration-demo-title" ref={sectionRef}>
       <div className="halo-container product-demo-inner">
-        <h2 id="product-demo-title" className="home-demo-title">text her when you don’t know what to wear</h2>
-        <p className="home-demo-description">tell oro where you’re going, she’ll figure out the rest.</p>
+        <h2 id="iteration-demo-title" className="home-demo-title">{title}</h2>
+        <p className="home-demo-description">{description}</p>
         <ol className="product-demo-thread" role="list">
-          <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>i'm going out for brunch with friends</SmsBubble>
-          </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">oro: </span>i have the perfect look!</SmsBubble>
+            <SmsBubble><span className="sr-only">oro: </span>how’s this?</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble avatar={jotting}>
               <span className="sr-only">oro: </span>
-              <img src={outfit} alt="Outfit collage with a cream cardigan, cherry-print top, flared jeans, red belt, silver hoops, and white sneakers" loading="lazy" decoding="async" width="1086" height="1448" />
+              <img src={jeansLook} alt="men’s streetwear look with a brown leather jacket, graphic tee, baggy jeans, silver sneakers, burgundy beanie, crossbody bag, sunglasses, belt, and silver jewelry" loading="lazy" decoding="async" width="1086" height="1448" />
             </SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>i wanna see it on me</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>can we try cargos instead?</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">oro: </span>it looks stunning on you :)</SmsBubble>
+            <SmsBubble><span className="sr-only">oro: </span>olive cargos. so good with the brown leather.</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble avatar={aww}>
               <span className="sr-only">oro: </span>
-              <img src={tryOn} alt="Try-on with a cream cardigan, cherry-print top, red belt, and light blue flared jeans" loading="lazy" decoding="async" width="480" height="640" />
+              <img src={cargosLook} alt="the same layered streetwear look and accessories, with olive cargos replacing the jeans" loading="lazy" decoding="async" width="1086" height="1448" />
             </SmsBubble>
+          </li>
+          <li className="product-demo-message product-demo-message--user">
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>yes, that’s the one</SmsBubble>
           </li>
         </ol>
       </div>

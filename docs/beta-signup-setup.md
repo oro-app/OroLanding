@@ -31,11 +31,21 @@ Add these **Script Properties** under Project Settings:
 
 Generate the secret with a password manager. Never put it in Git, a ticket, a screenshot, or a `VITE_` variable.
 
-Run `setupResponseSheet` once from the editor and authorize the requested Sheets access. It creates the `Responses` tab and its column headers, refusing to overwrite an existing response table. Protect this tab so only the script owner can edit it. Give reviewers their own `Review` tab, keyed by `request_id`, for notes and selections. Keep raw rows and headers intact; use filter views rather than moving cells independently.
+Run `setupResponseSheet` from the editor and authorize the requested Sheets access. It creates a new `Responses` tab or upgrades an existing one to the current headers. It preserves existing responses and refuses unexpected headers. Protect this tab so only the script owner can edit it. Give reviewers their own `Review` tab, keyed by `request_id`, for notes and selections. Keep raw rows and headers intact; use filter views rather than moving cells independently.
+
+For the existing production Sheet, back it up, then run `setupResponseSheet` **before** deploying the campaign-enabled writer. The same function adds any missing referral columns and backfills referral codes, then adds `campaign_source` with `unknown` for historical rows whose acquisition link cannot be recovered. Keep `BETA_SUBMISSION_SECRET` set while backfilling. Deploy the matching Apps Script and website versions together; a missing column causes the writer to refuse submissions.
+
+Setup also imports earlier signups from `Responses backup`, matching columns by name and preserving their original signup dates and consents. The backup stays unchanged. Each phone occupies one place in the queue; repeated setup is safe, and incomplete historical rows stop the import for review. Test and production Sheets remain separate.
+
+Use links to `/beta?src=reddit-12` or `/beta?src=poster-job`. For Instagram, X, and LinkedIn, use `ig-`, `x-`, or `linkedin-` followed by a lowercase creator or account name, such as `ig-carmen`, `x-patrick`, `linkedin-arav`, or `ig-creator-name`, `x-creator-name`, or `linkedin-creator-name`. Reddit IDs are positive post numbers; poster types and creator names use lowercase letters, numbers, and hyphens. Give each placement its own stable tag. The first valid campaign source stays with an unfinished beta draft; untagged and invalid links save as `direct`. The form's `source` answer remains self-reported, and `ref` continues to track referrals independently. For campaign counts, count distinct phones by `campaign_source` using each phone's earliest response row so repeat requests do not inflate a channel.
 
 Deploy a **Web app**, execute as the deploying account, with access **Anyone**. The endpoint must accept server calls without an interactive Google sign-in; the dedicated secret authorizes writes. The Sheet itself remains private. The endpoint offers no response-reading API. Copy the deployed `/exec` URL, not `/dev`. See [Google web app deployment](https://developers.google.com/apps-script/guides/web).
 
 On later code changes, rebuild both script files and update the existing deployment to a new version. Keep the same project, Sheet, and response keys. Updating editor code alone does not update the deployed `/exec` version.
+
+The home page reads the number of distinct signup phone numbers through `GET /api/beta-count`. This server endpoint asks the same Apps Script deployment for a count with the server-side secret; it never exposes the Sheet or secret to the browser. Redeploy the Apps Script version containing the count action before deploying the updated website. The page only shows the count when the read succeeds and there are more than 100 people.
+
+Valid campaign and referral tags are retained in session storage across landing-page navigation, then cleared after a confirmed signup or lookup. The first valid source stays with an unfinished session; a newly opened valid referral link replaces an older invitation. Direct tagged signup links also work when storage is blocked.
 
 ## 2. Configure the website and rate limit
 
@@ -49,6 +59,11 @@ In the OroLanding Vercel project, configure the server environment for the inten
 | `BETA_COHORT` | Exact match to the Google property and eventual `BETA_ONBOARDING_COHORT` |
 | `BETA_RATE_LIMIT_ID` | The SDK rule ID configured below, e.g. `beta-request` |
 | `BETA_ALLOWED_ORIGINS` | Comma-separated full origins, e.g. `https://askoro.now,https://www.askoro.now`; no paths or trailing slashes. Include the old website origins only if that deployment will also accept requests. |
+| `TWILIO_ACCOUNT_SID` | Account SID for the existing Twilio account (`AC...`) |
+| `TWILIO_AUTH_TOKEN` | Server-only auth token for that account |
+| `TWILIO_VERIFY_SERVICE_SID` | Verify Service SID (`VA...`); an existing suitable Verify Service can be reused |
+
+The phone step uses Twilio Verify to send an SMS code. It does not require a new Twilio phone number. Configure the Verify Service's SMS channel and allowed countries in Twilio before opening signups. The beta server accepts a request only when its phone has a code verification proof issued within the last hour. The proof is kept in browser memory and is never written to the Sheet. The existing rate limit covers sending codes, checking codes, and submitting requests.
 
 Enable Vercel's automatically exposed system environment variables. `VERCEL=1`, `VERCEL_URL` and `NODE_ENV=production` are required; these are provided by Vercel, not browser configuration. The exact `VERCEL_URL` origin is also accepted for that deployment. Custom preview aliases need an explicit allowed origin. Do not promote a build made with `VERCEL_ENV=preview` into production; create a production build so the design-preview controls are excluded.
 
@@ -85,6 +100,8 @@ Browser tests intercept `/api/beta-request`; they never write to the real Sheet.
 ## Records, retries, and selection
 
 Every saved row contains an immutable UUID4 `request_id`, a browser-generated UUID4 `submission_key`, a hash of the normalized answers/cohort/versions, UTC received/consent timestamps, cohort, form/consent versions, and all answers. Multi-select choices are stored as a JSON array. Missing optional consent values default false on the server. The current page's three prechecked boxes follow the approved frontend revision; the server still stores their explicit, independent values.
+
+Each phone gets a deterministic HMAC-SHA256 referral code, stored in `referral_code` and shown as an `/invite?ref=...` link after a confirmed save. The writer records valid first-signup attribution in `referred_by`; repeat requests, retries, unknown codes, and self referrals earn no credit. `referred_signups` counts distinct referred phones. At three, `referral_completed_date` records the third friend's signup time and stays fixed. `signup_number` is the current overall position: qualified people first by completion time, then everyone else by original signup time, with one place per phone. Existing completion dates remain unchanged. Lookup reconciles missed referral updates before returning position and progress. No rows are reordered and `accepted` remains a manual selection field; qualification does not grant app access. Deploy the matching Apps Script before using the new queue UI. Users can verify their phone again to check their place. Mobile Messages links prefill the invite where supported, with copy-link available on all devices; native message composition still needs a real iPhone/Android rehearsal.
 
 Both optional consent boxes refer to email **and** text in this form version. `futureBeta` covers future beta opportunities; `marketing` covers updates/promotions. The separate required `terms` flag is not a marketing opt-in. The exact copy for `2026-09-24.1` is in `Beta.jsx`; bump `CONSENT_VERSION` when that meaning changes, and `FORM_VERSION` when the accepted form changes. Deploy matching website and writer versions together. Consent is a record for later use, not an active sending integration.
 

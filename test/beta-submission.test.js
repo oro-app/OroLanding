@@ -2,11 +2,13 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createServer } from 'node:http'
 import { once } from 'node:events'
-import { createHash } from 'node:crypto'
+import { createHash, createHmac } from 'node:crypto'
 import { createBetaHandler } from '../api/_lib/beta-submission.js'
-import { canonicalPayload, normalizeAnswers, UUID4 } from '../src/lib/betaContract.js'
+import { canonicalPayload, FORM_VERSION, normalizeAnswers, UUID4 } from '../src/lib/betaContract.js'
 import { saveBetaRequest } from '../src/components/beta/betaSubmission.js'
+import { signPhoneProof } from '../api/_lib/beta-phone-proof.js'
 import { exampleAnswers, environment, makeSubmission, googleWriter } from './beta-fixture.js'
+import { messagesInvite } from '../src/components/beta/referralShare.js'
 
 async function serve(t, options = {}) {
   const google = googleWriter()
@@ -29,8 +31,9 @@ async function serve(t, options = {}) {
 
 function envelope(submission = makeSubmission()) {
   const answers = normalizeAnswers(submission.answers).answers
-  return { ...submission, answers, cohort: environment.BETA_COHORT, secret: environment.BETA_SUBMISSION_SECRET,
-    payload_hash: createHash('sha256').update(canonicalPayload(answers, environment.BETA_COHORT)).digest('hex') }
+  const { phone_verification, ...saved } = submission
+  return { ...saved, answers, cohort: environment.BETA_COHORT, secret: environment.BETA_SUBMISSION_SECRET,
+    payload_hash: createHash('sha256').update(canonicalPayload(answers, environment.BETA_COHORT, submission.referral_code || '', submission.campaign_source || '')).digest('hex') }
 }
 
 test('HTTP submission saves a literal row with canonical contact details and independent consents', async (t) => {
@@ -40,6 +43,7 @@ test('HTTP submission saves a literal row with canonical contact details and ind
   assert.equal(response.headers.get('cache-control'), 'no-store')
   const receipt = await response.json()
   assert.ok(UUID4.test(receipt.request_id))
+  assert.equal(receipt.signup_number, 1)
   const row = Object.fromEntries(state.rows[0].map((header, index) => [header, state.rows[1][index]]))
   assert.equal(row.request_id, receipt.request_id)
   assert.equal(row.email, 'beta-test@example.com')
@@ -52,8 +56,13 @@ test('HTTP submission saves a literal row with canonical contact details and ind
   assert.equal(row.usualHelpOther, '')
   assert.equal(row.age, 'Prefer not to say')
   assert.equal(row.gender, 'Prefer not to say')
-  assert.equal(row.form_version, '2026-09-28.4')
+  assert.equal(row.form_version, FORM_VERSION)
   assert.equal(row.consent_recorded_at, row.received_at)
+  assert.equal(row.referred_signups, 0)
+  assert.equal(row.referral_completed_date, '')
+  assert.equal(row.accepted, false)
+  assert.equal(row.referral_code, createHmac('sha256', environment.BETA_SUBMISSION_SECRET).update(row.phone).digest('hex'))
+  assert.equal(row.campaign_source, 'direct')
   assert.equal(state.appends[0].options.valueInputOption, 'RAW')
   assert.equal(state.locked, false)
 })
@@ -67,9 +76,11 @@ test('a lost HTTP acknowledgement is recovered by the browser retry without anot
     if (++attempts === 1) throw new Error('network connection lost after save')
     return response
   }
-  assert.equal((await saveBetaRequest(exampleAnswers, key, browserFetch)).code, 'temporarily_unavailable')
-  const saved = await saveBetaRequest(exampleAnswers, key, browserFetch)
+  const proof = signPhoneProof('+14165550123', environment.BETA_SUBMISSION_SECRET)
+  assert.equal((await saveBetaRequest(exampleAnswers, key, browserFetch, '', proof)).code, 'temporarily_unavailable')
+  const saved = await saveBetaRequest(exampleAnswers, key, browserFetch, '', proof)
   assert.equal(saved.requestId, state.rows[1][0])
+  assert.equal(saved.signupNumber, 1)
   assert.equal(state.appendCalls, 1)
 })
 
@@ -78,11 +89,142 @@ test('concurrent same-key retries return the original receipt; changed answers c
   const body = makeSubmission()
   const replies = await Promise.all(Array.from({ length: 4 }, async () => (await post(body)).json()))
   assert.equal(new Set(replies.map((reply) => reply.request_id)).size, 1)
+  assert.deepEqual(replies.map((reply) => reply.signup_number), [1, 1, 1, 1])
   assert.equal(state.appendCalls, 1)
   assert.equal((await post({ ...body, answers: { ...body.answers, location: 'Updated' } })).status, 409)
   assert.equal(state.appendCalls, 1)
-  assert.equal((await post(makeSubmission({ ...body.answers, location: 'Updated' }))).status, 200)
+  const next = await post(makeSubmission({ ...body.answers, location: 'Updated' }))
+  assert.equal(next.status, 200)
+  assert.equal((await next.json()).signup_number, 1)
   assert.equal(state.appendCalls, 2)
+  assert.equal((await (await post(body)).json()).signup_number, 1)
+})
+
+test('campaign links save validated source separately from self-reported source and referral', async (t) => {
+  const { post, state } = await serve(t)
+  for (const source of ['reddit-12', 'poster-job', 'ig-angela', 'ig-sunny', 'ig-oro', 'ig-creator-name', 'x-angela', 'x-sunny', 'x-oro', 'x-creator-name', 'linkedin-angela', 'linkedin-sunny', 'linkedin-oro', 'linkedin-creator-name', 'ig-carmen', 'x-patrick', 'linkedin-arav']) {
+    const body = makeSubmission({ ...exampleAnswers, phone: `41655501${String(24 + state.appendCalls).padStart(2, '0')}` })
+    body.campaign_source = source
+    assert.equal((await post(body)).status, 200)
+    const row = Object.fromEntries(state.rows[0].map((header, index) => [header, state.rows.at(-1)[index]]))
+    assert.equal(row.campaign_source, source)
+    assert.equal(row.source, 'Website')
+  }
+  for (const source of ['reddit-name', 'poster-', 'ig-', 'x--company', 'linkedin-founder-', 'ig-FounDER', 'tiktok-creator', '=evil', 'linkedin-name/other']) {
+    assert.equal((await post({ ...makeSubmission(), campaign_source: source })).status, 400)
+  }
+  assert.equal(state.appendCalls, 17)
+})
+
+test('submission requires a code proof for the same phone number', async (t) => {
+  const { post, state } = await serve(t)
+  const valid = makeSubmission()
+  assert.equal((await post({ ...valid, phone_verification: '' })).status, 400)
+  assert.equal((await post({ ...valid, answers: { ...valid.answers, phone: '4165550124' } })).status, 400)
+  assert.equal(state.appendCalls, 0)
+})
+
+test('three distinct referred phone signups set priority date once', async (t) => {
+  const { post, state } = await serve(t)
+  const owner = await (await post(makeSubmission())).json()
+  const row = (index) => Object.fromEntries(state.rows[0].map((header, column) => [header, state.rows[index][column]]))
+  assert.equal(owner.referral_code, row(1).referral_code)
+  for (let index = 1; index <= 3; index++) {
+    const body = makeSubmission({ ...exampleAnswers, phone: `416555012${index + 3}` })
+    body.referral_code = owner.referral_code
+    const response = await post(body)
+    assert.equal(response.status, 200)
+    assert.equal(row(1).referred_signups, index)
+    if (index < 3) assert.equal(row(1).referral_completed_date, '')
+  }
+  const completed = row(1).referral_completed_date
+  assert.match(completed, /^\d{4}-\d\d-\d\dT/)
+  assert.equal(row(1).accepted, false)
+  const repeat = makeSubmission({ ...exampleAnswers, phone: '4165550124', name: 'Another request' })
+  repeat.referral_code = owner.referral_code
+  assert.equal((await post(repeat)).status, 200)
+  assert.equal(row(1).referred_signups, 3)
+  assert.equal(row(1).referral_completed_date, completed)
+  assert.equal(row(5).referred_by, '')
+})
+
+test('self referrals, unknown codes, and retries do not award credit', async (t) => {
+  const { post, state } = await serve(t)
+  const owner = await (await post(makeSubmission())).json()
+  const self = makeSubmission({ ...exampleAnswers, name: 'Second request' })
+  self.referral_code = owner.referral_code
+  assert.equal((await post(self)).status, 200)
+  const unknown = makeSubmission({ ...exampleAnswers, phone: '4165550130' })
+  unknown.referral_code = 'a'.repeat(64)
+  assert.equal((await post(unknown)).status, 200)
+  const referred = makeSubmission({ ...exampleAnswers, phone: '4165550131' })
+  referred.referral_code = owner.referral_code
+  assert.equal((await post(referred)).status, 200)
+  assert.equal((await post(referred)).status, 200)
+  assert.equal(state.rows[1][state.rows[0].indexOf('referred_signups')], 1)
+  assert.equal(state.rows.length, 5)
+  assert.equal((await post({ ...makeSubmission(), referral_code: 'invalid' })).status, 400)
+})
+
+test('one visible line orders qualified people by their third referral, then original signup time', () => {
+  const google = googleWriter()
+  let now = Date.parse('2026-10-01T12:00:00Z')
+  google.context.Date = class extends Date { constructor() { super(now++) } }
+  const firstRequest = makeSubmission()
+  google.post(envelope(firstRequest))
+  const save = (phone, ref) => google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone }), referral_code: ref }))
+  const lookup = (phone) => google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone })
+  const second = save('+14165550124')
+  const third = save('+14165550125')
+  for (const phone of ['+14165550126', '+14165550127', '+14165550128']) save(phone, third.referral_code)
+  assert.equal(lookup('+14165550125').signup_number, 1)
+  assert.equal(lookup('+14165550123').signup_number, 2)
+  assert.equal(lookup('+14165550124').signup_number, 3)
+  const qualifiedAt = lookup('+14165550125').referral_completed_date
+  for (const phone of ['+14165550129', '+14165550130', '+14165550131']) save(phone, second.referral_code)
+  assert.equal(lookup('+14165550124').signup_number, 2)
+  assert.equal(lookup('+14165550123').signup_number, 3)
+  assert.equal(google.post(envelope(firstRequest)).signup_number, 3)
+  save('+14165550132', third.referral_code)
+  assert.equal(lookup('+14165550125').signup_number, 1)
+  assert.equal(lookup('+14165550125').referred_signups, 4)
+  assert.equal(lookup('+14165550125').referral_completed_date, qualifiedAt)
+  assert.equal(save('+14165550125').signup_number, 1)
+  assert.equal(save('+14165550133').signup_number, 11)
+  const headers = google.state.rows[0]
+  const owner = google.state.rows.find((row) => row[headers.indexOf('phone')] === '+14165550125')
+  owner[headers.indexOf('referral_completed_date')] = ''
+  owner[headers.indexOf('referred_signups')] = 0
+  assert.equal(lookup('+14165550125').referral_completed_date, qualifiedAt)
+  assert.equal(lookup('+14165550125').signup_number, 1)
+  assert.equal(owner[headers.indexOf('accepted')], false)
+})
+
+test('Messages invitations preserve the referral link and desktop falls back to copying', () => {
+  const link = 'https://askoro.now/invite?ref=abc&src=ig-sunny'
+  for (const [agent, prefix] of [['iPhone', 'sms:&body='], ['Android', 'sms:?body=']]) {
+    const uri = messagesInvite(link, agent)
+    assert.ok(uri.startsWith(prefix))
+    assert.equal(decodeURIComponent(uri.slice(prefix.length)), `thought you'd like oro too :) join me in line: ${link}`)
+  }
+  assert.equal(messagesInvite(link, 'Macintosh'), '')
+  assert.equal(messagesInvite('', 'iPhone'), '')
+})
+
+test('browser submission forwards the referral code and receives its own link code', async (t) => {
+  const { post } = await serve(t)
+  const owner = await (await post(makeSubmission())).json()
+  const referralCode = owner.referral_code
+  const key = makeSubmission().submission_key
+  const browserFetch = (_url, options) => {
+    const body = JSON.parse(options.body)
+    assert.equal(body.referral_code, referralCode)
+    return post(body)
+  }
+  const saved = await saveBetaRequest({ ...exampleAnswers, phone: '4165550132' }, key, browserFetch, referralCode, signPhoneProof('+14165550132', environment.BETA_SUBMISSION_SECRET))
+  assert.ok(UUID4.test(saved.requestId))
+  assert.equal(saved.signupNumber, 2)
+  assert.match(saved.referralCode, /^[0-9a-f]{64}$/)
 })
 
 test('optional and removed answers may be blank while hidden follow-ups cannot reach the Sheet', () => {
@@ -101,7 +243,7 @@ test('malformed answers, phone numbers, stale forms and privileged fields do not
   for (const patch of [
     { phone: '+11111111111' }, { phone: '4165550123 ext. 10' }, { terms: false }, { marketing: 'true' },
     { usedOro: 'Maybe' }, { usualHelp: ['Ask a friend', 'Ask a friend'] }, { usualHelp: 'Ask a friend' },
-    { source: 'Other', sourceOther: '' }, { age: '' }, { age: '35+' }, { gender: '' }, { email: 'nope' }, { name: 'x'.repeat(101) },
+    { source: 'Other', sourceOther: '' }, { age: '35+' }, { email: 'nope' }, { name: 'x'.repeat(101) },
     { occasion: 'Dinner' }, { uncertainty: 'Shoes' }, { approved: true },
   ]) assert.equal((await post({ ...valid, answers: { ...exampleAnswers, ...patch } })).status, 400)
   for (const patch of [{ cohort: 'other' }, { sheet_id: 'other' }, { submission_key: 'bad' }, { form_version: 'old' }, { consent_version: 'old' }, { answers: null }]) assert.equal((await post({ ...valid, ...patch })).status, 400)
@@ -174,6 +316,19 @@ test('Apps Script rejects incorrect secrets, cohorts, hashes and schema drift be
   assert.equal(google.state.locked, false)
 })
 
+test('verified-phone lookup returns an existing receipt without writing', () => {
+  const google = googleWriter()
+  assert.equal(google.post(envelope()).ok, true)
+  const existing = google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone: '+14165550123' })
+  assert.equal(existing.found, true)
+  assert.equal(existing.signup_number, 1)
+  assert.match(existing.referral_code, /^[0-9a-f]{64}$/)
+  assert.equal(existing.referred_signups, 0)
+  assert.equal(existing.referral_completed_date, '')
+  assert.deepEqual(google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone: '+14165550124' }), { ok: true, found: false })
+  assert.equal(google.state.appendCalls, 1)
+})
+
 test('Apps Script recovers a write whose acknowledgement failed and rejects a locked or unconfirmed write', () => {
   const google = googleWriter()
   google.state.throwAfterAppend = true
@@ -186,4 +341,199 @@ test('Apps Script recovers a write whose acknowledgement failed and rejects a lo
   google.state.dropWrite = true
   assert.equal(google.post(envelope()).ok, false)
   assert.equal(google.state.locked, false)
+})
+
+test('existing response sheets can be backfilled with stable referral codes', () => {
+  const google = googleWriter()
+  assert.equal(google.post(envelope()).ok, true)
+  const code = google.state.rows[1][google.state.rows[0].indexOf('referral_code')]
+  google.state.rows.forEach((row) => row.splice(-6))
+  google.context.setupResponseSheet()
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('referral_code')], code)
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('accepted')], false)
+  google.context.setupResponseSheet()
+  assert.equal(google.state.rows[0].filter((header) => header === 'referral_code').length, 1)
+  assert.equal(google.state.rows[1].at(-1), 'unknown')
+})
+
+test('existing response sheets get a campaign column with unknown historical sources', () => {
+  const google = googleWriter()
+  assert.equal(google.post(envelope()).ok, true)
+  google.state.rows.forEach((row) => row.pop())
+  google.context.setupResponseSheet()
+  assert.equal(google.state.rows[0].at(-1), 'campaign_source')
+  assert.equal(google.state.rows[1].at(-1), 'unknown')
+  google.context.setupResponseSheet()
+  assert.equal(google.state.rows[0].filter((header) => header === 'campaign_source').length, 1)
+})
+
+test('historical signups join the queue once, retaining their original date and consent', () => {
+  const google = googleWriter()
+  google.post(envelope())
+  const oldHeaders = google.state.rows[0].slice(0, -6)
+  const archived = google.state.rows[1].slice(0, -6)
+  archived[0] = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'
+  archived[1] = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc'
+  archived[3] = '2026-09-01T12:00:00.000Z'
+  archived[oldHeaders.indexOf('phone')] = '+14165550124'
+  archived[oldHeaders.indexOf('marketing')] = false
+  google.state.archive = [oldHeaders, archived, ['ORGANIC BETA SIGNUPS START BELOW'], [...archived]]
+  const original = structuredClone(google.state.archive)
+  google.context.setupResponseSheet()
+  google.context.setupResponseSheet()
+  assert.equal(google.state.rows.length, 3)
+  assert.deepEqual(google.state.archive, original)
+  const lookup = (phone) => google.post({ action: 'lookup', secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, phone })
+  assert.equal(lookup('+14165550124').signup_number, 1)
+  assert.equal(lookup('+14165550123').signup_number, 2)
+  assert.equal(google.state.rows[2][oldHeaders.indexOf('marketing')], false)
+  assert.equal(google.state.rows[2].at(-1), 'unknown')
+  google.post(envelope(makeSubmission({ ...exampleAnswers, phone: '+14165550124' })))
+  assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).count, 2)
+  const owner = lookup('+14165550124')
+  for (const phone of ['+14165550125', '+14165550126', '+14165550127']) google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone }), referral_code: owner.referral_code }))
+  assert.equal(lookup('+14165550124').referred_signups, 3)
+  assert.ok(lookup('+14165550124').referral_completed_date)
+})
+
+test('archive validation stops before importing any incomplete historical signup', () => {
+  const google = googleWriter()
+  google.state.archive = [['phone', 'received_at'], ['+14165550124', '2026-09-01T12:00:00.000Z']]
+  assert.throws(() => google.context.setupResponseSheet(), /Historical signup needs review/)
+  assert.equal(google.state.rows.length, 1)
+  assert.equal(google.state.locked, false)
+})
+
+test('removing a test identity from responses and history lets it rejoin after every real signup', () => {
+  const google = googleWriter()
+  const testPhone = '+14165550123'
+  const original = google.post(envelope())
+  const phoneIndex = google.state.rows[0].indexOf('phone')
+  google.state.rows[1][3] = '2020-01-01T12:00:00.000Z'
+  for (let index = 0; index < 37; index++) {
+    assert.equal(google.post(envelope(makeSubmission({ ...exampleAnswers, phone: `+14165550${150 + index}` }))).ok, true)
+    google.state.rows.at(-1)[3] = new Date(Date.UTC(2020, 0, 2, 0, index)).toISOString()
+  }
+  google.state.archive = google.state.rows.map((row) => row.slice(0, -6))
+  const lookup = () => google.post({ action: 'lookup', secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, phone: testPhone })
+  assert.equal(lookup().signup_number, 1)
+
+  google.state.rows = google.state.rows.filter((row, index) => index === 0 || row[phoneIndex] !== testPhone)
+  google.state.archive = google.state.archive.filter((row, index) => index === 0 || row[phoneIndex] !== testPhone)
+  google.context.setupResponseSheet()
+  google.context.setupResponseSheet()
+  assert.deepEqual(lookup(), { ok: true, found: false })
+  assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).count, 37)
+
+  const freshSubmission = envelope()
+  const freshReceipt = google.post(freshSubmission)
+  assert.equal(freshReceipt.signup_number, 38)
+  assert.notEqual(freshReceipt.request_id, original.request_id)
+  assert.equal(lookup().signup_number, 38)
+  assert.deepEqual(google.post(freshSubmission), freshReceipt)
+  google.context.setupResponseSheet()
+  assert.equal(lookup().signup_number, 38)
+  assert.equal(google.state.rows.length, 39)
+})
+
+test('the existing production form shares the upgraded sheet without losing receipts or referral identity', () => {
+  const google = googleWriter()
+  google.state.rows[0] = google.state.rows[0].slice(0, -6)
+  const payload = envelope()
+  payload.form_version = '2026-09-28.4'
+  payload.payload_hash = createHash('sha256').update(JSON.stringify({ cohort: payload.cohort, form_version: payload.form_version, consent_version: payload.consent_version, answers: payload.answers })).digest('hex')
+  const saved = google.post(payload)
+  assert.equal(saved.ok, true)
+  assert.equal(saved.payload_hash, payload.payload_hash)
+  assert.equal(google.state.rows[1][5], '2026-09-28.4')
+  assert.equal(google.state.rows[1].length, google.state.rows[0].length)
+  assert.equal(google.post(payload).request_id, saved.request_id)
+  assert.equal(google.state.rows.length, 2)
+  const found = google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone: payload.answers.phone })
+  assert.equal(found.referral_code, saved.referral_code)
+  assert.equal(found.signup_number, 1)
+  const friend = google.post(envelope(makeSubmission({ ...exampleAnswers, phone: '+14165550124' })))
+  assert.equal(friend.signup_number, 2)
+  google.context.setupReferrerNames()
+  const legacyNext = { ...payload, submission_key: makeSubmission().submission_key }
+  assert.equal(google.post(legacyNext).ok, true)
+  assert.equal(google.state.rows.at(-1).length, 35)
+  assert.equal(google.state.rows.at(-1)[34], '')
+  assert.equal(google.post({ ...payload, payload_hash: '0'.repeat(64) }).code, 'invalid_request')
+  assert.equal(google.post({ ...payload, campaign_source: 'ig-sunny' }).code, 'outdated_form')
+  assert.equal(google.post({ ...payload, secret: 'wrong' }).code, 'unauthorized')
+})
+
+test('legacy compatibility in the authenticated writer does not bypass the campaign API', async (t) => {
+  const { post, state } = await serve(t)
+  const response = await post({ ...makeSubmission(), form_version: '2026-09-28.4' })
+  assert.equal(response.status, 400)
+  assert.equal((await response.json()).code, 'outdated_form')
+  assert.equal(state.rows.length, 1)
+})
+
+test('referrer-name setup backfills only valid owners without changing existing signup data', () => {
+  const google = googleWriter()
+  const owner = google.post(envelope(makeSubmission({ ...exampleAnswers, name: '=Jamie' })))
+  const friend = { ...makeSubmission({ ...exampleAnswers, phone: '+14165550124' }), referral_code: owner.referral_code, campaign_source: 'ig-sunny' }
+  assert.equal(google.post(envelope(friend)).ok, true)
+  const headers = google.state.rows[0]
+  const byIndex = headers.indexOf('referred_by')
+  const lookup = () => google.post({ action: 'lookup', secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, phone: '+14165550124' })
+  const beforeLookup = lookup()
+  assert.equal(headers.length, 34)
+  const before = structuredClone(google.state.rows)
+  google.context.setupReferrerNames()
+  assert.equal(google.state.columns, 35)
+  assert.equal(headers.at(-1), 'referrer_name')
+  assert.equal(google.state.rows[1][34], '')
+  assert.equal(google.state.rows[2][34], '=Jamie')
+  assert.deepEqual(google.state.rows.map((row) => row.slice(0, 34)), before)
+  assert.equal(google.state.updates.at(-1).options.valueInputOption, 'RAW')
+  assert.deepEqual(lookup(), beforeLookup)
+  const migrated = structuredClone(google.state.rows)
+  google.context.setupReferrerNames()
+  google.context.setupResponseSheet()
+  assert.deepEqual(google.state.rows, migrated)
+  google.state.rows[1][byIndex] = owner.referral_code
+  google.state.rows[2][byIndex] = 'unknown'
+  google.context.setupReferrerNames()
+  assert.deepEqual(google.state.rows.slice(1).map((row) => row[34]), ['', ''])
+  headers[34] = 'unexpected_column'
+  assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).ok, false)
+})
+
+test('future referrals include the owner name while retries and non-referrals stay unchanged', () => {
+  const google = googleWriter()
+  google.context.setupReferrerNames()
+  const owner = google.post(envelope())
+  const friend = envelope({ ...makeSubmission({ ...exampleAnswers, phone: '+14165550124' }), referral_code: owner.referral_code, campaign_source: 'ig-sunny' })
+  const receipt = google.post(friend)
+  assert.equal(receipt.ok, true)
+  assert.equal(google.state.rows[2][34], 'Jamie')
+  assert.equal(google.state.rows[2][33], 'ig-sunny')
+  assert.deepEqual(google.post(friend), receipt)
+  assert.equal(google.state.rows.length, 3)
+  for (const [phone, code] of [['+14165550123', owner.referral_code], ['+14165550125', 'a'.repeat(64)], ['+14165550126', undefined]]) {
+    assert.equal(google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone }), referral_code: code })).ok, true)
+    assert.equal(google.state.rows.at(-1)[34], '')
+  }
+  assert.equal(google.state.rows[1][28], 1)
+  assert.equal(google.post({ secret: environment.BETA_SUBMISSION_SECRET, action: 'count' }).count, 4)
+})
+
+test('referrer names use the original signup when older history was appended later', () => {
+  const google = googleWriter()
+  google.context.setupReferrerNames()
+  const owner = google.post(envelope())
+  const original = structuredClone(google.state.rows[1])
+  original[0] = makeSubmission().submission_key
+  original[1] = makeSubmission().submission_key
+  original[3] = '2020-01-01T00:00:00.000Z'
+  original[8] = 'Original Jamie'
+  google.state.rows.push(original)
+  assert.equal(google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone: '+14165550124' }), referral_code: owner.referral_code })).ok, true)
+  assert.equal(google.state.rows.at(-1)[34], 'Original Jamie')
+  google.context.setupReferrerNames()
+  assert.equal(google.state.rows.at(-1)[34], 'Original Jamie')
 })

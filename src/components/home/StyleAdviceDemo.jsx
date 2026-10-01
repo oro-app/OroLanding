@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
-import outfitPhoto from '../../assets/fits/fri.webp'
+import outfitPhoto from '../../assets/fits/mens-streetwear.jpg'
+import thinking from '../../assets/mascot/thinking.webp'
 import SmsBubble from './SmsBubble'
 import './ProductDemo.css'
 import './StyleAdviceDemo.css'
@@ -39,22 +40,23 @@ export default function StyleAdviceDemo() {
   return (
     <section className="product-demo style-advice-demo" aria-labelledby="style-advice-demo-title" ref={sectionRef}>
       <div className="halo-container product-demo-inner">
-        <h2 id="style-advice-demo-title" className="sr-only">Get style advice from oro</h2>
+        <h2 id="style-advice-demo-title" className="home-demo-title">send her the fit pic</h2>
+        <p className="home-demo-description">deciding between two outfits? wondering if something looks off?<br />send oro a photo and get a second opinion.</p>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>Thoughts on this fit?</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>thoughts on this fit?</SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
             <SmsBubble tone="dark-purple" side="right">
-              <span className="sr-only">You sent a photo: </span>
-              <img src={outfitPhoto} alt="Pink top, white cardigan and pleated skirt, white sneakers, and a berry-colored bag" loading="lazy" decoding="async" width="408" height="560" />
+              <span className="sr-only">you sent a photo: </span>
+              <img src={outfitPhoto} alt="men’s outfit with a black leather jacket, washed grey cargo jeans, black knit beanie, and dark sneakers" loading="lazy" decoding="async" width="1024" height="1536" />
             </SmsBubble>
           </li>
           <li className="product-demo-message style-advice-demo-reply--continued">
-            <SmsBubble><span className="sr-only">Oro: </span>Pink and white is always such a cute color combo! </SmsBubble>
+            <SmsBubble><span className="sr-only">oro: </span>the worn leather and washed denim work really well together.</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>I'd keep the sneakers for daytime. If you want to dress it up, try ballet flats instead :)</SmsBubble>
+            <SmsBubble avatar={thinking}><span className="sr-only">oro: </span>i’d give the tee a small front tuck. it'll make your legs look longer and balance the roomy jacket.</SmsBubble>
           </li>
         </ol>
       </div>
