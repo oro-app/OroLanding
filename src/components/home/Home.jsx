@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
 import { HomeCta } from './HomeChrome'
@@ -58,6 +58,18 @@ function TypedHeadline() {
 
 export default function Home() {
   const motionRef = useHomeMotion()
+  const [entryCount, setEntryCount] = useState(null)
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetch('/api/beta-count', { signal: controller.signal })
+      .then((response) => response.ok ? response.json() : null)
+      .then((result) => {
+        if (Number.isSafeInteger(result?.count) && result.count > 100) setEntryCount(result.count)
+      })
+      .catch(() => {})
+    return () => controller.abort()
+  }, [])
 
   return (
     <div className="halo-home" ref={motionRef}>
@@ -74,7 +86,7 @@ export default function Home() {
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">get her number</HomeCta>
-              <Text variant="support" muted className="home-beta-note home-enter">1,482 people are trying to get Oro’s number</Text>
+              {entryCount !== null && <Text variant="support" muted className="home-beta-note home-enter">{entryCount.toLocaleString()} people are trying to get Oro’s number</Text>}
             </div>
           </section>
           <ProductDemo />
@@ -96,10 +108,10 @@ export default function Home() {
             ))}
           </section>
           <StyleAdviceDemo />
-          <section className="home-social-proof home-moments-panel" aria-labelledby="home-social-title" data-home-reveal>
+          {entryCount !== null && <section className="home-social-proof home-moments-panel" aria-labelledby="home-social-title" data-home-reveal>
             <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
-            <Text muted className="home-description home-stagger">1,482 people are already trying to get it.</Text>
-          </section>
+            <Text muted className="home-description home-stagger">{entryCount.toLocaleString()} people are already trying to get it.</Text>
+          </section>}
         </div>
       </div>
     </div>

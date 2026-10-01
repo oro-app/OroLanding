@@ -39,6 +39,8 @@ Deploy a **Web app**, execute as the deploying account, with access **Anyone**. 
 
 On later code changes, rebuild both script files and update the existing deployment to a new version. Keep the same project, Sheet, and response keys. Updating editor code alone does not update the deployed `/exec` version.
 
+The home page reads the number of saved response rows through `GET /api/beta-count`. This server endpoint asks the same Apps Script deployment for a count with the server-side secret; it never exposes the Sheet or secret to the browser. Redeploy the Apps Script version containing the count action before deploying the updated website. The page only shows the count when the read succeeds and there are more than 100 rows.
+
 ## 2. Configure the website and rate limit
 
 In the OroLanding Vercel project, configure the server environment for the intended deployment scope. Start with Preview pointing to the **test** Google project. Keep Production disabled until the rehearsal passes.

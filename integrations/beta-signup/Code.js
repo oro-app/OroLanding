@@ -24,6 +24,9 @@ function doPost(event) {
     const cohort = properties.getProperty('BETA_COHORT')
     const sheetId = properties.getProperty('BETA_SHEET_ID')
     if (!secret || secret.length < 32 || !cohort || !sheetId || input.secret !== secret) return jsonResult({ ok: false, code: 'unauthorized' })
+    if (input.action === 'count' && Object.keys(input).every((key) => ['secret', 'action'].includes(key))) {
+      return jsonResult({ ok: true, count: readResponses(sheetId).length - 1 })
+    }
     if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash', 'referral_code'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
     const validated = BetaContract.validateSubmission({ submission_key: input.submission_key, form_version: input.form_version, consent_version: input.consent_version, answers: input.answers, referral_code: input.referral_code })
     if (validated.code) return jsonResult({ ok: false, code: validated.code })
