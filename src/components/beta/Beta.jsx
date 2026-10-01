@@ -29,7 +29,7 @@ export default function Beta() {
   const [verificationStatus, setVerificationStatus] = useState('idle')
   const [attemptedSteps, setAttemptedSteps] = useState([])
   const [status, setStatus] = useState('idle')
-  const [enabled, setEnabled] = useState(false)
+  const [enabled, setEnabled] = useState(null)
   const [requestId, setRequestId] = useState(null)
   const [signupNumber, setSignupNumber] = useState(null)
   const [ownReferralCode, setOwnReferralCode] = useState(null)
@@ -77,7 +77,7 @@ export default function Beta() {
     fetch('/api/beta-request', { signal: controller.signal, cache: 'no-store' })
       .then((response) => response.ok ? response.json() : null)
       .then((result) => { if (!controller.signal.aborted) setEnabled(result?.enabled === true) })
-      .catch(() => { })
+      .catch(() => { if (!controller.signal.aborted) setEnabled(false) })
     return () => controller.abort()
   }, [])
 
@@ -202,7 +202,7 @@ export default function Beta() {
 
   async function submit(event) {
     event.preventDefault()
-    if (!allowForm || submitting.current) return
+    if (!allowForm || enabled === null || submitting.current) return
     const invalid = validateAnswers(answers)
     const checkedSteps = finalStep ? formSteps.map((_, index) => index) : [step]
     const invalidStep = checkedSteps.find((index) => formSteps[index].fields.some((name) => invalid[name]))
@@ -301,7 +301,7 @@ export default function Beta() {
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <HomeHeader />
-      {previewForm && !enabled && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is submitted</span>{view === 'receipt' ? <button onClick={() => setView('form')}>Back to form <span data-button-icon="up-right" aria-hidden="true">↗</span></button> : <><button onClick={() => previewReceipt()}>Preview confirmation <span data-button-icon="up-right" aria-hidden="true">↗</span></button>{import.meta.env.DEV && <button onClick={() => previewReceipt(true)}>Preview referral milestone <span data-button-icon="up-right" aria-hidden="true">↗</span></button>}</>}</div></div>}
+      {previewForm && enabled === false && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is submitted</span>{view === 'receipt' ? <button onClick={() => setView('form')}>Back to form <span data-button-icon="up-right" aria-hidden="true">↗</span></button> : <><button onClick={() => previewReceipt()}>Preview confirmation <span data-button-icon="up-right" aria-hidden="true">↗</span></button>{import.meta.env.DEV && <button onClick={() => previewReceipt(true)}>Preview referral milestone <span data-button-icon="up-right" aria-hidden="true">↗</span></button>}</>}</div></div>}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-panel beta-form-heading">
@@ -341,7 +341,7 @@ export default function Beta() {
             </div>}
             <div className="beta-step-actions">
               <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>
-              {!finalStep && <Button type="submit" className="beta-form-next" disabled={verificationStatus === 'sending' || verificationStatus === 'checking'}>
+              {!finalStep && <Button type="submit" className="beta-form-next" disabled={enabled === null || verificationStatus === 'sending' || verificationStatus === 'checking'}>
                 {verificationStatus === 'sending' ? 'sending your code…' : verificationStatus === 'checking' ? 'checking your code…' : step === 0 ? 'send my code' : 'verify my number'}
                 <ButtonArrow size={18} />
               </Button>}
