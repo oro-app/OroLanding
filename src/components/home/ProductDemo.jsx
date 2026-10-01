@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import outfit from '../../assets/fit-gen-demo/collage.webp'
 import tryOn from '../../assets/fit-gen-demo/tryon.webp'
-import cheeky from '../../assets/mascot/cheeky.webp'
+import aww from '../../assets/mascot/aww.webp'
 import jotting from '../../assets/mascot/jotting.webp'
 import SmsBubble from './SmsBubble'
 import './ProductDemo.css'
@@ -54,7 +54,7 @@ export default function ProductDemo() {
             <SmsBubble><span className="sr-only">Oro: </span>It looks stunning on you :)</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble avatar={cheeky}>
+            <SmsBubble avatar={aww}>
               <span className="sr-only">Oro: </span>
               <img src={tryOn} alt="Try-on with a cream cardigan, cherry-print top, red belt, and light blue flared jeans" loading="lazy" decoding="async" width="480" height="640" />
             </SmsBubble>

@@ -21,6 +21,7 @@
 
 .product-demo-message { display: flex; justify-content: flex-start; }
 .product-demo-message--user { justify-content: flex-end; }
+.product-demo-message:has(+ .product-demo-message .sms-avatar) { padding-left: 52px; }
 .product-demo-message:has(+ .product-demo-message .sms-bubble > img) .sms-bubble::after { display: none; }
 .product-demo-message .sms-bubble { max-width: min(78%, 340px); }
 .product-demo-message img { width: 250px; }
@@ -31,6 +32,7 @@
   height: 44px;
   margin-right: 8px;
   object-fit: contain;
+  filter: drop-shadow(0 3px 4px rgb(11 11 11 / 18%));
 }
 
 .product-demo[data-demo-motion="ready"] .product-demo-message[data-reveal-state="pending"] {
