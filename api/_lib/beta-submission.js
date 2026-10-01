@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { MAX_BODY_BYTES, UUID4, canonicalPayload, validateSubmission } from '../../src/lib/betaContract.js'
+import { MAX_BODY_BYTES, REFERRAL_CODE, UUID4, canonicalPayload, validateSubmission } from '../../src/lib/betaContract.js'
 
 export function readConfig(env) {
   const url = env.BETA_APPS_SCRIPT_URL || ''
@@ -57,11 +57,11 @@ export function createBetaHandler({ env = process.env, fetcher = fetch, checkLim
       if (Buffer.byteLength(JSON.stringify(body) || '') > MAX_BODY_BYTES) return send(413, { code: 'request_too_large' })
       const validated = validateSubmission(body)
       if (validated.code) return send(400, validated)
-      const payloadHash = createHash('sha256').update(canonicalPayload(validated.answers, config.cohort)).digest('hex')
+      const payloadHash = createHash('sha256').update(canonicalPayload(validated.answers, config.cohort, body.referral_code || '')).digest('hex')
       const result = await writeToGoogle(config, { ...body, answers: validated.answers, payload_hash: payloadHash }, fetcher)
       if (result?.code === 'submission_conflict') return send(409, { code: 'submission_conflict' })
-      if (result?.ok !== true || !UUID4.test(result.request_id || '') || result.submission_key !== body.submission_key || result.payload_hash !== payloadHash) throw new Error('Unconfirmed save')
-      return send(200, { ok: true, request_id: result.request_id, submission_key: body.submission_key })
+      if (result?.ok !== true || !UUID4.test(result.request_id || '') || result.submission_key !== body.submission_key || result.payload_hash !== payloadHash || !REFERRAL_CODE.test(result.referral_code || '')) throw new Error('Unconfirmed save')
+      return send(200, { ok: true, request_id: result.request_id, submission_key: body.submission_key, referral_code: result.referral_code })
     } catch {
       return send(503, { code: 'temporarily_unavailable' })
     }

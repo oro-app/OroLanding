@@ -2,9 +2,9 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createServer } from 'node:http'
 import { once } from 'node:events'
-import { createHash } from 'node:crypto'
+import { createHash, createHmac } from 'node:crypto'
 import { createBetaHandler } from '../api/_lib/beta-submission.js'
-import { canonicalPayload, normalizeAnswers, UUID4 } from '../src/lib/betaContract.js'
+import { canonicalPayload, FORM_VERSION, normalizeAnswers, UUID4 } from '../src/lib/betaContract.js'
 import { saveBetaRequest } from '../src/components/beta/betaSubmission.js'
 import { exampleAnswers, environment, makeSubmission, googleWriter } from './beta-fixture.js'
 
@@ -30,7 +30,7 @@ async function serve(t, options = {}) {
 function envelope(submission = makeSubmission()) {
   const answers = normalizeAnswers(submission.answers).answers
   return { ...submission, answers, cohort: environment.BETA_COHORT, secret: environment.BETA_SUBMISSION_SECRET,
-    payload_hash: createHash('sha256').update(canonicalPayload(answers, environment.BETA_COHORT)).digest('hex') }
+    payload_hash: createHash('sha256').update(canonicalPayload(answers, environment.BETA_COHORT, submission.referral_code || '')).digest('hex') }
 }
 
 test('HTTP submission saves a literal row with canonical contact details and independent consents', async (t) => {
@@ -52,8 +52,12 @@ test('HTTP submission saves a literal row with canonical contact details and ind
   assert.equal(row.usualHelpOther, '')
   assert.equal(row.age, 'Prefer not to say')
   assert.equal(row.gender, 'Prefer not to say')
-  assert.equal(row.form_version, '2026-09-28.4')
+  assert.equal(row.form_version, FORM_VERSION)
   assert.equal(row.consent_recorded_at, row.received_at)
+  assert.equal(row.referred_signups, 0)
+  assert.equal(row.referral_completed_date, '')
+  assert.equal(row.accepted, false)
+  assert.equal(row.referral_code, createHmac('sha256', environment.BETA_SUBMISSION_SECRET).update(row.phone).digest('hex'))
   assert.equal(state.appends[0].options.valueInputOption, 'RAW')
   assert.equal(state.locked, false)
 })
@@ -83,6 +87,63 @@ test('concurrent same-key retries return the original receipt; changed answers c
   assert.equal(state.appendCalls, 1)
   assert.equal((await post(makeSubmission({ ...body.answers, location: 'Updated' }))).status, 200)
   assert.equal(state.appendCalls, 2)
+})
+
+test('three distinct referred phone signups set priority date once', async (t) => {
+  const { post, state } = await serve(t)
+  const owner = await (await post(makeSubmission())).json()
+  const row = (index) => Object.fromEntries(state.rows[0].map((header, column) => [header, state.rows[index][column]]))
+  assert.equal(owner.referral_code, row(1).referral_code)
+  for (let index = 1; index <= 3; index++) {
+    const body = makeSubmission({ ...exampleAnswers, phone: `416555012${index + 3}` })
+    body.referral_code = owner.referral_code
+    const response = await post(body)
+    assert.equal(response.status, 200)
+    assert.equal(row(1).referred_signups, index)
+    if (index < 3) assert.equal(row(1).referral_completed_date, '')
+  }
+  const completed = row(1).referral_completed_date
+  assert.match(completed, /^\d{4}-\d\d-\d\dT/)
+  assert.equal(row(1).accepted, false)
+  const repeat = makeSubmission({ ...exampleAnswers, phone: '4165550124', name: 'Another request' })
+  repeat.referral_code = owner.referral_code
+  assert.equal((await post(repeat)).status, 200)
+  assert.equal(row(1).referred_signups, 3)
+  assert.equal(row(1).referral_completed_date, completed)
+  assert.equal(row(5).referred_by, '')
+})
+
+test('self referrals, unknown codes, and retries do not award credit', async (t) => {
+  const { post, state } = await serve(t)
+  const owner = await (await post(makeSubmission())).json()
+  const self = makeSubmission({ ...exampleAnswers, name: 'Second request' })
+  self.referral_code = owner.referral_code
+  assert.equal((await post(self)).status, 200)
+  const unknown = makeSubmission({ ...exampleAnswers, phone: '4165550130' })
+  unknown.referral_code = 'a'.repeat(64)
+  assert.equal((await post(unknown)).status, 200)
+  const referred = makeSubmission({ ...exampleAnswers, phone: '4165550131' })
+  referred.referral_code = owner.referral_code
+  assert.equal((await post(referred)).status, 200)
+  assert.equal((await post(referred)).status, 200)
+  assert.equal(state.rows[1][state.rows[0].indexOf('referred_signups')], 1)
+  assert.equal(state.rows.length, 5)
+  assert.equal((await post({ ...makeSubmission(), referral_code: 'invalid' })).status, 400)
+})
+
+test('browser submission forwards the referral code and receives its own link code', async (t) => {
+  const { post } = await serve(t)
+  const owner = await (await post(makeSubmission())).json()
+  const referralCode = owner.referral_code
+  const key = makeSubmission().submission_key
+  const browserFetch = (_url, options) => {
+    const body = JSON.parse(options.body)
+    assert.equal(body.referral_code, referralCode)
+    return post(body)
+  }
+  const saved = await saveBetaRequest({ ...exampleAnswers, phone: '4165550132' }, key, browserFetch, referralCode)
+  assert.ok(UUID4.test(saved.requestId))
+  assert.match(saved.referralCode, /^[0-9a-f]{64}$/)
 })
 
 test('optional and removed answers may be blank while hidden follow-ups cannot reach the Sheet', () => {
@@ -186,4 +247,16 @@ test('Apps Script recovers a write whose acknowledgement failed and rejects a lo
   google.state.dropWrite = true
   assert.equal(google.post(envelope()).ok, false)
   assert.equal(google.state.locked, false)
+})
+
+test('existing response sheets can be backfilled with stable referral codes', () => {
+  const google = googleWriter()
+  assert.equal(google.post(envelope()).ok, true)
+  const code = google.state.rows[1][google.state.rows[0].indexOf('referral_code')]
+  google.state.rows.forEach((row) => row.splice(-5))
+  google.context.setupReferralColumns()
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('referral_code')], code)
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('accepted')], false)
+  google.context.setupReferralColumns()
+  assert.equal(google.state.rows[0].filter((header) => header === 'referral_code').length, 1)
 })

@@ -6,6 +6,7 @@ import BetaIntroduction from './BetaIntroduction'
 import { clearBetaDraft, readBetaDraft, writeBetaDraft } from './betaDraft'
 import { choices, emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { saveBetaRequest, submissionMessages } from './betaSubmission'
+import { REFERRAL_CODE } from '../../lib/betaContract'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
@@ -54,6 +55,12 @@ export default function Beta() {
   const [status, setStatus] = useState('idle')
   const [enabled, setEnabled] = useState(false)
   const [requestId, setRequestId] = useState(null)
+  const [ownReferralCode, setOwnReferralCode] = useState(null)
+  const [incomingReferralCode] = useState(() => {
+    if (typeof window === 'undefined') return ''
+    const code = new URL(window.location.href).searchParams.get('ref') || ''
+    return REFERRAL_CODE.test(code) ? code : ''
+  })
   const submissionKey = useRef(draft?.submissionKey ?? null)
   const submitting = useRef(false)
   const allowForm = previewForm || enabled
@@ -196,11 +203,12 @@ export default function Beta() {
     writeBetaDraft(answers, submissionKey.current)
     submitting.current = true
     setStatus('saving')
-    const result = await saveBetaRequest(answers, submissionKey.current)
+    const result = await saveBetaRequest(answers, submissionKey.current, fetch, incomingReferralCode)
     submitting.current = false
     if (result.requestId) {
       clearBetaDraft()
       setRequestId(result.requestId)
+      setOwnReferralCode(result.referralCode)
       setStatus('idle')
       setView('receipt')
     } else setStatus(result.code)
@@ -267,6 +275,7 @@ export default function Beta() {
         <Text muted>Thanks for helping us make oro yours. We’ll review your responses and email you if you’re selected for the September 26–October 1 beta. We’ll also let you know when oro is officially available to the public.</Text>
         <Text variant="label" muted>Questions or concerns? Email <a href="mailto:sunny@buildingoro.ca">sunny@buildingoro.ca</a>.</Text>
         {requestId ? <Text variant="support" muted>Request reference: {requestId}</Text> : <Button variant="secondary" onClick={() => setView('form')}>Back to the draft</Button>}
+        {requestId && ownReferralCode && <div className="beta-referral-link"><Text>Invite friends with your referral link. After three friends sign up, your request gets priority review.</Text><a href={`${window.location.origin}/beta?ref=${ownReferralCode}`}>{`${window.location.origin}/beta?ref=${ownReferralCode}`}</a></div>}
       </section>}
     </div>
   )

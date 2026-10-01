@@ -1,6 +1,6 @@
 import vm from 'node:vm'
 import { readFileSync } from 'node:fs'
-import { createHash, randomUUID } from 'node:crypto'
+import { createHash, createHmac, randomUUID } from 'node:crypto'
 import { CONSENT_VERSION, FORM_VERSION } from '../src/lib/betaContract.js'
 
 export const exampleAnswers = {
@@ -28,8 +28,16 @@ export function googleWriter() {
   const context = vm.createContext({
     ContentService: { MimeType: { JSON: 'application/json' }, createTextOutput: (text) => ({ text, setMimeType() { return this } }) },
     PropertiesService: { getScriptProperties: () => ({ getProperty: (key) => state.properties[key] }) },
-    Utilities: { getUuid: randomUUID, DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' }, computeDigest: (algorithm, value) => [...createHash(algorithm).update(value).digest()] },
+    Utilities: { getUuid: randomUUID, DigestAlgorithm: { SHA_256: 'sha256' }, Charset: { UTF_8: 'utf8' }, computeDigest: (algorithm, value) => [...createHash(algorithm).update(value).digest()], computeHmacSha256Signature: (value, secret) => [...createHmac('sha256', secret).update(value).digest()] },
     LockService: { getScriptLock: () => ({ tryLock() { state.locked = !state.lockBusy; return state.locked }, hasLock: () => state.locked, releaseLock() { state.locked = false } }) },
+    SpreadsheetApp: { openById: () => ({ getSheetByName: () => ({
+      getLastRow: () => state.rows.length,
+      getLastColumn: () => state.rows[0].length,
+      getRange(row, column, height, width) { return {
+        getValues: () => Array.from({ length: height }, (_, offset) => Array.from({ length: width }, (_, index) => state.rows[row - 1 + offset]?.[column - 1 + index] ?? '')),
+        setValues(values) { values.forEach((cells, offset) => { const target = state.rows[row - 1 + offset]; cells.forEach((value, index) => { target[column - 1 + index] = value }) }) },
+      } },
+    }) }) },
     Sheets: { Spreadsheets: { Values: {
       get() { if (state.readFailure) throw new Error('read failed'); return { values: structuredClone(state.rows) } },
       append(body, id, range, options) {
@@ -39,6 +47,15 @@ export function googleWriter() {
         if (!state.dropWrite) state.rows.push(...structuredClone(body.values))
         if (state.throwAfterAppend) throw new Error('lost write acknowledgement')
         return { updates: { updatedRows: 1 } }
+      },
+      update(body, id, range, options) {
+        if (!state.locked) throw new Error('update without lock')
+        const cell = range.split('!')[1].split(':')[0]
+        const match = /^([A-Z]+)(\d+)$/.exec(cell)
+        const column = [...match[1]].reduce((value, letter) => value * 26 + letter.charCodeAt(0) - 64, 0) - 1
+        const row = Number(match[2]) - 1
+        body.values[0].forEach((value, index) => { state.rows[row][column + index] = value })
+        return { updatedRows: 1 }
       },
     } } },
   })
