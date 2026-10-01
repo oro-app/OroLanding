@@ -53,7 +53,9 @@
 .beta-welcome-content { display: grid; justify-items: center; gap: var(--oro-space-6); text-align: center; }
 .beta-welcome-content .oro-heading { font-size: clamp(56px, 8vw, 88px); line-height: 1; }
 .halo-site .beta-welcome-content h1:focus-visible { outline: none; }
-.beta-welcome-mascot { width: clamp(200px, 32svh, 280px); height: auto; object-fit: contain; }
+.beta-welcome-portrait { position: relative; isolation: isolate; width: clamp(200px, 32svh, 280px); }
+.beta-welcome-portrait::before { content: ''; position: absolute; inset: 5% -12%; z-index: -1; border-radius: 50%; pointer-events: none; background: radial-gradient(ellipse, color-mix(in srgb, var(--oro-color-champagne) 28%, transparent), color-mix(in srgb, var(--oro-color-display) 12%, transparent) 46%, transparent 72%); }
+.beta-welcome-mascot { display: block; width: 100%; height: auto; object-fit: contain; transform-origin: 50% 75%; }
 .beta-welcome-copy.oro-text { font-size: clamp(20px, 3vw, 26px); line-height: 1.4; }
 .beta-welcome-cta { width: min(100%, 320px); min-height: 60px; gap: var(--oro-space-3); font-size: 18px; }
 .beta-form-heading:has(+ .beta-form .beta-choice-hint) { margin-bottom: var(--oro-space-3); }
@@ -165,6 +167,14 @@
   .beta-story .home-type-char::after { content: ''; position: absolute; right: -0.045em; top: 0.12em; bottom: 0.12em; width: 2px; background: var(--oro-color-champagne); opacity: 0; animation: homeTypeCaret 34ms linear var(--home-char-delay) both; }
   .beta-chapter--hero .beta-lead, .beta-story-date { animation: beta-copy-in 240ms ease-out 1050ms both; }
   .beta-form-panel { animation: beta-step-in 420ms cubic-bezier(.22, 1, .36, 1) both; }
+  .beta-welcome-content { animation: none; }
+  .beta-welcome-content > :is(.oro-heading, .beta-welcome-copy, .beta-welcome-cta, .beta-welcome-note) { animation: beta-welcome-in 560ms cubic-bezier(.22, 1, .36, 1) backwards; }
+  .beta-welcome-mascot { animation: beta-welcome-hello 760ms cubic-bezier(.22, 1, .36, 1) 70ms backwards; }
+  .beta-welcome-portrait::before { animation: beta-welcome-glow 800ms ease-out 70ms backwards; }
+  .beta-welcome-copy.oro-text { animation-delay: 160ms; }
+  .beta-welcome-cta.oro-button { animation-delay: 240ms; }
+  .beta-welcome-note.oro-text { animation-delay: 310ms; }
+  .beta-welcome-cta:focus-visible { animation: none; }
   .beta-form-panel > .beta-form { animation: beta-step-in 420ms cubic-bezier(.22, 1, .36, 1) 70ms both; }
   .beta-receipt { animation: beta-step-in 420ms cubic-bezier(.22, 1, .36, 1) both; }
   .beta-form-progress > span { transition: width 420ms cubic-bezier(.22, 1, .36, 1); }
@@ -174,6 +184,14 @@
 @keyframes beta-body-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes beta-copy-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes beta-step-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes beta-welcome-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes beta-welcome-hello {
+  0% { opacity: 0; transform: translateY(22px) scale(.94) rotate(-4deg); }
+  60% { opacity: 1; transform: translateY(-4px) scale(1.015) rotate(1.5deg); }
+  82% { transform: translateY(1px) scale(.998) rotate(-.5deg); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes beta-welcome-glow { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) { .beta-option { transition: none; } .beta-chapter-content { opacity: 1; transform: none; filter: none; } }
 @media (max-width: 760px) {
   .beta-chapter { width: calc(100% - 48px); padding-block: var(--oro-space-8); flex: 0 0 auto; }
