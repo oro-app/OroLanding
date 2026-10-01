@@ -48,7 +48,7 @@ export function createBetaHandler({ env = process.env, fetcher = fetch, checkLim
     if (!config.origins.includes(req.headers.origin)) return send(403, { code: 'invalid_origin' })
     if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] || '')) return send(415, { code: 'invalid_content_type' })
     try {
-      const limit = await checkLimit(config.rateLimitId, { headers: { ...req.headers, host: config.host } })
+      const limit = await checkLimit(config.rateLimitId, { headers: { ...req.headers, host: new URL(req.headers.origin).host } })
       if (limit.error) return send(503, { code: 'temporarily_unavailable' })
       if (limit.rateLimited) { res.setHeader('Retry-After', '60'); return send(429, { code: 'rate_limited' }) }
       let body = req.body
