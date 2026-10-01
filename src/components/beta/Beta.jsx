@@ -6,14 +6,14 @@ import { clearBetaDraft, readBetaDraft, writeBetaDraft } from './betaDraft'
 import { emptyAnswers, formSteps, textLimits, validateAnswers } from './betaForm'
 import { findExistingBetaRequest, saveBetaRequest, submissionMessages } from './betaSubmission'
 import { CAMPAIGN_SOURCE, REFERRAL_CODE } from '../../lib/betaContract'
-import { createReceiptStory, downloadReceiptStory } from './receiptStory'
+import { createReceiptStory } from './receiptStory'
+import StoryImageActions from './StoryImageActions'
 import { messagesInvite } from './referralShare'
 import PhoneAnswer from './PhoneAnswer'
 import './Beta.css'
 
 const previewForm = import.meta.env.DEV || __BETA_FORM_PREVIEW__
 function CopyIcon() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="8" y="4" width="11" height="13" rx="2" /><path d="M16 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2" /></svg> }
-function DownloadIcon() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3" /></svg> }
 function WrittenAnswer({ name, label, value, update, error, ...props }) {
   return <TextField id={name} name={name} label={label} value={value} onChange={(event) => update(name, event.target.value)} maxLength={textLimits[name] || 64} required error={error} {...props} />
 }
@@ -42,6 +42,7 @@ export default function Beta() {
   const [copied, setCopied] = useState(false)
   const [messagesHref, setMessagesHref] = useState('')
   const [storyImage, setStoryImage] = useState(null)
+  const [storyRetry, setStoryRetry] = useState(0)
   const [incomingReferralCode] = useState(() => {
     if (typeof window === 'undefined') return ''
     const code = new URL(window.location.href).searchParams.get('ref') || ''
@@ -274,9 +275,9 @@ export default function Beta() {
       if (!active) return
       imageUrl = URL.createObjectURL(blob)
       setStoryImage({ blob, url: imageUrl })
-    }).catch(() => { if (active) { setStoryImage(null); setShareMessage('Could not prepare the share image. Try downloading it again.') } })
+    }).catch(() => { if (active) { setStoryImage(null); setShareMessage('Could not prepare the share image. Please try again.') } })
     return () => { active = false; if (imageUrl) URL.revokeObjectURL(imageUrl) }
-  }, [view, inviteLink, signupNumber])
+  }, [view, inviteLink, signupNumber, storyRetry])
   async function copyInvite() {
     if (!inviteLink) return
     try {
@@ -287,10 +288,6 @@ export default function Beta() {
       setShareMessage('Invite link copied.')
     }
     catch { setShareMessage('Could not copy the link. Please try again.') }
-  }
-  async function saveStory() {
-    try { downloadReceiptStory(storyImage?.blob ?? await createReceiptStory(inviteLink, signupNumber)); setShareMessage('Story image downloaded.') }
-    catch { setShareMessage('Could not download the story image. Please try again.') }
   }
   const questionContent = [
     <><PhoneAnswer value={answers.phone} update={update} error={errors.phone} disabled={verificationStatus === 'sending'} />{['unavailable', 'rate_limited'].includes(verificationStatus) && step === 0 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before requesting another code.' : 'We couldn’t send a code. Try again.'}</p>}</>,
@@ -361,7 +358,11 @@ export default function Beta() {
             </div>
             {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}
           </div>
-          {!referralCompleted && <div className="beta-story-preview">{storyImage ? <img src={storyImage.url} alt="Share image with the cheeky Oro mascot, referral message, and invite link" /> : <div className="beta-story-skeleton" role="status" aria-label={shareMessage.startsWith('Could not prepare') ? 'Image unavailable' : 'Preparing image'} />}<Button variant="tertiary" onClick={saveStory} aria-label="Download image" disabled={!storyImage && !shareMessage.startsWith('Could not prepare')}><DownloadIcon /></Button>{shareMessage.startsWith('Could not') && <p>{shareMessage}</p>}</div>}
+          {!referralCompleted && <div className="beta-story-preview">
+            {storyImage ? <img src={storyImage.url} alt="Share image with the cheeky Oro mascot, referral message, and invite link" /> : <div className="beta-story-skeleton" role="status" aria-label={shareMessage.startsWith('Could not prepare') ? 'Image unavailable' : 'Preparing image'} />}
+            <StoryImageActions blob={storyImage?.blob} failed={shareMessage.startsWith('Could not prepare')} onRetry={() => setStoryRetry((value) => value + 1)} />
+            {shareMessage.startsWith('Could not prepare') && <p>{shareMessage}</p>}
+          </div>}
         </div>
       </section>}
       {allowForm && view === 'receipt' && <HomeFooter landing closerTitle="good style looks better together" closerText={null} closerAction={<><button type="button" className="oro-button oro-button--primary halo-cta halo-cta--closer" onClick={copyInvite} disabled={!inviteLink}>copy my invite link</button><p className="beta-footer-message" role="status">{shareMessage || (!inviteLink && 'check back later :(')}</p></>} />}
