@@ -13,7 +13,7 @@ function textingLink() {
   return `sms:+18556762419${apple ? '&' : '?'}body=${encodeURIComponent(FIRST_MESSAGE)}`
 }
 
-const QUESTIONS = ['name', 'birthday', 'province', 'hear', 'phone']
+const QUESTIONS = ['name', 'birthday', 'province', 'hear', 'notification', 'phone']
 
 const countryNames = new Intl.DisplayNames(['en'], { type: 'region' })
 const PHONE_COUNTRIES = getCountries().map((country) => ({
@@ -110,7 +110,7 @@ export default function GetStarted() {
   const [view, setView] = useState('welcome')
   const [form, setForm] = useState(() => {
     if (typeof window === 'undefined') {
-      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' }
+      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', notificationHour: null, phone: '', phoneCountry: 'CA' }
     }
 
     try {
@@ -126,10 +126,11 @@ export default function GetStarted() {
         province: locations.some(([code]) => code === saved?.province) ? saved.province : '',
         hear: Array.isArray(saved?.hear) ? saved.hear.filter((item) => typeof item === 'string') : [],
         hearOther: typeof saved?.hearOther === 'string' ? saved.hearOther.slice(0, 100) : '',
+        notificationHour: saved?.notificationHour === 8 || saved?.notificationHour === 9 ? saved.notificationHour : null,
         ...phoneFields(typeof saved?.phone === 'string' ? saved.phone : '', saved?.phoneCountry || country),
       }
     } catch {
-      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' }
+      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', notificationHour: null, phone: '', phoneCountry: 'CA' }
     }
   })
   const [code, setCode] = useState('')
@@ -185,6 +186,7 @@ export default function GetStarted() {
       case 'province': return (form.country === 'CA' ? PROVINCES : form.country === 'US' ? US_STATES : [])
         .some(([code]) => code === form.province)
       case 'hear': return form.hear.length > 0
+      case 'notification': return form.notificationHour === 8 || form.notificationHour === 9
       case 'phone': return form.phone.trim().length > 0
       case 'otp': return code.length === 6 && verifyLeft === 0
       default: return true
@@ -199,7 +201,7 @@ export default function GetStarted() {
   }
 
   const restart = () => {
-    setForm({ name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' })
+    setForm({ name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', notificationHour: null, phone: '', phoneCountry: 'CA' })
     setCode('')
     setResendLeft(0)
     goTo('welcome', 'back')
@@ -241,6 +243,7 @@ export default function GetStarted() {
           ...form.hear,
           form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
         ].filter(Boolean).join(', '),
+        notification_hour: form.notificationHour,
         phone: phoneNumber.number,
       })
       const { status, result, detail, retryAfter } = response
@@ -461,6 +464,29 @@ export default function GetStarted() {
                   onChange={set('province')}
                 />
               )}
+            </Question>
+          )}
+
+          {view === 'notification' && (
+            <Question
+              label="What time should Oro get you ready every morning?"
+              canContinue={canContinue}
+              onContinue={advance}
+            >
+              <fieldset className="gs-time-options" aria-label="Morning notification time">
+                {[8, 9].map((hour) => (
+                  <label className="gs-time-option" key={hour}>
+                    <input
+                      type="radio"
+                      name="notification-hour"
+                      value={hour}
+                      checked={form.notificationHour === hour}
+                      onChange={() => set('notificationHour')(hour)}
+                    />
+                    <span>{hour} AM</span>
+                  </label>
+                ))}
+              </fieldset>
             </Question>
           )}
 

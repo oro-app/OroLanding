@@ -1,6 +1,6 @@
 import { test as base, expect } from './fixtures.js'
 
-const draft = { name: 'Test oronaut', birthday: '1998/01/02', country: 'CA', province: 'ON', hear: ['a friend'], hearOther: '', phone: '(416) 555-0123', phoneCountry: 'CA' }
+const draft = { name: 'Test oronaut', birthday: '1998/01/02', country: 'CA', province: 'ON', hear: ['a friend'], hearOther: '', notificationHour: 8, phone: '(416) 555-0123', phoneCountry: 'CA' }
 const inviteError = { status: 403, json: { detail: { code: 'beta_invite_required', message: 'An approved beta invite is required' } } }
 const test = base.extend({
   api: async ({ page }, use) => {
@@ -25,7 +25,7 @@ async function phoneStep(page, answers = draft) {
 
 async function continueToPhone(page) {
   await page.getByRole('button', { name: 'Let’s get you settled' }).click()
-  for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+  for (let step = 0; step < 5; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByLabel('Phone number', { exact: true })).toBeVisible()
 }
 
@@ -63,6 +63,8 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await page.getByRole('button', { name: 'A friend', exact: true }).click()
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+  await page.getByRole('radio', { name: '8 AM', exact: true }).check()
+  await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('CA')
   await page.getByLabel('Phone number', { exact: true }).fill('(416) 555-0123')
   await page.getByRole('button', { name: 'Send verification code.' }).click()
@@ -74,9 +76,64 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await expect(page.getByRole('link', { name: 'Start texting oro', exact: true })).toHaveAttribute('href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`)
   await expect(page.getByText('On your computer? Text +1 (855) 676-2419 from your phone.')).toBeVisible()
   expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
-  expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', phone: '+14165550123' })
+  expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', notification_hour: 8, phone: '+14165550123' })
+  expect(api.requests[0].body).not.toHaveProperty('timezone')
   expect(api.requests[1].body.phone).toBe('+14165550123')
   expect(await page.evaluate(() => localStorage.getItem('oro_get_started_responses'))).toBeNull()
+})
+
+test('morning notification time is required immediately before phone verification', async ({ page }) => {
+  const { notificationHour, ...answers } = draft
+  await page.goto('/get-started')
+  await page.evaluate((saved) => localStorage.setItem('oro_get_started_responses', JSON.stringify(saved)), answers)
+  await page.reload()
+  await page.getByRole('button', { name: 'Let’s get you settled' }).click()
+  for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+
+  await expect(page.getByRole('heading', { name: 'What time should Oro get you ready every morning?' })).toBeVisible()
+  await expect(page.locator('.gs-progress-current')).toHaveText('5')
+  await expect(page.locator('.gs-progress-total')).toHaveText('6')
+  await expect(page.getByRole('radio', { name: '8 AM', exact: true })).not.toBeChecked()
+  await expect(page.getByRole('radio', { name: '9 AM', exact: true })).not.toBeChecked()
+  await expect(page.getByRole('button', { name: 'Continue.', exact: true })).toBeDisabled()
+
+  await page.getByRole('radio', { name: '9 AM', exact: true }).check()
+  await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+  await expect(page.getByLabel('Phone number', { exact: true })).toBeVisible()
+})
+
+for (const hour of [8, 9]) {
+  test(`${hour} AM submits notification_hour: ${hour} without a timezone`, async ({ page, api }) => {
+    await phoneStep(page, { ...draft, notificationHour: hour })
+    await page.getByRole('button', { name: 'Send verification code.' }).click()
+
+    expect(api.requests[0].body.notification_hour).toBe(hour)
+    expect(api.requests[0].body).not.toHaveProperty('timezone')
+  })
+}
+
+test('the notification choice survives validation errors and OTP retries', async ({ page, api }) => {
+  await page.clock.install()
+  api.start = { status: 422, json: { detail: 'Check your answers' } }
+  await phoneStep(page, { ...draft, notificationHour: 9 })
+  await page.getByRole('button', { name: 'Send verification code.' }).click()
+  await expect(page.getByRole('alert')).toContainText('Check your answers')
+
+  await page.getByRole('button', { name: 'Go back' }).click()
+  await expect(page.getByRole('radio', { name: '9 AM', exact: true })).toBeChecked()
+  await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+
+  api.start = { status: 200, json: { status: 'otp_sent' } }
+  await page.getByRole('button', { name: 'Send verification code.' }).click()
+  api.verify = { status: 400, json: { detail: 'Invalid or expired code' } }
+  await verify(page, '000000')
+  await expect(page.getByRole('alert')).toContainText('didn’t match or has expired')
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('oro_get_started_responses')).notificationHour)).toBe(9)
+
+  await page.clock.runFor(61000)
+  await page.getByRole('button', { name: 'Resend code', exact: true }).click()
+  await expect(page.getByRole('status')).toContainText('New code sent.')
+  expect(api.requests.filter(({ action }) => action === 'start').map(({ body }) => body.notification_hour)).toEqual([9, 9, 9])
 })
 
 for (const [country, phone, expected] of [
