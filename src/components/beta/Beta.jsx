@@ -310,11 +310,11 @@ export default function Beta() {
             <h1 id="receipt-title">i’m {Number.isSafeInteger(signupNumber) && signupNumber > 0 && <><em>#{signupNumber}</em> </>}in line<br />to meet oro</h1>
             <div className="beta-social-share">
               <span>share to:</span>
-              <Button variant="primary" aria-label="Open Instagram to post your story" disabled={!inviteLink || !storyImage} onClick={() => { downloadForShare(); window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer') }}><InstagramIcon /></Button>
-              <Button variant="secondary" aria-label="Share to X" disabled={!inviteLink || !storyImage} onClick={() => { downloadForShare(); window.open(`https://x.com/intent/tweet?text=${encodeURIComponent('Good style looks better together.')}&url=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><XIcon /></Button>
-              <Button variant="secondary" aria-label="Share to Facebook" disabled={!inviteLink || !storyImage} onClick={() => { downloadForShare(); window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><FacebookIcon /></Button>
+              <Button variant="secondary" aria-label="Open Instagram to post your story" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer') }}><InstagramIcon /></Button>
+              <Button variant="secondary" aria-label="Share to X" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open(`https://x.com/intent/tweet?text=${encodeURIComponent('Good style looks better together.')}&url=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><XIcon /></Button>
+              <Button variant="secondary" aria-label="Share to Facebook" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><FacebookIcon /></Button>
             </div>
-            {inviteLink && <p className="beta-social-share-help">Your image downloads when you open a share link. Add it to your post or story.</p>}
+            {inviteLink && <p className="beta-social-share-help">{storyImage ? 'Your image downloads when you open a share link. Add it to your post or story.' : 'The share link is ready. Add the image manually if it becomes available.'}</p>}
             <div className="beta-rewards"><h2>want to meet her sooner?</h2><p>Get 3 friends to sign up with your link and you’ll get immediate access.</p><Button variant="tertiary" className="beta-hero-invite" onClick={copyInvite} disabled={!inviteLink}><span>{copied ? 'copied!' : inviteLink ? 'copy referral link' : 'check back later :('}</span><CopyIcon /></Button></div>
             {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}
           </div>
