@@ -87,7 +87,7 @@ export default function Beta() {
   }, [])
 
   useEffect(() => {
-    document.title = 'Help us make oro yours. - oro'
+    document.title = 'help us make oro yours. - oro'
     const syncLocation = () => {
       const url = new URL(window.location.href)
       const requestedStep = url.searchParams.get('step') || url.hash.slice(1)
@@ -342,7 +342,7 @@ export default function Beta() {
             <div className="beta-social-share">
               <span>share to:</span>
               <Button variant="secondary" aria-label="Open Instagram to post your story" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer') }}><InstagramIcon /></Button>
-              <Button variant="secondary" aria-label="Share to X" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open(`https://x.com/intent/tweet?text=${encodeURIComponent('I’m in line to meet oro ✨ Come join me?')}&url=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><XIcon /></Button>
+              <Button variant="secondary" aria-label="Share to X" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open(`https://x.com/intent/tweet?text=${encodeURIComponent('i’m in line to meet oro ✨ come join me?')}&url=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><XIcon /></Button>
               <Button variant="secondary" aria-label="Share to Facebook" disabled={!inviteLink} onClick={() => { if (storyImage) downloadForShare(); window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(inviteLink)}`, '_blank', 'noopener,noreferrer') }}><FacebookIcon /></Button>
             </div>
             {inviteLink && <p className="beta-social-share-help">{storyImage ? 'Your image downloads when you open a share link. Add it to your post or story.' : 'The share link is ready. Add the image manually if it becomes available.'}</p>}

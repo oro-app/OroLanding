@@ -43,7 +43,7 @@ export async function createReceiptStory(inviteLink, signupNumber) {
   ctx.fillText('good style looks', 118, 1450)
   ctx.fillText('better together', 118, 1510)
   ctx.font = '34px Arial, sans-serif'
-  ctx.fillText('Use my personal invite link:', 118, 1580)
+  ctx.fillText('use my personal invite link:', 118, 1580)
   ctx.fillStyle = '#49346c'
   ctx.font = '30px Arial, sans-serif'
   if (inviteLink) {
@@ -51,7 +51,7 @@ export async function createReceiptStory(inviteLink, signupNumber) {
     ctx.fillText(url.host + url.pathname, 118, 1640, 844)
     ctx.fillText(url.search.slice(0, 45), 118, 1680, 844)
     ctx.fillText(url.search.slice(45), 118, 1720, 844)
-  } else ctx.fillText('Your link appears here', 118, 1640)
+  } else ctx.fillText('your link appears here', 118, 1640)
   ctx.drawImage(logo, 70, 1780, 180, 101)
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))

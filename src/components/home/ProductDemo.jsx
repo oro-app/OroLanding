@@ -33,29 +33,29 @@ export default function ProductDemo() {
     <section className="product-demo" aria-labelledby="product-demo-title" ref={sectionRef}>
       <div className="halo-container product-demo-inner">
         <h2 id="product-demo-title" className="home-demo-title">text her when you don’t know what to wear</h2>
-        <p className="home-demo-description">tell Oro where you’re going, she’ll figure out the rest.</p>
+        <p className="home-demo-description">tell oro where you’re going, she’ll figure out the rest.</p>
         <ol className="product-demo-thread" role="list">
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I'm going out for brunch with friends</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>i'm going out for brunch with friends</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>I have the perfect look!</SmsBubble>
+            <SmsBubble><span className="sr-only">oro: </span>i have the perfect look!</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble avatar={jotting}>
-              <span className="sr-only">Oro: </span>
+              <span className="sr-only">oro: </span>
               <img src={outfit} alt="Outfit collage with a cream cardigan, cherry-print top, flared jeans, red belt, silver hoops, and white sneakers" loading="lazy" decoding="async" width="1086" height="1448" />
             </SmsBubble>
           </li>
           <li className="product-demo-message product-demo-message--user">
-            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">You: </span>I wanna see it on me</SmsBubble>
+            <SmsBubble tone="dark-purple" side="right"><span className="sr-only">you: </span>i wanna see it on me</SmsBubble>
           </li>
           <li className="product-demo-message">
-            <SmsBubble><span className="sr-only">Oro: </span>It looks stunning on you :)</SmsBubble>
+            <SmsBubble><span className="sr-only">oro: </span>it looks stunning on you :)</SmsBubble>
           </li>
           <li className="product-demo-message">
             <SmsBubble avatar={aww}>
-              <span className="sr-only">Oro: </span>
+              <span className="sr-only">oro: </span>
               <img src={tryOn} alt="Try-on with a cream cardigan, cherry-print top, red belt, and light blue flared jeans" loading="lazy" decoding="async" width="480" height="640" />
             </SmsBubble>
           </li>

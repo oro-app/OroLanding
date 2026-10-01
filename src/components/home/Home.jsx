@@ -12,7 +12,7 @@ import jotting from '../../assets/mascot/jotting.webp'
 const FEATURES = [
   {
     title: 'show her your closet',
-    description: 'send Oro photos of your clothes once. she’ll remember what you own and build outfits from your actual wardrobe.',
+    description: 'send oro photos of your clothes once. she’ll remember what you own and build outfits from your actual wardrobe.',
     image: wardrobeDemo,
     imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
     width: 1312,
@@ -28,14 +28,14 @@ const FEATURES = [
   },
   {
     title: 'the more you text her, the better she gets',
-    description: 'she knows you don’t like jewelry, get cold easily, love those jeans, and have Pilates on Sunday mornings.',
+    description: 'she knows you don’t like jewelry, get cold easily, love those jeans, and have pilates on sunday mornings.',
     image: jotting,
-    imageAlt: 'Oro jotting notes in a notepad.',
+    imageAlt: 'oro jotting notes in a notepad.',
     width: 1500,
     height: 1500,
   },
 ]
-const HEADLINE = 'The AI fashion assistant you can text'
+const HEADLINE = 'the ai fashion assistant you can text'
 const TYPE_STEP = 34
 
 function TypedHeadline() {
@@ -85,17 +85,17 @@ export default function Home() {
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">get her number</HomeCta>
-              {entryCount !== null && <Text variant="support" muted className="home-beta-note home-enter">{entryCount.toLocaleString()} people are trying to get Oro’s number</Text>}
+              {entryCount !== null && <Text variant="support" muted className="home-beta-note home-enter">{entryCount.toLocaleString()} people are trying to get oro’s number</Text>}
             </div>
           </section>
           <ProductDemo />
           <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal>
             <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">she gets your style. and your life.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
-              Oro learns what you wear and what you like, so her advice gets more personal the more you text.
+              oro learns what you wear and what you like, so her advice gets more personal the more you text.
             </Text>
           </section>
-          <section className="home-features" aria-label="Oro features">
+          <section className="home-features" aria-label="oro features">
             {FEATURES.map((feature, index) => (
               <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal>
                 <div className="home-feature-copy home-stagger">
