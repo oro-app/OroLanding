@@ -29,11 +29,11 @@ export async function findExistingBetaRequest(phone, phoneVerification, fetcher 
     const response = await fetcher('/api/beta-existing', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ phone, phone_verification: phoneVerification }),
-      signal: AbortSignal.timeout(12000),
+      signal: AbortSignal.timeout(25000),
     })
     const result = await response.json()
     if (response.ok && result.ok === true && result.found === false) return { found: false }
-    if (response.ok && result.ok === true && result.found === true && UUID4.test(result.request_id || '') && /^[0-9a-f]{64}$/.test(result.referral_code || '') && Number.isSafeInteger(result.signup_number) && result.signup_number > 0 && Number.isSafeInteger(result.referred_signups) && result.referred_signups >= 0 && typeof result.referral_completed_date === 'string') return { found: true, requestId: result.request_id, referralCode: result.referral_code, signupNumber: result.signup_number, referredSignups: result.referred_signups, referralCompletedDate: result.referral_completed_date }
-  } catch { /* Treat an unavailable lookup as non-fatal; the normal form remains available. */ }
-  return { found: false }
+    if (response.ok && result.ok === true && result.found === true && UUID4.test(result.request_id || '') && /^[0-9a-f]{64}$/.test(result.referral_code || '') && Number.isSafeInteger(result.signup_number) && result.signup_number > 0 && Number.isSafeInteger(result.referred_signups) && result.referred_signups >= 0 && typeof result.referral_completed_date === 'string') return { found: true, requestId: result.request_id, referralCode: result.referral_code, signupNumber: result.signup_number, referredSignups: result.referred_signups, referralCompletedDate: result.referral_completed_date, tester: result.tester === true }
+  } catch {}
+  return { code: 'temporarily_unavailable' }
 }

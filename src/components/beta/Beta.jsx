@@ -10,6 +10,7 @@ import { createReceiptStory } from './receiptStory'
 import StoryImageActions from './StoryImageActions'
 import { messagesInvite } from './referralShare'
 import PhoneAnswer from './PhoneAnswer'
+import TesterReferrals from './TesterReferrals'
 import BetaWelcome from './BetaWelcome'
 import './Beta.css'
 
@@ -34,6 +35,7 @@ export default function Beta({ campaign = 'general' }) {
   const [signupNumber, setSignupNumber] = useState(null)
   const [ownReferralCode, setOwnReferralCode] = useState(null)
   const [referredSignups, setReferredSignups] = useState(0)
+  const [tester, setTester] = useState(false)
   const [referralCompletedDate, setReferralCompletedDate] = useState('')
   const [shareMessage, setShareMessage] = useState('')
   const [copied, setCopied] = useState(false)
@@ -178,7 +180,9 @@ export default function Beta({ campaign = 'general' }) {
       if (response.ok && result.ok && action === 'start') { setVerificationStatus('sent'); return true }
       if (response.ok && result.ok && action === 'check' && result.proof) {
         const existing = await findExistingBetaRequest(phone, result.proof)
+        if (existing.code) { setVerificationStatus('lookup-unavailable'); return false }
         if (existing.found) {
+          setTester(existing.tester)
           clearBetaDraft()
           clearBetaAttribution()
           setPhoneProof(result.proof)
@@ -292,11 +296,13 @@ export default function Beta({ campaign = 'general' }) {
     <>
       <Text muted>Enter the code we sent to {answers.phone}.</Text>
       <WrittenAnswer name="code" label="Verification code" value={code} update={(_, value) => { const next = value.replace(/\D/g, '').slice(0, 10); currentCode.current = next; setCode(next); setVerificationStatus('sent') }} error={verificationStatus === 'invalid' ? 'That code is incorrect or has expired. Try again or request a new code.' : undefined} type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]*" disabled={verificationStatus === 'checking' || verificationStatus === 'sending'} />
-      {['unavailable', 'rate_limited'].includes(verificationStatus) && step === 1 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before trying again.' : 'We couldn’t check the code. Try again.'}</p>}
+      {['unavailable', 'lookup-unavailable', 'rate_limited'].includes(verificationStatus) && step === 1 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before trying again.' : verificationStatus === 'lookup-unavailable' ? 'Your phone is verified, but we couldn’t load your signup. Try again.' : 'We couldn’t check the code. Try again.'}</p>}
       <button type="button" className="beta-resend" disabled={verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => verifyPhone('start')}>Send a new code</button>
     </>,
     <>{field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name' })}{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}</>,
   ]
+
+  if (tester && view === 'receipt') return <TesterReferrals initialReceipt={{ referral_code: ownReferralCode, referred_signups: referredSignups }} />
 
   return (
     <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
