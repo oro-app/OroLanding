@@ -1,6 +1,6 @@
 import mascot from '../../assets/mascot/cheeky.webp'
 
-export async function createReceiptStory(signupNumber) {
+export async function createReceiptStory(signupNumber, { tester = false } = {}) {
   const image = new Image()
   image.src = mascot
   const logo = new Image()
@@ -20,17 +20,21 @@ export async function createReceiptStory(signupNumber) {
   ctx.fillRect(0, 0, 1080, 1920)
 
   ctx.fillStyle = '#2b1646'
-  const title = Number.isSafeInteger(signupNumber) && signupNumber > 0 ? `i’m #${signupNumber}` : 'i’m'
+  const title = tester ? 'i got her' : Number.isSafeInteger(signupNumber) && signupNumber > 0 ? `i’m #${signupNumber}` : 'i’m'
   let titleSize = 150
   ctx.font = `bold ${titleSize}px Georgia, serif`
   while (ctx.measureText(title).width > 928 && titleSize > 80) {
     titleSize -= 2
     ctx.font = `bold ${titleSize}px Georgia, serif`
   }
-  ctx.fillText(title, 76, 230, 928)
+  ctx.fillText(title, 76, tester ? 320 : 230, 928)
   ctx.font = 'bold 150px Georgia, serif'
-  ctx.fillText('in line', 76, 385)
-  ctx.fillText('to meet oro', 76, 540, 928)
+  if (tester) {
+    ctx.fillText('number 🤭', 76, 500, 928)
+  } else {
+    ctx.fillText('in line', 76, 385)
+    ctx.fillText('to meet oro', 76, 540, 928)
+  }
 
   ctx.drawImage(image, 260, 590, 720, 720)
 
@@ -40,13 +44,15 @@ export async function createReceiptStory(signupNumber) {
   ctx.fill()
   ctx.fillStyle = '#2b1646'
   ctx.font = 'bold 72px Georgia, serif'
-  ctx.fillText('want her number?', 118, 1470)
+  ctx.fillText(tester ? 'want it too?' : 'want her number?', 118, 1470)
   ctx.font = '44px Arial, sans-serif'
-  ctx.fillText('dm me for my invite.', 118, 1545)
+  ctx.fillText(tester ? 'DM me and I’ll tell you.' : 'dm me for my invite.', 118, 1545)
   ctx.fillStyle = '#49346c'
   ctx.font = '36px Arial, sans-serif'
-  ctx.fillText('your personal ai stylist,', 118, 1635)
-  ctx.fillText('right in your texts.', 118, 1685)
+  if (!tester) {
+    ctx.fillText('your personal ai stylist,', 118, 1635)
+    ctx.fillText('right in your texts.', 118, 1685)
+  }
   ctx.drawImage(logo, 70, 1780, 180, 101)
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
