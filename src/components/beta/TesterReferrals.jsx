@@ -6,13 +6,13 @@ import { REFERRAL_CODE } from '../../lib/betaContract'
 import './Beta.css'
 import './TesterReferrals.css'
 
-export default function TesterReferrals() {
+export default function TesterReferrals({ initialReceipt = null }) {
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
-  const [receipt, setReceipt] = useState(null)
+  const [receipt, setReceipt] = useState(initialReceipt)
   const pending = useRef(false)
 
   async function post(url, body) {
