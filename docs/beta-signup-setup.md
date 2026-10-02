@@ -116,3 +116,9 @@ For selection, map Sheet `request_id` to backend `source_request_id`, keep the s
 ## Close or roll back intake
 
 Set `BETA_SIGNUP_ENABLED=false` and redeploy. New page loads show the availability notice; forms already open receive a closed response and keep their answers. Preserve the response Sheet, writer project and request keys so earlier receipts and retry records remain valid. To rotate the writer secret, close intake, update both server and Script Properties, verify a test request, then reopen. A public link to the form never grants access to the Sheet.
+
+## Tester referral reward
+
+`/tester/referrals` reuses SMS verification and the private lookup to show a tester's existing invite link and progress toward one hoodie + tote at eight distinct referred phones. Team progress stays in `Responses.referred_signups`; approved rows at eight or more are highlighted green in the production Sheet. No extra tab or columns are needed. Reward fulfillment is manual via sunny@buildingoro.ca.
+
+Deploy the rebuilt Apps Script writer before deploying the website, so lookup returns `tester`. A tester needs an existing signup row with their verified phone and `accepted=TRUE`; mark the original row for that phone. Testers missing from the Sheet must complete the invite form once before the team accepts them. Setting this flag does not itself grant backend app access. The three-referral queue completion date and ordering remain unchanged.

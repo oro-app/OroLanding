@@ -1,0 +1,4 @@
+.tester-referrals .beta-form-panel { display: grid; gap: 1.25rem; }
+.tester-referrals .tester-count { font-size: 2rem; margin: 0; }
+.tester-referrals progress { width: 100%; height: 1rem; accent-color: #6d478b; }
+.tester-referrals .oro-input { min-width: 0; }

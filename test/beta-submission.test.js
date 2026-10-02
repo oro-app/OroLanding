@@ -537,3 +537,22 @@ test('referrer names use the original signup when older history was appended lat
   google.context.setupReferrerNames()
   assert.equal(google.state.rows.at(-1)[34], 'Original Jamie')
 })
+
+test('tester lookup uses manual acceptance and eight referrals preserve the three-friend queue milestone', () => {
+  const google = googleWriter()
+  const save = (phone, ref) => google.post(envelope({ ...makeSubmission({ ...exampleAnswers, phone }), ...(ref ? { referral_code: ref } : {}) }))
+  const owner = save('+14165550123')
+  const lookup = () => google.post({ secret: environment.BETA_SUBMISSION_SECRET, cohort: environment.BETA_COHORT, action: 'lookup', phone: '+14165550123' })
+  assert.equal(lookup().tester, false)
+  google.state.rows[1][google.state.rows[0].indexOf('accepted')] = true
+  assert.equal(lookup().tester, true)
+  for (const phone of ['+14165550124', '+14165550125', '+14165550126']) save(phone, owner.referral_code)
+  const queueDate = lookup().referral_completed_date
+  assert.ok(queueDate)
+  for (const phone of ['+14165550127', '+14165550128', '+14165550129', '+14165550130', '+14165550131']) save(phone, owner.referral_code)
+  assert.equal(lookup().referred_signups, 8)
+  assert.equal(lookup().referral_completed_date, queueDate)
+  save('+14165550131', owner.referral_code)
+  save('+14165550123', owner.referral_code)
+  assert.equal(lookup().referred_signups, 8)
+})

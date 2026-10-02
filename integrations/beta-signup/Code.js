@@ -40,7 +40,7 @@ function doPost(event) {
       const codeIndex = responseHeaders().indexOf('referral_code')
       const countIndex = responseHeaders().indexOf('referred_signups')
       const dateIndex = responseHeaders().indexOf('referral_completed_date')
-      return jsonResult({ ok: true, found: true, request_id: rows[matchIndex][0], referral_code: rows[matchIndex][codeIndex], signup_number: matchIndex, referred_signups: Number(rows[matchIndex][countIndex] || 0), referral_completed_date: rows[matchIndex][dateIndex] || '' })
+      return jsonResult({ ok: true, found: true, request_id: rows[matchIndex][0], referral_code: rows[matchIndex][codeIndex], signup_number: matchIndex, referred_signups: Number(rows[matchIndex][countIndex] || 0), referral_completed_date: rows[matchIndex][dateIndex] || '', tester: savedRows.slice(1).some((row) => row[phoneIndex] === input.phone && row[responseHeaders().indexOf('accepted')] === true) })
     }
     if (input.cohort !== cohort || Object.keys(input).some((key) => !['secret', 'cohort', 'submission_key', 'form_version', 'consent_version', 'answers', 'payload_hash', 'referral_code', 'campaign_source'].includes(key))) return jsonResult({ ok: false, code: 'invalid_request' })
     const legacyForm = input.form_version === '2026-09-28.4' && input.referral_code === undefined && input.campaign_source === undefined
