@@ -1,5 +1,36 @@
 import { test, expect } from './fixtures'
 
+for (const testerPage of [false, true]) {
+  for (const failure of [429, 503]) {
+    test(`${testerPage ? 'tester' : 'invite'} retries a ${failure} lookup without checking the consumed OTP again`, async ({ page }) => {
+      let checks = 0
+      let lookups = 0
+      const proof = `${Math.floor(Date.now() / 1000) + 3600}.${'a'.repeat(64)}`
+      await page.route('**/api/beta-request', (route) => route.fulfill({ json: { enabled: true } }))
+      await page.route('**/api/beta-verify', (route) => {
+        if (route.request().postDataJSON().action === 'check') checks++
+        return route.fulfill({ status: checks > 1 ? 400 : 200, json: checks > 1 ? { code: 'invalid_code' } : { ok: true, proof } })
+      })
+      await page.route('**/api/beta-existing', (route) => {
+        lookups++
+        expect(route.request().postDataJSON().phone_verification).toBe(proof)
+        return route.fulfill({ status: lookups === 1 ? failure : 200, json: lookups === 1 ? { code: failure === 429 ? 'rate_limited' : 'temporarily_unavailable' } : testerPage ? { ok: true, found: true, tester: true, referral_code: 'a'.repeat(64), referred_signups: 1 } : { ok: true, found: false } })
+      })
+      await page.goto(testerPage ? '/tester/referrals' : `/invite?ref=${'b'.repeat(64)}&step=phone`)
+      await page.getByLabel('phone number', { exact: true }).fill('4165550123')
+      await page.getByRole('button', { name: 'send my code' }).click()
+      await page.getByLabel('Verification code').fill('123456')
+      await page.getByRole('button', { name: testerPage ? 'see my progress' : 'verify my number' }).click()
+      await expect(page.getByText(failure === 429 ? /wait a minute/ : testerPage ? /couldn’t check your progress/ : /couldn’t load your signup/)).toBeVisible()
+      await page.getByRole('button', { name: testerPage ? 'see my progress' : 'check my signup' }).click()
+      await expect(testerPage ? page.getByText('1 / 8 friends joined') : page.getByLabel('Your name', { exact: true })).toBeVisible()
+      expect(checks).toBe(1)
+      expect(lookups).toBe(2)
+      if (!testerPage) expect(page.url()).toContain(`ref=${'b'.repeat(64)}`)
+    })
+  }
+}
+
 for (const count of [0, 7, 8, 9]) {
   test(`tester sees ${count} referrals and the correct reward state`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 })
