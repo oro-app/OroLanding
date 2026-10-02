@@ -20,6 +20,7 @@ export default function TesterReferrals({ initialReceipt = null }) {
   const [storyFailed, setStoryFailed] = useState(false)
   const [storyRetry, setStoryRetry] = useState(0)
   const pending = useRef(false)
+  const verifiedPhone = useRef(null)
 
   async function post(url, body) {
     const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(25000) })
@@ -33,8 +34,12 @@ export default function TesterReferrals({ initialReceipt = null }) {
     pending.current = true
     setBusy(true); setMessage('')
     try {
-      const result = await post('/api/beta-verify', { action, phone, ...(action === 'check' ? { code } : {}) })
+      const savedProof = verifiedPhone.current
+      const hasProof = action === 'check' && savedProof?.phone === phone && Number(savedProof.proof.split('.')[0]) * 1000 > Date.now()
+      if (action === 'start') verifiedPhone.current = null
+      const result = hasProof ? savedProof : await post('/api/beta-verify', { action, phone, ...(action === 'check' ? { code } : {}) })
       if (action === 'start') { setSent(true); setCode(''); return }
+      verifiedPhone.current = { phone, proof: result.proof }
       const saved = await post('/api/beta-existing', { phone, phone_verification: result.proof })
       if (!saved.found || saved.tester !== true) { setMessage('We couldn’t find an approved tester for this number. Use the number you signed up with, or contact sunny@buildingoro.ca.'); return }
       if (!REFERRAL_CODE.test(saved.referral_code || '') || !Number.isSafeInteger(saved.referred_signups) || saved.referred_signups < 0) throw new Error('We couldn’t check your progress. Please try again.')

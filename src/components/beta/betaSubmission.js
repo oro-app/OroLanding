@@ -32,6 +32,7 @@ export async function findExistingBetaRequest(phone, phoneVerification, fetcher 
       signal: AbortSignal.timeout(25000),
     })
     const result = await response.json()
+    if (!response.ok && ['rate_limited', 'phone_not_verified'].includes(result.code)) return { code: result.code }
     if (response.ok && result.ok === true && result.found === false) return { found: false }
     if (response.ok && result.ok === true && result.found === true && UUID4.test(result.request_id || '') && /^[0-9a-f]{64}$/.test(result.referral_code || '') && Number.isSafeInteger(result.signup_number) && result.signup_number > 0 && Number.isSafeInteger(result.referred_signups) && result.referred_signups >= 0 && typeof result.referral_completed_date === 'string') return { found: true, requestId: result.request_id, referralCode: result.referral_code, signupNumber: result.signup_number, referredSignups: result.referred_signups, referralCompletedDate: result.referral_completed_date, tester: result.tester === true }
   } catch {}
