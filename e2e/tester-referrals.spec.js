@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures'
 
 for (const count of [0, 7, 8, 9]) {
-  test(`tester sees ${count} referrals and the correct reward state`, async ({ page }) => {
+  test(`tester sees ${count} referrals and the correct reward state`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.route('**/api/beta-verify', (route) => route.fulfill({ json: { ok: true, proof: 'test-proof' } }))
     await page.route('**/api/beta-existing', (route) => route.fulfill({ json: { ok: true, found: true, tester: true, referral_code: 'a'.repeat(64), referred_signups: count } }))
@@ -14,9 +14,46 @@ for (const count of [0, 7, 8, 9]) {
     await expect(page.getByLabel('Your invite link')).toHaveValue(/\/invite\?ref=a{64}$/)
     if (count >= 8) await expect(page.getByText(/Your hoodie \+ tote is unlocked!/)).toBeVisible()
     else await expect(page.getByText(`${8 - count} more ${8 - count === 1 ? 'friend' : 'friends'} to unlock your hoodie + tote.`)).toBeVisible()
+    await expect(page.getByRole('img', { name: /Story graphic: i got her number/ })).toBeVisible()
+    if (count === 0) {
+      const downloadEvent = page.waitForEvent('download')
+      await page.getByRole('button', { name: 'download image', exact: true }).click()
+      const download = await downloadEvent
+      expect(download.suggestedFilename()).toBe('oro-invite-story.png')
+      await download.saveAs(testInfo.outputPath('oro-tester-story.png'))
+    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   })
 }
+
+test('tester shares their referral link in Messages and shares the story through the native menu', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.testShares = []
+    Object.defineProperty(navigator, 'userAgent', { value: 'iPhone' })
+    Object.defineProperty(navigator, 'canShare', { value: () => true })
+    Object.defineProperty(navigator, 'share', { value: async (data) => {
+      const file = data.files?.[0]
+      const bitmap = file && await createImageBitmap(file)
+      window.testShares.push(file ? { type: file.type, width: bitmap.width, height: bitmap.height } : data)
+    } })
+  })
+  await page.route('**/api/beta-verify', (route) => route.fulfill({ json: { ok: true, proof: 'test-proof' } }))
+  await page.route('**/api/beta-existing', (route) => route.fulfill({ json: { ok: true, found: true, tester: true, referral_code: 'b'.repeat(64), referred_signups: 0 } }))
+  await page.goto('/tester/referrals')
+  await page.getByLabel('phone number', { exact: true }).fill('4165550123')
+  await page.getByRole('button', { name: 'send my code' }).click()
+  await page.getByLabel('Verification code').fill('123456')
+  await page.getByRole('button', { name: 'see my progress' }).click()
+  const href = await page.getByRole('link', { name: 'share in messages' }).getAttribute('href')
+  expect(decodeURIComponent(href)).toContain(`/invite?ref=${'b'.repeat(64)}`)
+  expect(href).toMatch(/^sms:&body=/)
+  await page.getByRole('button', { name: 'share invite', exact: true }).click()
+  await page.getByRole('button', { name: 'save to photos' }).click()
+  await expect.poll(() => page.evaluate(() => window.testShares.length)).toBe(2)
+  const shared = await page.evaluate(() => window.testShares)
+  expect(shared[0].url).toMatch(/\/invite\?ref=b{64}$/)
+  expect(shared[1]).toEqual({ type: 'image/png', width: 1080, height: 1920 })
+})
 
 test('unapproved signup cannot open tester reward progress', async ({ page }) => {
   await page.route('**/api/beta-verify', (route) => route.fulfill({ json: { ok: true, proof: 'test-proof' } }))

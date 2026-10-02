@@ -1,7 +1,10 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Heading, Text, TextField } from 'oro-kit'
 import { HomeHeader } from '../home/HomeChrome'
 import PhoneAnswer from './PhoneAnswer'
+import StoryImageActions from './StoryImageActions'
+import { createReceiptStory } from './receiptStory'
+import { messagesInvite } from './referralShare'
 import { REFERRAL_CODE } from '../../lib/betaContract'
 import './Beta.css'
 import './TesterReferrals.css'
@@ -13,6 +16,9 @@ export default function TesterReferrals({ initialReceipt = null }) {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [receipt, setReceipt] = useState(initialReceipt)
+  const [storyImage, setStoryImage] = useState(null)
+  const [storyFailed, setStoryFailed] = useState(false)
+  const [storyRetry, setStoryRetry] = useState(0)
   const pending = useRef(false)
 
   async function post(url, body) {
@@ -40,27 +46,52 @@ export default function TesterReferrals({ initialReceipt = null }) {
   const count = receipt?.referred_signups || 0
   const unlocked = count >= 8
   const link = receipt ? `${window.location.origin}/invite?ref=${receipt.referral_code}` : ''
+  const inviteText = `i got her number 🤭 want it too? here’s my oro invite: ${link}`
+  const messagesHref = link ? messagesInvite(link, navigator.userAgent, inviteText) : ''
+  useEffect(() => {
+    if (!receipt) return
+    let active = true
+    let imageUrl
+    setStoryImage(null); setStoryFailed(false)
+    createReceiptStory(null, { tester: true }).then((blob) => {
+      if (!active) return
+      imageUrl = URL.createObjectURL(blob)
+      setStoryImage({ blob, url: imageUrl })
+    }).catch(() => { if (active) setStoryFailed(true) })
+    return () => { active = false; if (imageUrl) URL.revokeObjectURL(imageUrl) }
+  }, [Boolean(receipt), storyRetry])
   async function copyLink() {
     try { await navigator.clipboard.writeText(link); setMessage('Invite link copied.') }
     catch { setMessage('Copy the invite link from the field above.') }
+  }
+  async function shareInvite() {
+    if (!navigator.share) { await copyLink(); return }
+    try { await navigator.share({ title: 'i got her number 🤭', text: 'want it too? here’s my oro invite.', url: link }) }
+    catch (error) { if (error.name !== 'AbortError') setMessage('Couldn’t open sharing. Copy your invite link instead.') }
   }
 
   return <div className="beta-page tester-referrals ph-no-capture" data-private="true">
     <HomeHeader />
     <section className="beta-application" aria-labelledby="tester-title">
       <div className="beta-story-halo" aria-hidden="true" />
-      <div className="beta-form-panel">
+      <div className={`beta-form-panel${receipt ? ' tester-panel--receipt' : ''}`}>
         <Heading as="h1" variant="title" id="tester-title">{receipt ? unlocked ? 'you unlocked the goods.' : 'you got her number.' : 'your referrals.'}</Heading>
-        {receipt ? <>
+        {receipt ? <div className="tester-receipt"><div className="tester-progress">
           <Text>Share your invite. Bring 8 new friends to oro and earn a free hoodie + tote.</Text>
           <p className="tester-count" role="status">{count} / 8 friends joined</p>
           <progress max="8" value={Math.min(count, 8)} aria-label={`${count} of 8 friends joined`} />
           <Text>{unlocked ? 'Your hoodie + tote is unlocked! Email sunny@buildingoro.ca to arrange your reward.' : `${8 - count} more ${8 - count === 1 ? 'friend' : 'friends'} to unlock your hoodie + tote.`}</Text>
           <TextField id="tester-link" label="Your invite link" value={link} readOnly />
           <Button onClick={copyLink}>copy my invite link</Button>
+          {messagesHref && <a className="oro-button oro-button--primary" href={messagesHref}>share in messages</a>}
+          <Button variant="secondary" onClick={shareInvite}>share invite</Button>
           <Text variant="support" muted>New signups through your link count once per verified phone number. Your own signup and repeat signups don’t count.</Text>
           <button className="beta-resend" onClick={() => { setReceipt(null); setSent(false); setCode(''); setMessage('') }}>check updated progress</button>
-        </> : <form className="beta-form" onSubmit={(event) => { event.preventDefault(); verify(sent ? 'check' : 'start') }} aria-busy={busy}>
+        </div><div className="beta-story-preview">
+          {storyImage ? <img src={storyImage.url} alt="Story graphic: i got her number 🤭. Want it too? DM me and I’ll tell you, with the Oro mascot." /> : <div className="beta-story-skeleton" role="status" aria-label={storyFailed ? 'Image unavailable' : 'Preparing image'} />}
+          <StoryImageActions blob={storyImage?.blob} failed={storyFailed} onRetry={() => setStoryRetry((value) => value + 1)} />
+          <Text variant="support" muted>Post to your story. Send your invite link when friends DM you.</Text>
+        </div></div> : <form className="beta-form" onSubmit={(event) => { event.preventDefault(); verify(sent ? 'check' : 'start') }} aria-busy={busy}>
           <Text>Verify the phone number you used for the beta to see your invite link and hoodie + tote progress.</Text>
           <PhoneAnswer value={phone} disabled={busy} update={(_, value) => { setPhone(value); setSent(false); setCode(''); setMessage('') }} />
           {sent && <TextField id="tester-code" label="Verification code" value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, '').slice(0, 10))} inputMode="numeric" autoComplete="one-time-code" disabled={busy} required />}
