@@ -250,7 +250,13 @@ async function main() {
   const manifest = JSON.parse(await fs.readFile(path.join(distDir, '.vite', 'manifest.json'), 'utf8'))
   const legalStylesheet = manifest['src/legal.css']?.file
   const headingsStylesheet = manifest['src/serif-headings.css']?.file
-  const betaStylesheets = manifest['src/components/beta/Beta.jsx']?.css
+  function importedStylesheets(key, seen = new Set()) {
+    if (seen.has(key)) return []
+    seen.add(key)
+    const entry = manifest[key]
+    return [...(entry?.css || []), ...(entry?.imports || []).flatMap((dependency) => importedStylesheets(dependency, seen))]
+  }
+  const betaStylesheets = [...new Set(importedStylesheets('src/components/beta/Beta.jsx'))]
   if (!betaStylesheets?.length) throw new Error('Missing signup stylesheets in the client build manifest')
   const betaTemplate = template.replace('</head>', `${betaStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!headingsStylesheet) throw new Error('Missing preview heading stylesheet in the client build manifest')

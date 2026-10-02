@@ -30,7 +30,7 @@ export function createExistingBetaHandler({ env = process.env, fetcher = fetch, 
       if (result?.ok !== true || typeof result.found !== 'boolean') throw new Error('Invalid lookup')
       if (!result.found) return send(200, { ok: true, found: false })
       if (!UUID4.test(result.request_id || '') || !REFERRAL_CODE.test(result.referral_code || '') || !Number.isSafeInteger(result.signup_number) || result.signup_number < 1 || !Number.isSafeInteger(result.referred_signups) || result.referred_signups < 0 || typeof result.referral_completed_date !== 'string') throw new Error('Invalid receipt')
-      return send(200, { ok: true, found: true, request_id: result.request_id, referral_code: result.referral_code, signup_number: result.signup_number, referred_signups: result.referred_signups, referral_completed_date: result.referral_completed_date })
+      return send(200, { ok: true, found: true, request_id: result.request_id, referral_code: result.referral_code, signup_number: result.signup_number, referred_signups: result.referred_signups, referral_completed_date: result.referral_completed_date, tester: result.tester === true })
     } catch { return send(503, { code: 'temporarily_unavailable' }) }
   }
 }

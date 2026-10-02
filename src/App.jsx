@@ -18,6 +18,7 @@ const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
 const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
+const TesterReferrals = lazy(() => import('./components/beta/TesterReferrals'))
 const BetaPage = lazy(() => import('./components/beta/Beta'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
 
@@ -41,6 +42,7 @@ export function getRouteFromPath(pathname = '/', search = '') {
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/get-started')     return { type: 'get-started' }
+  if (path === '/tester/referrals') return { type: 'beta', tester: true }
   if (['/beta', '/invite', '/beta/career', '/beta/dating'].includes(path)) return { type: 'beta', campaign: getBetaCampaign(path, search) }
 
   return { type: 'home' }
@@ -144,7 +146,7 @@ function App({ initialRoute }) {
             <Suspense fallback={null}><FeedbackPage /></Suspense>
           ) : isBeta ? (
             <Suspense fallback={null}>
-              <BetaPage campaign={route.campaign || 'general'} />
+              {route.tester ? <TesterReferrals /> : <BetaPage campaign={route.campaign || 'general'} />}
             </Suspense>
           ) : route.type === 'newsletter' ? (
             <Suspense fallback={<BlogSkeleton variant="article" />}>
