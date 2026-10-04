@@ -44,3 +44,36 @@ test('accepting on a private route tags the consent page view', async ({ page })
     ))
   ))).toBe(true)
 })
+
+test('home sections are tracked once when first viewed', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('oro_cookie_consent', 'accepted')
+    window.dataLayer = []
+    window.gtag = (...args) => window.dataLayer.push(args)
+  })
+
+  await page.goto('/')
+
+  await expect.poll(() => page.evaluate(() => window.dataLayer.filter((args) => (
+    args[0] === 'event'
+    && args[1] === 'section_view'
+    && args[2]?.section_name === 'hero'
+  )).length)).toBe(1)
+
+  await page.locator('[data-analytics-section="outfit_demo"]').scrollIntoViewIfNeeded()
+  await expect.poll(() => page.evaluate(() => window.dataLayer.filter((args) => (
+    args[0] === 'event'
+    && args[1] === 'section_view'
+    && args[2]?.section_name === 'outfit_demo'
+  )).length)).toBe(1)
+
+  await page.locator('[data-analytics-section="hero"]').scrollIntoViewIfNeeded()
+  await page.locator('[data-analytics-section="outfit_demo"]').scrollIntoViewIfNeeded()
+  await page.waitForTimeout(100)
+
+  expect(await page.evaluate(() => window.dataLayer.filter((args) => (
+    args[0] === 'event'
+    && args[1] === 'section_view'
+    && args[2]?.section_name === 'outfit_demo'
+  )).length)).toBe(1)
+})

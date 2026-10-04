@@ -38,7 +38,7 @@ export default function StyleAdviceDemo() {
   }, [])
 
   return (
-    <section className="product-demo style-advice-demo" aria-labelledby="style-advice-demo-title" ref={sectionRef}>
+    <section className="product-demo style-advice-demo" aria-labelledby="style-advice-demo-title" ref={sectionRef} data-analytics-section="style_advice_demo">
       <div className="halo-container product-demo-inner">
         <h2 id="style-advice-demo-title" className="home-demo-title">send her the fit pic</h2>
         <p className="home-demo-description">deciding between two outfits? wondering if something looks off?<br />send oro a photo and get a second opinion.</p>

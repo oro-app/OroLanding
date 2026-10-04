@@ -47,7 +47,7 @@ export function HomeFooter({ landing = false, closerTitle = 'want her number?', 
   return (
     <footer className="halo-footer halo-footer--landing">
       <div className="halo-container">
-        <section className="halo-footer-closer" aria-labelledby="closer-title">
+        <section className="halo-footer-closer" aria-labelledby="closer-title" data-analytics-section="final_cta">
           <Heading as="h2" variant="title" id="closer-title">{closerTitle}</Heading>
           {closerText && <Text muted>{closerText}</Text>}
           {closerAction || <HomeCta place="closer">get her number</HomeCta>}

@@ -30,7 +30,7 @@ export default function ProductDemo() {
   }, [])
 
   return (
-    <section className="product-demo" aria-labelledby="product-demo-title" ref={sectionRef}>
+    <section className="product-demo" aria-labelledby="product-demo-title" ref={sectionRef} data-analytics-section="outfit_demo">
       <div className="halo-container product-demo-inner">
         <h2 id="product-demo-title" className="home-demo-title">text her when you don’t know what to wear</h2>
         <p className="home-demo-description">tell oro where you’re going, she’ll figure out the rest.</p>
