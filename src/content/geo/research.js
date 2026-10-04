@@ -1,5 +1,6 @@
 export const RESEARCH_INDEX = {
   path: '/research',
+  noindex: true,
   title: 'Oro Research | Outfit Decisions and Wardrobe Use',
   description:
     'A home for future Oro research reports about outfit decisions and wardrobe use, with methods, definitions, findings, and limitations.',

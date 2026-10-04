@@ -15,6 +15,7 @@ const ROUTES = [
   { path: '/dress-codes/smart-casual', h1: 'What does smart casual mean?', title: 'What Is Smart Casual? A Practical Dress-Code Guide | Oro', answer: 'Smart casual usually means a relaxed outfit with a considered, polished finish.' },
   { path: '/guides/style-clothes-you-already-own', h1: 'How do you style clothes you already own?', title: 'How to Style Clothes You Already Own | Oro', answer: 'Start with one piece you want to wear, choose an occasion, and build a complete outfit around it using the clothes you have.' },
   { path: '/guides/i-have-clothes-but-nothing-to-wear', h1: 'Why do I have clothes but feel like I have nothing to wear?', title: 'Why You Have Clothes but Feel Like Nothing to Wear | Oro', answer: 'A full closet can still be hard to dress from when the clothes do not combine easily, do not feel comfortable, or do not suit your current routine.' },
+  { path: '/guides', h1: 'Style guides', title: 'Style Guides for Everyday Outfits | Oro', answer: 'Practical answers for getting dressed, understanding dress codes, and making more of the clothes you already own.' },
   { path: '/research', h1: 'Oro Research', title: 'Oro Research | Outfit Decisions and Wardrobe Use', answer: 'No research reports have been published here yet.' },
   { path: '/research/how-people-choose-outfits', h1: 'How people choose outfits', title: 'How People Choose Outfits | Unpublished Oro Research Template', answer: 'This is an unpublished template for a possible report about outfit decisions.' },
 ]
@@ -23,6 +24,7 @@ const REPRESENTATIVE_PATHS = new Set([
   '/ai-stylist-you-can-text',
   '/what-to-wear/job-interview',
   '/dress-codes/business-casual',
+  '/guides',
   '/research',
   '/research/how-people-choose-outfits',
 ])
@@ -71,22 +73,40 @@ async function checkRoute(page, request, route, viewport) {
   const cta = article.getByRole('link', { name: 'Meet Oro', exact: true })
   await expect(cta).toHaveAttribute('href', '/beta')
   const related = article.locator('.geo-related a')
-  if (!route.path.startsWith('/research')) {
+  if (route.path === '/guides') {
+    const guideLinks = article.locator('nav.geo-guide-group a')
+    await expect(guideLinks).toHaveCount(10)
+    const guidePaths = ROUTES.filter((item) => item.path !== '/guides' && !item.path.startsWith('/research')).map((item) => item.path)
+    expect((await guideLinks.evaluateAll((links) => links.map((link) => link.getAttribute('href')))).sort()).toEqual(guidePaths.sort())
+    for (const href of guidePaths) {
+      await expect(article.locator(`nav.geo-guide-group a[href="${href}"]`)).toBeVisible()
+      const linkedResponse = await request.get(pagePath(href))
+      expect(linkedResponse.status()).toBe(200)
+      expect(await linkedResponse.text()).toContain(`href="${CANONICAL_ORIGIN}${href}"`)
+    }
+  }
+  if (!route.path.startsWith('/research') && route.path !== '/guides') {
     expect(await related.count()).toBeGreaterThanOrEqual(2)
     expect(await related.count()).toBeLessThanOrEqual(4)
   }
   for (const link of await related.all()) {
     const href = await link.getAttribute('href')
-    expect(href).toMatch(/^\/(?:ai-|what-to-wear\/|dress-codes\/|guides\/|how-it-works$|from-the-closet$|research)/)
+    expect(href).toMatch(/^\/(?:ai-|what-to-wear\/|dress-codes\/|guides(?:\/|$)|how-it-works$|from-the-closet$)/)
     expect(href).not.toBe(route.path)
     const linkedResponse = await request.get(pagePath(href))
     expect(linkedResponse.status()).toBe(200)
     expect(await linkedResponse.text()).toContain(`href="${CANONICAL_ORIGIN}${href}"`)
   }
+  await expect(page.locator('header a[href="/guides"]')).toHaveCount(0)
+  await expect(page.locator('footer').getByRole('link', { name: /^style guides$/i })).toHaveAttribute('href', '/guides')
+  if (!route.path.startsWith('/research')) {
+    await expect(page.locator('a[href="/research"], a[href^="/research/"]')).toHaveCount(0)
+  } else {
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
+  }
   if (route.path === '/research/how-people-choose-outfits') {
     await expect(article).toContainText('Unpublished research template.')
     await expect(article).toContainText('No findings have been published.')
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
     await expect(article.locator('time, .geo-study-meta')).toHaveCount(0)
   }
   if (process.env.GEO_SCREENSHOT_DIR && REPRESENTATIVE_PATHS.has(route.path)) {
@@ -157,20 +177,66 @@ for (const width of [1440, 390]) {
     })
     await page.goto(pagePath('/what-to-wear/job-interview'))
     await page.getByRole('navigation', { name: 'Related guides' }).getByRole('link', { name: 'What does business casual mean?', exact: true }).click()
-    await expect(page).toHaveURL(/\/dress-codes\/business-casual$/)
+    await expect(page).toHaveURL(/\/dress-codes\/business-casual\/?$/)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('What does business casual mean?')
     await page.locator('.geo-cta').getByRole('link', { name: 'Meet Oro', exact: true }).click()
-    await expect(page).toHaveURL(/\/beta$/)
+    await expect(page).toHaveURL(/\/beta\/?$/)
     await expect(page.getByRole('heading', { name: 'heard you were looking for my number.', exact: true })).toBeVisible()
     await expect(page.getByRole('form')).toHaveCount(0)
     await page.getByRole('button', { name: 'want her number?', exact: true }).click()
-    await expect(page).toHaveURL(/\/beta\?step=phone$/)
+    await expect(page).toHaveURL(/\/beta\/?\?step=phone$/)
     await expect(page.getByRole('heading', { name: 'where should oro text you?', exact: true })).toBeVisible()
     await page.getByRole('button', { name: 'Back', exact: true }).click()
-    await expect(page).toHaveURL(/\/beta$/)
+    await expect(page).toHaveURL(/\/beta\/?$/)
     await expect(page.getByRole('heading', { name: 'heard you were looking for my number.', exact: true })).toBeVisible()
     await expect(page.getByRole('form')).toHaveCount(0)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     expect(writes).toEqual([])
   })
 }
+
+for (const width of [1440, 390]) {
+  test(`homepage Style guides footer navigation works at ${width}px without changing the header`, async ({ page }) => {
+    await page.setViewportSize({ width, height: width === 1440 ? 1000 : 844 })
+    const errors = []
+    page.on('pageerror', (error) => errors.push(error.message))
+    page.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text())
+    })
+    await page.goto('/')
+    await expect(page.locator('header a[href="/guides"]')).toHaveCount(0)
+    await expect(page.locator('header').getByRole('link', { name: 'want her number?', exact: true })).toHaveAttribute('href', '/beta')
+    await expect(page.locator('a[href="/research"], a[href^="/research/"]')).toHaveCount(0)
+    const link = page.locator('footer').getByRole('link', { name: /^style guides$/i })
+    await expect(link).toHaveCount(1)
+    await expect(link).toHaveAttribute('href', '/guides')
+    await link.scrollIntoViewIfNeeded()
+    await expect(link).toBeVisible()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    if (process.env.GEO_SCREENSHOT_DIR) {
+      await mkdir(process.env.GEO_SCREENSHOT_DIR, { recursive: true })
+      await page.locator('footer').screenshot({ path: join(process.env.GEO_SCREENSHOT_DIR, `style-guides-footer-${width}.png`) })
+    }
+    await link.click()
+    await expect(page).toHaveURL(/\/guides\/?$/)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Style guides')
+    await expect(page).toHaveTitle('Style Guides for Everyday Outfits | Oro')
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${CANONICAL_ORIGIN}/guides`)
+    await expect(page.locator('article.geo-page nav.geo-guide-group a')).toHaveCount(10)
+    expect(errors).toEqual([])
+    await page.locator('article.geo-page nav.geo-guide-group').getByRole('link', { name: 'What should you wear to a job interview?', exact: true }).click()
+    await expect(page).toHaveURL(/\/what-to-wear\/job-interview\/?$/)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('What should you wear to a job interview?')
+    expect(errors).toEqual([])
+  })
+}
+
+test('unpublished research is excluded from public discovery files', async ({ request }) => {
+  for (const path of ['/sitemap.xml', '/llms.txt']) {
+    const response = await request.get(path)
+    expect(response.status()).toBe(200)
+    const text = await response.text()
+    expect(text).toContain(`${CANONICAL_ORIGIN}/guides`)
+    expect(text).not.toContain(`${CANONICAL_ORIGIN}/research`)
+  }
+})

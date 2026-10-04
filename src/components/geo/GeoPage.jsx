@@ -14,13 +14,16 @@ function ContentSection({ heading, paragraphs = [], bullets = [] }) {
   )
 }
 
-function RelatedPages({ paths, heading = 'Keep reading' }) {
+function RelatedPages({ paths, heading = 'Keep reading', descriptions = false }) {
   const pages = paths.map(getGeoPage).filter((page) => page && isIndexableGeoPage(page))
   if (!pages.length) return null
   return (
-    <nav className="geo-related" aria-label={heading}>
+    <nav className={`geo-related${descriptions ? ' geo-guide-group' : ''}`} aria-label={heading}>
       <Heading as="h2" variant="section">{heading}</Heading>
-      <ul>{pages.map((page) => <li key={page.path}><a href={page.path}>{page.h1}</a></li>)}</ul>
+      <ul>{pages.map((page) => <li key={page.path}>
+        <a href={page.path}>{page.h1}</a>
+        {descriptions && <p>{page.description}</p>}
+      </li>)}</ul>
     </nav>
   )
 }
@@ -86,13 +89,13 @@ export default function GeoPage({ path }) {
           {page.kind === 'research-article' ? <ResearchArticle page={page} /> : <>
             <div className="geo-answer">{page.answer.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
             {page.sections.map((section) => <ContentSection key={section.heading} {...section} />)}
+            {page.groups?.map((group) => <RelatedPages key={group.heading} heading={group.heading} paths={group.paths} descriptions />)}
             {page.personalization && <ContentSection heading="Where a general guide stops" paragraphs={[page.personalization]} />}
           </>}
           {page.kind === 'research-index' && publishedReports.length > 0 && <RelatedPages heading="Published reports" paths={publishedReports.map((item) => item.path)} />}
           <OroCta />
           <RelatedPages paths={page.related || []} heading={research ? 'Related reading' : 'Related guides'} />
           {research && <a className="geo-research-link" href="/ai-personal-stylist">What is an AI personal stylist?</a>}
-          {!research && <a className="geo-research-link" href="/research">Oro Research: how we plan to study getting dressed</a>}
         </div>
       </div>
     </article>

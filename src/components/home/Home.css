@@ -59,6 +59,8 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-footer-social a { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; color: #fff; }
 .halo-footer-social svg { display: block; width: 21px; height: 21px; }
 .halo-footer-social a:hover { background: #333; border-radius: 50%; }
+.halo-footer-guide-link { display: inline-flex; align-items: center; min-height: var(--oro-control-min-height); color: #bdbdbd; font-size: var(--oro-type-support-size); }
+.halo-footer-guide-link:hover { color: #fff; text-decoration: underline; }
 .halo-footer-legal a:hover { color: #fff; text-decoration: underline; }
 .halo-footer-legal { display: flex; flex-direction: column; align-items: flex-end; min-width: 150px; text-align: right; }
 .halo-footer-legal h3 { margin: 0; font-size: var(--oro-type-label-size); font-weight: 600; }

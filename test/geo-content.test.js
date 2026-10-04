@@ -100,8 +100,10 @@ test('a valid analysis list cannot mask a malformed opposite list or null sectio
   assert.equal(isPublishedResearch(completedReport({ analysis: [null] }), reviewTime), false)
 })
 
-test('the initial research index and template do not present an unpublished study as evidence', () => {
+test('the initial research index and template stay unindexed without presenting an unpublished study as evidence', () => {
   assert.ok(RESEARCH_INDEX.answer.includes('No research reports have been published here yet.'))
+  assert.equal(RESEARCH_INDEX.noindex, true)
+  assert.equal(isIndexableGeoPage(getGeoPage('/research')), false)
   assert.equal(RESEARCH_ARTICLES.length, 1)
   const template = RESEARCH_ARTICLES[0]
   assert.equal(template.status, 'template')
@@ -118,9 +120,9 @@ test('the initial research index and template do not present an unpublished stud
   }
 })
 
-test('unpublished research gets noindex and no Article schema while guides get Article schema', () => {
-  for (const template of RESEARCH_ARTICLES) {
-    const seo = getSeoForRoute({ type: 'geo', path: template.path })
+test('both research pages get noindex and no Article schema while individual guides get Article schema', () => {
+  for (const page of [RESEARCH_INDEX, ...RESEARCH_ARTICLES]) {
+    const seo = getSeoForRoute({ type: 'geo', path: page.path })
     assert.equal(seo.noindex, true)
     assert.equal(seo.ogType, 'website')
     assert.ok(!seo.jsonLd.some((entity) => entity['@type'] === 'Article'))
@@ -134,6 +136,28 @@ test('unpublished research gets noindex and no Article schema while guides get A
     assert.equal(article.mainEntityOfPage, `${SITE_URL}${guide.path}`)
     assert.ok(!Object.hasOwn(article, 'datePublished'))
   }
+})
+
+test('the style guides hub is a public WebPage covering all ten guide routes', () => {
+  assert.equal(GEO_PAGES.length, 13)
+  assert.equal(GEO_GUIDES.length, 10)
+  const hub = getGeoPage('/guides')
+  assert.ok(hub)
+  assert.equal(hub.kind, 'guide-index')
+  assert.equal(isIndexableGeoPage(hub), true)
+  assert.ok(hub.answer.length > 0 && hub.answer.every((answer) => typeof answer === 'string' && answer.trim()))
+  const seo = getSeoForRoute({ type: 'geo', path: '/guides' })
+  assert.equal(seo.noindex, false)
+  assert.equal(seo.ogType, 'website')
+  assert.ok(seo.jsonLd.some((entity) => entity['@type'] === 'WebPage'))
+  assert.ok(!seo.jsonLd.some((entity) => entity['@type'] === 'Article'))
+  assert.equal(GEO_PAGES.filter(isIndexableGeoPage).length, 11)
+})
+
+test('an explicit noindex flag prevents a completed research report from becoming discoverable', () => {
+  const report = completedReport({ publicationDate: '2020-10-02T12:00:00.000Z', noindex: true })
+  assert.equal(isPublishedResearch(report), true)
+  assert.equal(isIndexableGeoPage(report), false)
 })
 
 test('SEO honors the publication gate for incomplete or future reports', () => {

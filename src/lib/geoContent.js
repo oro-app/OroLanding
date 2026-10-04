@@ -1,4 +1,5 @@
 import { GEO_GUIDES } from '../content/geo/guides.js'
+import { GUIDE_INDEX } from '../content/geo/guideIndex.js'
 import { RESEARCH_INDEX, RESEARCH_ARTICLES } from '../content/geo/research.js'
 
 export function isPublishedResearch(article, now = Date.now()) {
@@ -24,6 +25,7 @@ export function isPublishedResearch(article, now = Date.now()) {
 }
 
 export const GEO_PAGES = [
+  { ...GUIDE_INDEX, kind: 'guide-index' },
   ...GEO_GUIDES.map((page) => ({ ...page, kind: 'guide' })),
   { ...RESEARCH_INDEX, kind: 'research-index' },
   ...RESEARCH_ARTICLES.map((page) => ({ ...page, kind: 'research-article' })),
@@ -34,5 +36,5 @@ export function getGeoPage(path) {
 }
 
 export function isIndexableGeoPage(page) {
-  return page.kind !== 'research-article' || isPublishedResearch(page)
+  return !page.noindex && (page.kind !== 'research-article' || isPublishedResearch(page))
 }

@@ -123,7 +123,7 @@ test('prerendered JSON-LD matches visible page content and does not invent softw
   }
 })
 
-test('published guides and the research index are discoverable, while templates are excluded and noindexed', () => {
+test('the guides and hub are discoverable while both research pages are excluded and noindexed', () => {
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => decodeEntities(url))
   assert.equal(new Set(locations).size, locations.length, 'Sitemap must not repeat URLs')
   for (const { page, html } of pages) {
@@ -140,12 +140,37 @@ test('published guides and the research index are discoverable, while templates 
       assert.ok(!locations.includes(canonical), page.path)
       assert.ok(!llms.includes(canonical), page.path)
       assert.ok(!structuredData(html).some((entity) => entity['@type'] === 'Article'))
-      assert.ok(decodeEntities(html).includes('Unpublished research template.'))
+      if (page.kind === 'research-article') {
+        assert.ok(decodeEntities(html).includes('Unpublished research template.'))
+      }
     }
   }
   const index = pages.find(({ page }) => page.kind === 'research-index').html
   assert.ok(decodeEntities(index).includes('No research reports have been published here yet.'))
-  for (const { page } of pages.filter(({ page }) => !isIndexableGeoPage(page))) {
-    assert.ok(!index.includes(`href="${page.path}"`), `${page.path} must not appear on the public research index`)
+  for (const { page } of pages.filter(({ page }) => page.kind === 'research-article')) {
+    assert.ok(!index.includes(`href="${page.path}"`), `${page.path} must not be linked from the research index`)
+  }
+})
+
+test('the public guides hub statically links all ten guides with WebPage metadata', () => {
+  assert.equal(pages.length, 13)
+  const hub = pages.find(({ page }) => page.path === '/guides')
+  assert.ok(hub)
+  const hrefs = elements(hub.html.slice(hub.html.indexOf('<body')), 'a').map((tag) => attribute(tag, 'href'))
+  const guides = pages.filter(({ page }) => page.kind === 'guide')
+  assert.equal(guides.length, 10)
+  for (const { page } of guides) assert.ok(hrefs.includes(page.path), `/guides must statically link ${page.path}`)
+  const graph = structuredData(hub.html)
+  assert.ok(graph.some((entity) => entity['@type'] === 'WebPage' && entity.url === `${SITE_URL}/guides`))
+  assert.ok(!graph.some((entity) => entity['@type'] === 'Article'))
+})
+
+test('public pages expose the approved Style guides navigation and keep Research links hidden', () => {
+  for (const { page, html } of [...pages.filter(({ page }) => isIndexableGeoPage(page)), { page: { path: '/' }, html: homeHtml }]) {
+    const body = html.slice(html.indexOf('<body'))
+    const links = elements(body, 'a').map((tag) => attribute(tag, 'href'))
+    assert.ok(links.includes('/guides'), `${page.path} must expose the Style guides hub`)
+    assert.ok(!links.some((href) => href === '/research' || href.startsWith('/research/')), `${page.path} must not publicly link Research`)
+    assert.ok(decodeEntities(body).includes('Style guides'), `${page.path} must use the approved footer label`)
   }
 })

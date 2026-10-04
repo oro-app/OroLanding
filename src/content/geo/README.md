@@ -5,6 +5,11 @@ articles. The initial article is an **unpublished template**, with no study find
 Keep it at `status: 'template'` until real evidence and the complete publication
 requirements below are available.
 
+Oro has no published research. The research index also has `noindex: true` and
+is omitted from public discovery. There are no public navigation links to Research.
+Keep that setting until a public research section with real reports is approved;
+the Style guides directory and footer are the current public entry points.
+
 Templates must have `noindex` metadata and must be excluded from the public research
 index, sitemap, and discovery lists. A template being accessible at its path does
 not make it a published report. Do not add its path to the index's `related` list.
@@ -16,6 +21,7 @@ not make it a published report. Do not add its path to the index's `related` lis
 | Field | Shape | Purpose |
 | --- | --- | --- |
 | `path` | String | `/research` |
+| `noindex` | Boolean | Keep `true` while the research section is unpublished |
 | `title` | String | Unique SEO title |
 | `description` | String | Search description |
 | `h1` | String | Visible page heading |
@@ -89,6 +95,8 @@ Before changing `status` to `'published'`:
    limitations. Avoid presenting the sample as representative without support.
 5. Replace every template notice and drafting instruction with the reviewed report.
    Update the index's empty-state copy only when a report is actually published.
+   A future public research launch also requires removing the index's `noindex`
+   flag and adding appropriate navigation after approval.
 6. Run `npm run build` and inspect the rendered report, metadata, sitemap, and
    discovery output. Verify the report is included and remaining templates are
    still excluded and marked `noindex`.

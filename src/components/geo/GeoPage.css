@@ -21,6 +21,9 @@
 .geo-cta .oro-button { margin-top: var(--oro-space-3); }
 .geo-related { border-top: var(--oro-border-width) solid var(--oro-color-border); padding-top: var(--oro-space-8); }
 .geo-related a { display: inline-block; padding-block: var(--oro-space-2); }
+.geo-guide-group { margin-top: var(--oro-space-10); }
+.geo-guide-group li { margin-block: var(--oro-space-5); }
+.geo-guide-group li p { margin-block: 0; font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }
 .geo-research-link { display: inline-block; margin-top: var(--oro-space-8); font-size: var(--oro-type-support-size); }
 .geo-template-notice { padding: var(--oro-space-6); border: 2px solid var(--oro-color-accent); border-radius: var(--oro-radius-card); background: var(--oro-color-soft); }
 .geo-subtitle { font-size: 1.25rem; color: var(--oro-color-muted); }

@@ -20,7 +20,8 @@ The frozen homepage is controlled by `src/components/home/Home.jsx`, `HomeChrome
 `Home.css`, its demo components, `useHomeMotion.js`, `GoldBackground`, global styles,
 Oro Kit, and existing logo/image assets. `src/App.jsx` mounts that same tree.
 Signup lives in the existing beta and get-started components and API handlers.
-All of those visible components, styles, links and signup code remain unchanged.
+The user subsequently approved one visible homepage change: a Style guides link
+in the footer. The header, hero, existing copy and signup code remain unchanged.
 
 Before implementation, the plan was to touch three existing integration files:
 `src/App.jsx` for new route selection; `src/lib/seo.js` for invisible metadata;
@@ -32,19 +33,25 @@ and text, links, layout and signup-review captures.
 
 Ten distinct answer-first guides, each with useful context, concrete examples,
 common mistakes where relevant, personalization limits, an Oro beta CTA and
-two to four relevant guide links. No new links or content were added to the homepage.
+two to four relevant guide links. A `/guides` directory groups all ten by topic;
+the homepage links to it only from the footer, as subsequently requested.
 The article shell uses existing Oro typography, colors and controls; its new CSS
 is scoped to GEO classes and loaded only for those pages.
 
-A conservative research index and one visibly unpublished research template.
+A research index and one visibly unpublished research template were included
+in the original handoff request. Oro has no published research. Following the
+user's clarification, both pages are noindexed and excluded from public discovery;
+there are no Research links on the guides, directory or homepage.
 The template contains no participant data, numerical findings, publication date,
-sample size, charts, or privacy assurances. It receives `noindex,follow`, is excluded
-from sitemap and `llms.txt`, and is not linked from the public research index.
+sample size, charts, or privacy assurances. Both research paths receive
+`noindex,follow` and are excluded from sitemap and `llms.txt`. They remain accessible
+at their direct paths as unfinished infrastructure, without a public navigation link.
 
 ## Every new route
 
 | Route | Status |
 | --- | --- |
+| `/guides` | Indexable Style guides directory; footer link |
 | `/ai-personal-stylist` | Indexable guide |
 | `/ai-stylist-you-can-text` | Indexable guide |
 | `/what-to-wear/job-interview` | Indexable guide |
@@ -55,11 +62,11 @@ from sitemap and `llms.txt`, and is not linked from the public research index.
 | `/dress-codes/smart-casual` | Indexable guide |
 | `/guides/style-clothes-you-already-own` | Indexable guide |
 | `/guides/i-have-clothes-but-nothing-to-wear` | Indexable guide |
-| `/research` | Indexable research index |
+| `/research` | Unpublished, noindexed research index; no public links |
 | `/research/how-people-choose-outfits` | Unpublished, noindexed template |
 
-No category indexes or About page were added: the ten guides, their related links,
-and the research index provide the initial content layer without extra thin pages.
+No separate category indexes or About page were added. The Style guides directory
+and related links make the ten guides reachable from the homepage footer.
 
 ## Every existing file modified
 
@@ -68,14 +75,17 @@ and the research index provide the initial content layer without extra thin page
 | `src/App.jsx` | Recognize exact new route paths, lazy-load the shared GEO page, and select the existing Halo theme for those new pages. The home branch renders the same tree. |
 | `src/lib/seo.js` | Add the canonical entity description, align Organization social identities with the existing main-branch homepage links, add factual text-stylist software markup and GEO page metadata. |
 | `scripts/generate-seo.mjs` | Prerender new pages with their CSS, include only indexable pages in discovery, and replace stale app-first LLM summary claims with the canonical text-stylist positioning. |
+| `src/components/home/HomeChrome.jsx` | Add the approved Style guides link beneath the homepage footer's social icons. |
+| `src/components/home/Home.css` | Style only that new footer link. |
+| `src/lib/siteLinks.js` | Add Style guides to the shared Halo footer links; header navigation remains unchanged. |
 
-No homepage component, stylesheet, navigation configuration, footer configuration,
-signup component, API handler, dependency file, robots source or Vercel configuration
-was modified. `App.jsx` is a homepage integration file; its additions select only
-new routes. The homepage's metadata graph changes invisibly through `seo.js`.
+The approved footer addition is the only visible homepage change. No signup
+component, API handler, dependency file, robots source or Vercel configuration
+was modified. `App.jsx` additions select only new routes. The homepage's metadata
+graph changes invisibly through `seo.js`.
 
 New implementation files: `src/lib/geoRoutes.js`, `src/lib/geoContent.js`,
-`src/content/geo/guides.js`, `src/content/geo/research.js`,
+`src/content/geo/guides.js`, `src/content/geo/guideIndex.js`, `src/content/geo/research.js`,
 `src/content/geo/README.md`, `src/components/geo/GeoPage.jsx` and `GeoPage.css`.
 New checks: `test/geo-content.test.js`, `test/geo-prerender.test.js`, `e2e/geo.spec.js`.
 
@@ -106,9 +116,11 @@ were removed from that invisible summary.
 
 ## Crawlability and canonical strategy
 
-Eleven indexable new routes are added to the generated sitemap. The unpublished
-template is deliberately omitted. `llms.txt` includes the canonical entity statement,
-guides and research index, and will include research reports only after publication.
+Eleven indexable new routes are added to the generated sitemap: the directory
+and ten guides. Both research pages are deliberately omitted. `llms.txt` includes
+the canonical entity statement, directory and guides, and will include research
+reports only after publication. The research index has an explicit `noindex` flag
+that must be removed before a future public launch with real reports.
 New content is present in static HTML without JavaScript. New pages have unique
 titles, descriptions, canonical paths and OpenGraph titles/descriptions.
 Undated guides do not receive a fabricated sitemap modification date.
@@ -147,7 +159,7 @@ design genuine 404 handling. Review Vercel domains and CDN/firewall access befor
 deployment. These recommendations have not been implemented.
 
 Other changes requiring approval remain deferred: existing homepage/product-copy
-revisions, new homepage navigation/footer links, signup changes, and unverified
+revisions, additional homepage navigation/footer links, signup changes, and unverified
 product/company claims. No such approval is needed to review this additive branch.
 
 After an approved deployment, inspect the exact new URLs and raw HTML on Vercel,
@@ -208,24 +220,35 @@ events. Conversational wording needs validated coding and appropriate permission
 
 ## Verification results
 
-`npm run build` passes: 42 React routes prerendered and six static legal pages
+`npm run build` passes: 43 React routes prerendered and six static legal pages
 enriched. No lint or typecheck scripts exist in this plain-JSX repository.
 `npm run test:feedback` passes all 41 tests; `npm run test:beta` passes all 75.
-`node --test test/geo-content.test.js test/geo-prerender.test.js` passes all 16
+`node --test test/geo-content.test.js test/geo-prerender.test.js` passes all 20
 content, publication-gate and emitted-artifact checks.
 
-The new GEO browser suite passes all 23 tests and checks all twelve routes on desktop and six representative
+The new GEO browser suite passes all 28 tests and checks all thirteen routes on desktop and seven representative
 routes on mobile, raw answer-first HTML, unique metadata and canonicals, related
 links, no-JavaScript reading/styles, console/page errors, assets, overflow and
-beta welcome/phone/back navigation with no submission.
+beta welcome/phone/back navigation with no submission. The footer follow-up adds
+desktop/mobile navigation from the homepage footer through the directory to a
+guide, confirms no header link, and checks both research paths remain outside
+public links, the sitemap and `llms.txt`.
 
-The unchanged homepage was compared at 1440×1000 and 390×844 with deterministic
+Before the approved footer addition, the unchanged homepage was compared at 1440×1000 and 390×844 with deterministic
 count responses, declined analytics consent and settled fonts/images. Ten captures
 (hero, full page, footer, signup phone and signup review at both widths) have zero
 differing pixels. Text, links, controls, headings, image dimensions, layout rectangles,
 page heights and signup fields/consent match. No browser errors or API mutations
-occurred. The final build's entire homepage `<body>` is also byte-identical to the
-saved baseline; only invisible head metadata/assets differ.
+occurred. That build's entire homepage `<body>` was also byte-identical to the
+saved baseline; only invisible head metadata/assets differed. The subsequent
+footer addition intentionally changes the footer and is verified separately.
+
+The footer follow-up preserves all six desktop/mobile hero and signup screenshot
+comparisons with zero differing pixels, unchanged signup fields and unchanged
+header links. The new footer line adds exactly 44px. The directory is readable
+at both widths, links all ten guides and has no Research links or overflow.
+See `footer-guides-focused-review.json`, `footer-guides-node.log` and
+`footer-guides-e2e.log` in the evidence directory.
 
 Evidence lives in `/Users/sunny/oro-workspace/outputs/oro-geo-verification`, including
 `comparison-report.json`, baseline/after screenshots and new-page screenshots.
@@ -241,11 +264,14 @@ directory. Deployment-only checks are skipped locally, so they still need a Verc
 preview after approval to deploy.
 
 Vite preview serves clean article URLs through its SPA fallback; for raw route-specific
-metadata verification locally, use the generated directory URL with a trailing slash,
-such as `/ai-personal-stylist/`. Canonicals remain the existing slashless paths.
+metadata verification with Vite, use the generated directory URL with a trailing
+slash, such as `/ai-personal-stylist/`. The current local review server on port 4175
+serves the built `dist` directory directly and resolves directory paths to their
+own HTML, so the footer link opens the correct prerendered page. This is a local
+preview adjustment. Canonicals remain the existing slashless paths.
 Production existing routes were audited to receive their own prerendered metadata;
-new production routes should be verified on deployment. No redirects were added to
-work around the local preview behavior.
+new production routes should be verified on deployment. No production redirects
+or routing configuration were changed.
 
 Before deployment, the environment recommends updating the outdated Vercel CLI
 with `npm i -g vercel@latest`. The CLI was not changed by this task.
