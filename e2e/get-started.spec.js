@@ -79,6 +79,23 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   expect(await page.evaluate(() => localStorage.getItem('oro_get_started_responses'))).toBeNull()
 })
 
+test('held Enter submits each onboarding request once', async ({ page, api }) => {
+  await phoneStep(page)
+  await page.getByLabel('Phone number', { exact: true }).focus()
+  await page.keyboard.down('Enter')
+  await page.keyboard.down('Enter')
+  await page.keyboard.up('Enter')
+  await expect(page.getByLabel('Verification code', { exact: true })).toBeVisible()
+  expect(api.requests.map((request) => request.action)).toEqual(['start'])
+
+  await page.getByLabel('Verification code', { exact: true }).fill('123456')
+  await page.keyboard.down('Enter')
+  await page.keyboard.down('Enter')
+  await page.keyboard.up('Enter')
+  await expect(page.getByRole('heading', { name: 'Youâ€™re all set.' })).toBeVisible()
+  expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
+})
+
 for (const [country, phone, expected] of [
   ['PK', '0301 2345678', '+923012345678'],
   ['GB', '07911 123456', '+447911123456'],
