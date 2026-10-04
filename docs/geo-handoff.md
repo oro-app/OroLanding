@@ -87,8 +87,10 @@ and related links connect the ten guides. No Style guides link appears in site f
 
 The footer component, stylesheet and link configuration are restored to the original
 baseline. There are no visible homepage changes. No signup
-component, API handler, dependency file, robots source or Vercel configuration
-was modified. `App.jsx` additions select only new routes. The homepage's metadata
+component, API handler, dependency file or Vercel configuration was modified.
+The October 4 SEO follow-up aligns the robots sitemap reference with the existing
+canonical origin and clarifies homepage search metadata; see `seo-follow-up.md`.
+`App.jsx` additions select only new routes. The homepage's metadata
 graph changes invisibly through `seo.js`.
 
 New implementation files: `src/lib/geoRoutes.js`, `src/lib/geoContent.js`,
@@ -136,8 +138,9 @@ titles, descriptions, canonical paths and OpenGraph titles/descriptions.
 Undated guides do not receive a fabricated sitemap modification date.
 
 Every canonical and generated discovery URL keeps the existing origin
-`https://www.askoro.now`. Robots directives, DNS, redirects and domain strategy
-are unchanged. Existing `Allow: /` permits crawling of new routes and the template's
+`https://www.askoro.now`. Crawl allow rules, DNS, redirects and domain strategy
+are unchanged. The robots sitemap reference now matches that canonical origin.
+Existing `Allow: /` permits crawling of new routes and the template's
 noindex directive. Do not disallow the template in robots: crawlers need to fetch
 it to see noindex. [Google noindex guidance](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
 
@@ -157,15 +160,15 @@ Live read-only HTTP checks on October 3, 2026 found:
 | `askoro.now` | 308 to `www.askoro.now`, preserving paths and queries |
 | `www.askoro.now` | 200; self-canonical |
 
-Both robots files advertise `https://buildingoro.ca/sitemap.xml`; sitemap entries
-use `www.askoro.now`. Static legal source files contain older canonicals, but the
+At the initial audit, both robots files advertised `https://buildingoro.ca/sitemap.xml`;
+sitemap entries used `www.askoro.now`. The October 4 SEO follow-up aligns the
+advertised sitemap with `www.askoro.now`. Static legal source files contain older canonicals, but the
 existing build correctly replaces them with `www.askoro.now` in deployed HTML.
 Unknown paths receive the homepage with HTTP 200, an existing soft-404 behavior.
 
 The split domain signals can make consolidation and crawl discovery less clear.
 Recommended for explicit approval: redirect the older www host to the already
-configured canonical host, align robots sitemap discovery with that host, and
-design genuine 404 handling. Review Vercel domains and CDN/firewall access before
+configured canonical host and design genuine 404 handling. Review Vercel domains and CDN/firewall access before
 deployment. These recommendations have not been implemented.
 
 Other changes requiring approval remain deferred: existing homepage/product-copy

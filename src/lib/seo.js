@@ -4,9 +4,9 @@ import { ORO_DESCRIPTION } from './geoRoutes.js'
 
 export const SITE_URL = 'https://www.askoro.now'
 export const SITE_NAME = 'oro'
-export const SITE_TITLE = 'oro - your ai stylist, one text away'
+export const SITE_TITLE = 'Oro | AI Personal Stylist You Can Text'
 export const DEFAULT_DESCRIPTION =
-  'nothing to wear? ask oro and discover the gold in your wardrobe.'
+  'Oro is an AI personal stylist you can text. Get outfit recommendations from clothes you already own, tailored to your style and plans.'
 export const DEFAULT_IMAGE = '/favicon.webp'
 export const DEFAULT_IMAGE_META = {
   type: 'image/webp',
@@ -50,7 +50,7 @@ export const ROUTE_SEO = {
     description: DEFAULT_DESCRIPTION,
     h1: 'the ai fashion assistant you can text',
     summary:
-      'oro helps you find your look, whatever your plans. ask oro, and head out feeling good about what you’re wearing.',
+      'Oro is an AI personal stylist you can text for outfit recommendations from your own wardrobe, tailored to your style and plans.',
     priority: '1.0',
   },
   'try-oro': {
