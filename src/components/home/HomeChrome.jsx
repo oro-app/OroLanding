@@ -9,8 +9,8 @@ function HomeLogo() {
 
 export function HomeCta({ place, children, className = '' }) {
   return (
-    <a href="/beta" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-      onClick={() => trackCtaClick('get_started_click', { location: place, destination: 'beta' })}>
+    <a href="/signup?step=phone" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
+      onClick={() => trackCtaClick('get_started_click', { location: place, destination: 'signup' })}>
       {children}
     </a>
   )

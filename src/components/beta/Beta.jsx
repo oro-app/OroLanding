@@ -20,7 +20,7 @@ function WrittenAnswer({ name, label, value, update, error, ...props }) {
   return <TextField id={name} name={name} label={label} value={value} onChange={(event) => update(name, event.target.value)} maxLength={textLimits[name] || 64} required error={error} {...props} />
 }
 
-export default function Beta({ campaign = 'general' }) {
+export default function Beta({ campaign = 'general', landing = false }) {
   const [draft] = useState(readBetaDraft)
   const [attribution] = useState(browserBetaAttribution)
   const campaignSource = draft?.campaignSource || attribution.source
@@ -54,7 +54,7 @@ export default function Beta({ campaign = 'general' }) {
   const entryView = allowForm || enabled === null ? 'welcome' : 'coming-soon'
   const saving = status === 'saving'
   const message = submissionMessages[status]
-  const [view, setView] = useState(entryView)
+  const [view, setView] = useState(landing ? entryView : 'form')
   const [step, setStep] = useState(0)
   const formRef = useRef(null)
   const stepTitleRef = useRef(null)
@@ -87,6 +87,15 @@ export default function Beta({ campaign = 'general' }) {
     document.title = 'help us make oro yours. - oro'
     const syncLocation = () => {
       const url = new URL(window.location.href)
+      if (landing) {
+        url.searchParams.delete('step')
+        url.hash = ''
+        window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+        currentStep.current = -1
+        setStep(0)
+        setView(entryView)
+        return
+      }
       const requestedStep = url.searchParams.get('step') || url.hash.slice(1)
       const index = formSteps.findIndex((item) => item.hash.slice(1) === requestedStep)
       if (index >= 0) {
@@ -97,14 +106,14 @@ export default function Beta({ campaign = 'general' }) {
         }
         currentStep.current = index
         setStep(index)
-        setView(allowForm ? 'form' : entryView)
+        setView(allowForm || enabled === null ? 'form' : 'coming-soon')
       } else {
-        url.searchParams.delete('step')
+        url.searchParams.set('step', formSteps[0].hash.slice(1))
         url.hash = ''
         window.history.replaceState(null, '', `${url.pathname}${url.search}`)
-        currentStep.current = -1
+        currentStep.current = 0
         setStep(0)
-        setView(entryView)
+        setView(allowForm || enabled === null ? 'form' : 'coming-soon')
       }
     }
     syncLocation()
@@ -114,7 +123,7 @@ export default function Beta({ campaign = 'general' }) {
       window.removeEventListener('popstate', syncLocation)
       window.removeEventListener('hashchange', syncLocation)
     }
-  }, [entryView, allowForm])
+  }, [entryView, allowForm, enabled, landing])
 
   useEffect(() => {
     if (view !== 'form') return
@@ -153,6 +162,10 @@ export default function Beta({ campaign = 'general' }) {
 
   function openStep(index) {
     if (submitting.current) return
+    if (index < 0 && !landing) {
+      window.location.assign('/beta')
+      return
+    }
     const url = new URL(window.location.href)
     if (index < 0) url.searchParams.delete('step')
     else url.searchParams.set('step', formSteps[index].hash.slice(1))
@@ -324,8 +337,8 @@ export default function Beta({ campaign = 'general' }) {
           <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <ButtonArrow direction="up-right" /></a>
         </div>
       </section>}
-      {view === 'welcome' && <BetaWelcome campaign={campaign} enabled={allowForm} onStart={() => openStep(0)} titleRef={welcomeRef} />}
-      {allowForm && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
+      {view === 'welcome' && <BetaWelcome campaign={campaign} enabled={allowForm} href="/signup?step=phone" titleRef={welcomeRef} />}
+      {(allowForm || enabled === null) && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-progress" role="progressbar" aria-label="Invite request progress" aria-valuemin={0} aria-valuemax={formSteps.length} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${formSteps.length}`}><span style={{ width: `${(step + 1) / formSteps.length * 100}%` }} /></div>
         <div className="beta-form-panel" key={step}>
@@ -366,7 +379,7 @@ export default function Beta({ campaign = 'general' }) {
             <div className="beta-referral-actions">
               {messagesHref && <a className="oro-button oro-button--primary" href={messagesHref}>share in messages</a>}
               <Button variant="secondary" className="beta-hero-invite" onClick={copyInvite} disabled={!inviteLink}><span>{copied ? 'copied!' : 'copy my invite link'}</span><CopyIcon /></Button>
-              <a className="beta-resend" href="/beta?step=phone">check my place</a>
+              <a className="beta-resend" href="/signup?step=phone">check my place</a>
             </div>
             {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}
           </div>

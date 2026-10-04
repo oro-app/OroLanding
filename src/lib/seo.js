@@ -34,6 +34,13 @@ export const ROUTE_SEO = {
     h1: 'help us make oro yours.',
     noindex: true,
   },
+  signup: {
+    path: '/signup',
+    title: 'request an oro invite - oro beta',
+    description: 'request an invite to meet oro, your personal ai stylist over text.',
+    h1: 'where should oro text you?',
+    noindex: true,
+  },
   'beta-career': {
     path: '/beta/career', title: 'meet oro - your personal ai stylist',
     description: 'get dressed for your next opportunity with oro, right in your texts.',

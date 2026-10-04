@@ -14,13 +14,13 @@ test('home page loads cleanly @smoke', async ({ page }) => {
 })
 
 for (const place of ['header', 'hero', 'closer']) {
-  test(`${place} CTA opens the beta invitation`, async ({ page }) => {
+  test(`${place} CTA opens the signup flow`, async ({ page }) => {
     await page.goto('/')
     await page.locator(`.halo-cta--${place}`).click()
-    await expect(page).toHaveURL(/\/beta$/)
-    await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
+    await expect(page).toHaveURL(/\/signup\?step=phone$/)
+    await expect(page.getByRole('heading', { name: 'Where should oro text you?' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Blog' })).toHaveCount(0)
-    await expect(page.getByRole('link', { name: 'Get started' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'want her number?' })).toHaveAttribute('href', '/signup?step=phone')
   })
 }
 
