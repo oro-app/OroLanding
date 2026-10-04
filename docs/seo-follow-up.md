@@ -2,9 +2,11 @@
 
 The user's Google first-page results for `ai stylist` did not contain Oro at the
 time of review. This is one personalized search result, not proof that the site is
-absent from Google's index. The currently signed-in Google Search Console account
-shows the welcome screen, with no accessible site properties, so Google-selected
-canonical URLs, index exclusions, impressions, and positions remain unverified.
+absent from Google's index. At the initial review, the signed-in Google Search
+Console account showed the welcome screen with no accessible site properties.
+The user subsequently approved verification and sitemap submission for
+`https://www.askoro.now/`. Search Console results and submission evidence are
+recorded under `outputs/oro-seo-audit` in the workspace.
 
 ## Changes
 
@@ -14,9 +16,14 @@ canonical URLs, index exclusions, impressions, and positions remain unverified.
 - Matching OpenGraph/Twitter/fallback metadata and a factual home sitemap summary.
 - `robots.txt` now advertises `https://www.askoro.now/sitemap.xml`, matching the
   existing canonical origin and every generated sitemap URL.
+- The downloaded Google ownership verification file is retained at
+  `public/googleed6f95a7b6af77aa.html` for the authorized URL-prefix property.
+- Two user-approved contextual article links connect existing published content
+  to the AI stylist guide and the guide to styling clothes already owned.
 
 The homepage body, visible copy, layout, signup, header, and footer are unchanged.
-No guide or research navigation links were added. No DNS, domain redirects,
+No guide or research header/footer links were added. No Research links were added
+to existing pages. No DNS, domain redirects,
 firewall settings, or routing configuration changed. Cross-domain sitemaps are
 supported; the old sitemap reference was an alignment issue, not a demonstrated
 indexing blocker. Better titles and descriptions do not guarantee Google will
@@ -38,17 +45,14 @@ the homepage with HTTP 200, an existing issue for a separate routing change.
 
 ## Remaining work
 
-1. Obtain access to an existing Search Console property or verify the site in the
-   intended Google account. Inspect `/` and `/ai-personal-stylist`, submit the
-   canonical sitemap, and request indexing only after checking the live response.
-2. Decide whether to add contextual links from existing published articles. The
-   guides form their own linked cluster with no incoming links from established
-   site navigation. The user's instruction to keep the pages unlinked is preserved.
-   Two specific link-only proposals, with the current visible words retained:
-   - `the-cost-of-deciding.mdx`: “what to do with the clothes you already have”
-     links to `/guides/style-clothes-you-already-own`.
-   - `youre-always-dressing-for-someone.mdx`: “finds the combinations you haven't
-     seen yet” links to `/ai-personal-stylist`.
+1. Inspect `/` and `/ai-personal-stylist` in the authorized Search Console property,
+   submit the canonical sitemap, and request indexing after checking the live
+   response. Keep the verification file deployed to retain verified ownership.
+2. Check discovery and rankings after Google processes the newly connected guide
+   cluster. The approved links preserve the current visible article words:
+   `the-cost-of-deciding.mdx` links “what to do with the clothes you already have”
+   to `/guides/style-clothes-you-already-own`; `youre-always-dressing-for-someone.mdx`
+   links “finds the combinations you haven't seen yet” to `/ai-personal-stylist`.
 3. After reviewing Google's selected canonicals, consider consolidation of the
    older public domain. Both hosts still serve the site, with canonical metadata
    pointing to `www.askoro.now`; no domain migration was performed.
