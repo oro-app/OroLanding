@@ -1,15 +1,20 @@
-# GEO content and research publishing
+# GEO content and Research & Engineering publishing
 
 `research.js` exports the research landing-page content and a collection of research
 articles. The initial article is an **unpublished template**, with no study findings.
 Keep it at `status: 'template'` until real evidence and the complete publication
 requirements below are available.
 
-Oro has no published research. The research index also has `noindex: true` and
-is omitted from public discovery. There are no public navigation links to Research.
-Keep that setting until a public research section with real reports is approved;
-the Style guides directory and individual guides remain available at their URLs,
-without a Style guides footer link.
+`engineering.js` exports three published editorial engineering notes. The
+Research & Engineering index lists them and is included in public discovery.
+These notes explain styling problems and design reasoning; they are not empirical
+studies. They publish no stack, provider, prompt, schema, architecture, private
+measurement, or model-training details. Do not invent performance results or claims
+of superiority to fill out the section.
+
+There are no Research & Engineering links in the homepage, header, footer, or
+Style guides directory. Both directories and their published articles remain
+available at their direct URLs, in the sitemap, and in `llms.txt`.
 
 Templates must have `noindex` metadata and must be excluded from the public research
 index, sitemap, and discovery lists. A template being accessible at its path does
@@ -22,7 +27,7 @@ not make it a published report. Do not add its path to the index's `related` lis
 | Field | Shape | Purpose |
 | --- | --- | --- |
 | `path` | String | `/research` |
-| `noindex` | Boolean | Keep `true` while the research section is unpublished |
+| `noindex` | Boolean, optional | Explicitly exclude an index from public discovery when required |
 | `title` | String | Unique SEO title |
 | `description` | String | Search description |
 | `h1` | String | Visible page heading |
@@ -32,8 +37,34 @@ not make it a published report. Do not add its path to the index's `related` lis
 | `related` | Array of internal paths | Relevant public pages |
 
 A section has `heading` and optional `paragraphs` and `bullets`, each an array of
-strings. Keep the index's statement that no reports have been published until a
-report passes the publication gate.
+strings. The renderer lists only engineering notes and reports that pass their
+respective publication gates. Keep unfinished reports out of its related links.
+
+## Editorial engineering note fields
+
+`ENGINEERING_NOTES` is an array of editorial article objects:
+
+| Field | Shape | Purpose |
+| --- | --- | --- |
+| `path` | String | Stable `/research/<slug>` route, also listed in `ENGINEERING_PATHS` |
+| `status` | `'draft'` or `'published'` | Editorial publication gate |
+| `publicationDate` | Full UTC ISO timestamp | Actual, nonfuture publication date |
+| `title`, `description`, `h1` | Strings | Unique metadata and visible title |
+| `category` | String | Visible editorial label, currently `Engineering note` |
+| `author` | String | Accurate visible author, currently `Oro` |
+| `answer` | Nonempty array of strings | Opening explanation |
+| `sections` | Nonempty array of section objects | Headings with paragraphs or bullets |
+| `related` | Array of internal paths | Other published notes |
+| `sources` | Array of `{ title, url }`, optional | Relevant primary-source further reading |
+
+The editorial gate requires published status, a valid nonfuture full UTC timestamp,
+complete title/description/heading/author, an opening answer, and sections with
+real text. It does not require study fields, and it does not weaken the empirical
+research gate below. Review all product statements against the actual system.
+Clearly identify illustrative examples and distinguish design criteria from
+implemented measurement or demonstrated outcomes. Keep confidential details out
+of public copy and metadata. New notes need an exact route in `ENGINEERING_PATHS`
+and the same build, rendered-page, metadata, and discovery checks as other GEO pages.
 
 ## Research article fields
 
@@ -71,7 +102,7 @@ The article renderer supplies its citation summary and CTA from the article and
 shared page UI. Do not place invented author credentials, study dates, findings,
 sample sizes, or company facts in the content to fill those surfaces.
 
-## Publication gate
+## Empirical research publication gate
 
 Before changing `status` to `'published'`:
 
@@ -95,9 +126,8 @@ Before changing `status` to `'published'`:
    selection effects, missing information, measurement limits, and other material
    limitations. Avoid presenting the sample as representative without support.
 5. Replace every template notice and drafting instruction with the reviewed report.
-   Update the index's empty-state copy only when a report is actually published.
-   A future public research launch also requires removing the index's `noindex`
-   flag and adding appropriate navigation after approval.
+   The existing index will list a report only when it passes this gate. Homepage,
+   header, and footer navigation changes are outside this publishing workflow.
 6. Run `npm run build` and inspect the rendered report, metadata, sitemap, and
    discovery output. Verify the report is included and remaining templates are
    still excluded and marked `noindex`.

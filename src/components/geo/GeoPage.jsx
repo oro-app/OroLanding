@@ -42,6 +42,35 @@ function OroCta() {
   )
 }
 
+function PublicationMeta({ page }) {
+  return <p className="geo-note-meta">
+    <span>By {page.author}</span><span aria-hidden="true">·</span>
+    <time dateTime={page.publicationDate}>{new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(page.publicationDate))}</time>
+  </p>
+}
+
+function EngineeringNotes({ pages }) {
+  if (!pages.length) return null
+  return <nav className="geo-publications" aria-label="Engineering notes">
+    <ol>{pages.map((page, index) => <li key={page.path}>
+      <span className="geo-publication-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+      <div>
+        <Text variant="label" muted>{page.category}</Text>
+        <Heading as="h2" variant="section"><a href={page.path}>{page.h1}</a></Heading>
+        <p>{page.description}</p>
+      </div>
+    </li>)}</ol>
+  </nav>
+}
+
+function Sources({ sources = [] }) {
+  if (!sources.length) return null
+  return <section className="geo-sources" aria-labelledby="geo-sources-title">
+    <Heading as="h2" variant="section" id="geo-sources-title">Further reading</Heading>
+    <ul>{sources.map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a></li>)}</ul>
+  </section>
+}
+
 function ResearchArticle({ page }) {
   const published = isPublishedResearch(page)
   return (
@@ -71,14 +100,16 @@ function ResearchArticle({ page }) {
 export default function GeoPage({ path }) {
   const page = getGeoPage(path)
   if (!page) return null
-  const research = page.kind.startsWith('research')
+  const engineering = page.kind === 'engineering-note'
+  const research = page.kind.startsWith('research') || engineering
+  const publishedNotes = GEO_PAGES.filter((item) => item.kind === 'engineering-note' && isIndexableGeoPage(item))
   const publishedReports = GEO_PAGES.filter((item) => item.kind === 'research-article' && isPublishedResearch(item))
   return (
     <article className="geo-page">
       <div className="geo-shell">
         <nav className="geo-breadcrumbs" aria-label="Breadcrumb">
           <a href="/">Oro</a><span aria-hidden="true">/</span>
-          {page.kind === 'research-article' && <><a href="/research">Research</a><span aria-hidden="true">/</span></>}
+          {(page.kind === 'research-article' || engineering) && <><a href="/research">Research & Engineering</a><span aria-hidden="true">/</span></>}
           <span aria-current="page">{page.h1}</span>
         </nav>
         <header className="geo-heading">
@@ -86,13 +117,16 @@ export default function GeoPage({ path }) {
           <Heading as="h1" variant="display">{page.h1}</Heading>
         </header>
         <div className="geo-body">
+          {engineering && isIndexableGeoPage(page) && <PublicationMeta page={page} />}
           {page.kind === 'research-article' ? <ResearchArticle page={page} /> : <>
             <div className="geo-answer">{page.answer.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
             {page.sections.map((section) => <ContentSection key={section.heading} {...section} />)}
             {page.groups?.map((group) => <RelatedPages key={group.heading} heading={group.heading} paths={group.paths} descriptions />)}
             {page.personalization && <ContentSection heading="Where a general guide stops" paragraphs={[page.personalization]} />}
           </>}
+          {page.kind === 'research-index' && <EngineeringNotes pages={publishedNotes} />}
           {page.kind === 'research-index' && publishedReports.length > 0 && <RelatedPages heading="Published reports" paths={publishedReports.map((item) => item.path)} />}
+          {engineering && <Sources sources={page.sources} />}
           <OroCta />
           <RelatedPages paths={page.related || []} heading={research ? 'Related reading' : 'Related guides'} />
           {research && <a className="geo-research-link" href="/ai-personal-stylist">What is an AI personal stylist?</a>}

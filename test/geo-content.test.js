@@ -2,11 +2,16 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { GEO_GUIDES } from '../src/content/geo/guides.js'
 import { RESEARCH_INDEX, RESEARCH_ARTICLES } from '../src/content/geo/research.js'
-import { GEO_PAGES, getGeoPage, isIndexableGeoPage, isPublishedResearch } from '../src/lib/geoContent.js'
+import { GEO_PAGES, getGeoPage, isIndexableGeoPage, isPublishedResearch, isPublishedEngineeringNote } from '../src/lib/geoContent.js'
 import { GEO_GUIDE_PATHS, GEO_PATHS } from '../src/lib/geoRoutes.js'
 import { ROUTE_SEO, SITE_URL, getSeoForRoute } from '../src/lib/seo.js'
 
 const reviewTime = Date.parse('2026-10-03T12:00:00.000Z')
+const engineeringPaths = [
+  '/research/context-before-composition',
+  '/research/evaluating-personal-style',
+  '/research/learning-from-specific-feedback',
+]
 
 function completedReport(overrides = {}) {
   return {
@@ -100,10 +105,10 @@ test('a valid analysis list cannot mask a malformed opposite list or null sectio
   assert.equal(isPublishedResearch(completedReport({ analysis: [null] }), reviewTime), false)
 })
 
-test('the initial research index and template stay unindexed without presenting an unpublished study as evidence', () => {
-  assert.ok(RESEARCH_INDEX.answer.includes('No research reports have been published here yet.'))
-  assert.equal(RESEARCH_INDEX.noindex, true)
-  assert.equal(isIndexableGeoPage(getGeoPage('/research')), false)
+test('Research & Engineering publishes editorial notes while the empirical report template remains unpublished', () => {
+  assert.equal(RESEARCH_INDEX.h1, 'Research & Engineering')
+  assert.ok(RESEARCH_INDEX.answer.includes('Notes on the problems behind personal styling: context, outfit quality, and learning from feedback.'))
+  assert.equal(isIndexableGeoPage(getGeoPage('/research')), true)
   assert.equal(RESEARCH_ARTICLES.length, 1)
   const template = RESEARCH_ARTICLES[0]
   assert.equal(template.status, 'template')
@@ -120,12 +125,42 @@ test('the initial research index and template stay unindexed without presenting 
   }
 })
 
-test('both research pages get noindex and no Article schema while individual guides get Article schema', () => {
-  for (const page of [RESEARCH_INDEX, ...RESEARCH_ARTICLES]) {
+test('editorial notes have dated Oro Article metadata while the index is a WebPage and the empirical template stays noindex', () => {
+  const indexSeo = getSeoForRoute({ type: 'geo', path: RESEARCH_INDEX.path })
+  assert.equal(indexSeo.noindex, false)
+  assert.equal(indexSeo.ogType, 'website')
+  assert.ok(!indexSeo.jsonLd.some((entity) => entity['@type'] === 'Article'))
+  for (const page of RESEARCH_ARTICLES) {
     const seo = getSeoForRoute({ type: 'geo', path: page.path })
     assert.equal(seo.noindex, true)
     assert.equal(seo.ogType, 'website')
     assert.ok(!seo.jsonLd.some((entity) => entity['@type'] === 'Article'))
+  }
+  for (const path of engineeringPaths) {
+    const note = getGeoPage(path)
+    assert.equal(note.kind, 'engineering-note')
+    assert.equal(note.author, 'Oro')
+    assert.equal(isIndexableGeoPage(note), true)
+    assert.equal(isPublishedResearch(note), false)
+    assert.equal(new Date(note.publicationDate).toISOString(), note.publicationDate)
+    assert.ok(Date.parse(note.publicationDate) <= Date.now())
+    assert.ok(!Object.hasOwn(note, 'sampleSize'))
+    assert.ok(!Object.hasOwn(note, 'keyFindings'))
+    const seo = getSeoForRoute({ type: 'geo', path })
+    assert.equal(seo.noindex, false)
+    assert.equal(seo.ogType, 'article')
+    const article = seo.jsonLd.find((entity) => entity['@type'] === 'Article')
+    assert.ok(article)
+    assert.equal(article.headline, note.h1)
+    assert.equal(article.mainEntityOfPage, `${SITE_URL}${path}`)
+    assert.equal(article.datePublished, note.publicationDate)
+    const author = article.author['@id']
+      ? seo.jsonLd.find((entity) => entity['@id'] === article.author['@id'])
+      : article.author
+    assert.equal(author.name.toLowerCase(), 'oro')
+    for (const property of ['sampleSize', 'keyFindings', 'aggregateRating', 'review']) {
+      assert.ok(!Object.hasOwn(article, property), `${path}: ${property}`)
+    }
   }
   for (const guide of GEO_GUIDES) {
     const seo = getSeoForRoute({ type: 'geo', path: guide.path })
@@ -138,8 +173,49 @@ test('both research pages get noindex and no Article schema while individual gui
   }
 })
 
+test('editorial drafts, future dates, invalid dates, and explicit noindex cannot become published discoveries', () => {
+  const note = {
+    ...getGeoPage(engineeringPaths[0]),
+    path: '/research/test-editorial-note',
+    publicationDate: '2026-10-02T12:00:00.000Z',
+  }
+  assert.equal(isPublishedEngineeringNote(note, reviewTime), true)
+  assert.equal(isPublishedResearch(note, reviewTime), false)
+  assert.equal(isIndexableGeoPage({ ...note, noindex: true }), false)
+  for (const overrides of [
+    { status: 'draft' },
+    { publicationDate: '9999-10-04T00:00:00.000Z' },
+    { publicationDate: '2026-02-31T12:00:00.000Z' },
+    { author: '' },
+    { answer: [] },
+    { sections: [] },
+  ]) {
+    const record = { ...note, ...overrides }
+    assert.equal(isPublishedEngineeringNote(record, reviewTime), false, JSON.stringify(overrides))
+    GEO_PAGES.push(record)
+    try {
+      assert.equal(isIndexableGeoPage(record), false)
+      const seo = getSeoForRoute({ type: 'geo', path: record.path })
+      assert.equal(seo.noindex, true)
+      assert.ok(!seo.jsonLd.some((entity) => entity['@type'] === 'Article'))
+    } finally {
+      GEO_PAGES.pop()
+    }
+  }
+})
+
+test('engineering copy does not expose internal providers, API keys, or prompt strings', () => {
+  const restricted = /\b(?:Claude|Gemini|Haiku|TypeSafe|Supabase|Resend)\b|\bAPI[ _-]?key\b|\bsystem[ _-]prompt\b|\bdeveloper[ _-]prompt\b|\bprompt\s*[=:]/i
+  for (const path of engineeringPaths) {
+    const note = getGeoPage(path)
+    const copy = [note.title, note.description, note.h1, ...note.answer,
+      ...note.sections.flatMap((section) => [section.heading, ...(section.paragraphs || []), ...(section.bullets || [])])].join(' ')
+    assert.doesNotMatch(copy, restricted, path)
+  }
+})
+
 test('the style guides hub is a public WebPage covering all ten guide routes', () => {
-  assert.equal(GEO_PAGES.length, 13)
+  assert.equal(GEO_PAGES.length, 16)
   assert.equal(GEO_GUIDES.length, 10)
   const hub = getGeoPage('/guides')
   assert.ok(hub)
@@ -151,7 +227,7 @@ test('the style guides hub is a public WebPage covering all ten guide routes', (
   assert.equal(seo.ogType, 'website')
   assert.ok(seo.jsonLd.some((entity) => entity['@type'] === 'WebPage'))
   assert.ok(!seo.jsonLd.some((entity) => entity['@type'] === 'Article'))
-  assert.equal(GEO_PAGES.filter(isIndexableGeoPage).length, 11)
+  assert.equal(GEO_PAGES.filter(isIndexableGeoPage).length, 15)
 })
 
 test('an explicit noindex flag prevents a completed research report from becoming discoverable', () => {

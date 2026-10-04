@@ -25,6 +25,17 @@
 .geo-guide-group li { margin-block: var(--oro-space-5); }
 .geo-guide-group li p { margin-block: 0; font-size: var(--oro-type-support-size); color: var(--oro-color-muted); }
 .geo-research-link { display: inline-block; margin-top: var(--oro-space-8); font-size: var(--oro-type-support-size); }
+.geo-note-meta { display: flex; flex-wrap: wrap; gap: var(--oro-space-3); color: var(--oro-color-muted); font-size: var(--oro-type-support-size); }
+.geo-publications { margin-block: var(--oro-space-10); }
+.geo-publications ol { list-style: none; margin: 0; padding: 0; }
+.geo-publications li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: var(--oro-space-4); margin: 0; padding-block: var(--oro-space-8); border-top: var(--oro-border-width) solid var(--oro-color-border); }
+.geo-publication-number { padding-top: var(--oro-space-1); color: var(--oro-color-muted); font-size: var(--oro-type-support-size); }
+.geo-publications .oro-heading { margin-top: var(--oro-space-3); font-size: clamp(1.6rem, 3vw, 2.125rem); }
+.geo-publications .oro-heading a { color: var(--oro-color-ink); text-decoration: none; }
+.geo-publications .oro-heading a:hover { text-decoration: underline; }
+.geo-publications li p { margin-bottom: 0; font-size: 1rem; line-height: 1.7; color: var(--oro-color-muted); }
+.geo-sources { margin-top: var(--oro-space-12); padding-top: var(--oro-space-6); border-top: var(--oro-border-width) solid var(--oro-color-border); font-size: var(--oro-type-support-size); }
+.geo-sources .oro-heading { font-size: 1.5rem; }
 .geo-template-notice { padding: var(--oro-space-6); border: 2px solid var(--oro-color-accent); border-radius: var(--oro-radius-card); background: var(--oro-color-soft); }
 .geo-subtitle { font-size: 1.25rem; color: var(--oro-color-muted); }
 .geo-study-meta { display: grid; grid-template-columns: auto 1fr; gap: var(--oro-space-2) var(--oro-space-6); }

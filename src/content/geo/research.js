@@ -1,40 +1,16 @@
 export const RESEARCH_INDEX = {
   path: '/research',
-  noindex: true,
-  title: 'Oro Research | Outfit Decisions and Wardrobe Use',
+  title: 'Research & Engineering | Oro',
   description:
-    'A home for future Oro research reports about outfit decisions and wardrobe use, with methods, definitions, findings, and limitations.',
-  h1: 'Oro Research',
-  category: 'Oro Research',
+    'Engineering notes on context, outfit quality, and learning from specific feedback. Explore Oro’s approach to personal styling and fashion technology.',
+  h1: 'Research & Engineering',
+  category: 'Oro',
   answer: [
-    'No research reports have been published here yet.',
-    'This space is intended for reports that examine how people choose outfits and use their wardrobes. Each published report will explain what was studied, how it was measured, and what the evidence can support.',
+    'Notes on the problems behind personal styling: context, outfit quality, and learning from feedback.',
+    'Personal styling asks a system to reconcile the clothes available, the demands of a moment, and a person’s preferences. These engineering notes explore the distinctions that shape Oro’s recommendation approach.',
   ],
-  sections: [
-    {
-      heading: 'Questions for future reports',
-      paragraphs: [
-        'Possible topics include the factors people consider when getting dressed, how they describe clothing they wear often, and how they approach repeating an outfit. These are potential research questions, not completed studies or announced projects.',
-      ],
-    },
-    {
-      heading: 'What a published report will include',
-      bullets: [
-        'A publication date, study question, and concise summary.',
-        'The sample size, selection criteria, measurement period, and methodology.',
-        'Definitions for the terms used in the analysis.',
-        'Findings supported by the stated evidence, with charts where useful.',
-        'Limitations that explain who and what the results apply to.',
-      ],
-    },
-    {
-      heading: 'Reading the evidence',
-      paragraphs: [
-        'A result about one sample does not automatically describe everyone. Future reports should distinguish observations from interpretations and make the scope of each conclusion clear.',
-      ],
-    },
-  ],
-  related: ['/guides/i-have-clothes-but-nothing-to-wear', '/guides/style-clothes-you-already-own'],
+  sections: [],
+  related: [],
 };
 
 export const RESEARCH_ARTICLES = [

@@ -4,6 +4,11 @@ import { test, expect } from './fixtures.js'
 
 const CANONICAL_ORIGIN = 'https://www.askoro.now'
 const pagePath = (path) => /localhost|127\.0\.0\.1/.test(process.env.E2E_BASE_URL ?? '') ? `${path}/` : path
+const ENGINEERING_PATHS = [
+  '/research/context-before-composition',
+  '/research/evaluating-personal-style',
+  '/research/learning-from-specific-feedback',
+]
 const ROUTES = [
   { path: '/ai-personal-stylist', h1: 'What is an AI personal stylist?', title: 'What Is an AI Personal Stylist? | Oro', answer: 'An AI personal stylist helps you work through clothing choices in a conversation.' },
   { path: '/ai-stylist-you-can-text', h1: 'How do you ask an AI stylist for outfit help over text?', title: 'An AI Stylist You Can Text: How to Ask for Outfit Help | Oro', answer: 'Start with where you are going, what clothes you can use, and how you want to feel.' },
@@ -16,7 +21,10 @@ const ROUTES = [
   { path: '/guides/style-clothes-you-already-own', h1: 'How do you style clothes you already own?', title: 'How to Style Clothes You Already Own | Oro', answer: 'Start with one piece you want to wear, choose an occasion, and build a complete outfit around it using the clothes you have.' },
   { path: '/guides/i-have-clothes-but-nothing-to-wear', h1: 'Why do I have clothes but feel like I have nothing to wear?', title: 'Why You Have Clothes but Feel Like Nothing to Wear | Oro', answer: 'A full closet can still be hard to dress from when the clothes do not combine easily, do not feel comfortable, or do not suit your current routine.' },
   { path: '/guides', h1: 'Style guides', title: 'Style Guides for Everyday Outfits | Oro', answer: 'Practical answers for getting dressed, understanding dress codes, and making more of the clothes you already own.' },
-  { path: '/research', h1: 'Oro Research', title: 'Oro Research | Outfit Decisions and Wardrobe Use', answer: 'No research reports have been published here yet.' },
+  { path: '/research', h1: 'Research & Engineering', title: 'Research & Engineering | Oro', answer: 'Notes on the problems behind personal styling: context, outfit quality, and learning from feedback.' },
+  { path: '/research/context-before-composition', h1: 'Context before composition', title: 'Context Before Composition | Oro Engineering Notes', answer: 'An outfit recommendation is a decision about a particular person getting dressed for a particular situation.' },
+  { path: '/research/evaluating-personal-style', h1: 'Evaluating personal style', title: 'Evaluating Personal Style | Oro Engineering Notes', answer: 'Personal styling allows several reasonable answers to the same request.' },
+  { path: '/research/learning-from-specific-feedback', h1: 'Learning from specific feedback', title: 'Learning from Specific Feedback | Oro Engineering Notes', answer: '“I don’t like it” contains an objection, but not necessarily its cause.' },
   { path: '/research/how-people-choose-outfits', h1: 'How people choose outfits', title: 'How People Choose Outfits | Unpublished Oro Research Template', answer: 'This is an unpublished template for a possible report about outfit decisions.' },
 ]
 const REPRESENTATIVE_PATHS = new Set([
@@ -26,6 +34,7 @@ const REPRESENTATIVE_PATHS = new Set([
   '/dress-codes/business-casual',
   '/guides',
   '/research',
+  ...ENGINEERING_PATHS,
   '/research/how-people-choose-outfits',
 ])
 
@@ -91,7 +100,7 @@ async function checkRoute(page, request, route, viewport) {
   }
   for (const link of await related.all()) {
     const href = await link.getAttribute('href')
-    expect(href).toMatch(/^\/(?:ai-|what-to-wear\/|dress-codes\/|guides(?:\/|$)|how-it-works$|from-the-closet$)/)
+    expect(href).toMatch(/^\/(?:ai-|what-to-wear\/|dress-codes\/|guides(?:\/|$)|how-it-works$|from-the-closet$|research(?:\/|$))/)
     expect(href).not.toBe(route.path)
     const linkedResponse = await request.get(pagePath(href))
     expect(linkedResponse.status()).toBe(200)
@@ -100,15 +109,38 @@ async function checkRoute(page, request, route, viewport) {
   await expect(page.locator('header a[href="/guides"]')).toHaveCount(0)
   await expect(page.locator('footer a[href="/guides"]')).toHaveCount(0)
   await expect(page.locator('footer').getByRole('link', { name: /^style guides$/i })).toHaveCount(0)
+  await expect(page.locator('header a[href="/research"], header a[href^="/research/"], footer a[href="/research"], footer a[href^="/research/"]')).toHaveCount(0)
   if (!route.path.startsWith('/research')) {
     await expect(page.locator('a[href="/research"], a[href^="/research/"]')).toHaveCount(0)
-  } else {
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
+  }
+  if (route.path === '/research') {
+    const noteLinks = article.locator('a[href^="/research/"]')
+    await expect(noteLinks).toHaveCount(3)
+    expect((await noteLinks.evaluateAll((links) => links.map((link) => link.getAttribute('href')))).sort()).toEqual([...ENGINEERING_PATHS].sort())
+  }
+  if (ENGINEERING_PATHS.includes(route.path)) {
+    const graph = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent())
+    const note = graph.find((entity) => entity['@type'] === 'Article')
+    expect(note).toBeTruthy()
+    expect(note.headline).toBe(route.h1)
+    expect(new Date(note.datePublished).toISOString()).toBe(note.datePublished)
+    expect(Date.parse(note.datePublished)).toBeLessThanOrEqual(Date.now())
+    const author = note.author['@id'] ? graph.find((entity) => entity['@id'] === note.author['@id']) : note.author
+    expect(author.name.toLowerCase()).toBe('oro')
+    await expect(article.locator('.geo-note-meta')).toContainText('By Oro')
+    await expect(article.locator('time')).toHaveCount(1)
+    await expect(article.locator('time')).toHaveAttribute('datetime', note.datePublished)
+    await expect(article.getByRole('heading', { name: 'Key findings', exact: true })).toHaveCount(0)
+    await expect(article.getByText('Sample size', { exact: true })).toHaveCount(0)
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article')
   }
   if (route.path === '/research/how-people-choose-outfits') {
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
     await expect(article).toContainText('Unpublished research template.')
     await expect(article).toContainText('No findings have been published.')
     await expect(article.locator('time, .geo-study-meta')).toHaveCount(0)
+  } else {
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index,follow')
   }
   if (process.env.GEO_SCREENSHOT_DIR && REPRESENTATIVE_PATHS.has(route.path)) {
     await mkdir(process.env.GEO_SCREENSHOT_DIR, { recursive: true })
@@ -154,7 +186,7 @@ test('all GEO responses contain distinct metadata and useful content before the 
 
 test.describe('GEO articles with JavaScript disabled', () => {
   test.use({ javaScriptEnabled: false })
-  for (const path of ['/what-to-wear/job-interview', '/research/how-people-choose-outfits']) {
+  for (const path of ['/what-to-wear/job-interview', '/research/context-before-composition', '/research/how-people-choose-outfits']) {
     test(`${path} is styled and readable before client code runs`, async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 1000 })
       const route = ROUTES.find((item) => item.path === path)
@@ -225,12 +257,14 @@ for (const width of [1440, 390]) {
   })
 }
 
-test('unpublished research is excluded from public discovery files', async ({ request }) => {
+test('published engineering notes appear in discovery files while the empirical template stays excluded', async ({ request }) => {
   for (const path of ['/sitemap.xml', '/llms.txt']) {
     const response = await request.get(path)
     expect(response.status()).toBe(200)
     const text = await response.text()
     expect(text).toContain(`${CANONICAL_ORIGIN}/guides`)
-    expect(text).not.toContain(`${CANONICAL_ORIGIN}/research`)
+    expect(text).toContain(`${CANONICAL_ORIGIN}/research`)
+    for (const path of ENGINEERING_PATHS) expect(text).toContain(`${CANONICAL_ORIGIN}${path}`)
+    expect(text).not.toContain(`${CANONICAL_ORIGIN}/research/how-people-choose-outfits`)
   }
 })

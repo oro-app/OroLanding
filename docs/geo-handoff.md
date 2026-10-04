@@ -38,14 +38,20 @@ the directory and individual pages remain available at their URLs, without a foo
 The article shell uses existing Oro typography, colors and controls; its new CSS
 is scoped to GEO classes and loaded only for those pages.
 
-A research index and one visibly unpublished research template were included
-in the original handoff request. Oro has no published research. Following the
-user's clarification, both pages are noindexed and excluded from public discovery;
-there are no Research links on the guides, directory or homepage.
-The template contains no participant data, numerical findings, publication date,
-sample size, charts, or privacy assurances. Both research paths receive
-`noindex,follow` and are excluded from sitemap and `llms.txt`. They remain accessible
-at their direct paths as unfinished infrastructure, without a public navigation link.
+A Research & Engineering index now presents three published editorial notes:
+context before composition, evaluating personal style, and learning from specific
+feedback. They explain fashion distinctions and recommendation design reasoning
+without publishing Oro's stack, providers, architecture, prompts, schemas, private
+metrics, or model-training details. They include actual author/date metadata,
+clearly illustrative examples, and relevant primary-source further reading.
+There is no beliefs manifesto or claim of measured superiority.
+
+The original empirical research template remains visibly unpublished and
+`noindex,follow`, excluded from the index, sitemap, and `llms.txt`. It contains no
+participant data, numerical findings, publication date, sample size, charts, or
+privacy assurances. There are no Research links on the guides, directory,
+homepage, header, or footer; the section is accessible at `/research` and through
+generated discovery files.
 
 ## Every new route
 
@@ -62,7 +68,10 @@ at their direct paths as unfinished infrastructure, without a public navigation 
 | `/dress-codes/smart-casual` | Indexable guide |
 | `/guides/style-clothes-you-already-own` | Indexable guide |
 | `/guides/i-have-clothes-but-nothing-to-wear` | Indexable guide |
-| `/research` | Unpublished, noindexed research index; no public links |
+| `/research` | Indexable Research & Engineering index; no homepage/header/footer links |
+| `/research/context-before-composition` | Published, indexable engineering note |
+| `/research/evaluating-personal-style` | Published, indexable engineering note |
+| `/research/learning-from-specific-feedback` | Published, indexable engineering note |
 | `/research/how-people-choose-outfits` | Unpublished, noindexed template |
 
 No separate category indexes or About page were added. The Style guides directory
@@ -84,6 +93,7 @@ graph changes invisibly through `seo.js`.
 
 New implementation files: `src/lib/geoRoutes.js`, `src/lib/geoContent.js`,
 `src/content/geo/guides.js`, `src/content/geo/guideIndex.js`, `src/content/geo/research.js`,
+`src/content/geo/engineering.js`,
 `src/content/geo/README.md`, `src/components/geo/GeoPage.jsx` and `GeoPage.css`.
 New checks: `test/geo-content.test.js`, `test/geo-prerender.test.js`, `e2e/geo.spec.js`.
 
@@ -99,9 +109,11 @@ X `askoro_now` links. Existing legal company name, logo and identity URLs are pr
 The homepage and two entity guides include a text-stylist `SoftwareApplication`
 with name, stable ID, description, category, URL and publisher. It adds no pricing,
 operating system, ratings, reviews, awards or statistics. Each guide includes
-`Article`, `WebPage` and `BreadcrumbList` markup. The research index and unpublished
-template have page/breadcrumb markup, without a fabricated research Article.
-Real published research can receive Article markup and its actual publication date.
+`Article`, `WebPage` and `BreadcrumbList` markup. Published engineering notes have
+Article markup with Oro as author/publisher and their actual publication date.
+The research index and unpublished template have page/breadcrumb markup, without
+a fabricated research Article. Real published research can receive Article markup
+and its actual publication date.
 No FAQ markup was added.
 
 Existing product pages still describe an app, outfit planner, virtual try-on and
@@ -114,11 +126,11 @@ were removed from that invisible summary.
 
 ## Crawlability and canonical strategy
 
-Eleven indexable new routes are added to the generated sitemap: the directory
-and ten guides. Both research pages are deliberately omitted. `llms.txt` includes
-the canonical entity statement, directory and guides, and will include research
-reports only after publication. The research index has an explicit `noindex` flag
-that must be removed before a future public launch with real reports.
+Fifteen indexable GEO routes are added to the generated sitemap: the guide
+directory, ten guides, the Research & Engineering index, and three engineering
+notes. The empirical research template is deliberately omitted. `llms.txt` includes
+the canonical entity statement, both directories, guides, and engineering notes;
+it will include empirical reports only after they pass the research publication gate.
 New content is present in static HTML without JavaScript. New pages have unique
 titles, descriptions, canonical paths and OpenGraph titles/descriptions.
 Undated guides do not receive a fabricated sitemap modification date.
@@ -165,14 +177,21 @@ check sitemap reachability on the chosen host, run the deployment-only tests and
 use Search Console URL Inspection/Rich Results Test. This local verification does
 not establish production indexing, crawler-firewall access or Vercel route responses.
 
-## Research publishing and information needed
+## Research & Engineering publishing and information needed
+
+Editorial engineering notes use a separate publication gate: published status,
+valid nonfuture full UTC timestamp, accurate author, complete metadata, an opening
+answer, and sections with real text. That gate does not require study fields and
+does not relax the empirical gate. Review product claims and confidentiality before
+publication. Keep examples illustrative and avoid presenting design reasoning as
+measured results. See `src/content/geo/README.md` for the editorial field shapes.
 
 The data model supports title, subtitle, publication timestamp, study question,
 inclusion criteria, sample size and unit, methodology, definitions, key findings,
 limitations, analysis, charts, related research, citation summary and the shared CTA.
 See `src/content/geo/README.md` for the authoring workflow and field shapes.
 
-Indexing requires `status: 'published'`, a valid nonfuture full UTC ISO timestamp,
+Empirical report indexing requires `status: 'published'`, a valid nonfuture full UTC ISO timestamp,
 positive sample size, explicit sample unit, study and inclusion descriptions,
 complete metadata/summary/methodology, nonempty findings/limitations, and real
 analysis sections. Invalid or incomplete reports stay noindexed and undiscoverable.
@@ -218,19 +237,26 @@ events. Conversational wording needs validated coding and appropriate permission
 
 ## Verification results
 
-`npm run build` passes: 43 React routes prerendered and six static legal pages
+`npm run build` passes: 46 React routes prerendered and six static legal pages
 enriched. No lint or typecheck scripts exist in this plain-JSX repository.
 `npm run test:feedback` passes all 41 tests; `npm run test:beta` passes all 75.
-`node --test test/geo-content.test.js test/geo-prerender.test.js` passes all 20
-content, publication-gate and emitted-artifact checks.
+The updated content, publication-gate, emitted-artifact, and browser checks cover
+the Research & Engineering index and all three new notes, in addition to the guides
+and unpublished empirical template. All 22 Node GEO tests and all 35 browser cases
+pass, including the new notes on desktop/mobile and without JavaScript. The focused
+index/article visual review also passes at 1440×1000 and 390×844, with no overflow,
+console errors, or failed HTTP requests. The rebuilt homepage body remains
+byte-identical to the saved original baseline. Logs and screenshots are saved as
+`research-engineering-*` in the evidence directory.
 
-The new GEO browser suite passes all 28 tests and checks all thirteen routes on desktop and seven representative
+The original GEO browser suite passed all 28 tests and checked all thirteen routes on desktop and seven representative
 routes on mobile, raw answer-first HTML, unique metadata and canonicals, related
 links, no-JavaScript reading/styles, console/page errors, assets, overflow and
 beta welcome/phone/back navigation with no submission. The footer follow-up checks
 desktop/mobile footer link absence and direct directory access, confirms no header
-link, and checks both research paths remain outside
-public links, the sitemap and `llms.txt`.
+link, and checked both then-unpublished research paths outside public links,
+the sitemap and `llms.txt`. The new engineering notes deliberately publish the
+index and three essays while preserving the template exclusion and absent homepage navigation.
 
 Before the approved footer addition, the unchanged homepage was compared at 1440×1000 and 390×844 with deterministic
 count responses, declined analytics consent and settled fonts/images. Ten captures

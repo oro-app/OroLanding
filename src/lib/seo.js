@@ -334,7 +334,7 @@ export function getSeoForRoute(route, newsletter) {
     const content = getGeoPage(route.path)
     if (!content) throw new Error(`Missing GEO content for ${route.path}`)
     const noindex = !isIndexableGeoPage(content)
-    const article = content.kind === 'guide' || (content.kind === 'research-article' && !noindex)
+    const article = content.kind === 'guide' || (['research-article', 'engineering-note'].includes(content.kind) && !noindex)
     const page = {
       path: content.path,
       title: content.title,
@@ -346,7 +346,7 @@ export function getSeoForRoute(route, newsletter) {
       date: content.publicationDate || content.dateModified,
       breadcrumbs: [
         { name: 'Oro', path: '/' },
-        ...(content.kind === 'research-article' ? [{ name: 'Research', path: '/research' }] : []),
+        ...(['research-article', 'engineering-note'].includes(content.kind) ? [{ name: 'Research & Engineering', path: '/research' }] : []),
         { name: content.h1, path: content.path },
       ],
     }

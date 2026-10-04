@@ -12,5 +12,10 @@ export const GEO_GUIDE_PATHS = [
 ]
 
 export const RESEARCH_PATHS = ['/research/how-people-choose-outfits']
-export const GEO_PATHS = ['/guides', ...GEO_GUIDE_PATHS, '/research', ...RESEARCH_PATHS]
+export const ENGINEERING_PATHS = [
+  '/research/context-before-composition',
+  '/research/evaluating-personal-style',
+  '/research/learning-from-specific-feedback',
+]
+export const GEO_PATHS = ['/guides', ...GEO_GUIDE_PATHS, '/research', ...ENGINEERING_PATHS, ...RESEARCH_PATHS]
 export const ORO_DESCRIPTION = 'Oro is the AI personal stylist you can text. It learns your style and wardrobe and helps you decide what to wear.'

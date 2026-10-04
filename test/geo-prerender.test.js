@@ -21,7 +21,7 @@ function decodeEntities(value) {
 }
 
 function attribute(tag, name) {
-  return decodeEntities(tag.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1] || '')
+  return decodeEntities(tag.match(new RegExp(`\\b${name}="([^"]*)"`, 'i'))?.[1] || '')
 }
 
 function elements(html, tagName) {
@@ -52,10 +52,14 @@ test('every GEO page includes crawlable headings, direct answers, sections, and 
     assert.equal(decodeEntities(headings[0][1].replace(/<[^>]+>/g, '')), page.h1, page.path)
     const expected = page.kind === 'research-article'
       ? [page.summary, page.methodology, ...page.limitations, ...page.definitions.map(({ term, definition }) => `${term}${definition}`)]
-      : [...page.answer, ...page.sections.map(({ heading }) => heading)]
+      : [...page.answer, ...page.sections.flatMap(({ heading, paragraphs = [], bullets = [] }) => [heading, ...paragraphs, ...bullets])]
     for (const text of expected) assert.ok(visible.includes(text), `${page.path} must prerender ${text}`)
     assert.match(body, /href="\/beta"[^>]*>[\s\S]*?Meet Oro/)
     for (const related of page.related || []) assert.ok(body.includes(`href="${related}"`), `${page.path} must link ${related}`)
+    for (const source of page.sources || []) {
+      assert.ok(body.includes(`href="${source.url}"`), `${page.path} must link ${source.url}`)
+      assert.ok(visible.includes(source.title), `${page.path} must identify ${source.title}`)
+    }
   }
 })
 
@@ -115,6 +119,18 @@ test('prerendered JSON-LD matches visible page content and does not invent softw
     assert.deepEqual(graph, seo.jsonLd)
     const breadcrumbs = graph.find((entity) => entity['@type'] === 'BreadcrumbList').itemListElement
     assert.equal(breadcrumbs.at(-1).item, `${SITE_URL}${page.path}`)
+    if (page.kind === 'engineering-note') {
+      const article = graph.find((entity) => entity['@type'] === 'Article')
+      assert.ok(article, page.path)
+      assert.equal(article.datePublished, page.publicationDate)
+      const author = article.author['@id']
+        ? graph.find((entity) => entity['@id'] === article.author['@id'])
+        : article.author
+      assert.equal(author.name.toLowerCase(), 'oro')
+      const byline = html.match(/<p\b[^>]*class="geo-note-meta"[^>]*>([\s\S]*?)<\/p>/)?.[1] || ''
+      assert.ok(decodeEntities(byline.replace(/<[^>]+>/g, '')).includes('By Oro'), `${page.path} must show its Oro byline`)
+      assert.ok(elements(html, 'time').some((tag) => attribute(tag, 'datetime') === page.publicationDate), `${page.path} must show its publication date`)
+    }
     for (const application of graph.filter((entity) => entity['@type'] === 'SoftwareApplication')) {
       for (const property of ['offers', 'review', 'reviews', 'aggregateRating', 'rating', 'operatingSystem']) {
         assert.ok(!Object.hasOwn(application, property), `${page.path}: ${property}`)
@@ -123,7 +139,7 @@ test('prerendered JSON-LD matches visible page content and does not invent softw
   }
 })
 
-test('the guides and hub are discoverable while both research pages are excluded and noindexed', () => {
+test('published notes, research index, guides, and hub are discoverable while the empirical template is excluded and noindexed', () => {
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => decodeEntities(url))
   assert.equal(new Set(locations).size, locations.length, 'Sitemap must not repeat URLs')
   for (const { page, html } of pages) {
@@ -146,14 +162,21 @@ test('the guides and hub are discoverable while both research pages are excluded
     }
   }
   const index = pages.find(({ page }) => page.kind === 'research-index').html
-  assert.ok(decodeEntities(index).includes('No research reports have been published here yet.'))
+  assert.ok(decodeEntities(index).includes('Notes on the problems behind personal styling: context, outfit quality, and learning from feedback.'))
+  const notes = pages.filter(({ page }) => page.kind === 'engineering-note')
+  assert.equal(notes.length, 3)
+  for (const { page } of notes) {
+    const position = index.indexOf(`href="${page.path}"`)
+    assert.ok(position > -1, `${page.path} must be linked from the research index`)
+    assert.ok(position < index.indexOf('class="geo-cta"'), `${page.path} must appear before the beta CTA`)
+  }
   for (const { page } of pages.filter(({ page }) => page.kind === 'research-article')) {
     assert.ok(!index.includes(`href="${page.path}"`), `${page.path} must not be linked from the research index`)
   }
 })
 
 test('the public guides hub statically links all ten guides with WebPage metadata', () => {
-  assert.equal(pages.length, 13)
+  assert.equal(pages.length, 16)
   const hub = pages.find(({ page }) => page.path === '/guides')
   assert.ok(hub)
   const hrefs = elements(hub.html.slice(hub.html.indexOf('<body')), 'a').map((tag) => attribute(tag, 'href'))
@@ -165,15 +188,16 @@ test('the public guides hub statically links all ten guides with WebPage metadat
   assert.ok(!graph.some((entity) => entity['@type'] === 'Article'))
 })
 
-test('headers and footers omit Style guides navigation while public pages keep Research links hidden', () => {
+test('headers and footers omit guide and Research navigation while the homepage and styling guides keep Research links hidden', () => {
   for (const { page, html } of [...pages, { page: { path: '/' }, html: homeHtml }]) {
     const body = html.slice(html.indexOf('<body'))
     for (const [, tag, content] of body.matchAll(/<(header|footer)\b[^>]*>([\s\S]*?)<\/\1>/g)) {
       const links = elements(content, 'a').map((element) => attribute(element, 'href'))
       assert.ok(!links.some((href) => /^\/guides\/?$/.test(href)), `${page.path} ${tag} must not link the guides hub`)
+      assert.ok(!links.some((href) => /^\/research(?:\/|$)/.test(href)), `${page.path} ${tag} must not link Research`)
       if (tag === 'footer') assert.doesNotMatch(decodeEntities(content), /style guides/i, `${page.path} footer must not show a Style guides label`)
     }
-    if (page.path === '/' || isIndexableGeoPage(page)) {
+    if (page.path === '/' || ['guide', 'guide-index'].includes(page.kind)) {
       const links = elements(body, 'a').map((tag) => attribute(tag, 'href'))
       assert.ok(!links.some((href) => href === '/research' || href.startsWith('/research/')), `${page.path} must not publicly link Research`)
     }
