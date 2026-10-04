@@ -49,6 +49,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
   const submitting = useRef(false)
   const verifying = useRef(false)
   const codeSent = useRef(false)
+  const availabilityRequest = useRef(null)
   const currentPhone = useRef(answers.phone)
   const currentCode = useRef(code)
   const currentStep = useRef(0)
@@ -73,6 +74,14 @@ export default function Beta({ campaign = 'general', landing = false }) {
     ? Object.fromEntries(Object.entries(validateAnswers(answers)).filter(([name]) => stepInfo.fields.includes(name)))
     : {}
 
+  function loadAvailability() {
+    if (!availabilityRequest.current) availabilityRequest.current = fetch('/api/beta-request', { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((result) => result?.enabled === true)
+      .catch(() => false)
+    return availabilityRequest.current
+  }
+
   useEffect(() => {
     if (answers !== emptyAnswers) writeBetaDraft(answers, submissionKey.current, campaignSource)
   }, [answers, campaignSource])
@@ -92,12 +101,9 @@ export default function Beta({ campaign = 'general', landing = false }) {
   }, [resendLeft])
 
   useEffect(() => {
-    const controller = new AbortController()
-    fetch('/api/beta-request', { signal: controller.signal, cache: 'no-store' })
-      .then((response) => response.ok ? response.json() : null)
-      .then((result) => { if (!controller.signal.aborted) setEnabled(result?.enabled === true) })
-      .catch(() => { if (!controller.signal.aborted) setEnabled(false) })
-    return () => controller.abort()
+    let active = true
+    loadAvailability().then((result) => { if (active) setEnabled(result) })
+    return () => { active = false }
   }, [])
 
   useEffect(() => {
@@ -216,6 +222,11 @@ export default function Beta({ campaign = 'general', landing = false }) {
     if (action === 'start') setPhoneProof('')
     setVerificationStatus(action === 'start' ? 'sending' : 'checking')
     try {
+      if (action === 'start') {
+        const intakeEnabled = enabled ?? await loadAvailability()
+        if (enabled === null) setEnabled(intakeEnabled)
+        if (!intakeEnabled) { setVerificationStatus('idle'); return false }
+      }
       const response = hasProof ? null : await fetch('/api/beta-verify', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, phone, ...(action === 'check' ? { code: submittedCode } : {}) }),
@@ -258,7 +269,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
 
   async function submit(event) {
     event.preventDefault()
-    if (!allowForm || enabled === null || submitting.current) return
+    if ((!allowForm && !(step === 0 && enabled === null)) || submitting.current) return
     const invalid = validateAnswers(answers)
     const checkedSteps = finalStep ? formSteps.map((_, index) => index) : [step]
     const invalidStep = checkedSteps.find((index) => formSteps[index].fields.some((name) => invalid[name]))
@@ -388,7 +399,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
             </div>}
             <div className="beta-step-actions">
               {(step > 0 || showPhoneBack) && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}
-              {!finalStep && <Button type="submit" className="beta-form-next" disabled={enabled === null || (step === 0 && resendLeft > 0) || verificationStatus === 'sending' || verificationStatus === 'checking'}>
+              {!finalStep && <Button type="submit" className="beta-form-next" disabled={(step !== 0 && enabled === null) || (step === 0 && resendLeft > 0) || verificationStatus === 'sending' || verificationStatus === 'checking'}>
                 {verificationStatus === 'sending' ? 'sending your code…' : verificationStatus === 'checking' ? 'checking…' : step === 0 && resendLeft > 0 ? `send a new code in ${resendLeft}s` : step === 0 ? 'send my code' : phoneProof ? 'check my signup' : 'verify my number'}
                 <ButtonArrow size={18} />
               </Button>}

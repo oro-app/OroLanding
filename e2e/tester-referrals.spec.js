@@ -3,7 +3,12 @@ import { test, expect } from './fixtures'
 test('resending waits 60 seconds and refreshing verification returns to the phone step', async ({ page }) => {
   await page.clock.install()
   let sends = 0
-  await page.route('**/api/beta-request', (route) => route.fulfill({ json: { enabled: true } }))
+  let releaseAvailability
+  const availabilityPending = new Promise((resolve) => { releaseAvailability = resolve })
+  await page.route('**/api/beta-request', async (route) => {
+    await availabilityPending
+    return route.fulfill({ json: { enabled: true } })
+  })
   await page.route('**/api/beta-verify', (route) => {
     if (route.request().postDataJSON().action === 'start') sends++
     return route.fulfill({ json: { ok: true } })
@@ -11,7 +16,12 @@ test('resending waits 60 seconds and refreshing verification returns to the phon
 
   await page.goto('/signup?step=phone')
   await page.getByLabel('phone number', { exact: true }).fill('4165550123')
-  await page.getByRole('button', { name: 'send my code' }).click()
+  const sendButton = page.getByRole('button', { name: 'send my code' })
+  await expect(sendButton).toBeEnabled()
+  await sendButton.click()
+  await expect(page.getByRole('button', { name: 'sending your code…' })).toBeDisabled()
+  expect(sends).toBe(0)
+  releaseAvailability()
   await expect(page).toHaveURL(/\/signup\?step=verify-phone$/)
   await expect(page.getByRole('button', { name: 'Send a new code in 60s' })).toBeDisabled()
 
