@@ -1,0 +1,53 @@
+src/content/geo/engineering.js
+  s_6ea11abadaf19c::t_b908d5d1811203 13,34,41,64,98,142,150
+  s_6ea11abadaf19c::t_f9481f27dc83ae 1-12,14-33,35-40,42-63,65-97,99-141,143-149,151-156
+src/components/geo/GeoPage.css
+  s_6ea11abadaf19c::t_34a2949104b45a 28-38
+test/geo-prerender.test.js
+  s_6ea11abadaf19c::t_56724897cd0457 122-128,132-133,142,165-172,179,191,197,200
+  s_6ea11abadaf19c::t_68738881630578 130-131
+  s_6ea11abadaf19c::t_fdfa356f83c7e3 55,59-62,129
+  s_6ea11abadaf19c::t_8623983212c4ae 24
+src/lib/geoContent.js
+  s_6ea11abadaf19c::t_2bad13e7656372 4-23,51,60
+src/content/geo/research.js
+  s_6ea11abadaf19c::t_2bad13e7656372 3,5-7,9-10,12-13
+src/lib/geoRoutes.js
+  s_6ea11abadaf19c::t_2bad13e7656372 15-20
+src/content/geo/README.md
+  s_6ea11abadaf19c::t_eeb4a3d3d96553 1,8-17,30,40-67,105,129-130
+scripts/generate-seo.mjs
+  s_6ea11abadaf19c::t_2bad13e7656372 238-241
+src/components/geo/GeoPage.jsx
+  s_6ea11abadaf19c::t_34a2949104b45a 45-69,71-73,103-105,112,120,127,129
+  s_6ea11abadaf19c::t_b908d5d1811203 70
+docs/geo-handoff.md
+  s_6ea11abadaf19c::t_08de2da5c0bd95 245-250
+  s_6ea11abadaf19c::t_eeb4a3d3d96553 41-54,71-74,96,112-116,129-133,180-187,194,240,243-244,251-252,257-259
+src/lib/seo.js
+  s_6ea11abadaf19c::t_2bad13e7656372 337,349
+e2e/geo.spec.js
+  s_6ea11abadaf19c::t_fdfa356f83c7e3 24-27,37,129-130,189
+  s_6ea11abadaf19c::t_60aea0b9fd8b15 134
+  s_6ea11abadaf19c::t_a4469308b274a7 7-11,103,112,115-128,131-133,135,138,142-143,260,266-268
+test/geo-content.test.js
+  s_6ea11abadaf19c::t_fdfa356f83c7e3 5,142,160,176-215
+  s_6ea11abadaf19c::t_f248aa47d7a3c2 10-14,108-111,128-133,139-141,143-159,161-164,218,230
+  s_6ea11abadaf19c::t_b1f59a4c42f9ba 216
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bfd21b335664e437b9c1467eae741dba7eb089bc",
+  "prompts": {},
+  "sessions": {
+    "s_6ea11abadaf19c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a10426-7bac-7653-a78b-35f0e104f7ae",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
