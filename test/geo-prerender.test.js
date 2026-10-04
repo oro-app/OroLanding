@@ -165,12 +165,17 @@ test('the public guides hub statically links all ten guides with WebPage metadat
   assert.ok(!graph.some((entity) => entity['@type'] === 'Article'))
 })
 
-test('public pages expose the approved Style guides navigation and keep Research links hidden', () => {
-  for (const { page, html } of [...pages.filter(({ page }) => isIndexableGeoPage(page)), { page: { path: '/' }, html: homeHtml }]) {
+test('headers and footers omit Style guides navigation while public pages keep Research links hidden', () => {
+  for (const { page, html } of [...pages, { page: { path: '/' }, html: homeHtml }]) {
     const body = html.slice(html.indexOf('<body'))
-    const links = elements(body, 'a').map((tag) => attribute(tag, 'href'))
-    assert.ok(links.includes('/guides'), `${page.path} must expose the Style guides hub`)
-    assert.ok(!links.some((href) => href === '/research' || href.startsWith('/research/')), `${page.path} must not publicly link Research`)
-    assert.ok(decodeEntities(body).includes('Style guides'), `${page.path} must use the approved footer label`)
+    for (const [, tag, content] of body.matchAll(/<(header|footer)\b[^>]*>([\s\S]*?)<\/\1>/g)) {
+      const links = elements(content, 'a').map((element) => attribute(element, 'href'))
+      assert.ok(!links.some((href) => /^\/guides\/?$/.test(href)), `${page.path} ${tag} must not link the guides hub`)
+      if (tag === 'footer') assert.doesNotMatch(decodeEntities(content), /style guides/i, `${page.path} footer must not show a Style guides label`)
+    }
+    if (page.path === '/' || isIndexableGeoPage(page)) {
+      const links = elements(body, 'a').map((tag) => attribute(tag, 'href'))
+      assert.ok(!links.some((href) => href === '/research' || href.startsWith('/research/')), `${page.path} must not publicly link Research`)
+    }
   }
 })

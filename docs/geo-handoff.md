@@ -3,7 +3,7 @@
 Implementation branch: `codex/geo-cornerstone`, based on main `33a4689`.
 Working copy: `/Users/sunny/oro-workspace/oro-landing-geo`.
 The separate existing checkout and its untracked files were left untouched.
-This change is local and has not been deployed.
+This implementation is released through the existing main-to-Vercel production pipeline.
 
 ## Architecture and initial audit
 
@@ -20,8 +20,8 @@ The frozen homepage is controlled by `src/components/home/Home.jsx`, `HomeChrome
 `Home.css`, its demo components, `useHomeMotion.js`, `GoldBackground`, global styles,
 Oro Kit, and existing logo/image assets. `src/App.jsx` mounts that same tree.
 Signup lives in the existing beta and get-started components and API handlers.
-The user subsequently approved one visible homepage change: a Style guides link
-in the footer. The header, hero, existing copy and signup code remain unchanged.
+The Style guides footer link was added and then removed at the user's request.
+The homepage has no new visible links; header, hero, copy and signup code remain unchanged.
 
 Before implementation, the plan was to touch three existing integration files:
 `src/App.jsx` for new route selection; `src/lib/seo.js` for invisible metadata;
@@ -34,7 +34,7 @@ and text, links, layout and signup-review captures.
 Ten distinct answer-first guides, each with useful context, concrete examples,
 common mistakes where relevant, personalization limits, an Oro beta CTA and
 two to four relevant guide links. A `/guides` directory groups all ten by topic;
-the homepage links to it only from the footer, as subsequently requested.
+the directory and individual pages remain available at their URLs, without a footer link.
 The article shell uses existing Oro typography, colors and controls; its new CSS
 is scoped to GEO classes and loaded only for those pages.
 
@@ -51,7 +51,7 @@ at their direct paths as unfinished infrastructure, without a public navigation 
 
 | Route | Status |
 | --- | --- |
-| `/guides` | Indexable Style guides directory; footer link |
+| `/guides` | Indexable Style guides directory; direct URL, no footer link |
 | `/ai-personal-stylist` | Indexable guide |
 | `/ai-stylist-you-can-text` | Indexable guide |
 | `/what-to-wear/job-interview` | Indexable guide |
@@ -66,7 +66,7 @@ at their direct paths as unfinished infrastructure, without a public navigation 
 | `/research/how-people-choose-outfits` | Unpublished, noindexed template |
 
 No separate category indexes or About page were added. The Style guides directory
-and related links make the ten guides reachable from the homepage footer.
+and related links connect the ten guides. No Style guides link appears in site footers.
 
 ## Every existing file modified
 
@@ -75,11 +75,9 @@ and related links make the ten guides reachable from the homepage footer.
 | `src/App.jsx` | Recognize exact new route paths, lazy-load the shared GEO page, and select the existing Halo theme for those new pages. The home branch renders the same tree. |
 | `src/lib/seo.js` | Add the canonical entity description, align Organization social identities with the existing main-branch homepage links, add factual text-stylist software markup and GEO page metadata. |
 | `scripts/generate-seo.mjs` | Prerender new pages with their CSS, include only indexable pages in discovery, and replace stale app-first LLM summary claims with the canonical text-stylist positioning. |
-| `src/components/home/HomeChrome.jsx` | Add the approved Style guides link beneath the homepage footer's social icons. |
-| `src/components/home/Home.css` | Style only that new footer link. |
-| `src/lib/siteLinks.js` | Add Style guides to the shared Halo footer links; header navigation remains unchanged. |
 
-The approved footer addition is the only visible homepage change. No signup
+The footer component, stylesheet and link configuration are restored to the original
+baseline. There are no visible homepage changes. No signup
 component, API handler, dependency file, robots source or Vercel configuration
 was modified. `App.jsx` additions select only new routes. The homepage's metadata
 graph changes invisibly through `seo.js`.
@@ -229,9 +227,9 @@ content, publication-gate and emitted-artifact checks.
 The new GEO browser suite passes all 28 tests and checks all thirteen routes on desktop and seven representative
 routes on mobile, raw answer-first HTML, unique metadata and canonicals, related
 links, no-JavaScript reading/styles, console/page errors, assets, overflow and
-beta welcome/phone/back navigation with no submission. The footer follow-up adds
-desktop/mobile navigation from the homepage footer through the directory to a
-guide, confirms no header link, and checks both research paths remain outside
+beta welcome/phone/back navigation with no submission. The footer follow-up checks
+desktop/mobile footer link absence and direct directory access, confirms no header
+link, and checks both research paths remain outside
 public links, the sitemap and `llms.txt`.
 
 Before the approved footer addition, the unchanged homepage was compared at 1440×1000 and 390×844 with deterministic
@@ -241,9 +239,11 @@ differing pixels. Text, links, controls, headings, image dimensions, layout rect
 page heights and signup fields/consent match. No browser errors or API mutations
 occurred. That build's entire homepage `<body>` was also byte-identical to the
 saved baseline; only invisible head metadata/assets differed. The subsequent
-footer addition intentionally changes the footer and is verified separately.
+footer addition was later removed, restoring the original footer source.
+After that removal, the built homepage `<body>` again matches the original
+saved baseline byte for byte. All three footer source files match `33a4689`.
 
-The footer follow-up preserves all six desktop/mobile hero and signup screenshot
+The earlier footer-addition follow-up preserved all six desktop/mobile hero and signup screenshot
 comparisons with zero differing pixels, unchanged signup fields and unchanged
 header links. The new footer line adds exactly 44px. The directory is readable
 at both widths, links all ten guides and has no Research links or overflow.
@@ -267,7 +267,7 @@ Vite preview serves clean article URLs through its SPA fallback; for raw route-s
 metadata verification with Vite, use the generated directory URL with a trailing
 slash, such as `/ai-personal-stylist/`. The current local review server on port 4175
 serves the built `dist` directory directly and resolves directory paths to their
-own HTML, so the footer link opens the correct prerendered page. This is a local
+own HTML, so direct URLs open the correct prerendered pages. This is a local
 preview adjustment. Canonicals remain the existing slashless paths.
 Production existing routes were audited to receive their own prerendered metadata;
 new production routes should be verified on deployment. No production redirects

@@ -8,7 +8,8 @@ requirements below are available.
 Oro has no published research. The research index also has `noindex: true` and
 is omitted from public discovery. There are no public navigation links to Research.
 Keep that setting until a public research section with real reports is approved;
-the Style guides directory and footer are the current public entry points.
+the Style guides directory and individual guides remain available at their URLs,
+without a Style guides footer link.
 
 Templates must have `noindex` metadata and must be excluded from the public research
 index, sitemap, and discovery lists. A template being accessible at its path does

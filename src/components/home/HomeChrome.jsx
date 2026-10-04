@@ -71,7 +71,6 @@ export function HomeFooter({ landing = false, closerTitle = 'want her number?', 
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M10 6a2 2 0 1 1 2.7 1.9c-.5.2-.7.5-.7 1.1v1l9 6a1.6 1.6 0 0 1-.9 2.9H3.9A1.6 1.6 0 0 1 3 16l9-6" /></svg>
               </a>
             </nav>
-            <a className="halo-footer-guide-link" href="/guides">Style guides</a>
           </div>
           <nav className="halo-footer-legal" aria-label="Legal">
             <h3>Legal</h3>

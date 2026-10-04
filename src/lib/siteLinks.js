@@ -40,7 +40,6 @@ export const NAV_COLUMNS = [
 ]
 
 export const FOOTER_LINKS = [
-  { label: 'style guides', href: '/guides' },
   { label: 'from the closet', href: '/from-the-closet' },
   { label: 'contact', href: '/contact' },
   { label: 'terms', href: '/terms' },

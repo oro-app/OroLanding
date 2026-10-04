@@ -98,7 +98,8 @@ async function checkRoute(page, request, route, viewport) {
     expect(await linkedResponse.text()).toContain(`href="${CANONICAL_ORIGIN}${href}"`)
   }
   await expect(page.locator('header a[href="/guides"]')).toHaveCount(0)
-  await expect(page.locator('footer').getByRole('link', { name: /^style guides$/i })).toHaveAttribute('href', '/guides')
+  await expect(page.locator('footer a[href="/guides"]')).toHaveCount(0)
+  await expect(page.locator('footer').getByRole('link', { name: /^style guides$/i })).toHaveCount(0)
   if (!route.path.startsWith('/research')) {
     await expect(page.locator('a[href="/research"], a[href^="/research/"]')).toHaveCount(0)
   } else {
@@ -196,7 +197,7 @@ for (const width of [1440, 390]) {
 }
 
 for (const width of [1440, 390]) {
-  test(`homepage Style guides footer navigation works at ${width}px without changing the header`, async ({ page }) => {
+  test(`homepage footer omits Style guides at ${width}px while the hub remains directly accessible`, async ({ page }) => {
     await page.setViewportSize({ width, height: width === 1440 ? 1000 : 844 })
     const errors = []
     page.on('pageerror', (error) => errors.push(error.message))
@@ -207,26 +208,19 @@ for (const width of [1440, 390]) {
     await expect(page.locator('header a[href="/guides"]')).toHaveCount(0)
     await expect(page.locator('header').getByRole('link', { name: 'want her number?', exact: true })).toHaveAttribute('href', '/beta')
     await expect(page.locator('a[href="/research"], a[href^="/research/"]')).toHaveCount(0)
-    const link = page.locator('footer').getByRole('link', { name: /^style guides$/i })
-    await expect(link).toHaveCount(1)
-    await expect(link).toHaveAttribute('href', '/guides')
-    await link.scrollIntoViewIfNeeded()
-    await expect(link).toBeVisible()
+    await expect(page.locator('footer a[href="/guides"]')).toHaveCount(0)
+    await expect(page.locator('footer').getByRole('link', { name: /^style guides$/i })).toHaveCount(0)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     if (process.env.GEO_SCREENSHOT_DIR) {
       await mkdir(process.env.GEO_SCREENSHOT_DIR, { recursive: true })
-      await page.locator('footer').screenshot({ path: join(process.env.GEO_SCREENSHOT_DIR, `style-guides-footer-${width}.png`) })
+      await page.locator('footer').screenshot({ path: join(process.env.GEO_SCREENSHOT_DIR, `guides-footer-absent-${width}.png`) })
     }
-    await link.click()
+    await page.goto(pagePath('/guides'))
     await expect(page).toHaveURL(/\/guides\/?$/)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Style guides')
     await expect(page).toHaveTitle('Style Guides for Everyday Outfits | Oro')
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${CANONICAL_ORIGIN}/guides`)
     await expect(page.locator('article.geo-page nav.geo-guide-group a')).toHaveCount(10)
-    expect(errors).toEqual([])
-    await page.locator('article.geo-page nav.geo-guide-group').getByRole('link', { name: 'What should you wear to a job interview?', exact: true }).click()
-    await expect(page).toHaveURL(/\/what-to-wear\/job-interview\/?$/)
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('What should you wear to a job interview?')
     expect(errors).toEqual([])
   })
 }
