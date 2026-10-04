@@ -28,6 +28,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
   const [code, setCode] = useState('')
   const [phoneProof, setPhoneProof] = useState('')
   const [verificationStatus, setVerificationStatus] = useState('idle')
+  const [resendLeft, setResendLeft] = useState(0)
   const [attemptedSteps, setAttemptedSteps] = useState([])
   const [status, setStatus] = useState('idle')
   const [enabled, setEnabled] = useState(null)
@@ -47,6 +48,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
   const copyTimeout = useRef(null)
   const submitting = useRef(false)
   const verifying = useRef(false)
+  const codeSent = useRef(false)
   const currentPhone = useRef(answers.phone)
   const currentCode = useRef(code)
   const currentStep = useRef(0)
@@ -73,6 +75,11 @@ export default function Beta({ campaign = 'general', landing = false }) {
     if (answers !== emptyAnswers) writeBetaDraft(answers, submissionKey.current, campaignSource)
   }, [answers, campaignSource])
   useEffect(() => () => clearTimeout(copyTimeout.current), [])
+  useEffect(() => {
+    if (resendLeft <= 0) return undefined
+    const timeout = setTimeout(() => setResendLeft((seconds) => Math.max(0, seconds - 1)), 1000)
+    return () => clearTimeout(timeout)
+  }, [resendLeft])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -96,7 +103,13 @@ export default function Beta({ campaign = 'general', landing = false }) {
         setView(entryView)
         return
       }
-      const requestedStep = url.searchParams.get('step') || url.hash.slice(1)
+      let requestedStep = url.searchParams.get('step') || url.hash.slice(1)
+      if (requestedStep === 'verify-phone' && !codeSent.current) {
+        requestedStep = 'phone'
+        url.searchParams.set('step', requestedStep)
+        url.hash = ''
+        window.history.replaceState(null, '', `${url.pathname}${url.search}`)
+      }
       const index = formSteps.findIndex((item) => item.hash.slice(1) === requestedStep)
       if (index >= 0) {
         if (!url.searchParams.has('step')) {
@@ -156,7 +169,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
   function update(name, value) {
     if (submitting.current) return
     setAnswers((current) => ({ ...current, [name]: value }))
-    if (name === 'phone') { currentPhone.current = value; currentCode.current = ''; setCode(''); setPhoneProof(''); setVerificationStatus('idle') }
+    if (name === 'phone') { currentPhone.current = value; currentCode.current = ''; codeSent.current = false; setCode(''); setPhoneProof(''); setVerificationStatus('idle') }
     setStatus('idle')
   }
 
@@ -177,7 +190,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
   }
 
   async function verifyPhone(action) {
-    if (verifying.current) return false
+    if (verifying.current || (action === 'start' && resendLeft > 0)) return false
     verifying.current = true
     const phone = answers.phone
     const submittedCode = code
@@ -192,7 +205,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
       })
       const result = hasProof ? { ok: true, proof: phoneProof } : await response.json()
       if (currentPhone.current !== phone || currentCode.current !== submittedCode || currentStep.current !== sourceStep) return false
-      if (action === 'start' && response.ok && result.ok) { setVerificationStatus('sent'); return true }
+      if (action === 'start' && response.ok && result.ok) { codeSent.current = true; setResendLeft(60); setVerificationStatus('sent'); return true }
       if ((hasProof || response.ok) && result.ok && action === 'check' && result.proof) {
         setPhoneProof(result.proof)
         const existing = await findExistingBetaRequest(phone, result.proof)
@@ -219,6 +232,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
         }
         setPhoneProof(result.proof); setVerificationStatus('verified'); return { ok: true, existing: false }
       }
+      if (action === 'start' && result.code === 'rate_limited') setResendLeft(60)
       setVerificationStatus(result.code === 'invalid_code' ? 'invalid' : result.code === 'rate_limited' ? 'rate_limited' : 'unavailable')
     } catch { if (currentPhone.current === phone && currentStep.current === sourceStep) setVerificationStatus('unavailable') }
     finally { verifying.current = false }
@@ -318,7 +332,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
       <Text muted>Enter the code we sent to {answers.phone}.</Text>
       <WrittenAnswer name="code" label="Verification code" value={code} update={(_, value) => { const next = value.replace(/\D/g, '').slice(0, 10); currentCode.current = next; setCode(next); setVerificationStatus('sent') }} error={verificationStatus === 'invalid' ? 'That code is incorrect or has expired. Try again or request a new code.' : undefined} type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]*" disabled={verificationStatus === 'checking' || verificationStatus === 'sending'} />
       {['unavailable', 'lookup-unavailable', 'lookup-rate-limited', 'rate_limited'].includes(verificationStatus) && step === 1 && <p className="oro-field__error" role="status">{verificationStatus === 'rate_limited' ? 'Please wait a minute before trying again.' : verificationStatus === 'lookup-rate-limited' ? 'Your phone is verified. Please wait a minute, then check your signup again.' : verificationStatus === 'lookup-unavailable' ? 'Your phone is verified, but we couldn’t load your signup. Try again.' : 'We couldn’t check the code. Try again.'}</p>}
-      <button type="button" className="beta-resend" disabled={verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => verifyPhone('start')}>Send a new code</button>
+      <button type="button" className="beta-resend" disabled={resendLeft > 0 || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => verifyPhone('start')}>{resendLeft > 0 ? `Send a new code in ${resendLeft}s` : 'Send a new code'}</button>
     </>,
     <>{field('name', 'Your name', { autoComplete: 'name', placeholder: 'Your name' })}{field('email', 'Email address', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' })}</>,
   ]
@@ -357,8 +371,8 @@ export default function Beta({ campaign = 'general', landing = false }) {
             </div>}
             <div className="beta-step-actions">
               <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>
-              {!finalStep && <Button type="submit" className="beta-form-next" disabled={enabled === null || verificationStatus === 'sending' || verificationStatus === 'checking'}>
-                {verificationStatus === 'sending' ? 'sending your code…' : verificationStatus === 'checking' ? 'checking…' : step === 0 ? 'send my code' : phoneProof ? 'check my signup' : 'verify my number'}
+              {!finalStep && <Button type="submit" className="beta-form-next" disabled={enabled === null || (step === 0 && resendLeft > 0) || verificationStatus === 'sending' || verificationStatus === 'checking'}>
+                {verificationStatus === 'sending' ? 'sending your code…' : verificationStatus === 'checking' ? 'checking…' : step === 0 && resendLeft > 0 ? `send a new code in ${resendLeft}s` : step === 0 ? 'send my code' : phoneProof ? 'check my signup' : 'verify my number'}
                 <ButtonArrow size={18} />
               </Button>}
             </div>
