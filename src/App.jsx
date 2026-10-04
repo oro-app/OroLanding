@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { isFeedbackPath } from './lib/feedbackSession.js'
 import { getBetaCampaign } from './lib/betaCampaign.js'
+import { GEO_PATHS } from './lib/geoRoutes.js'
 import Home from './components/home/Home'
 import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
 import SiteHeader from './components/layout/SiteHeader'
@@ -21,9 +22,11 @@ const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
 const TesterReferrals = lazy(() => import('./components/beta/TesterReferrals'))
 const BetaPage = lazy(() => import('./components/beta/Beta'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
+const GeoPage = lazy(() => import('./components/geo/GeoPage'))
 
 export function getRouteFromPath(pathname = '/', search = '') {
   const path = pathname.replace(/\/+$/, '') || '/'
+  if (GEO_PATHS.includes(path)) return { type: 'geo', path }
   if (isFeedbackPath(path)) return { type: 'feedback' }
   const newsletterMatch = path.match(/^\/newsletter\/([^/]+)$/)
 
@@ -58,9 +61,10 @@ function App({ initialRoute }) {
   const isHome = route.type === 'home'
   const isBeta = route.type === 'beta'
   const isFeedback = route.type === 'feedback'
-  const isBlog = route.type === 'newsletter' || route.type === 'journal'
+  const isGeo = route.type === 'geo'
+  const isBlog = route.type === 'newsletter' || route.type === 'journal' || isGeo
   const isPrivateForm = isBeta || isFeedback || route.type === 'get-started'
-  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'newsletter'
+  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'newsletter' || isGeo
   const pageViewParams = {
     route_type: route.type,
     ...(route.slug ? { newsletter_slug: route.slug } : {}),
@@ -142,7 +146,9 @@ function App({ initialRoute }) {
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
         {!isBeta && !isFeedback && (isHalo ? <HomeHeader /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
-          {isFeedback ? (
+          {isGeo ? (
+            <Suspense fallback={null}><GeoPage path={route.path} /></Suspense>
+          ) : isFeedback ? (
             <Suspense fallback={null}><FeedbackPage /></Suspense>
           ) : isBeta ? (
             <Suspense fallback={null}>

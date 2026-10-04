@@ -3,7 +3,6 @@ import path from 'node:path'
 import vm from 'node:vm'
 import { pathToFileURL } from 'node:url'
 import {
-  DEFAULT_DESCRIPTION,
   DEFAULT_IMAGE,
   DEFAULT_IMAGE_META,
   PUBLIC_ROUTE_TYPES,
@@ -13,7 +12,8 @@ import {
   absoluteUrl,
   getSeoForRoute,
 } from '../src/lib/seo.js'
-import { PRODUCT_FAQS } from '../src/lib/faqs.js'
+import { GEO_PAGES, isIndexableGeoPage } from '../src/lib/geoContent.js'
+import { GEO_PATHS, ORO_DESCRIPTION } from '../src/lib/geoRoutes.js'
 
 const root = process.cwd()
 const distDir = path.join(root, 'dist')
@@ -132,7 +132,7 @@ function seoHeadTags(seo) {
     `<link rel="canonical" href="${escapeAttr(canonical)}">`,
     `<meta name="robots" content="${seo.noindex ? 'noindex,follow' : 'index,follow'}">`,
     `<meta property="og:site_name" content="${SITE_NAME}">`,
-    `<meta property="og:type" content="${seo.path.startsWith('/newsletter/') ? 'article' : 'website'}">`,
+    `<meta property="og:type" content="${seo.ogType || (seo.path.startsWith('/newsletter/') ? 'article' : 'website')}">`,
     `<meta property="og:title" content="${escapeAttr(seo.title)}">`,
     `<meta property="og:description" content="${escapeAttr(seo.description)}">`,
     `<meta property="og:url" content="${escapeAttr(canonical)}">`,
@@ -190,12 +190,18 @@ async function writeSitemap(newsletters) {
     date: newsletter.date,
   }))
 
-  const urls = [...routeUrls, ...newsletterUrls]
+  const geoUrls = GEO_PAGES.filter(isIndexableGeoPage).map((page) => ({
+    path: page.path,
+    priority: '0.7',
+    date: page.dateModified || page.publicationDate,
+    geo: true,
+  }))
+  const urls = [...routeUrls, ...newsletterUrls, ...geoUrls]
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((item) => `  <url>
     <loc>${escapeXml(absoluteUrl(item.path))}</loc>
-    <lastmod>${escapeXml(item.date || now)}</lastmod>
+    ${item.geo && !item.date ? '' : `<lastmod>${escapeXml(item.date || now)}</lastmod>`}
     <changefreq>${item.path === '/' ? 'weekly' : item.path.startsWith('/newsletter/') ? 'monthly' : 'monthly'}</changefreq>
     <priority>${escapeXml(item.priority || '0.5')}</priority>
   </url>`).join('\n')}
@@ -209,13 +215,14 @@ async function writeLlms(newsletters) {
   const lines = [
     `# ${SITE_NAME}`,
     '',
-    `> ${DEFAULT_DESCRIPTION}`,
+    `> ${ORO_DESCRIPTION}`,
     '',
-    'oro is an AI stylist app for getting dressed from the clothes a person already owns. It focuses on outfit planning, wardrobe reuse, personal taste, occasion, weather, color, silhouette, body, and virtual try-on.',
+    'The styling guides below offer general advice. Oro personalizes advice around style and the clothes a person already owns. Access starts through the existing beta signup.',
     '',
     '## Official URLs',
     '',
     `- Website: ${SITE_URL}`,
+    `- Meet Oro / beta signup: ${absoluteUrl('/beta')}`,
     `- Try oro: ${absoluteUrl('/try-oro')}`,
     `- How it works: ${absoluteUrl('/how-it-works')}`,
     `- Why oro: ${absoluteUrl('/why-oro')}`,
@@ -223,19 +230,14 @@ async function writeLlms(newsletters) {
     `- Terms: ${absoluteUrl('/terms')}`,
     `- Privacy: ${absoluteUrl('/privacy')}`,
     '',
-    '## Key Facts',
+    '## Styling guides',
     '',
-    '- oro builds outfit recommendations from clothes users already own.',
-    '- oro is not primarily a shopping engine.',
-    '- oro is free to start.',
-    '- oro is available on iOS, with Android in progress.',
-    '- oro does not sell closet data.',
-    '- oro includes virtual try-on for previewing outfits.',
-    '- Publisher: Oro Digital Inc.',
+    ...GEO_PAGES.filter((page) => page.kind === 'guide').map((page) => `- [${page.h1}](${absoluteUrl(page.path)}): ${page.description}`),
     '',
-    '## Common Questions',
+    '## Oro Research',
     '',
-    ...PRODUCT_FAQS.map((faq) => `### ${faq.question}\n${faq.answer}\n`),
+    `- [Oro Research](${absoluteUrl('/research')}): A home for future reports on outfit decisions, with methodology and limitations.`,
+    ...GEO_PAGES.filter((page) => page.kind === 'research-article' && isIndexableGeoPage(page)).map((page) => `- [${page.h1}](${absoluteUrl(page.path)}): ${page.summary}`),
     '## Latest Editorial',
     '',
     ...newsletters.slice(0, 10).map((item) => `- [${item.title}](${absoluteUrl(item.href)}): ${item.summary}`),
@@ -257,6 +259,9 @@ async function main() {
     return [...(entry?.css || []), ...(entry?.imports || []).flatMap((dependency) => importedStylesheets(dependency, seen))]
   }
   const betaStylesheets = [...new Set(importedStylesheets('src/components/beta/Beta.jsx'))]
+  const geoStylesheets = [...new Set(importedStylesheets('src/components/geo/GeoPage.jsx'))]
+  if (!geoStylesheets.length) throw new Error('Missing GEO stylesheets in the client build manifest')
+  const geoTemplate = template.replace('</head>', `${geoStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!betaStylesheets?.length) throw new Error('Missing signup stylesheets in the client build manifest')
   const betaTemplate = template.replace('</head>', `${betaStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!headingsStylesheet) throw new Error('Missing preview heading stylesheet in the client build manifest')
@@ -284,6 +289,14 @@ async function main() {
     await fs.writeFile(staticPath, withSeoHeadOnly(html, seo))
   }
 
+  if (GEO_PAGES.length !== GEO_PATHS.length || GEO_PAGES.some((page) => !GEO_PATHS.includes(page.path))) {
+    throw new Error('GEO routing and content paths must match')
+  }
+  for (const page of GEO_PAGES) {
+    const seo = getSeoForRoute({ type: 'geo', path: page.path })
+    await writeRoute(geoTemplate, seo, await render(page.path))
+  }
+
   for (const newsletter of newsletters) {
     const seo = getSeoForRoute({ type: 'newsletter', slug: newsletter.slug }, newsletter)
     await writeRoute(template, seo, await render(newsletter.href))
@@ -299,7 +312,7 @@ async function main() {
   await writeLlms(newsletters)
   await fs.rm(serverDir, { recursive: true, force: true })
 
-  console.log(`Prerendered ${APP_ROUTE_TYPES.length + newsletters.length} React routes, enriched ${STATIC_PAGE_TYPES.length} static pages, and generated sitemap.xml + llms.txt.`)
+  console.log(`Prerendered ${APP_ROUTE_TYPES.length + newsletters.length + GEO_PAGES.length} React routes, enriched ${STATIC_PAGE_TYPES.length} static pages, and generated sitemap.xml + llms.txt.`)
 }
 
 main().catch((error) => {

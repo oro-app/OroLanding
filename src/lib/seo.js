@@ -1,4 +1,6 @@
 import { PRODUCT_FAQS } from './faqs.js'
+import { getGeoPage, isIndexableGeoPage } from './geoContent.js'
+import { ORO_DESCRIPTION } from './geoRoutes.js'
 
 export const SITE_URL = 'https://www.askoro.now'
 export const SITE_NAME = 'oro'
@@ -209,13 +211,13 @@ export function getBaseJsonLd() {
       '@id': ORGANIZATION_ID,
       name: SITE_NAME,
       legalName: 'Oro Digital Inc.',
+      description: ORO_DESCRIPTION,
       url: SITE_URL,
       logo: getImageUrl(LOGO_IMAGE),
       sameAs: [
-        'https://www.instagram.com/oro.wardrobe/',
-        'https://www.tiktok.com/@oro.wardrobe',
-        'https://www.linkedin.com/company/buildingoro/',
-        'https://linktr.ee/buildingoro',
+        'https://www.instagram.com/askoro.now',
+        'https://www.linkedin.com/company/askoro',
+        'https://x.com/askoro_now',
       ],
     },
     {
@@ -277,6 +279,19 @@ function makeSoftwareJsonLd(page) {
   }
 }
 
+function makeTextStylistJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    '@id': `${SITE_URL}/#text-stylist`,
+    name: 'Oro',
+    applicationCategory: 'LifestyleApplication',
+    description: ORO_DESCRIPTION,
+    url: absoluteUrl('/ai-personal-stylist'),
+    publisher: { '@id': ORGANIZATION_ID },
+  }
+}
+
 function makeArticleJsonLd(newsletter) {
   return {
     '@context': 'https://schema.org',
@@ -304,7 +319,7 @@ export function makePageJsonLd(page, extras = []) {
       isPartOf: { '@id': WEBSITE_ID },
       publisher: { '@id': ORGANIZATION_ID },
     },
-    makeBreadcrumbJsonLd([
+    makeBreadcrumbJsonLd(page.breadcrumbs || [
       { name: 'Home', path: '/' },
       ...(page.path === '/' ? [] : [{ name: page.h1 || page.title, path: page.path }]),
     ]),
@@ -315,6 +330,40 @@ export function makePageJsonLd(page, extras = []) {
 }
 
 export function getSeoForRoute(route, newsletter) {
+  if (route?.type === 'geo') {
+    const content = getGeoPage(route.path)
+    if (!content) throw new Error(`Missing GEO content for ${route.path}`)
+    const noindex = !isIndexableGeoPage(content)
+    const article = content.kind === 'guide' || (content.kind === 'research-article' && !noindex)
+    const page = {
+      path: content.path,
+      title: content.title,
+      description: content.description,
+      h1: content.h1,
+      noindex,
+      ogType: article ? 'article' : 'website',
+      image: DEFAULT_IMAGE,
+      date: content.publicationDate || content.dateModified,
+      breadcrumbs: [
+        { name: 'Oro', path: '/' },
+        ...(content.kind === 'research-article' ? [{ name: 'Research', path: '/research' }] : []),
+        { name: content.h1, path: content.path },
+      ],
+    }
+    const extras = article ? [{
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: content.h1,
+      description: content.description,
+      mainEntityOfPage: absoluteUrl(content.path),
+      author: { '@id': ORGANIZATION_ID },
+      publisher: { '@id': ORGANIZATION_ID },
+      ...(content.publicationDate ? { datePublished: content.publicationDate } : {}),
+      ...(content.dateModified ? { dateModified: content.dateModified } : {}),
+    }] : []
+    if (['/ai-personal-stylist', '/ai-stylist-you-can-text'].includes(content.path)) extras.push(makeTextStylistJsonLd())
+    return { ...page, jsonLd: makePageJsonLd(page, extras) }
+  }
   if (route?.type === 'newsletter') {
     const page = newsletter
       ? {
@@ -347,6 +396,8 @@ export function getSeoForRoute(route, newsletter) {
 
   const page = ROUTE_SEO[route?.type] || ROUTE_SEO.home
   const extras = []
+
+  if (route?.type === 'home') extras.push(makeTextStylistJsonLd())
 
   if (['try-oro', 'how-it-works', 'why-oro'].includes(route?.type)) {
     extras.push(makeSoftwareJsonLd(page))
