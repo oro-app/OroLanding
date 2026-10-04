@@ -19,6 +19,7 @@ for (const place of ['header', 'hero', 'closer']) {
     await page.locator(`.halo-cta--${place}`).click()
     await expect(page).toHaveURL(/\/signup\?step=phone$/)
     await expect(page.getByRole('heading', { name: 'Where should oro text you?' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Back', exact: true })).toHaveCount(0)
     await expect(page.getByRole('link', { name: 'Blog' })).toHaveCount(0)
     await expect(page.getByRole('link', { name: 'want her number?' })).toHaveAttribute('href', '/signup?step=phone')
   })

@@ -219,6 +219,7 @@ for (const width of [1440, 390]) {
     await page.getByRole('link', { name: 'want her number?', exact: true }).click()
     await expect(page).toHaveURL(/\/signup\/?\?step=phone$/)
     await expect(page.getByRole('heading', { name: 'where should oro text you?', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Back', exact: true })).toBeVisible()
     await page.getByRole('button', { name: 'Back', exact: true }).click()
     await expect(page).toHaveURL(/\/beta\/?$/)
     await expect(page.getByRole('heading', { name: 'heard you were looking for my number.', exact: true })).toBeVisible()

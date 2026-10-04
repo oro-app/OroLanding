@@ -52,12 +52,14 @@ export default function Beta({ campaign = 'general', landing = false }) {
   const currentPhone = useRef(answers.phone)
   const currentCode = useRef(code)
   const currentStep = useRef(0)
+  const previousEndpointChecked = useRef(false)
   const allowForm = previewForm || enabled
   const entryView = allowForm || enabled === null ? 'welcome' : 'coming-soon'
   const saving = status === 'saving'
   const message = submissionMessages[status]
   const [view, setView] = useState(landing ? entryView : 'form')
   const [step, setStep] = useState(0)
+  const [showPhoneBack, setShowPhoneBack] = useState(false)
   const formRef = useRef(null)
   const stepTitleRef = useRef(null)
   const receiptRef = useRef(null)
@@ -75,6 +77,14 @@ export default function Beta({ campaign = 'general', landing = false }) {
     if (answers !== emptyAnswers) writeBetaDraft(answers, submissionKey.current, campaignSource)
   }, [answers, campaignSource])
   useEffect(() => () => clearTimeout(copyTimeout.current), [])
+  useEffect(() => {
+    if (landing || previousEndpointChecked.current) return
+    previousEndpointChecked.current = true
+    try {
+      setShowPhoneBack(sessionStorage.getItem('oro_signup_previous_endpoint') === '/beta')
+      sessionStorage.removeItem('oro_signup_previous_endpoint')
+    } catch {}
+  }, [landing])
   useEffect(() => {
     if (resendLeft <= 0) return undefined
     const timeout = setTimeout(() => setResendLeft((seconds) => Math.max(0, seconds - 1)), 1000)
@@ -187,6 +197,13 @@ export default function Beta({ campaign = 'general', landing = false }) {
     currentStep.current = index
     setStep(Math.max(0, index))
     setView(index < 0 ? entryView : 'form')
+  }
+
+  function rememberSignupSource(event) {
+    if (!landing || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || window.location.pathname.replace(/\/+$/, '') !== '/beta') return
+    const link = event.target.closest?.('a[href]')
+    if (!link || new URL(link.href).pathname.replace(/\/+$/, '') !== '/signup') return
+    try { sessionStorage.setItem('oro_signup_previous_endpoint', '/beta') } catch {}
   }
 
   async function verifyPhone(action) {
@@ -340,7 +357,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
   if (tester && view === 'receipt') return <TesterReferrals initialReceipt={{ referral_code: ownReferralCode, referred_signups: referredSignups }} />
 
   return (
-    <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
+    <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true" onClickCapture={rememberSignupSource}>
       <HomeHeader />
       {previewForm && enabled === false && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is submitted</span>{view === 'receipt' ? <button onClick={() => setView('form')}>Back to form <span data-button-icon="up-right" aria-hidden="true">↗</span></button> : <><button onClick={() => previewReceipt()}>Preview confirmation <span data-button-icon="up-right" aria-hidden="true">↗</span></button>{import.meta.env.DEV && <button onClick={() => previewReceipt(true)}>Preview referral milestone <span data-button-icon="up-right" aria-hidden="true">↗</span></button>}</>}</div></div>}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
@@ -370,7 +387,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
               <Text variant="support" muted>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>, and to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</Text>
             </div>}
             <div className="beta-step-actions">
-              <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>
+              {(step > 0 || showPhoneBack) && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}
               {!finalStep && <Button type="submit" className="beta-form-next" disabled={enabled === null || (step === 0 && resendLeft > 0) || verificationStatus === 'sending' || verificationStatus === 'checking'}>
                 {verificationStatus === 'sending' ? 'sending your code…' : verificationStatus === 'checking' ? 'checking…' : step === 0 && resendLeft > 0 ? `send a new code in ${resendLeft}s` : step === 0 ? 'send my code' : phoneProof ? 'check my signup' : 'verify my number'}
                 <ButtonArrow size={18} />
