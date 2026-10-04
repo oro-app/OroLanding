@@ -1,0 +1,27 @@
+index.html
+  s_6ea11abadaf19c::t_a7feeafd8be9d4 6-8,18-19,24
+public/robots.txt
+  s_6ea11abadaf19c::t_a7feeafd8be9d4 4
+docs/geo-handoff.md
+  s_6ea11abadaf19c::t_216fed57704c4f 90-93,141-143,163-165,171
+src/lib/seo.js
+  s_6ea11abadaf19c::t_a7feeafd8be9d4 7,9,53
+docs/seo-follow-up.md
+  s_6ea11abadaf19c::t_7039ab165142c0 1-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2b0be62496710280641874d28e0113c8481fee3a",
+  "prompts": {},
+  "sessions": {
+    "s_6ea11abadaf19c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a10426-7bac-7653-a78b-35f0e104f7ae",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
