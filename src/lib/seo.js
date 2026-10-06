@@ -125,9 +125,9 @@ export const ROUTE_SEO = {
   },
   about: {
     path: '/about',
-    title: 'about the team - oro',
+    title: 'Democratizing personal styling for everyone - oro',
     description: 'Meet the team building oro, a personal stylist designed around your wardrobe, your taste, and your life.',
-    h1: 'about the team.',
+    h1: 'Democratizing personal styling for everyone',
     summary: 'Meet the small team building oro across product, operations, technology, and design.',
     priority: '0.5',
   },

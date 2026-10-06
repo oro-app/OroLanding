@@ -16,10 +16,9 @@ function TeamCard({ member, supporting = false }) {
           width="600"
           height="600"
         />
-        {member.placeholder && <span className="team-card-placeholder">Portrait coming soon</span>}
       </div>
       <figcaption className="team-card-caption">
-        <Heading as="h3" variant="card">{member.name}</Heading>
+        <Heading as="h2" variant="card">{member.name}</Heading>
         <Text muted>{member.role}</Text>
       </figcaption>
     </figure>
@@ -43,15 +42,13 @@ export default function AboutPage() {
             <AboutContent />
           </div>
 
-          <section className="team-section" aria-labelledby="leadership-title">
-            <Heading as="h2" variant="section" id="leadership-title">Leadership</Heading>
+          <section className="team-section" aria-label="Leadership">
             <div className="team-primary-grid">
               {leadership.map((member) => <TeamCard key={member.name} member={member} />)}
             </div>
           </section>
 
-          <section className="team-section team-section--supporting" aria-labelledby="supporting-team-title">
-            <Heading as="h2" variant="section" id="supporting-team-title">Supporting the work</Heading>
+          <section className="team-section team-section--supporting" aria-label="Supporting team">
             <div className="team-supporting-grid">
               {supportingTeam.map((member) => <TeamCard key={member.name} member={member} supporting />)}
             </div>
