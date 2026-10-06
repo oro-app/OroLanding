@@ -2,8 +2,8 @@ import { NAV_COLUMNS } from '../../lib/siteLinks'
 import { trackCtaClick } from '../../lib/analytics'
 
 // Redesigned site footer — theme-aware via --color-* tokens. The four link
-// columns are driven by the shared NAV_COLUMNS data (same source the header
-// dropdowns use), so footer and navbar are always identical.
+// columns are driven by the shared NAV_COLUMNS data used by the header, with
+// footer-only links added here when needed.
 function Arrow() {
   return (
     <svg data-button-icon="right" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
