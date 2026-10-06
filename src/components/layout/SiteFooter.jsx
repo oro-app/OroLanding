@@ -15,7 +15,7 @@ function Arrow() {
 export default function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="site-footer-grid">
+      <nav className="site-footer-grid" aria-label="Footer">
         <div className="site-footer-brand">
           <img src="/oro-logo.webp" alt="oro" className="site-footer-logo" width="1672" height="941" />
           <p className="site-footer-tagline">
@@ -52,9 +52,12 @@ export default function SiteFooter() {
                 {link.label}
               </a>
             ))}
+            {col.head === 'editorial' && (
+              <a className="site-footer-link" href="/about">about us</a>
+            )}
           </div>
         ))}
-      </div>
+      </nav>
 
       <div className="site-footer-bottom">
         <span>© 2026 Oro Digital Inc.</span>

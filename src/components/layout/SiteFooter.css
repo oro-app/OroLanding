@@ -62,7 +62,9 @@
 }
 
 .site-footer-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 500;

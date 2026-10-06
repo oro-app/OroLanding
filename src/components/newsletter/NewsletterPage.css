@@ -73,6 +73,7 @@
 }
 
 .newsletter-article-body { min-width: 0; }
+.about-page .newsletter-article-body { max-width: 680px; margin-inline: auto; }
 
 .newsletter-mdx {
   max-width: 680px;

@@ -123,6 +123,14 @@ export const ROUTE_SEO = {
       'a real person at oro reads support questions, press notes, partnership inquiries, and product feedback.',
     priority: '0.5',
   },
+  about: {
+    path: '/about',
+    title: 'about us - oro',
+    description: 'Meet oro and learn why we are building a personal stylist around your wardrobe, your taste, and your life.',
+    h1: 'about us.',
+    summary: 'Oro is building a personal stylist that helps you get more from the clothes you already own.',
+    priority: '0.5',
+  },
   'get-started': {
     path: '/get-started',
     title: 'complete your beta setup - oro',
@@ -192,6 +200,7 @@ export const PUBLIC_ROUTE_TYPES = [
   'journal',
   'manifesto',
   'contact',
+  'about',
   'get-started',
   'app-terms',
   'app-privacy',

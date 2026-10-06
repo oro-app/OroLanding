@@ -18,6 +18,7 @@ const HowItWorksPage = lazy(() => import('./components/how-it-works/HowItWorks')
 const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
+const AboutPage = lazy(() => import('./components/about/AboutPage'))
 const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
 const TesterReferrals = lazy(() => import('./components/beta/TesterReferrals'))
 const BetaPage = lazy(() => import('./components/beta/Beta'))
@@ -44,6 +45,7 @@ export function getRouteFromPath(pathname = '/', search = '') {
   if (path === '/why-oro')         return { type: 'why-oro' }
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
+  if (path === '/about')           return { type: 'about' }
   if (path === '/get-started')     return { type: 'get-started' }
   if (path === '/signup')          return { type: 'signup' }
   if (path === '/tester/referrals') return { type: 'beta', tester: true }
@@ -64,9 +66,9 @@ function App({ initialRoute }) {
   const isSignup = route.type === 'signup'
   const isFeedback = route.type === 'feedback'
   const isGeo = route.type === 'geo'
-  const isBlog = route.type === 'newsletter' || route.type === 'journal' || isGeo
+  const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
   const isPrivateForm = isBeta || isSignup || isFeedback || route.type === 'get-started'
-  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'newsletter' || isGeo
+  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
   const pageViewParams = {
     route_type: route.type,
     ...(route.slug ? { newsletter_slug: route.slug } : {}),
@@ -183,6 +185,10 @@ function App({ initialRoute }) {
           ) : route.type === 'contact' ? (
             <Suspense fallback={null}>
               <ContactPage />
+            </Suspense>
+          ) : route.type === 'about' ? (
+            <Suspense fallback={<BlogSkeleton variant="article" />}>
+              <AboutPage />
             </Suspense>
           ) : route.type === 'get-started' ? (
             <Suspense fallback={null}>
