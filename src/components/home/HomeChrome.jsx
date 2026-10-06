@@ -74,7 +74,7 @@ export function HomeFooter({ landing = false, closerTitle = 'want her number?', 
           </div>
           <nav className="halo-footer-legal" aria-label="Company and legal">
             <h3>Explore</h3>
-            <a href="/about">About us</a>
+            <a href="/about">About the team</a>
             <a href="/privacy">Privacy</a>
             <a href="/terms">Terms</a>
             <a href="/cookies">Cookies</a>

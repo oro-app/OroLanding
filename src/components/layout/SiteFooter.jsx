@@ -53,7 +53,7 @@ export default function SiteFooter() {
               </a>
             ))}
             {col.head === 'editorial' && (
-              <a className="site-footer-link" href="/about">about us</a>
+              <a className="site-footer-link" href="/about">about the team</a>
             )}
           </div>
         ))}

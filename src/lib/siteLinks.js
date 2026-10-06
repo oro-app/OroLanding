@@ -39,7 +39,7 @@ export const NAV_COLUMNS = [
 ]
 
 export const FOOTER_LINKS = [
-  { label: 'about us', href: '/about' },
+  { label: 'about the team', href: '/about' },
   { label: 'from the closet', href: '/from-the-closet' },
   { label: 'contact', href: '/contact' },
   { label: 'terms', href: '/terms' },

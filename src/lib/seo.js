@@ -125,10 +125,10 @@ export const ROUTE_SEO = {
   },
   about: {
     path: '/about',
-    title: 'about us - oro',
-    description: 'Meet oro and learn why we are building a personal stylist around your wardrobe, your taste, and your life.',
-    h1: 'about us.',
-    summary: 'Oro is building a personal stylist that helps you get more from the clothes you already own.',
+    title: 'about the team - oro',
+    description: 'Meet the team building oro, a personal stylist designed around your wardrobe, your taste, and your life.',
+    h1: 'about the team.',
+    summary: 'Meet the small team building oro across product, operations, technology, and design.',
     priority: '0.5',
   },
   'get-started': {
