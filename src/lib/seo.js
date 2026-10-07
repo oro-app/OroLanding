@@ -126,9 +126,9 @@ export const ROUTE_SEO = {
   about: {
     path: '/about',
     title: 'Democratizing personal styling for everyone - oro',
-    description: 'Meet the team building oro, a personal stylist designed around your wardrobe, your taste, and your life.',
+    description: 'Meet the team building oro to make personal styling more accessible and help people feel confident in what they wear.',
     h1: 'Democratizing personal styling for everyone',
-    summary: 'Meet the small team building oro across product, operations, technology, and design.',
+    summary: 'Meet the small team building oro to help more people feel confident in what they wear.',
     priority: '0.5',
   },
   'get-started': {
