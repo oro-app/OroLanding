@@ -40,7 +40,7 @@ test('hero CTA offers desktop users a scannable text handoff', async ({ page }) 
   const visualBox = await page.locator('.home-message-visual').boundingBox()
   expect(visualBox.x).toBeGreaterThan(copyBox.x)
   expect(Math.abs(visualBox.y - copyBox.y)).toBeLessThan(2)
-  await expect(page.getByRole('link', { name: 'or text +1 (855) 676-2419' })).toHaveAttribute('href', /^sms:\+18556762419/)
+  await expect(page.getByRole('link', { name: 'text +1 (855) 676-2419' })).toHaveAttribute('href', /^sms:\+18556762419/)
 })
 
 test('hero CTA opens a prefilled text on mobile', async ({ page }) => {

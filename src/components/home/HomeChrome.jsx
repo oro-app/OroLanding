@@ -46,10 +46,10 @@ export function HomeCta({ place, children, className = '' }) {
           </form>
           <div className="home-message-dialog-copy">
             <Heading as="h2" variant="title" id="home-message-title">get oro&apos;s<br />number</Heading>
-            <ul><li>scan the code with your phone and your first message will be ready to send.</li></ul>
+            <p>scan the code with your phone and your first message will be ready to send.</p>
             <a className="home-message-number" href={smsHref}>
               <PhoneIcon />
-              <span><small>or text</small>+1 (855) 676-2419</span>
+              <span><small>text</small>+1 (855) 676-2419</span>
             </a>
           </div>
           <div className="home-message-visual">
