@@ -1,4 +1,5 @@
 import { Heading, Text } from 'oro-kit'
+import { useRef } from 'react'
 import useScrolled from '../../hooks/useScrolled'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
@@ -8,11 +9,41 @@ function HomeLogo() {
 }
 
 export function HomeCta({ place, children, className = '' }) {
+  const dialogRef = useRef(null)
+  const isHero = place === 'hero'
+  const message = 'Hey oro! Your newest oronaut has landed 🚀'
+  const apple = typeof navigator !== 'undefined' && /iPhone|iPad|iPod/.test(navigator.userAgent)
+  const smsHref = `sms:+18556762419${apple ? '&' : '?'}body=${encodeURIComponent(message)}`
+
+  const handleClick = (event) => {
+    trackCtaClick('get_started_click', { location: place, destination: isHero ? 'messages' : 'signup' })
+    if (isHero && !/Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent)) {
+      event.preventDefault()
+      dialogRef.current?.showModal()
+    }
+  }
+
   return (
-    <a href="/signup?step=phone" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-      onClick={() => trackCtaClick('get_started_click', { location: place, destination: 'signup' })}>
-      {children}
-    </a>
+    <>
+      <a href={isHero ? smsHref : '/signup?step=phone'} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
+        onClick={handleClick}>
+        {children}
+        {isHero && <span aria-hidden="true">→</span>}
+      </a>
+      {isHero && (
+        <dialog className="home-message-dialog" ref={dialogRef} aria-labelledby="home-message-title">
+          <form method="dialog">
+            <button className="home-message-close" type="submit" aria-label="Close message options">×</button>
+          </form>
+          <div className="home-message-dialog-copy">
+            <Heading as="h2" variant="title" id="home-message-title">text oro</Heading>
+            <Text muted>scan the QR code with your phone to start a text.</Text>
+            <a href={smsHref}>or text +1 (855) 676-2419</a>
+          </div>
+          <img src="/oro-sms-qr.png" alt="QR code that opens a prefilled text message to oro" width="512" height="512" />
+        </dialog>
+      )}
+    </>
   )
 }
 

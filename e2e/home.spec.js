@@ -13,7 +13,7 @@ test('home page loads cleanly @smoke', async ({ page }) => {
   expect(errors).toEqual([])
 })
 
-for (const place of ['header', 'hero', 'closer']) {
+for (const place of ['header', 'closer']) {
   test(`${place} CTA opens the signup flow`, async ({ page }) => {
     await page.goto('/')
     await page.locator(`.halo-cta--${place}`).click()
@@ -25,13 +25,32 @@ for (const place of ['header', 'hero', 'closer']) {
   })
 }
 
+test('hero CTA offers desktop users a scannable text handoff', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('.halo-cta--hero').click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'text oro' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'or text +1 (855) 676-2419' })).toHaveAttribute('href', /^sms:\+18556762419/)
+})
+
+test('hero CTA opens a prefilled text on mobile', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', {
+    value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)',
+  }))
+  await page.goto('/')
+  await expect(page.locator('.halo-cta--hero')).toHaveAttribute(
+    'href',
+    `sms:+18556762419&body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`,
+  )
+})
+
 test('centered hero gives way to the rest of the page on scroll', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/')
   await page.evaluate(() => document.fonts.ready)
   await expect(page.locator('.halo-home')).toHaveAttribute('data-motion', 'ready')
   await expect(page.locator('.mt-device')).toHaveCount(0)
-  await expect(page.locator('.halo-cta--hero')).toHaveText('Join the beta')
+  await expect(page.locator('.halo-cta--hero')).toContainText('get her number')
   const heading = page.getByRole('heading', { level: 1 })
   const headingTop = await heading.evaluate((element) => element.getBoundingClientRect().top)
   await page.evaluate(() => window.scrollTo({ top: 300, behavior: 'instant' }))
