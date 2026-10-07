@@ -18,6 +18,34 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-footer-links a:hover { color: var(--oro-color-accent); }
 .halo-site .halo-cta { gap: var(--oro-space-3); }
 .halo-site .halo-cta--header { gap: var(--oro-space-2); }
+.halo-cta-message, .halo-cta-arrow { flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.halo-cta-message { width: 26px; height: 26px; }
+.halo-cta-arrow { width: 20px; height: 20px; }
+.halo-site :is(.halo-cta--hero, .halo-cta--closer) {
+  width: 286px;
+  max-width: 100%;
+  min-height: 68px;
+  justify-content: space-between;
+  padding: 14px 22px 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: #573969;
+  box-shadow: 0 16px 38px rgba(43, 22, 70, 0.3), 0 4px 12px rgba(43, 22, 70, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.halo-site :is(.halo-cta--hero, .halo-cta--closer) .halo-cta-message {
+  width: 29px;
+  height: 29px;
+}
+.halo-site :is(.halo-cta--hero, .halo-cta--closer) .halo-cta-arrow { display: block; width: 22px; height: 22px; opacity: 0.86; }
+.halo-site :is(.halo-cta--hero, .halo-cta--closer):hover {
+  background: #634475;
+  box-shadow: 0 20px 48px rgba(43, 22, 70, 0.34), 0 6px 16px rgba(43, 22, 70, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.halo-site :is(.halo-cta--hero, .halo-cta--closer):focus-visible { outline-color: var(--oro-gold); }
 
 .home-copy { padding-bottom: var(--oro-space-24); }
 .home-panel { max-width: 560px; min-height: calc(100dvh - var(--halo-header-height)); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-block: var(--oro-space-16); }
@@ -32,7 +60,8 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-panel.home-moments-panel .oro-heading--title { max-width: 760px; }
 .home-description { margin-top: var(--oro-space-6); max-width: 440px; text-wrap: pretty; }
 .home-action { display: flex; flex-direction: column; align-items: flex-start; width: fit-content; max-width: 100%; margin-top: var(--oro-space-8); }
-.home-beta-note { margin-top: var(--oro-space-2); text-align: left; }
+.home-cta-note { margin-top: var(--oro-space-3); text-align: center; }
+.home-beta-note { margin-top: var(--oro-space-1); text-align: center; }
 .home-pull { margin-top: var(--oro-space-6); }
 .home-feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "copy media"; align-items: center; gap: clamp(32px, 6vw, 96px); padding-block: clamp(24px, 3vw, 40px); }
 .home-feature + .home-feature { border-top: 1px solid var(--oro-color-border); }
@@ -46,7 +75,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-footer--landing { background: #000; color: #fff; padding-top: clamp(72px, 9vw, 120px); }
 .halo-footer-closer { text-align: center; }
 .halo-footer-closer .oro-heading { max-width: 780px; margin-inline: auto; color: #fff; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.06; text-wrap: balance; }
-.halo-footer-closer .halo-cta { min-height: 52px; margin-top: var(--oro-space-8); padding-inline: 28px; font-size: 1rem; }
+.halo-footer-closer .halo-cta { margin-top: var(--oro-space-8); }
 .halo-footer-goals { margin-top: clamp(72px, 8vw, 112px); text-align: center; }
 .halo-footer-goals h2 { margin: 0; color: #bdbdbd; font-family: var(--oro-font-family-wordmark); font-size: clamp(2rem, 3vw, 2.5rem); font-weight: var(--oro-font-weight-heading); line-height: 1.2; }
 .halo-footer-goal-options { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 850px; margin: 36px auto 0; }
@@ -82,11 +111,13 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-home[data-motion="ready"] .home-enter { animation: homeEnter 620ms var(--home-ease) backwards; }
   .halo-home[data-motion="ready"] .home-description.home-enter { animation-delay: 760ms; }
   .halo-home[data-motion="ready"] .halo-cta--hero { animation-delay: 900ms; }
-  .halo-home[data-motion="ready"] .home-beta-note { animation-delay: 1020ms; }
+  .halo-home[data-motion="ready"] .home-cta-note { animation-delay: 1020ms; }
+  .halo-home[data-motion="ready"] .home-beta-note { animation-delay: 1100ms; }
   .halo-home[data-motion="ready"] [data-home-reveal] .home-stagger { transition: opacity 650ms ease var(--home-delay), transform 750ms var(--home-ease) var(--home-delay); }
   .halo-home[data-motion="ready"] [data-reveal-state="pending"] .home-stagger { opacity: 0; transform: translateY(22px); }
   .halo-home[data-motion="ready"] [data-home-reveal]:focus-within .home-stagger { opacity: 1; transform: none; transition: none; }
-  .halo-site .halo-cta { transition: color var(--oro-motion-duration) var(--oro-motion-easing), background-color var(--oro-motion-duration) var(--oro-motion-easing), box-shadow 240ms ease; }
+  .halo-site .halo-cta { transition: color var(--oro-motion-duration) var(--oro-motion-easing), background-color var(--oro-motion-duration) var(--oro-motion-easing), box-shadow 240ms ease, transform 240ms var(--home-ease); }
+  .halo-site :is(.halo-cta--hero, .halo-cta--closer):hover { transform: translateY(-2px); }
   .halo-home .halo-cta:focus-visible { animation: none; opacity: 1; transform: none; transition: none; }
 }
 

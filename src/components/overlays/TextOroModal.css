@@ -1,0 +1,180 @@
+.text-oro-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgba(11, 11, 11, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.text-oro-dialog {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(300px, 1.1fr);
+  width: min(920px, 100%);
+  max-height: calc(100dvh - 56px);
+  overflow: auto;
+  border: 1px solid color-mix(in srgb, var(--oro-color-accent) 28%, transparent);
+  border-radius: 32px;
+  background: var(--oro-color-surface);
+  color: var(--oro-color-ink);
+  box-shadow: 0 32px 100px rgba(37, 24, 45, 0.34);
+}
+
+.text-oro-close {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--oro-color-canvas) 82%, transparent);
+  color: var(--oro-color-ink);
+  cursor: pointer;
+}
+
+.text-oro-close svg { width: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.75; }
+.text-oro-close:hover { background: var(--oro-color-soft); }
+
+.text-oro-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(48px, 7vw, 80px) clamp(32px, 6vw, 64px);
+}
+
+.text-oro-eyebrow {
+  color: var(--oro-accent-text);
+  font-size: 0.76rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.text-oro-copy h2 {
+  margin: 14px 0 0;
+  font-family: var(--oro-font-family-heading);
+  font-size: clamp(3rem, 6vw, 4.6rem);
+  font-weight: var(--oro-font-weight-heading);
+  letter-spacing: -0.055em;
+  line-height: 0.94;
+}
+
+.text-oro-copy > p {
+  max-width: 360px;
+  margin: 26px 0 0;
+  color: var(--oro-color-muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.text-oro-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  width: fit-content;
+  margin-top: 42px;
+  color: var(--oro-color-ink);
+  font-size: 1.04rem;
+  font-weight: 650;
+}
+
+.text-oro-number svg {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--oro-color-accent);
+  fill: none;
+  stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.text-oro-number span { display: flex; flex-direction: column; }
+.text-oro-number small { color: var(--oro-color-muted); font-size: 0.76rem; font-weight: 500; }
+.text-oro-number:hover { color: var(--oro-accent-text); }
+.text-oro-copy .text-oro-fineprint { margin-top: 28px; font-size: 0.78rem; }
+.text-oro-copy .text-oro-terms { margin-top: 42px; color: var(--oro-color-muted); font-size: 0.78rem; line-height: 1.55; text-transform: none; }
+.text-oro-terms a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: 3px; }
+.text-oro-terms a:hover { color: var(--oro-color-accent); }
+
+.text-oro-visual {
+  position: relative;
+  display: flex;
+  min-height: 570px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 68px 48px 46px;
+  overflow: hidden;
+  border-radius: 0 32px 32px 0;
+  background: linear-gradient(145deg, var(--oro-color-soft), color-mix(in srgb, var(--oro-color-accent) 32%, var(--oro-color-canvas)));
+}
+
+.text-oro-bubble {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  margin: 0 0 -2px 8px;
+  padding: 10px 16px;
+  border-radius: 18px 18px 4px 18px;
+  background: var(--oro-color-surface);
+  box-shadow: 0 8px 24px rgba(37, 24, 45, 0.12);
+  font-size: 0.9rem;
+}
+
+.text-oro-mascot {
+  position: relative;
+  z-index: 1;
+  width: 142px;
+  height: 92px;
+  margin: -8px 12px -28px auto;
+  object-fit: cover;
+  object-position: 50% 31%;
+}
+
+.text-oro-qr-frame {
+  position: relative;
+  width: min(100%, 330px);
+  aspect-ratio: 1;
+  padding: 20px;
+  border: 1px solid color-mix(in srgb, var(--oro-color-border) 72%, transparent);
+  border-radius: 28px;
+  background: var(--oro-color-surface);
+  box-shadow: 0 24px 64px rgba(37, 24, 45, 0.2);
+}
+
+.text-oro-qr-frame img { display: block; width: 100%; height: 100%; border-radius: 10px; }
+.text-oro-qr-loading { display: block; width: 100%; height: 100%; border-radius: 10px; background: var(--oro-color-canvas); }
+@media (prefers-reduced-motion: no-preference) {
+  .text-oro-backdrop { animation: textOroFade 180ms ease-out both; }
+  .text-oro-dialog { animation: textOroEnter 280ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+}
+
+@keyframes textOroFade { from { opacity: 0; } }
+@keyframes textOroEnter { from { opacity: 0; transform: translateY(14px) scale(0.985); } }
+
+@media (max-width: 720px) {
+  .text-oro-backdrop { padding: 16px; }
+  .text-oro-dialog { grid-template-columns: 1fr; border-radius: 24px; }
+  .text-oro-copy { padding: 56px 28px 38px; }
+  .text-oro-copy h2 { font-size: clamp(3rem, 16vw, 4.5rem); }
+  .text-oro-visual { min-height: auto; padding: 42px 28px 36px; border-radius: 0 0 24px 24px; }
+  .text-oro-qr-frame { width: min(100%, 280px); }
+}
+
+@media (forced-colors: active) {
+  .text-oro-dialog, .text-oro-qr-frame { border: 2px solid CanvasText; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-oro-backdrop, .text-oro-dialog { animation: none; }
+}

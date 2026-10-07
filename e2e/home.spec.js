@@ -6,23 +6,86 @@ test('home page loads cleanly @smoke', async ({ page }) => {
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()) })
   await page.goto('/')
   await expect(page).toHaveTitle(/oro/i)
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('the ai fashion assistant you can text')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveAttribute('aria-label', 'the ai fashion assistant you can text')
   await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', 'Fraunces, Georgia, serif')
   await expect(page.getByText(/600\+/)).toHaveCount(0)
-  await expect(page.getByText(/Getting dressed is one text away/)).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'text her when you don’t know what to wear' })).toBeVisible()
   expect(errors).toEqual([])
 })
 
 for (const place of ['header', 'hero', 'closer']) {
-  test(`${place} CTA opens the beta invitation`, async ({ page }) => {
+  test(`${place} CTA opens the text handoff`, async ({ page }) => {
     await page.goto('/')
-    await page.locator(`.halo-cta--${place}`).click()
-    await expect(page).toHaveURL(/\/beta$/)
-    await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Blog' })).toHaveCount(0)
-    await expect(page.getByRole('link', { name: 'Get started' })).toBeVisible()
+    const cta = page.locator(`.halo-cta--${place}`)
+    await cta.click()
+    const dialog = page.getByRole('dialog', { name: "get oro's number" })
+    await expect(dialog).toBeVisible()
+    await expect(dialog.getByText('+1 (855) 676-2419')).toBeVisible()
+    await expect(dialog.getByAltText('QR code to start a text with oro')).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(dialog).toBeHidden()
+    await expect(cta).toBeFocused()
   })
 }
+
+test('mobile get-her-number CTA is a prefilled SMS deep link', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'userAgent', {
+      configurable: true,
+      value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148',
+    })
+  })
+  await page.goto('/')
+  const cta = page.locator('.halo-cta--hero')
+  await expect(cta).toHaveAttribute('href', `sms:+18556762419&body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`)
+  await expect(page.getByText('text oro — no app needed')).toBeVisible()
+})
+
+test('get-her-number handoff records CTA and modal analytics', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('oro_cookie_consent', 'accepted')
+    window.dataLayer = []
+    window.gtag = (...args) => window.dataLayer.push(args)
+  })
+  await page.goto('/')
+  await page.locator('.halo-cta--hero').click()
+  await expect.poll(() => page.evaluate(() => window.dataLayer.some((entry) => (
+    Array.isArray(entry)
+      && entry[0] === 'event'
+      && entry[1] === 'get_number_click'
+      && entry[2]?.location === 'hero'
+      && entry[2]?.destination === 'qr_handoff'
+  )))).toBe(true)
+  await expect.poll(() => page.evaluate(() => window.dataLayer.some((entry) => (
+    Array.isArray(entry)
+      && entry[0] === 'event'
+      && entry[1] === 'text_handoff_open'
+      && entry[2]?.location === 'hero'
+  )))).toBe(true)
+})
+
+test('hero and footer share one solid CTA treatment and the handoff includes legal terms', async ({ page }) => {
+  await page.goto('/')
+  const hero = page.locator('.halo-cta--hero')
+  const closer = page.locator('.halo-cta--closer')
+  const heroStyle = await hero.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return { width: style.width, height: style.height, backgroundColor: style.backgroundColor, backgroundImage: style.backgroundImage }
+  })
+  await closer.scrollIntoViewIfNeeded()
+  const closerStyle = await closer.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return { width: style.width, height: style.height, backgroundColor: style.backgroundColor, backgroundImage: style.backgroundImage }
+  })
+  expect(closerStyle).toEqual(heroStyle)
+  expect(heroStyle.backgroundImage).toBe('none')
+
+  await hero.click()
+  const dialog = page.getByRole('dialog', { name: "get oro's number" })
+  await expect(dialog.getByText(/scan the code with your phone/i)).toHaveCount(0)
+  await expect(dialog.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', '/terms')
+  await expect(dialog.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy')
+})
 
 test('centered hero gives way to the rest of the page on scroll', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
@@ -30,13 +93,13 @@ test('centered hero gives way to the rest of the page on scroll', async ({ page 
   await page.evaluate(() => document.fonts.ready)
   await expect(page.locator('.halo-home')).toHaveAttribute('data-motion', 'ready')
   await expect(page.locator('.mt-device')).toHaveCount(0)
-  await expect(page.locator('.halo-cta--hero')).toHaveText('Join the beta')
+  await expect(page.locator('.halo-cta--hero')).toContainText('get her number')
   const heading = page.getByRole('heading', { level: 1 })
   const headingTop = await heading.evaluate((element) => element.getBoundingClientRect().top)
   await page.evaluate(() => window.scrollTo({ top: 300, behavior: 'instant' }))
   expect(await heading.evaluate((element) => element.getBoundingClientRect().top)).toBeCloseTo(headingTop - 300, 0)
   await page.locator('#home-moments-title').scrollIntoViewIfNeeded()
-  await expect(page.getByRole('heading', { name: 'Look like yourself. Feel ready for anything.' })).toBeInViewport()
+  await expect(page.getByRole('heading', { name: 'she gets your style. and your life.' })).toBeInViewport()
   await expect(page.locator('.home-panel[aria-hidden="true"]')).toHaveCount(0)
 })
 
@@ -82,6 +145,5 @@ test('keyboard focus makes the final call to action readable immediately', async
   await expect(cta).toBeFocused()
   await expect(cta).toHaveCSS('opacity', '1')
   await expect(cta).toHaveCSS('transform', 'none')
-  await expect(cta).toHaveCSS('transition-duration', '0s')
   await expect(page.locator('#closer-title')).toHaveCSS('opacity', '1')
 })

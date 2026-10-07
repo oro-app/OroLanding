@@ -78,10 +78,11 @@ export default function Home() {
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
             <Text muted className="home-description home-enter">
-              your personal fashion stylist over text, here to help you decide what to wear.
+              personalized outfit advice for your closet, your style, and your plans.
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">get her number</HomeCta>
+              <Text variant="support" muted className="home-cta-note home-enter">text oro — no app needed</Text>
               {entryCount !== null && <Text variant="support" muted className="home-beta-note home-enter">{entryCount.toLocaleString()} people are trying to get oro’s number</Text>}
             </div>
           </section>

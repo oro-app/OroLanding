@@ -83,7 +83,7 @@ function App({ initialRoute }) {
       if (!link) return
 
       const href = link.getAttribute('href')
-      if (!href || href.startsWith('mailto:') || href.startsWith('tel:')) return
+      if (!href || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('sms:')) return
 
       const destination = new URL(href, window.location.href)
       const destinationPath = `${destination.pathname}${destination.search}${destination.hash}`

@@ -4,14 +4,8 @@ import { getCountries, getCountryCallingCode, parsePhoneNumberFromString } from 
 import ButtonArrow from '../ButtonArrow'
 import { postOnboarding } from './onboardingApi'
 import GoldBackground from '../GoldBackground'
+import { getOroTextLink, ORO_TEXT_NUMBER_DISPLAY } from '../../lib/textOro'
 import './GetStarted.css'
-
-const FIRST_MESSAGE = 'Hey oro! Your newest oronaut has landed 🚀'
-
-function textingLink() {
-  const apple = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)
-  return `sms:+18556762419${apple ? '&' : '?'}body=${encodeURIComponent(FIRST_MESSAGE)}`
-}
 
 const QUESTIONS = ['name', 'birthday', 'province', 'hear', 'phone']
 
@@ -567,8 +561,8 @@ export default function GetStarted() {
               <p className="gs-eyebrow">Welcome, oronaut.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">You’re all set.</Heading>
               <p className="gs-terminal-sub">Your beta setup is complete. Send oro your first text to get started.</p>
-              <a className="oro-button oro-button--primary gs-cta" href={textingLink()}>Start texting oro</a>
-              <p className="gs-terminal-sub">On your computer? Text +1 (855) 676-2419 from your phone.</p>
+              <a className="oro-button oro-button--primary gs-cta" href={getOroTextLink()}>Start texting oro</a>
+              <p className="gs-terminal-sub">On your computer? Text {ORO_TEXT_NUMBER_DISPLAY} from your phone.</p>
               <a className="gs-textlink" href="mailto:sunny@buildingoro.ca">Questions? Email us</a>
             </div>
           )}
