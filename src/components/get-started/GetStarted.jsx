@@ -133,6 +133,7 @@ export default function GetStarted() {
     }
   })
   const [code, setCode] = useState('')
+  const [smsConsent, setSmsConsent] = useState(false)
   const phoneNumber = useMemo(() => {
     const parsed = parsePhoneNumberFromString(form.phone, { defaultCountry: form.phoneCountry, extract: false })
     return parsed?.isValid() && !parsed.ext ? parsed : null
@@ -188,11 +189,11 @@ export default function GetStarted() {
       case 'province': return (form.country === 'CA' ? PROVINCES : form.country === 'US' ? US_STATES : [])
         .some(([code]) => code === form.province)
       case 'hear': return form.hear.length > 0
-      case 'phone': return form.phone.trim().length > 0
+      case 'phone': return form.phone.trim().length > 0 && smsConsent
       case 'otp': return code.length === 6 && verifyLeft === 0
       default: return true
     }
-  }, [view, form, code, verifyLeft])
+  }, [view, form, code, smsConsent, verifyLeft])
 
   const goTo = (next, direction = 'fwd') => {
     setDir(direction)
@@ -481,7 +482,7 @@ export default function GetStarted() {
               cta={loading ? 'Sending' : resendLeft > 0 ? `Send code in ${resendLeft}s` : 'Send verification code'}
               loading={loading}
               error={error}
-              footer={<ConsentNote />}
+              footer={<ConsentNote checked={smsConsent} onChange={setSmsConsent} />}
             >
               <div className="gs-phone-fields">
                 <div className="oro-field">
@@ -678,19 +679,27 @@ function Question({
   )
 }
 
-function ConsentNote() {
+function ConsentNote({ checked, onChange }) {
   return (
     <>
+      <label className="gs-sms-consent">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(event) => onChange(event.target.checked)}
+          required
+        />
+        <span>
+          I agree to receive recurring automated SMS/MMS messages from Oro at the number provided,
+          including messages from Oro's AI styling assistant. Message frequency varies. Message &amp;
+          data rates may apply. Reply STOP to opt out or HELP for help.
+        </span>
+      </label>
       <p className="gs-consent-line">
-        By entering your number, you agree to oro's{' '}
+        By continuing, you agree to oro's{' '}
         <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and{' '}
         <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and
         confirm that you are not a resident of Quebec.
-      </p>
-      <p className="gs-consent-line">
-        You're also opting in to recurring automated texts from oro at this number - it's how oro
-        styles you. Msg &amp; data rates may apply, frequency varies. Reply STOP to opt out, HELP for
-        help.
       </p>
     </>
   )

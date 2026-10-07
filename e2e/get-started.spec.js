@@ -31,6 +31,7 @@ async function continueToPhone(page) {
 
 async function codeStep(page) {
   await phoneStep(page)
+  await page.getByRole('checkbox').check()
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await expect(page.getByRole('heading', { name: 'We just texted you.' })).toBeVisible()
 }
@@ -65,6 +66,7 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('CA')
   await page.getByLabel('Phone number', { exact: true }).fill('(416) 555-0123')
+  await page.getByRole('checkbox').check()
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await verify(page)
   await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeFocused()
