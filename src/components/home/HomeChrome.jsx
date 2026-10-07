@@ -9,10 +9,11 @@ function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
 }
 
-function MessageIcon() {
+function PhoneIcon() {
   return (
-    <svg className="home-message-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M5 5.5h14v10H9l-4 3v-13Z" />
+    <svg className="home-message-phone-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="7" y="2.5" width="10" height="19" rx="2" />
+      <path d="M10.5 18.5h3" />
     </svg>
   )
 }
@@ -36,7 +37,6 @@ export function HomeCta({ place, children, className = '' }) {
     <>
       <a href={isHero ? smsHref : '/signup?step=phone'} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
         onClick={handleClick}>
-        {isHero && <MessageIcon />}
         {children}
       </a>
       {isHero && (
@@ -48,17 +48,19 @@ export function HomeCta({ place, children, className = '' }) {
             <Heading as="h2" variant="title" id="home-message-title">get oro&apos;s<br />number</Heading>
             <ul><li>scan the code with your phone and your first message will be ready to send.</li></ul>
             <a className="home-message-number" href={smsHref}>
-              <span className="home-message-number-icon" aria-hidden="true"><MessageIcon /></span>
+              <PhoneIcon />
               <span><small>or text</small>+1 (855) 676-2419</span>
             </a>
           </div>
           <div className="home-message-visual">
-            <p>hey, i&apos;m oro ✨</p>
             <img className="home-message-mascot" src={oroTexting} alt="" width="1500" height="1500" />
             <div className="home-message-qr">
               <img src="/oro-sms-qr.png" alt="QR code that opens a prefilled text message to oro" width="512" height="512" />
             </div>
           </div>
+          <footer className="home-message-footer">
+            By continuing, you agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+          </footer>
         </dialog>
       )}
     </>
