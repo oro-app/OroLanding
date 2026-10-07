@@ -108,7 +108,7 @@ export default function Home() {
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
             <Text muted className="home-description home-enter">
-              your personal fashion stylist over text, here to help you decide what to wear.
+              not another digital wardrobe. not another app.
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">get her number</HomeCta>
