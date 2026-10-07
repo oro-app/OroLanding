@@ -1,5 +1,40 @@
 import { test, expect } from './fixtures'
 
+test('resending waits 60 seconds and refreshing verification returns to the phone step', async ({ page }) => {
+  await page.clock.install()
+  let sends = 0
+  let releaseAvailability
+  const availabilityPending = new Promise((resolve) => { releaseAvailability = resolve })
+  await page.route('**/api/beta-request', async (route) => {
+    await availabilityPending
+    return route.fulfill({ json: { enabled: true } })
+  })
+  await page.route('**/api/beta-verify', (route) => {
+    if (route.request().postDataJSON().action === 'start') sends++
+    return route.fulfill({ json: { ok: true } })
+  })
+
+  await page.goto('/signup?step=phone')
+  await page.getByLabel('phone number', { exact: true }).fill('4165550123')
+  const sendButton = page.getByRole('button', { name: 'send my code' })
+  await expect(sendButton).toBeEnabled()
+  await sendButton.click()
+  await expect(page.getByRole('button', { name: 'sending your code…' })).toBeDisabled()
+  expect(sends).toBe(0)
+  releaseAvailability()
+  await expect(page).toHaveURL(/\/signup\?step=verify-phone$/)
+  await expect(page.getByRole('button', { name: 'Send a new code in 60s' })).toBeDisabled()
+
+  await page.clock.runFor(60000)
+  await page.getByRole('button', { name: 'Send a new code', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Send a new code in 60s' })).toBeDisabled()
+  expect(sends).toBe(2)
+
+  await page.reload()
+  await expect(page).toHaveURL(/\/signup\?step=phone$/)
+  await expect(page.getByLabel('phone number', { exact: true })).toBeVisible()
+})
+
 for (const testerPage of [false, true]) {
   for (const failure of [429, 503]) {
     test(`${testerPage ? 'tester' : 'invite'} retries a ${failure} lookup without checking the consumed OTP again`, async ({ page }) => {
@@ -16,7 +51,7 @@ for (const testerPage of [false, true]) {
         expect(route.request().postDataJSON().phone_verification).toBe(proof)
         return route.fulfill({ status: lookups === 1 ? failure : 200, json: lookups === 1 ? { code: failure === 429 ? 'rate_limited' : 'temporarily_unavailable' } : testerPage ? { ok: true, found: true, tester: true, referral_code: 'a'.repeat(64), referred_signups: 1 } : { ok: true, found: false } })
       })
-      await page.goto(testerPage ? '/tester/referrals' : `/invite?ref=${'b'.repeat(64)}&step=phone`)
+      await page.goto(testerPage ? '/tester/referrals' : `/signup?ref=${'b'.repeat(64)}&step=phone`)
       await page.getByLabel('phone number', { exact: true }).fill('4165550123')
       await page.getByRole('button', { name: 'send my code' }).click()
       await page.getByLabel('Verification code').fill('123456')
@@ -107,7 +142,7 @@ for (const unavailable of [false, true]) {
     })
     await page.route('**/api/beta-verify', (route) => route.fulfill({ json: { ok: true, proof: 'test-proof' } }))
     await page.route('**/api/beta-existing', (route) => route.fulfill({ status: unavailable ? 503 : 200, json: unavailable ? { code: 'temporarily_unavailable' } : { ok: true, found: true, tester: true, request_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', referral_code: 'a'.repeat(64), signup_number: 38, referred_signups: 1, referral_completed_date: '' } }))
-    await page.goto('/beta?step=phone')
+    await page.goto('/signup?step=phone')
     await page.getByLabel('phone number', { exact: true }).fill('4165550123')
     await page.getByRole('button', { name: 'send my code' }).click()
     await page.getByLabel('Verification code').fill('123456')

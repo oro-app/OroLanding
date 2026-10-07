@@ -145,4 +145,5 @@ export function setAnalyticsConsent(accepted, pageViewParams = {}) {
     initAnalytics();
     trackPageView({ ...pageViewParams, consent_source: 'cookie_banner' });
   }
+  window.dispatchEvent(new CustomEvent('oro:analytics-consent-change'));
 }

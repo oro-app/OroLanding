@@ -30,7 +30,7 @@ export default function IterationDemo({ title, description }) {
   }, [])
 
   return (
-    <section className="product-demo iteration-demo" aria-labelledby="iteration-demo-title" ref={sectionRef}>
+    <section className="product-demo iteration-demo" aria-labelledby="iteration-demo-title" ref={sectionRef} data-analytics-section="outfit_iteration_demo">
       <div className="halo-container product-demo-inner">
         <h2 id="iteration-demo-title" className="home-demo-title">{title}</h2>
         <p className="home-demo-description">{description}</p>

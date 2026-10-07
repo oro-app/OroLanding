@@ -3,9 +3,8 @@ import useScrolled from '../../hooks/useScrolled'
 import { NAV_COLUMNS } from '../../lib/siteLinks'
 
 // Redesigned site header — sticky, hairline bottom border, theme-aware via
-// --color-* tokens. The nav mirrors the footer exactly: each footer column
-// (product / editorial / say hi / legal) is a hover/focus dropdown here,
-// driven by the shared NAV_COLUMNS data so the two never drift apart.
+// --color-* tokens. Its dropdown columns are driven by NAV_COLUMNS;
+// footer-only links are kept out of this shared data.
 //
 // Theme control is a single sun/moon icon toggle (was two literal
 // dark / light text buttons).

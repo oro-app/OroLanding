@@ -138,8 +138,11 @@ export default function GetStarted() {
   const [notice, setNotice] = useState('')
   const [problem, setProblem] = useState(null)
   const screenRef = useRef(null)
+  const advancing = useRef(false)
+  const requesting = useRef(false)
 
   useEffect(() => {
+    advancing.current = false
     screenRef.current?.querySelector('h1')?.focus()
   }, [view])
 
@@ -218,11 +221,12 @@ export default function GetStarted() {
   }
 
   const startSignup = async ({ resend = false } = {}) => {
-    if (loading || resendLeft > 0) return
+    if (requesting.current || loading || resendLeft > 0) return
     if (!phoneNumber) {
       setError('Enter a valid phone number and check the selected country code.')
       return
     }
+    requesting.current = true
     setLoading(true)
     setError('')
     setNotice('')
@@ -261,12 +265,14 @@ export default function GetStarted() {
     } catch {
       setError('We couldn’t reach oro. Check your connection and try again.')
     } finally {
+      requesting.current = false
       setLoading(false)
     }
   }
 
   const verifyCode = async () => {
-    if (loading || verifyLeft > 0 || !phoneNumber) return
+    if (requesting.current || loading || verifyLeft > 0 || !phoneNumber) return
+    requesting.current = true
     setLoading(true)
     setError('')
     setNotice('')
@@ -293,12 +299,14 @@ export default function GetStarted() {
     } catch {
       showProblem('connection')
     } finally {
+      requesting.current = false
       setLoading(false)
     }
   }
 
   const advance = () => {
-    if (!canContinue || loading) return
+    if (!canContinue || loading || advancing.current) return
+    advancing.current = true
     // Birthday gate: under-16 diverts to the ineligible dead-end.
     if (view === 'birthday' && ageFromISO(form.birthday) < MIN_AGE) {
       goTo('ineligible')
@@ -309,8 +317,8 @@ export default function GetStarted() {
       return
     }
     if (view === 'welcome') { goTo(QUESTIONS[0]); return }
-    if (view === 'phone') { startSignup(); return }
-    if (view === 'otp') { verifyCode(); return }
+    if (view === 'phone') { startSignup().finally(() => { advancing.current = false }); return }
+    if (view === 'otp') { verifyCode().finally(() => { advancing.current = false }); return }
     const nextIndex = qIndex + 1
     goTo(nextIndex < QUESTIONS.length ? QUESTIONS[nextIndex] : 'done')
   }
@@ -697,7 +705,10 @@ function TextField({ value, onChange, onEnter, ...rest }) {
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={(e) => {
-        if (e.key === 'Enter') onEnter?.()
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          if (!e.repeat) onEnter?.()
+        }
       }}
       {...rest}
     />
@@ -880,7 +891,12 @@ function DateField({ value, onChange, onEnter }) {
           ref={yearRef}
           value={year}
           onChange={(event) => updatePart(0, event.target.value)}
-          onKeyDown={(event) => { if (event.key === 'Enter') onEnter?.() }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              if (!event.repeat) onEnter?.()
+            }
+          }}
           placeholder="YYYY"
           inputMode="numeric"
           autoComplete="bday-year"
@@ -894,7 +910,10 @@ function DateField({ value, onChange, onEnter }) {
           onChange={(event) => updatePart(1, event.target.value)}
           onKeyDown={(event) => {
             if (event.key === 'Backspace' && !month) yearRef.current?.focus()
-            if (event.key === 'Enter') onEnter?.()
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              if (!event.repeat) onEnter?.()
+            }
           }}
           placeholder="MM"
           inputMode="numeric"
@@ -909,7 +928,10 @@ function DateField({ value, onChange, onEnter }) {
           onChange={(event) => updatePart(2, event.target.value)}
           onKeyDown={(event) => {
             if (event.key === 'Backspace' && !day) monthRef.current?.focus()
-            if (event.key === 'Enter') onEnter?.()
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              if (!event.repeat) onEnter?.()
+            }
           }}
           placeholder="DD"
           inputMode="numeric"

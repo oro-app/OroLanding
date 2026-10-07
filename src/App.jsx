@@ -18,6 +18,7 @@ const HowItWorksPage = lazy(() => import('./components/how-it-works/HowItWorks')
 const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
+const AboutPage = lazy(() => import('./components/about/AboutPage'))
 const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
 const TesterReferrals = lazy(() => import('./components/beta/TesterReferrals'))
 const BetaPage = lazy(() => import('./components/beta/Beta'))
@@ -44,7 +45,9 @@ export function getRouteFromPath(pathname = '/', search = '') {
   if (path === '/why-oro')         return { type: 'why-oro' }
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
+  if (path === '/about')           return { type: 'about' }
   if (path === '/get-started')     return { type: 'get-started' }
+  if (path === '/signup')          return { type: 'signup' }
   if (path === '/tester/referrals') return { type: 'beta', tester: true }
   if (['/beta', '/invite', '/beta/career', '/beta/dating'].includes(path)) return { type: 'beta', campaign: getBetaCampaign(path, search) }
 
@@ -60,11 +63,12 @@ function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
   const isHome = route.type === 'home'
   const isBeta = route.type === 'beta'
+  const isSignup = route.type === 'signup'
   const isFeedback = route.type === 'feedback'
   const isGeo = route.type === 'geo'
-  const isBlog = route.type === 'newsletter' || route.type === 'journal' || isGeo
-  const isPrivateForm = isBeta || isFeedback || route.type === 'get-started'
-  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'newsletter' || isGeo
+  const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
+  const isPrivateForm = isBeta || isSignup || isFeedback || route.type === 'get-started'
+  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
   const pageViewParams = {
     route_type: route.type,
     ...(route.slug ? { newsletter_slug: route.slug } : {}),
@@ -144,15 +148,15 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && (isHalo ? <HomeHeader /> : <SiteHeader />)}
+        {!isBeta && !isSignup && !isFeedback && (isHalo ? <HomeHeader /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {isGeo ? (
             <Suspense fallback={null}><GeoPage path={route.path} /></Suspense>
           ) : isFeedback ? (
             <Suspense fallback={null}><FeedbackPage /></Suspense>
-          ) : isBeta ? (
+          ) : isBeta || isSignup ? (
             <Suspense fallback={null}>
-              {route.tester ? <TesterReferrals /> : <BetaPage campaign={route.campaign || 'general'} />}
+              {route.tester ? <TesterReferrals /> : <BetaPage campaign={route.campaign || 'general'} landing={isBeta} />}
             </Suspense>
           ) : route.type === 'newsletter' ? (
             <Suspense fallback={<BlogSkeleton variant="article" />}>
@@ -182,6 +186,10 @@ function App({ initialRoute }) {
             <Suspense fallback={null}>
               <ContactPage />
             </Suspense>
+          ) : route.type === 'about' ? (
+            <Suspense fallback={<BlogSkeleton variant="article" />}>
+              <AboutPage />
+            </Suspense>
           ) : route.type === 'get-started' ? (
             <Suspense fallback={null}>
               <GetStartedPage />
@@ -190,7 +198,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && !isBeta && <HomeFooter landing={isHome} />}
+        {isHalo && !isFeedback && !isBeta && !isSignup && <HomeFooter landing={isHome} />}
         <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />
       </div>
     </ThemeProvider>

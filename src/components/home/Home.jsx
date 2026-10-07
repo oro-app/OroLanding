@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
 import { HomeCta } from './HomeChrome'
@@ -8,6 +8,7 @@ import StyleAdviceDemo from './StyleAdviceDemo'
 import wardrobeDemo from '../../assets/demos/wardrobe.png'
 import IterationDemo from './IterationDemo'
 import jotting from '../../assets/mascot/jotting.webp'
+import { hasAnalyticsConsent, trackEvent } from '../../lib/analytics'
 
 const FEATURES = [
   {
@@ -55,7 +56,36 @@ function TypedHeadline() {
 
 export default function Home() {
   const motionRef = useHomeMotion()
+  const viewedSectionsRef = useRef(new Set())
   const [entryCount, setEntryCount] = useState(null)
+
+  useEffect(() => {
+    let observer
+    const observeSections = () => {
+      if (!hasAnalyticsConsent() || !('IntersectionObserver' in window)) return
+
+      observer?.disconnect()
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || viewedSectionsRef.current.has(entry.target)) return
+          viewedSectionsRef.current.add(entry.target)
+          observer.unobserve(entry.target)
+          trackEvent('section_view', { section_name: entry.target.dataset.analyticsSection })
+        })
+      }, { threshold: 0.12, rootMargin: '0px 0px -32px 0px' })
+
+      document.querySelectorAll('[data-analytics-section]').forEach((section) => {
+        if (!viewedSectionsRef.current.has(section)) observer.observe(section)
+      })
+    }
+
+    observeSections()
+    window.addEventListener('oro:analytics-consent-change', observeSections)
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('oro:analytics-consent-change', observeSections)
+    }
+  }, [entryCount])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -73,7 +103,7 @@ export default function Home() {
       <GoldBackground />
       <div className="home-grid halo-container">
         <div className="home-copy">
-          <section className="home-panel" aria-labelledby="home-title">
+          <section className="home-panel" aria-labelledby="home-title" data-analytics-section="hero">
             <Heading as="h1" variant="display" id="home-title" aria-label={HEADLINE}>
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
@@ -87,7 +117,7 @@ export default function Home() {
             </div>
           </section>
           <ProductDemo />
-          <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal>
+          <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal data-analytics-section="personalized_style">
             <Heading as="h2" variant="title" id="home-moments-title" className="home-stagger">she gets your style. and your life.</Heading>
             <Text muted className="home-description home-stagger" style={{ '--home-delay': '120ms' }}>
               oro learns what you wear and what you like, so her advice gets more personal the more you text.
@@ -97,7 +127,7 @@ export default function Home() {
             {FEATURES.map((feature, index) => feature.demo ? (
               <IterationDemo key={feature.title} title={feature.title} description={feature.description} />
             ) : (
-              <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal>
+              <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal data-analytics-section={index === 0 ? 'closet' : 'learns_preferences'}>
                 <div className="home-feature-copy home-stagger">
                   <Heading as="h2" variant="title">{index === 2 ? <>the more you text her,<br />the better she gets</> : feature.title}</Heading>
                   <Text muted className="home-description">{feature.description}</Text>
@@ -107,7 +137,7 @@ export default function Home() {
             ))}
           </section>
           <StyleAdviceDemo />
-          {entryCount !== null && <section className="home-social-proof home-moments-panel" aria-labelledby="home-social-title" data-home-reveal>
+          {entryCount !== null && <section className="home-social-proof home-moments-panel" aria-labelledby="home-social-title" data-home-reveal data-analytics-section="social_proof">
             <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
             <Text muted className="home-description home-stagger">{entryCount.toLocaleString()} people are already trying to get it.</Text>
           </section>}

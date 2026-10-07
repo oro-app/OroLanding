@@ -1,6 +1,5 @@
-// Single source of truth for the site's navigational columns. Consumed by
-// both SiteFooter (as columns) and SiteHeader (as dropdown menus) so the two
-// stay literally identical — change a link here and it updates both places.
+// Shared source for the site's header dropdowns and matching footer columns.
+// Links that should appear only in a footer are added by that footer instead.
 //
 // Every link opens in a new tab, matching the site-wide link policy.
 export const NAV_COLUMNS = [
@@ -40,6 +39,7 @@ export const NAV_COLUMNS = [
 ]
 
 export const FOOTER_LINKS = [
+  { label: 'about the team', href: '/about' },
   { label: 'from the closet', href: '/from-the-closet' },
   { label: 'contact', href: '/contact' },
   { label: 'terms', href: '/terms' },

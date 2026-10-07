@@ -2,8 +2,8 @@ import { NAV_COLUMNS } from '../../lib/siteLinks'
 import { trackCtaClick } from '../../lib/analytics'
 
 // Redesigned site footer — theme-aware via --color-* tokens. The four link
-// columns are driven by the shared NAV_COLUMNS data (same source the header
-// dropdowns use), so footer and navbar are always identical.
+// columns are driven by the shared NAV_COLUMNS data used by the header, with
+// footer-only links added here when needed.
 function Arrow() {
   return (
     <svg data-button-icon="right" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -15,7 +15,7 @@ function Arrow() {
 export default function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="site-footer-grid">
+      <nav className="site-footer-grid" aria-label="Footer">
         <div className="site-footer-brand">
           <img src="/oro-logo.webp" alt="oro" className="site-footer-logo" width="1672" height="941" />
           <p className="site-footer-tagline">
@@ -52,9 +52,12 @@ export default function SiteFooter() {
                 {link.label}
               </a>
             ))}
+            {col.head === 'editorial' && (
+              <a className="site-footer-link" href="/about">about the team</a>
+            )}
           </div>
         ))}
-      </div>
+      </nav>
 
       <div className="site-footer-bottom">
         <span>© 2026 Oro Digital Inc.</span>

@@ -34,6 +34,13 @@ export const ROUTE_SEO = {
     h1: 'help us make oro yours.',
     noindex: true,
   },
+  signup: {
+    path: '/signup',
+    title: 'request an oro invite - oro beta',
+    description: 'request an invite to meet oro, your personal ai stylist over text.',
+    h1: 'where should oro text you?',
+    noindex: true,
+  },
   'beta-career': {
     path: '/beta/career', title: 'meet oro - your personal ai stylist',
     description: 'get dressed for your next opportunity with oro, right in your texts.',
@@ -116,6 +123,14 @@ export const ROUTE_SEO = {
       'a real person at oro reads support questions, press notes, partnership inquiries, and product feedback.',
     priority: '0.5',
   },
+  about: {
+    path: '/about',
+    title: 'Democratizing personal styling for everyone - oro',
+    description: 'Meet the team building oro to make personal styling more accessible and help people feel confident in what they wear.',
+    h1: 'Democratizing personal styling for everyone',
+    summary: 'Meet the small team building oro to help more people feel confident in what they wear.',
+    priority: '0.5',
+  },
   'get-started': {
     path: '/get-started',
     title: 'complete your beta setup - oro',
@@ -185,6 +200,7 @@ export const PUBLIC_ROUTE_TYPES = [
   'journal',
   'manifesto',
   'contact',
+  'about',
   'get-started',
   'app-terms',
   'app-privacy',
