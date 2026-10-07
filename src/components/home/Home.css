@@ -18,7 +18,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-footer-links a:hover { color: var(--oro-color-accent); }
 .halo-site .halo-cta { gap: var(--oro-space-3); }
 .halo-site .halo-cta--header { gap: var(--oro-space-2); }
-.halo-site .halo-cta--hero { min-height: 72px; padding-inline: 40px; background: var(--oro-color-accent); background-image: none; font-size: 1.25rem; font-weight: 700; box-shadow: 0 12px 30px color-mix(in srgb, var(--oro-color-accent) 28%, transparent); }
+.halo-site .halo-cta--hero { padding-inline: 28px; background: var(--oro-color-accent); background-image: none; font-size: 1rem; font-weight: 400; box-shadow: 0 12px 30px color-mix(in srgb, var(--oro-color-accent) 28%, transparent); }
 
 .home-copy { padding-bottom: var(--oro-space-24); }
 .home-panel { max-width: 560px; min-height: calc(100dvh - var(--halo-header-height)); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-block: var(--oro-space-16); }
