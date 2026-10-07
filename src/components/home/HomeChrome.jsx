@@ -1,4 +1,5 @@
 import { Heading, Text } from 'oro-kit'
+import ButtonArrow from '../ButtonArrow'
 import { useRef } from 'react'
 import useScrolled from '../../hooks/useScrolled'
 import { trackCtaClick } from '../../lib/analytics'
@@ -37,6 +38,7 @@ export function HomeCta({ place, children, className = '' }) {
       <a href={isHero ? smsHref : '/signup?step=phone'} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
         onClick={handleClick}>
         {children}
+        {isHero && <ButtonArrow className="halo-cta-arrow" />}
       </a>
       {isHero && (
         <dialog className="home-message-dialog" ref={dialogRef} aria-labelledby="home-message-title">
