@@ -33,6 +33,13 @@ export function HomeCta({ place, children, className = '' }) {
     }
   }
 
+  const handleDialogClick = (event) => {
+    const { left, right, top, bottom } = event.currentTarget.getBoundingClientRect()
+    if (event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom) {
+      event.currentTarget.close()
+    }
+  }
+
   return (
     <>
       <a href={isHero ? smsHref : '/signup?step=phone'} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
@@ -41,10 +48,7 @@ export function HomeCta({ place, children, className = '' }) {
         {isHero && <ButtonArrow className="halo-cta-arrow" />}
       </a>
       {isHero && (
-        <dialog className="home-message-dialog" ref={dialogRef} aria-labelledby="home-message-title">
-          <form method="dialog">
-            <button className="home-message-close" type="submit" aria-label="Close message options">×</button>
-          </form>
+        <dialog className="home-message-dialog" ref={dialogRef} aria-labelledby="home-message-title" onClick={handleDialogClick}>
           <div className="home-message-dialog-copy">
             <Heading as="h2" variant="title" id="home-message-title">get oro&apos;s<br />number</Heading>
             <p>scan the code with your phone to get started.</p>
