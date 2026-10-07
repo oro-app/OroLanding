@@ -1,6 +1,6 @@
 import { test as base, expect } from './fixtures.js'
 
-const draft = { name: 'Test oronaut', birthday: '1998/01/02', country: 'CA', province: 'ON', hear: ['a friend'], hearOther: '', phone: '(416) 555-0123', phoneCountry: 'CA' }
+const draft = { name: 'Test oronaut', birthday: '1998/01/02', country: 'CA', province: 'ON', hear: ['a friend'], hearOther: '', notificationHour: '8', phone: '(416) 555-0123', phoneCountry: 'CA' }
 const inviteError = { status: 403, json: { detail: { code: 'beta_invite_required', message: 'An approved beta invite is required' } } }
 const test = base.extend({
   api: async ({ page }, use) => {
@@ -21,11 +21,12 @@ async function phoneStep(page, answers = draft) {
   await page.evaluate((answers) => localStorage.setItem('oro_get_started_responses', JSON.stringify(answers)), answers)
   await page.reload()
   await continueToPhone(page)
+  await page.getByRole('checkbox').check()
 }
 
 async function continueToPhone(page) {
   await page.getByRole('button', { name: 'Let’s get you settled' }).click()
-  for (let step = 0; step < 4; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+  for (let step = 0; step < 5; step += 1) await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByLabel('Phone number', { exact: true })).toBeVisible()
 }
 
@@ -64,6 +65,13 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await page.getByRole('button', { name: 'A friend', exact: true }).click()
   await page.getByRole('button', { name: 'Continue.', exact: true }).click()
+  const reminderTime = page.getByRole('combobox', { name: 'Daily reminder time' })
+  await reminderTime.focus()
+  await page.keyboard.press('Enter')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('Enter')
+  await expect(reminderTime).toContainText('9:00 AM')
+  await page.getByRole('button', { name: 'Continue.', exact: true }).click()
   await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('CA')
   await page.getByLabel('Phone number', { exact: true }).fill('(416) 555-0123')
   await page.getByRole('checkbox').check()
@@ -76,7 +84,7 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await expect(page.getByRole('link', { name: 'Start texting oro', exact: true })).toHaveAttribute('href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`)
   await expect(page.getByText('On your computer? Text +1 (855) 676-2419 from your phone.')).toBeVisible()
   expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
-  expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', phone: '+14165550123' })
+  expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', phone: '+14165550123', notification_hour: 9 })
   expect(api.requests[1].body.phone).toBe('+14165550123')
   expect(await page.evaluate(() => localStorage.getItem('oro_get_started_responses'))).toBeNull()
 })
@@ -94,7 +102,7 @@ test('held Enter submits each onboarding request once', async ({ page, api }) =>
   await page.keyboard.down('Enter')
   await page.keyboard.down('Enter')
   await page.keyboard.up('Enter')
-  await expect(page.getByRole('heading', { name: 'Youâ€™re all set.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeVisible()
   expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
 })
 
@@ -132,6 +140,7 @@ test('pasted international numbers update the dropdown and survive a reload', as
   expect(saved).toMatchObject({ phoneCountry: 'PK', phone: '0301 2345678', country: 'CA' })
   await page.reload()
   await continueToPhone(page)
+  await page.getByRole('checkbox').check()
   await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('PK')
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await verify(page)
