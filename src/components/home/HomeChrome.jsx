@@ -1,6 +1,5 @@
 import { Heading, Text } from 'oro-kit'
 import { useRef } from 'react'
-import oroTexting from '../../assets/mascot/oro_texting.webp'
 import useScrolled from '../../hooks/useScrolled'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
@@ -53,7 +52,6 @@ export function HomeCta({ place, children, className = '' }) {
             </a>
           </div>
           <div className="home-message-visual">
-            <img className="home-message-mascot" src={oroTexting} alt="" width="1500" height="1500" />
             <div className="home-message-qr">
               <img src="/oro-sms-qr.png" alt="QR code that opens a prefilled text message to oro" width="512" height="512" />
             </div>
