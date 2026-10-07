@@ -27,9 +27,13 @@ for (const place of ['header', 'closer']) {
 
 test('hero CTA offers desktop users a scannable text handoff', async ({ page }) => {
   await page.goto('/')
-  await page.locator('.halo-cta--hero').click()
+  const heroCta = page.locator('.halo-cta--hero')
+  await expect(heroCta.locator('.home-message-icon')).toHaveCount(1)
+  await expect(heroCta).toHaveCSS('background-image', 'none')
+  await heroCta.click()
   await expect(page.getByRole('dialog')).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'text oro' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: "get oro's number" })).toBeVisible()
+  await expect(page.locator('.home-message-mascot')).toBeVisible()
   await expect(page.getByRole('link', { name: 'or text +1 (855) 676-2419' })).toHaveAttribute('href', /^sms:\+18556762419/)
 })
 

@@ -1,11 +1,20 @@
 import { Heading, Text } from 'oro-kit'
 import { useRef } from 'react'
+import oroTexting from '../../assets/mascot/oro_texting.webp'
 import useScrolled from '../../hooks/useScrolled'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 
 function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
+}
+
+function MessageIcon() {
+  return (
+    <svg className="home-message-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M5 5.5h14v10H9l-4 3v-13Z" />
+    </svg>
+  )
 }
 
 export function HomeCta({ place, children, className = '' }) {
@@ -27,8 +36,8 @@ export function HomeCta({ place, children, className = '' }) {
     <>
       <a href={isHero ? smsHref : '/signup?step=phone'} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
         onClick={handleClick}>
+        {isHero && <MessageIcon />}
         {children}
-        {isHero && <span aria-hidden="true">→</span>}
       </a>
       {isHero && (
         <dialog className="home-message-dialog" ref={dialogRef} aria-labelledby="home-message-title">
@@ -36,11 +45,20 @@ export function HomeCta({ place, children, className = '' }) {
             <button className="home-message-close" type="submit" aria-label="Close message options">×</button>
           </form>
           <div className="home-message-dialog-copy">
-            <Heading as="h2" variant="title" id="home-message-title">text oro</Heading>
-            <Text muted>scan the QR code with your phone to start a text.</Text>
-            <a href={smsHref}>or text +1 (855) 676-2419</a>
+            <Heading as="h2" variant="title" id="home-message-title">get oro&apos;s<br />number</Heading>
+            <ul><li>scan the code with your phone and your first message will be ready to send.</li></ul>
+            <a className="home-message-number" href={smsHref}>
+              <span className="home-message-number-icon" aria-hidden="true"><MessageIcon /></span>
+              <span><small>or text</small>+1 (855) 676-2419</span>
+            </a>
           </div>
-          <img src="/oro-sms-qr.png" alt="QR code that opens a prefilled text message to oro" width="512" height="512" />
+          <div className="home-message-visual">
+            <p>hey, i&apos;m oro ✨</p>
+            <img className="home-message-mascot" src={oroTexting} alt="" width="1500" height="1500" />
+            <div className="home-message-qr">
+              <img src="/oro-sms-qr.png" alt="QR code that opens a prefilled text message to oro" width="512" height="512" />
+            </div>
+          </div>
         </dialog>
       )}
     </>
