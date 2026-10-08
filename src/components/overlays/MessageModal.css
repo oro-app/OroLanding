@@ -6,7 +6,7 @@
 .home-message-close:active { color: var(--oro-color-accent-hover); transform: none; }
 .home-message-number { min-height: 44px; }
 .home-message-dialog-copy { display: flex; flex-direction: column; justify-content: center; align-items: stretch; gap: var(--oro-space-4); text-align: left; }
-.oro-editorial .home-message-dialog-copy .oro-heading { font-family: var(--font-serif); font-size: clamp(2.5rem, 4.5vw, 3.5rem); font-weight: 400; line-height: 1.05; letter-spacing: -0.03em; text-align: left; }
+.oro-editorial .home-message-dialog-copy .oro-heading { font-family: var(--font-serif); font-size: clamp(2.5rem, 4.5vw, 3.5rem); font-weight: 400; line-height: 1.25; letter-spacing: normal; text-align: left; }
 .home-message-dialog-copy > p { margin: 0; color: var(--oro-color-muted); font-size: 0.9rem; line-height: 1.5; text-align: left; }
 .home-message-number { display: flex; align-items: center; gap: 12px; color: var(--oro-color-ink); font-size: 1.05rem; font-weight: 700; text-align: left; }
 .home-message-number strong { color: var(--oro-color-accent); font-weight: 700; }
