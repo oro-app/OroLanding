@@ -329,6 +329,30 @@ test('verified-phone lookup returns an existing receipt without writing', () => 
   assert.equal(google.state.appendCalls, 1)
 })
 
+test('text signup writes the same response shape with a stable referral receipt', () => {
+  const google = googleWriter()
+  const signup = {
+    secret: environment.BETA_SUBMISSION_SECRET,
+    cohort: environment.BETA_COHORT,
+    action: 'text_signup',
+    phone: '+14165550123',
+    name: ' Maya ',
+    email: 'MAYA@example.com',
+  }
+  const first = google.post(signup)
+  assert.equal(first.ok, true)
+  assert.equal(first.signup_number, 1)
+  assert.equal(first.referral_code, createHmac('sha256', environment.BETA_SUBMISSION_SECRET).update(signup.phone).digest('hex'))
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('name')], 'Maya')
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('email')], 'maya@example.com')
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('terms')], false)
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('consent_recorded_at')], '')
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('campaign_source')], 'text')
+  assert.deepEqual(google.post(signup), first)
+  assert.equal(google.state.appendCalls, 1)
+  assert.equal(google.post({ ...signup, email: 'not-an-email' }).ok, false)
+})
+
 test('Apps Script recovers a write whose acknowledgement failed and rejects a locked or unconfirmed write', () => {
   const google = googleWriter()
   google.state.throwAfterAppend = true
