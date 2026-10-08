@@ -37,7 +37,7 @@ test('mobile get-her-number CTA is a prefilled SMS deep link', async ({ page }) 
   })
   await page.goto('/')
   const cta = page.locator('.halo-cta--hero')
-  await expect(cta).toHaveAttribute('href', `sms:+18556762419&body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`)
+  await expect(cta).toHaveAttribute('href', `sms:+18556762419&body=${encodeURIComponent('hey oro, your newest oronaut just landed 🚀')}`)
   await expect(page.getByText('text oro — no app needed')).toHaveCount(0)
 })
 
