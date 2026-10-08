@@ -7,7 +7,6 @@ const SPA_ROUTES = [
   '/why-oro',
   '/honestly',
   '/contact',
-  '/get-started',
 ]
 
 for (const route of SPA_ROUTES) {

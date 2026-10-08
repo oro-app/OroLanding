@@ -33,8 +33,8 @@ for (const width of [320, 390, 1440]) {
     await expect(page.locator('.newsletter-mdx > p').first()).toHaveCSS('font-family', '"DM Sans", sans-serif')
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1)
     await page.locator('.halo-cta--newsletter_article').click()
-    await expect(page).toHaveURL(/\/signup\?step=phone$/)
-    await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await expect(page.getByRole('dialog')).toContainText('Message frequency varies.')
   })
 }
 

@@ -34,13 +34,6 @@ export const ROUTE_SEO = {
     h1: 'help us make oro yours.',
     noindex: true,
   },
-  signup: {
-    path: '/signup',
-    title: 'request an oro invite - oro beta',
-    description: 'request an invite to meet oro, your personal ai stylist over text.',
-    h1: 'where should oro text you?',
-    noindex: true,
-  },
   'beta-career': {
     path: '/beta/career', title: 'meet oro - your personal ai stylist',
     description: 'get dressed for your next opportunity with oro, right in your texts.',
@@ -131,16 +124,6 @@ export const ROUTE_SEO = {
     summary: 'Meet the small team building oro to help more people feel confident in what they wear.',
     priority: '0.5',
   },
-  'get-started': {
-    path: '/get-started',
-    title: 'complete your beta setup - oro',
-    description:
-      'invited to the oro beta? answer a few quick questions and verify the phone number on your approved invitation.',
-    h1: 'let’s get you set up.',
-    summary:
-      'approved beta testers complete their oro setup by answering a few questions and verifying their phone number.',
-    priority: '0.8',
-  },
   'app-terms': {
     path: '/app/terms',
     title: 'oro - Mobile App Terms of Service',
@@ -201,7 +184,6 @@ export const PUBLIC_ROUTE_TYPES = [
   'manifesto',
   'contact',
   'about',
-  'get-started',
   'app-terms',
   'app-privacy',
   'terms',

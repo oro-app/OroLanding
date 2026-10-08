@@ -13,47 +13,38 @@ test('home page loads cleanly @smoke', async ({ page }) => {
   expect(errors).toEqual([])
 })
 
-for (const place of ['header', 'closer']) {
-  test(`${place} CTA opens the signup flow`, async ({ page }) => {
+for (const place of ['header', 'hero', 'closer']) {
+  test(`${place} CTA opens and dismisses the text modal`, async ({ page }) => {
     await page.goto('/')
-    await page.locator(`.halo-cta--${place}`).click()
-    await expect(page).toHaveURL(/\/signup\?step=phone$/)
-    await expect(page.getByRole('heading', { name: 'Where should oro text you?' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Back', exact: true })).toHaveCount(0)
-    await expect(page.getByRole('link', { name: 'Blog' })).toHaveCount(0)
-    await expect(page.getByRole('link', { name: 'want her number?' })).toHaveAttribute('href', '/signup?step=phone')
+    const trigger = page.locator(`.halo-cta--${place}`)
+    await trigger.click()
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    await expect(dialog.getByRole('heading', { name: "get oro's number" })).toBeVisible()
+    await expect(dialog.getByRole('img', { name: /QR code/ })).toBeVisible()
+    const href = await dialog.getByRole('link', { name: 'text +1 (855) 676-2419' }).getAttribute('href')
+    expect(decodeURIComponent(href)).toContain('I AGREE to receive recurring automated texts from oro')
+    await page.keyboard.press('Escape')
+    await expect(dialog).not.toBeVisible()
+    await expect(trigger).toBeFocused()
+    await trigger.click()
+    await dialog.getByRole('button', { name: 'Close', exact: true }).click()
+    await expect(trigger).toBeFocused()
   })
 }
 
-test('hero CTA offers desktop users a scannable text handoff', async ({ page }) => {
-  await page.goto('/')
-  const heroCta = page.locator('.halo-cta--hero')
-  await expect(heroCta.locator('svg')).toHaveCount(0)
-  await expect(heroCta).toHaveCSS('background-image', 'none')
-  await heroCta.click()
-  await expect(page.getByRole('dialog')).toBeVisible()
-  await expect(page.getByRole('heading', { name: "get oro's number" })).toBeVisible()
-  await expect(page.getByText('scan the code with your phone to get started.')).toBeVisible()
-  await expect(page.locator('.home-message-mascot')).toBeVisible()
-  await expect(page.locator('.home-message-phone-icon')).toBeVisible()
-  await expect(page.getByText('By continuing, you agree to the')).toBeVisible()
-  const copyBox = await page.locator('.home-message-dialog-copy').boundingBox()
-  const visualBox = await page.locator('.home-message-visual').boundingBox()
-  expect(visualBox.x).toBeGreaterThan(copyBox.x)
-  expect(Math.abs(visualBox.y - copyBox.y)).toBeLessThan(2)
-  await expect(page.getByRole('link', { name: 'text +1 (855) 676-2419' })).toHaveAttribute('href', /^sms:\+18556762419/)
-})
-
-test('hero CTA opens a prefilled text on mobile', async ({ page }) => {
-  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', {
-    value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)',
-  }))
-  await page.goto('/')
-  await expect(page.locator('.halo-cta--hero')).toHaveAttribute(
-    'href',
-    `sms:+18556762419&body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`,
-  )
-})
+for (const [device, separator] of [['iPhone', '&'], ['Android', '?']]) {
+  test(`${device} opens the modal with a consent-bearing phone link`, async ({ page }) => {
+    await page.addInitScript((value) => Object.defineProperty(navigator, 'userAgent', { value }), device)
+    await page.goto('/')
+    await page.locator('.halo-cta--hero').click()
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toBeVisible()
+    const href = await dialog.getByRole('link', { name: 'text +1 (855) 676-2419' }).getAttribute('href')
+    expect(href.startsWith(`sms:+18556762419${separator}body=`)).toBe(true)
+    expect(decodeURIComponent(href)).toContain('I AGREE')
+  })
+}
 
 test('centered hero gives way to the rest of the page on scroll', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })

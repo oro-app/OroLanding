@@ -5,22 +5,15 @@ import { readFile } from 'node:fs/promises'
 const root = new URL('../', import.meta.url)
 const read = (path) => readFile(new URL(path, root), 'utf8')
 const html = await read('dist/beta/index.html')
-const signupHtml = await read('dist/signup/index.html')
 const manifest = JSON.parse(await read('dist/.vite/manifest.json'))
 const config = JSON.parse(await read('vercel.json'))
 
 test('beta HTML remains on the welcome screen without a temporary status banner', () => {
-  assert.match(html, /class="beta-page beta-page--welcome /,
+  assert.match(html, /class="beta-page beta-page--welcome"/,
     'Build first with npm run build in preview or production mode')
   assert.match(html, /id="welcome-title"/)
   assert.doesNotMatch(html, /class="beta-draft-bar"/)
   assert.doesNotMatch(html, /beta-coming-soon/)
-})
-
-test('signup HTML starts on the phone step', () => {
-  assert.match(signupHtml, /class="beta-page beta-page--form /)
-  assert.match(signupHtml, /where should oro text you\?/i)
-  assert.doesNotMatch(signupHtml, /id="welcome-title"/)
 })
 
 test('the welcome layout and entrance styles are linked before the prerendered body', async () => {
@@ -37,7 +30,7 @@ test('the welcome layout and entrance styles are linked before the prerendered b
   }
 })
 
-test('beta, invite, and signup entry URLs serve prerendered HTML before the homepage fallback', () => {
+test('beta and invite entry URLs serve prerendered HTML before the homepage fallback', () => {
   const fallbackIndex = config.rewrites.findIndex(({ destination }) => destination === '/index.html')
   assert.ok(fallbackIndex >= 0, 'The SPA fallback must be identifiable')
   for (const source of ['/beta', '/invite']) {
@@ -45,9 +38,7 @@ test('beta, invite, and signup entry URLs serve prerendered HTML before the home
     assert.ok(index >= 0 && index < fallbackIndex, `${source} must precede the homepage fallback`)
     assert.equal(config.rewrites[index].destination, '/beta/index.html')
   }
-  const signupIndex = config.rewrites.findIndex((rule) => rule.source === '/signup')
-  assert.ok(signupIndex >= 0 && signupIndex < fallbackIndex, '/signup must precede the homepage fallback')
-  assert.equal(config.rewrites[signupIndex].destination, '/signup/index.html')
+
 })
 
 test('all poster openings arrive prerendered with their own copy, styles and noindex', async () => {

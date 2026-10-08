@@ -1,6 +1,6 @@
 import { Heading, Text } from 'oro-kit'
 import ButtonArrow from '../ButtonArrow'
-import { useRef } from 'react'
+import { useId, useRef } from 'react'
 import useScrolled from '../../hooks/useScrolled'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
@@ -20,17 +20,16 @@ function PhoneIcon() {
 
 export function HomeCta({ place, children, className = '' }) {
   const dialogRef = useRef(null)
+  const triggerRef = useRef(null)
+  const titleId = useId()
   const isHero = place === 'hero'
-  const message = 'Hey oro! Your newest oronaut has landed 🚀'
+  const message = 'Hey oro! Your newest oronaut has landed 🚀\n\nI AGREE to receive recurring automated texts from oro for onboarding, styling advice, and follow-ups at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.'
   const apple = typeof navigator !== 'undefined' && /iPhone|iPad|iPod/.test(navigator.userAgent)
   const smsHref = `sms:+18556762419${apple ? '&' : '?'}body=${encodeURIComponent(message)}`
 
-  const handleClick = (event) => {
-    trackCtaClick('get_started_click', { location: place, destination: isHero ? 'messages' : 'signup' })
-    if (isHero && !/Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent)) {
-      event.preventDefault()
-      dialogRef.current?.showModal()
-    }
+  const handleClick = () => {
+    trackCtaClick('get_started_click', { location: place, destination: 'messages_modal' })
+    dialogRef.current?.showModal()
   }
 
   const handleDialogClick = (event) => {
@@ -42,31 +41,30 @@ export function HomeCta({ place, children, className = '' }) {
 
   return (
     <>
-      <a href={isHero ? smsHref : '/signup?step=phone'} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
+      <button type="button" ref={triggerRef} aria-haspopup="dialog" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
         onClick={handleClick}>
         {children}
         {isHero && <ButtonArrow className="halo-cta-arrow" />}
-      </a>
-      {isHero && (
-        <dialog className="home-message-dialog" ref={dialogRef} aria-labelledby="home-message-title" onClick={handleDialogClick}>
-          <div className="home-message-dialog-copy">
-            <Heading as="h2" variant="title" id="home-message-title">get oro&apos;s<br />number</Heading>
-            <p>scan the code with your phone to get started.</p>
-            <a className="home-message-number" href={smsHref}>
-              <PhoneIcon />
-              <span><small>text</small><strong>+1 (855) 676-2419</strong></span>
-            </a>
+      </button>
+      <dialog className="home-message-dialog" ref={dialogRef} aria-labelledby={titleId} onClick={handleDialogClick} onClose={() => triggerRef.current?.focus()}>
+        <button type="button" className="home-message-close" aria-label="Close" onClick={() => dialogRef.current?.close()} autoFocus><span aria-hidden="true">×</span></button>
+        <div className="home-message-dialog-copy">
+          <Heading as="h2" variant="title" id={titleId}>get oro&apos;s<br />number</Heading>
+          <p>scan the code or tap the number, then send the prefilled message to get started.</p>
+          <a className="home-message-number" href={smsHref}>
+            <PhoneIcon />
+            <span><small>text</small><strong>+1 (855) 676-2419</strong></span>
+          </a>
+        </div>
+        <div className="home-message-visual">
+          <div className="home-message-qr">
+            <img src="/oro-sms-consent-qr.png" alt="QR code that opens a text to oro with the greeting and messaging consent" width="512" height="512" />
           </div>
-          <div className="home-message-visual">
-            <div className="home-message-qr">
-              <img src="/oro-sms-qr.png" alt="QR code that opens a prefilled text message to oro" width="512" height="512" />
-            </div>
-          </div>
-          <footer className="home-message-footer">
-            By continuing, you agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
-          </footer>
-        </dialog>
-      )}
+        </div>
+        <div className="home-message-footer">
+          <p>Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.</p>
+        </div>
+      </dialog>
     </>
   )
 }

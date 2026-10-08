@@ -5,7 +5,7 @@ const painted = page => page.locator('.gold-background').evaluate(canvas => {
   return pixels.some((value, index) => index % 4 === 3 && value > 0)
 })
 
-for (const route of ['/', '/beta', '/get-started']) {
+for (const route of ['/', '/beta']) {
   test(`gold follows the pointer and fades on ${route}`, async ({ page }) => {
     await page.goto(route)
     await page.mouse.move(100, 200)
