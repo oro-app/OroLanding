@@ -112,7 +112,6 @@ export default function Home() {
             </Text>
             <div className="home-action">
               <HomeCta place="hero" className="home-enter">get her number</HomeCta>
-              <Text variant="support" muted className="home-cta-note home-enter">text oro — no app needed</Text>
               {entryCount !== null && <Text variant="support" muted className="home-beta-note home-enter">{entryCount.toLocaleString()} people are trying to get oro’s number</Text>}
             </div>
           </section>

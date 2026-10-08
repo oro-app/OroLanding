@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom'
 import oroTexting from '../../assets/mascot/oro_texting.webp'
 import { trackEvent } from '../../lib/analytics'
 import { getOroTextLink, ORO_TEXT_NUMBER_DISPLAY } from '../../lib/textOro'
+import MessagesIcon from '../MessagesIcon'
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
@@ -83,14 +84,12 @@ export default function TextOroModal({ open, onClose, source }) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
         </button>
         <div className="text-oro-copy">
-          <span className="text-oro-eyebrow">your stylist is one text away</span>
-          <h2 id={titleId}>get oro's<br />number</h2>
+          <h2 id={titleId}>get oro's number</h2>
           <a className="text-oro-number" href={smsLink}
             onClick={() => trackEvent('message_app_open', { location: source, method: 'phone_number' })}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v11H9l-4 4V4Z" /></svg>
-            <span><small>or text</small>{ORO_TEXT_NUMBER_DISPLAY}</span>
+            <MessagesIcon />
+            <span><small>or text</small><span className="text-oro-number-value">{ORO_TEXT_NUMBER_DISPLAY}</span></span>
           </a>
-          <p className="text-oro-fineprint">no download. no account. just text oro.</p>
           <p className="text-oro-terms">By continuing, you agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
         </div>
         <div className="text-oro-visual">

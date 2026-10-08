@@ -37,8 +37,8 @@ test('mobile get-her-number CTA is a prefilled SMS deep link', async ({ page }) 
   })
   await page.goto('/')
   const cta = page.locator('.halo-cta--hero')
-  await expect(cta).toHaveAttribute('href', `sms:+18556762419&body=${encodeURIComponent('hey oro, your newest oronaut just landed 🚀')}`)
-  await expect(page.getByText('text oro — no app needed')).toBeVisible()
+  await expect(cta).toHaveAttribute('href', `sms:+18556762419&body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`)
+  await expect(page.getByText('text oro — no app needed')).toHaveCount(0)
 })
 
 test('get-her-number handoff records CTA and modal analytics', async ({ page }) => {
@@ -64,8 +64,9 @@ test('get-her-number handoff records CTA and modal analytics', async ({ page }) 
   )))).toBe(true)
 })
 
-test('hero and footer share one solid CTA treatment and the handoff includes legal terms', async ({ page }) => {
+test('all CTAs share one purple treatment and the handoff keeps the same visual language', async ({ page }) => {
   await page.goto('/')
+  const header = page.locator('.halo-cta--header')
   const hero = page.locator('.halo-cta--hero')
   const closer = page.locator('.halo-cta--closer')
   const heroStyle = await hero.evaluate((element) => {
@@ -78,10 +79,19 @@ test('hero and footer share one solid CTA treatment and the handoff includes leg
     return { width: style.width, height: style.height, backgroundColor: style.backgroundColor, backgroundImage: style.backgroundImage }
   })
   expect(closerStyle).toEqual(heroStyle)
+  await expect(header).toHaveCSS('background-color', heroStyle.backgroundColor)
+  await expect(hero).toHaveCSS('background-color', 'rgb(87, 57, 105)')
+  await expect(header).toContainText('want her number?')
+  await expect(header.locator('.halo-cta-message')).toHaveCount(0)
   expect(heroStyle.backgroundImage).toBe('none')
+  await expect(page.locator('.halo-cta-message circle')).toHaveCount(0)
 
   await hero.click()
   const dialog = page.getByRole('dialog', { name: "get oro's number" })
+  await expect(dialog.getByRole('heading', { name: "get oro's number" })).toHaveCSS('font-family', 'Fraunces, Georgia, serif')
+  await expect(dialog.locator('.text-oro-number svg')).toHaveCSS('color', heroStyle.backgroundColor)
+  await expect(dialog.locator('.text-oro-number-value')).toHaveCSS('color', heroStyle.backgroundColor)
+  await expect(dialog.locator('.text-oro-number-value')).toHaveCSS('text-decoration-line', 'underline')
   await expect(dialog.getByText(/scan the code with your phone/i)).toHaveCount(0)
   await expect(dialog.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', '/terms')
   await expect(dialog.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy')
