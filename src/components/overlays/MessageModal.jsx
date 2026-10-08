@@ -13,7 +13,7 @@ function PhoneIcon() {
 
 export default function MessageModal({ dialogRef, onClose }) {
   const titleId = useId()
-  const message = 'Hey oro! Your newest oronaut has landed 🚀\n\nI AGREE to receive recurring automated texts from oro for onboarding, styling advice, and follow-ups at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.'
+  const message = 'Hey oro! Your newest oronaut has landed 🚀'
   const apple = typeof navigator !== 'undefined' && /iPhone|iPad|iPod/.test(navigator.userAgent)
   const smsHref = `sms:+18556762419${apple ? '&' : '?'}body=${encodeURIComponent(message)}`
 
@@ -37,7 +37,7 @@ export default function MessageModal({ dialogRef, onClose }) {
       </div>
       <div className="home-message-visual">
         <div className="home-message-qr">
-          <img src="/oro-sms-consent-qr.png" alt="QR code that opens a text to oro with the greeting and messaging consent" width="512" height="512" />
+          <img src="/oro-sms-qr.png" alt="QR code that opens a prefilled text message to oro" width="512" height="512" />
         </div>
       </div>
       <div className="home-message-footer">
