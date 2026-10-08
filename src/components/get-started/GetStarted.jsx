@@ -104,7 +104,7 @@ export default function GetStarted() {
   const [view, setView] = useState('welcome')
   const [form, setForm] = useState(() => {
     if (typeof window === 'undefined') {
-      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' }
+      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', notificationHour: '8', phone: '', phoneCountry: 'CA' }
     }
 
     try {
@@ -120,10 +120,15 @@ export default function GetStarted() {
         province: locations.some(([code]) => code === saved?.province) ? saved.province : '',
         hear: Array.isArray(saved?.hear) ? saved.hear.filter((item) => typeof item === 'string') : [],
         hearOther: typeof saved?.hearOther === 'string' ? saved.hearOther.slice(0, 100) : '',
+        notificationHour: Number.isInteger(Number(saved?.notificationHour))
+          && Number(saved.notificationHour) >= 0
+          && Number(saved.notificationHour) <= 23
+          ? String(Number(saved.notificationHour))
+          : '8',
         ...phoneFields(typeof saved?.phone === 'string' ? saved.phone : '', saved?.phoneCountry || country),
       }
     } catch {
-      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' }
+      return { name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', notificationHour: '8', phone: '', phoneCountry: 'CA' }
     }
   })
   const [code, setCode] = useState('')
@@ -183,6 +188,7 @@ export default function GetStarted() {
       case 'province': return (form.country === 'CA' ? PROVINCES : form.country === 'US' ? US_STATES : [])
         .some(([code]) => code === form.province)
       case 'hear': return form.hear.length > 0
+      case 'reminder': return REMINDER_HOURS.some(([hour]) => hour === form.notificationHour)
       case 'phone': return form.phone.trim().length > 0 && smsConsent
       case 'otp': return code.length === 6 && verifyLeft === 0
       default: return true
@@ -197,7 +203,7 @@ export default function GetStarted() {
   }
 
   const restart = () => {
-    setForm({ name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', phone: '', phoneCountry: 'CA' })
+    setForm({ name: '', birthday: '', country: '', province: '', hear: [], hearOther: '', notificationHour: '8', phone: '', phoneCountry: 'CA' })
     setCode('')
     setResendLeft(0)
     goTo('welcome', 'back')
@@ -241,6 +247,8 @@ export default function GetStarted() {
           form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
         ].filter(Boolean).join(', '),
         phone: phoneNumber.number,
+        daily_checkin_hour: Number(form.notificationHour),
+        daily_checkin_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       })
       const { status, result, detail, retryAfter } = response
       if (status === 200 && result === 'otp_sent') {
@@ -464,6 +472,22 @@ export default function GetStarted() {
                   onChange={set('province')}
                 />
               )}
+            </Question>
+          )}
+
+          {view === 'reminder' && (
+            <Question
+              label="When should oro send your daily reminder?"
+              hint="Choose your local time. Oro will text you from your existing conversation."
+              canContinue={canContinue}
+              onContinue={advance}
+            >
+              <Select
+                label="Daily reminder time"
+                value={form.notificationHour}
+                options={REMINDER_HOURS}
+                onChange={set('notificationHour')}
+              />
             </Question>
           )}
 

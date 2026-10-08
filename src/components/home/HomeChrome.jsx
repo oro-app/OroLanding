@@ -51,7 +51,7 @@ export function HomeCta({ place, children, className = '' }) {
   )
 }
 
-export function HomeHeader() {
+export function HomeHeader({ showCta = true }) {
   const scrolled = useScrolled()
 
   return (
@@ -59,7 +59,7 @@ export function HomeHeader() {
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          <HomeCta place="header">want her number?</HomeCta>
+          {showCta && <HomeCta place="header">want her number?</HomeCta>}
         </nav>
       </div>
     </header>
