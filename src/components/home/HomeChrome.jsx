@@ -1,72 +1,10 @@
 import { Heading, Text } from 'oro-kit'
-import ButtonArrow from '../ButtonArrow'
-import { useId, useRef } from 'react'
+import MessageCta from '../MessageCta'
 import useScrolled from '../../hooks/useScrolled'
-import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 
 function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
-}
-
-function PhoneIcon() {
-  return (
-    <svg className="home-message-phone-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <rect x="7" y="2.5" width="10" height="19" rx="2" />
-      <path d="M10.5 18.5h3" />
-    </svg>
-  )
-}
-
-export function HomeCta({ place, children, className = '' }) {
-  const dialogRef = useRef(null)
-  const triggerRef = useRef(null)
-  const titleId = useId()
-  const isHero = place === 'hero'
-  const message = 'Hey oro! Your newest oronaut has landed 🚀\n\nI AGREE to receive recurring automated texts from oro for onboarding, styling advice, and follow-ups at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.'
-  const apple = typeof navigator !== 'undefined' && /iPhone|iPad|iPod/.test(navigator.userAgent)
-  const smsHref = `sms:+18556762419${apple ? '&' : '?'}body=${encodeURIComponent(message)}`
-
-  const handleClick = () => {
-    trackCtaClick('get_started_click', { location: place, destination: 'messages_modal' })
-    dialogRef.current?.showModal()
-  }
-
-  const handleDialogClick = (event) => {
-    const { left, right, top, bottom } = event.currentTarget.getBoundingClientRect()
-    if (event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom) {
-      event.currentTarget.close()
-    }
-  }
-
-  return (
-    <>
-      <button type="button" ref={triggerRef} aria-haspopup="dialog" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-        onClick={handleClick}>
-        {children}
-        {isHero && <ButtonArrow className="halo-cta-arrow" />}
-      </button>
-      <dialog className="home-message-dialog" ref={dialogRef} aria-labelledby={titleId} onClick={handleDialogClick} onClose={() => triggerRef.current?.focus()}>
-        <button type="button" className="home-message-close" aria-label="Close" onClick={() => dialogRef.current?.close()} autoFocus><span aria-hidden="true">×</span></button>
-        <div className="home-message-dialog-copy">
-          <Heading as="h2" variant="title" id={titleId}>get oro&apos;s<br />number</Heading>
-          <p>scan the code or tap the number, then send the prefilled message to get started.</p>
-          <a className="home-message-number" href={smsHref}>
-            <PhoneIcon />
-            <span><small>text</small><strong>+1 (855) 676-2419</strong></span>
-          </a>
-        </div>
-        <div className="home-message-visual">
-          <div className="home-message-qr">
-            <img src="/oro-sms-consent-qr.png" alt="QR code that opens a text to oro with the greeting and messaging consent" width="512" height="512" />
-          </div>
-        </div>
-        <div className="home-message-footer">
-          <p>By continuing, you agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
-        </div>
-      </dialog>
-    </>
-  )
 }
 
 export function HomeHeader() {
@@ -77,7 +15,7 @@ export function HomeHeader() {
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          <HomeCta place="header">want her number?</HomeCta>
+          <MessageCta place="header">want her number?</MessageCta>
         </nav>
       </div>
     </header>
@@ -103,7 +41,7 @@ export function HomeFooter({ landing = false, closerTitle = 'want her number?', 
         <section className="halo-footer-closer" aria-labelledby="closer-title" data-analytics-section="final_cta">
           <Heading as="h2" variant="title" id="closer-title">{closerTitle}</Heading>
           {closerText && <Text muted>{closerText}</Text>}
-          {closerAction || <HomeCta place="closer">get her number</HomeCta>}
+          {closerAction || <MessageCta place="closer">get her number</MessageCta>}
         </section>
         <div className="halo-footer-main">
           <div className="halo-footer-brand">

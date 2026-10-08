@@ -1,5 +1,5 @@
 import { Heading, Text } from 'oro-kit'
-import { HomeCta } from '../home/HomeChrome'
+import MessageCta from '../MessageCta'
 import mascot from '../../assets/mascot/oro_hi.webp'
 import careerOutfit from '../../assets/poster-campaign/career.webp'
 import datingOutfit from '../../assets/poster-campaign/dating.webp'
@@ -30,7 +30,7 @@ export default function BetaWelcome({ campaign, titleRef }) {
         {!opening.image && <div className="beta-welcome-portrait"><img className="beta-welcome-mascot" src={mascot} alt="oro waving hello" width="280" height="280" /></div>}
         {opening.copy && <Text className="beta-welcome-copy">{opening.copy}</Text>}
         <Text className={opening.image ? 'beta-welcome-intro' : 'beta-welcome-copy'}>your personal ai stylist,<br />right in your texts.</Text>
-        <HomeCta place="beta" className="beta-welcome-cta">want her number?</HomeCta>
+        <MessageCta place="beta" className="beta-welcome-cta">want her number?</MessageCta>
       </div>
       {opening.image && <div className="beta-welcome-demo" aria-label="a preview of styling with oro">
         <p className="beta-welcome-demo-label">a little preview</p>

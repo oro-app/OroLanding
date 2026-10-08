@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Heading, Text } from 'oro-kit'
 import { getNewsletterBySlug } from '../../lib/newsletters'
 import NewsletterRecommendations from './NewsletterRecommendations'
-import { HomeCta } from '../home/HomeChrome'
+import MessageCta from '../MessageCta'
 import WaitlistModal from '../overlays/WaitlistModal'
 import { hasAnalyticsConsent, trackEvent } from '../../lib/analytics'
 import {
@@ -183,7 +183,7 @@ export default function NewsletterPage({ slug }) {
           <div className="newsletter-article-cta">
             <Text variant="label" muted>Meet oro</Text>
             <Heading variant="section">Your AI stylist, <em>in your corner.</em></Heading>
-            <HomeCta place="newsletter_article">Start the conversation</HomeCta>
+            <MessageCta place="newsletter_article">Start the conversation</MessageCta>
           </div>
         </article>
       </div>

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
-import { HomeCta } from './HomeChrome'
+import MessageCta from '../MessageCta'
 import { useHomeMotion } from './useHomeMotion'
 import ProductDemo from './ProductDemo'
 import StyleAdviceDemo from './StyleAdviceDemo'
@@ -114,7 +114,7 @@ export default function Home() {
               not another digital wardrobe. not another app.
             </Text>
             <div className="home-action">
-              <HomeCta place="hero" className="home-enter">get her number</HomeCta>
+              <MessageCta place="hero" className="home-enter">get her number</MessageCta>
               {entryCount !== null && <Text variant="support" muted className="home-beta-note home-enter">{entryCount.toLocaleString()} people are trying to get oro’s number</Text>}
             </div>
           </section>
