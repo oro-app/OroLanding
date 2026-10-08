@@ -50,21 +50,13 @@
   padding: clamp(48px, 7vw, 80px) clamp(32px, 6vw, 64px);
 }
 
-.text-oro-eyebrow {
-  color: var(--oro-accent-text);
-  font-size: 0.76rem;
-  font-weight: 650;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
 .text-oro-copy h2 {
-  margin: 14px 0 0;
-  font-family: var(--oro-font-family-heading);
-  font-size: clamp(3rem, 6vw, 4.6rem);
-  font-weight: var(--oro-font-weight-heading);
-  letter-spacing: -0.055em;
-  line-height: 0.94;
+  margin: 0;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(3rem, 6vw, var(--oro-type-display-size));
+  font-weight: 400;
+  letter-spacing: var(--oro-type-display-tracking);
+  line-height: var(--oro-type-display-line-height);
 }
 
 .text-oro-copy > p {
@@ -78,30 +70,24 @@
 .text-oro-number {
   display: inline-flex;
   align-items: center;
-  gap: 13px;
+  gap: 16px;
   width: fit-content;
-  margin-top: 42px;
+  margin-top: 46px;
   color: var(--oro-color-ink);
-  font-size: 1.04rem;
+  font-size: 1.28rem;
   font-weight: 650;
 }
 
 .text-oro-number svg {
-  width: 36px;
-  height: 36px;
-  padding: 8px;
-  border-radius: 12px;
-  background: var(--oro-color-accent);
-  fill: none;
-  stroke: currentColor;
-  stroke-linejoin: round;
-  stroke-width: 1.7;
+  width: 52px;
+  height: 52px;
+  color: var(--halo-cta-background);
 }
 
-.text-oro-number span { display: flex; flex-direction: column; }
-.text-oro-number small { color: var(--oro-color-muted); font-size: 0.76rem; font-weight: 500; }
-.text-oro-number:hover { color: var(--oro-accent-text); }
-.text-oro-copy .text-oro-fineprint { margin-top: 28px; font-size: 0.78rem; }
+.text-oro-number > span { display: flex; flex-direction: column; }
+.text-oro-number small { margin-bottom: 2px; color: var(--oro-color-muted); font-size: 0.95rem; font-weight: 550; }
+.text-oro-number .text-oro-number-value { color: var(--halo-cta-background); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+.text-oro-number:hover .text-oro-number-value { color: var(--halo-cta-background-hover); }
 .text-oro-copy .text-oro-terms { margin-top: 42px; color: var(--oro-color-muted); font-size: 0.78rem; line-height: 1.55; text-transform: none; }
 .text-oro-terms a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: 3px; }
 .text-oro-terms a:hover { color: var(--oro-color-accent); }
@@ -121,9 +107,9 @@
 
 .text-oro-bubble {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   align-self: flex-start;
-  margin: 0 0 -2px 8px;
+  margin: 0 0 18px 8px;
   padding: 10px 16px;
   border-radius: 18px 18px 4px 18px;
   background: var(--oro-color-surface);
@@ -132,17 +118,18 @@
 }
 
 .text-oro-mascot {
-  position: relative;
+  position: absolute;
   z-index: 1;
-  width: 142px;
-  height: 92px;
-  margin: -8px 12px -28px auto;
-  object-fit: cover;
-  object-position: 50% 31%;
+  top: 26px;
+  right: 58px;
+  width: 196px;
+  height: 196px;
+  object-fit: contain;
 }
 
 .text-oro-qr-frame {
   position: relative;
+  z-index: 2;
   width: min(100%, 330px);
   aspect-ratio: 1;
   padding: 20px;
@@ -168,6 +155,7 @@
   .text-oro-copy { padding: 56px 28px 38px; }
   .text-oro-copy h2 { font-size: clamp(3rem, 16vw, 4.5rem); }
   .text-oro-visual { min-height: auto; padding: 42px 28px 36px; border-radius: 0 0 24px 24px; }
+  .text-oro-mascot { top: 42px; right: 14px; width: 164px; height: 164px; }
   .text-oro-qr-frame { width: min(100%, 280px); }
 }
 
