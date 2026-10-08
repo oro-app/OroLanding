@@ -81,7 +81,7 @@ test('approved setup completes by keyboard with oro-kit controls and clears the 
   await expect(page.getByText('Your beta setup is complete. Send oro your first text to get started.')).toBeVisible()
   await expect(page.getByText(/oro just texted you|check your phone|already signed up/i)).toHaveCount(0)
   const separator = await page.evaluate(() => /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) ? '&' : '?')
-  await expect(page.getByRole('link', { name: 'Start texting oro', exact: true })).toHaveAttribute('href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`)
+  await expect(page.getByRole('link', { name: 'Start texting oro', exact: true })).toHaveAttribute('href', `sms:+18556762419${separator}body=${encodeURIComponent('hey oro, your newest oronaut just landed 🚀')}`)
   await expect(page.getByText('On your computer? Text +1 (855) 676-2419 from your phone.')).toBeVisible()
   expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
   expect(api.requests[0].body).toMatchObject({ country: 'CA', state: 'ON', birthday: '1998-01-02', phone: '+14165550123', daily_checkin_hour: 9 })
@@ -320,7 +320,7 @@ for (const [device, userAgent, separator] of [
     await codeStep(page)
     await verify(page)
     await expect(page.getByRole('link', { name: 'Start texting oro', exact: true })).toHaveAttribute(
-      'href', `sms:+18556762419${separator}body=${encodeURIComponent('Hey oro! Your newest oronaut has landed 🚀')}`,
+      'href', `sms:+18556762419${separator}body=${encodeURIComponent('hey oro, your newest oronaut just landed 🚀')}`,
     )
   })
 }

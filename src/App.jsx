@@ -47,7 +47,7 @@ export function getRouteFromPath(pathname = '/', search = '') {
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/about')           return { type: 'about' }
-  if (path === '/get-started')     return { type: 'get-started' }
+  if (path === '/getstarted' || path === '/get-started') return { type: 'get-started' }
   if (path === '/get-started/setup') return { type: 'get-started', legacy: true }
   if (path === '/signup')          return { type: 'signup' }
   if (path === '/tester/referrals') return { type: 'beta', tester: true }

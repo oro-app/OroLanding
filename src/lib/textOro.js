@@ -1,6 +1,6 @@
 export const ORO_TEXT_NUMBER = '+18556762419'
 export const ORO_TEXT_NUMBER_DISPLAY = '+1 (855) 676-2419'
-export const ORO_FIRST_MESSAGE = 'Hey oro! Your newest oronaut has landed 🚀'
+export const ORO_FIRST_MESSAGE = 'hey oro, your newest oronaut just landed 🚀'
 
 export function getOroTextLink(userAgent = typeof navigator === 'undefined' ? '' : navigator.userAgent) {
   const apple = /iPhone|iPad|iPod|Macintosh/.test(userAgent)
