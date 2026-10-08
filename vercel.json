@@ -83,6 +83,7 @@
     }
   ],
   "redirects": [
+    { "source": "/get-started", "destination": "/getstarted", "permanent": true },
     { "source": "/:entry(beta|invite)", "has": [{ "type": "query", "key": "src", "value": "^poster-career(?:-[a-z0-9]+)*$" }], "destination": "/beta/career", "permanent": false },
     { "source": "/:entry(beta|invite)", "has": [{ "type": "query", "key": "src", "value": "^poster-dating(?:-[a-z0-9]+)*$" }], "destination": "/beta/dating", "permanent": false },
     { "source": "/journal",   "destination": "/from-the-closet", "permanent": true },
