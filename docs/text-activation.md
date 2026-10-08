@@ -4,7 +4,7 @@
 
 On desktop, the QR opens `https://askoro.now/get-started?from=qr` on the person's phone. That page chooses the SMS draft format for their device. The visible phone number also works as a fallback. This avoids relying on one SMS-body separator working across both iPhone and Android QR scanners.
 
-The screenshots below are real local Chromium renders, with the cookie banner declined and focus moved off the heading. The phone screenshot is a responsive web viewport, not a native Messages screenshot. Browser tests check iPhone/Android user agents, draft links, CTA visibility, and horizontal overflow.
+The screenshots below are real local Chromium renders of the production build, with the bundled fonts loaded, with the cookie banner declined and focus moved off the heading. The phone screenshot is a responsive web viewport, not a native Messages screenshot. Browser tests check iPhone/Android user agents, draft links, CTA visibility, and horizontal overflow.
 
 ## Desktop · 1440 × 1000
 
