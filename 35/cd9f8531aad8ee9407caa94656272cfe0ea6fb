@@ -1,0 +1,31 @@
+e2e/get-started.spec.js
+  s_ad995eaa0aff57::t_2abee331bcee7c 20,24,46,98
+docs/text-activation.md
+  s_ad995eaa0aff57::t_1df23195ec8f49 1-17
+src/components/get-started/TextOro.jsx
+  s_ad995eaa0aff57::t_8d75583879d98c 1-56
+e2e/text-oro.spec.js
+  s_ad995eaa0aff57::t_aff55415dbd84a 1-37
+src/components/get-started/TextOro.css
+  s_ad995eaa0aff57::t_8d75583879d98c 1-42
+public/text-oro-qr.svg
+  s_ad995eaa0aff57::t_d06134c3a243c4 1-2
+src/lib/seo.js
+  s_ad995eaa0aff57::t_ad19f920f7cd2a 136,138-139,141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "35cd9f8531aad8ee9407caa94656272cfe0ea6fb",
+  "prompts": {},
+  "sessions": {
+    "s_ad995eaa0aff57": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a118df-b351-71b2-9918-d3ed1b2588d7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
