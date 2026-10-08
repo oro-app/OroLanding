@@ -259,7 +259,8 @@ export default function GetStarted() {
           form.hear.includes('somewhere else') ? form.hearOther.trim() : '',
         ].filter(Boolean).join(', '),
         phone: phoneNumber.number,
-        notification_hour: Number(form.notificationHour),
+        daily_checkin_hour: Number(form.notificationHour),
+        daily_checkin_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       })
       const { status, result, detail, retryAfter } = response
       if (status === 200 && result === 'otp_sent') {
@@ -489,7 +490,7 @@ export default function GetStarted() {
           {view === 'reminder' && (
             <Question
               label="When should oro send your daily reminder?"
-              hint="Choose your local time. You'll enable app notifications after installing oro."
+              hint="Choose your local time. Oro will text you from your existing conversation."
               canContinue={canContinue}
               onContinue={advance}
             >
