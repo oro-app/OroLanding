@@ -42,10 +42,11 @@ function doPost(event) {
       const dateIndex = responseHeaders().indexOf('referral_completed_date')
       return jsonResult({ ok: true, found: true, request_id: rows[matchIndex][0], referral_code: rows[matchIndex][codeIndex], signup_number: matchIndex, referred_signups: Number(rows[matchIndex][countIndex] || 0), referral_completed_date: rows[matchIndex][dateIndex] || '', tester: savedRows.slice(1).some((row) => row[phoneIndex] === input.phone && row[responseHeaders().indexOf('accepted')] === true) })
     }
-    if (input.action === 'text_signup' && input.cohort === cohort && Object.keys(input).every((key) => ['secret', 'cohort', 'action', 'phone', 'name', 'email'].includes(key))) {
+    if (input.action === 'text_signup' && input.cohort === cohort && Object.keys(input).every((key) => ['secret', 'cohort', 'action', 'phone', 'name', 'email', 'agreed_at'].includes(key))) {
       const name = typeof input.name === 'string' ? input.name.trim() : ''
       const email = typeof input.email === 'string' ? input.email.trim().toLowerCase() : ''
-      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || !/^\+[1-9]\d{6,14}$/.test(input.phone)) return jsonResult({ ok: false, code: 'invalid_request' })
+      const consentRecordedAt = typeof input.agreed_at === 'string' ? input.agreed_at.trim() : ''
+      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || !/^\+[1-9]\d{6,14}$/.test(input.phone) || !/^\d{4}-\d{2}-\d{2}T/.test(consentRecordedAt) || Number.isNaN(Date.parse(consentRecordedAt))) return jsonResult({ ok: false, code: 'invalid_request' })
       lock = LockService.getScriptLock()
       if (!lock.tryLock(5000)) return jsonResult({ ok: false, code: 'temporarily_unavailable' })
       upgradeResponseSheet()
@@ -57,10 +58,10 @@ function doPost(event) {
       if (existing) return jsonResult({ ok: true, referral_code: existing[codeIndex], signup_number: orderedSignups(rows).indexOf(existing) + 1 })
       const receivedAt = new Date().toISOString()
       const requestId = Utilities.getUuid()
-      const answers = Object.fromEntries(BetaContract.answerFields.map((field) => [field, field === 'name' ? name : field === 'email' ? email : field === 'phone' ? input.phone : field === 'usualHelp' ? [] : field === 'terms' || field === 'futureBeta' || field === 'marketing' ? false : '']))
+      const answers = Object.fromEntries(BetaContract.answerFields.map((field) => [field, field === 'name' ? name : field === 'email' ? email : field === 'phone' ? input.phone : field === 'usualHelp' ? [] : field === 'terms' ? true : field === 'futureBeta' || field === 'marketing' ? false : '']))
       const referralCode = codeForPhone(input.phone, secret)
       const payloadHash = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, `text_signup:${input.phone}`, Utilities.Charset.UTF_8).map((byte) => ('0' + ((byte + 256) % 256).toString(16)).slice(-2)).join('')
-      const row = [requestId, requestId, payloadHash, receivedAt, cohort, 'text-message-v1', 'not-collected', '']
+      const row = [requestId, requestId, payloadHash, receivedAt, cohort, 'text-message-v1', 'text-activation-v1', consentRecordedAt]
         .concat(BetaContract.answerFields.map((field) => Array.isArray(answers[field]) ? JSON.stringify(answers[field]) : answers[field]), [0, '', false, referralCode, '', 'text'])
       if (rows[0].includes('referrer_name')) row.push('')
       Sheets.Spreadsheets.Values.append({ values: [row] }, sheetId, "'Responses'!A1", { valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS' })

@@ -338,6 +338,7 @@ test('text signup writes the same response shape with a stable referral receipt'
     phone: '+14165550123',
     name: ' Maya ',
     email: 'MAYA@example.com',
+    agreed_at: '2026-10-08T12:30:00+00:00',
   }
   const first = google.post(signup)
   assert.equal(first.ok, true)
@@ -345,8 +346,9 @@ test('text signup writes the same response shape with a stable referral receipt'
   assert.equal(first.referral_code, createHmac('sha256', environment.BETA_SUBMISSION_SECRET).update(signup.phone).digest('hex'))
   assert.equal(google.state.rows[1][google.state.rows[0].indexOf('name')], 'Maya')
   assert.equal(google.state.rows[1][google.state.rows[0].indexOf('email')], 'maya@example.com')
-  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('terms')], false)
-  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('consent_recorded_at')], '')
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('terms')], true)
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('consent_version')], 'text-activation-v1')
+  assert.equal(google.state.rows[1][google.state.rows[0].indexOf('consent_recorded_at')], signup.agreed_at)
   assert.equal(google.state.rows[1][google.state.rows[0].indexOf('campaign_source')], 'text')
   assert.deepEqual(google.post(signup), first)
   assert.equal(google.state.appendCalls, 1)
