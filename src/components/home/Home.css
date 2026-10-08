@@ -1,7 +1,6 @@
 :root:has(.halo-site) { --color-bg: var(--oro-color-canvas); --halo-header-height: 64px; }
 body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-site { min-height: 100dvh; }
-.halo-site ::selection { background: var(--oro-color-soft); color: var(--oro-color-ink); }
 .halo-site a { text-decoration: none; transition: color var(--oro-motion-duration) var(--oro-motion-easing), background-color var(--oro-motion-duration) var(--oro-motion-easing); }
 .halo-site :is(a, button, [tabindex]):focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
 .halo-container { width: min(100% - 96px, 1120px); margin-inline: auto; }

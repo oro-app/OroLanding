@@ -15,7 +15,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: var(--oro-color-soft); color: var(--oro-color-ink); }
 a { color: var(--oro-color-accent); text-underline-offset: 3px; overflow-wrap: anywhere; }
 a:hover { color: var(--oro-color-accent-hover); }
 :focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
