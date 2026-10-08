@@ -133,12 +133,12 @@ export const ROUTE_SEO = {
   },
   'get-started': {
     path: '/get-started',
-    title: 'complete your beta setup - oro',
+    title: 'text your personal stylist - oro',
     description:
-      'invited to the oro beta? answer a few quick questions and verify the phone number on your approved invitation.',
-    h1: 'let’s get you set up.',
+      'start a conversation with oro, your personal stylist in your texts. open Messages or scan the QR code from your computer.',
+    h1: 'one text away from your next fit.',
     summary:
-      'approved beta testers complete their oro setup by answering a few questions and verifying their phone number.',
+      'send oro your first text and complete any missing setup in the conversation. no repeat signup form.',
     priority: '0.8',
   },
   'app-terms': {

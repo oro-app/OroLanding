@@ -19,7 +19,8 @@ const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
 const AboutPage = lazy(() => import('./components/about/AboutPage'))
-const GetStartedPage = lazy(() => import('./components/get-started/GetStarted'))
+const GetStartedPage = lazy(() => import('./components/get-started/TextOro'))
+const LegacySetupPage = lazy(() => import('./components/get-started/GetStarted'))
 const TesterReferrals = lazy(() => import('./components/beta/TesterReferrals'))
 const BetaPage = lazy(() => import('./components/beta/Beta'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
@@ -47,6 +48,7 @@ export function getRouteFromPath(pathname = '/', search = '') {
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/about')           return { type: 'about' }
   if (path === '/get-started')     return { type: 'get-started' }
+  if (path === '/get-started/setup') return { type: 'get-started', legacy: true }
   if (path === '/signup')          return { type: 'signup' }
   if (path === '/tester/referrals') return { type: 'beta', tester: true }
   if (['/beta', '/invite', '/beta/career', '/beta/dating'].includes(path)) return { type: 'beta', campaign: getBetaCampaign(path, search) }
@@ -148,7 +150,7 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isSignup && !isFeedback && (isHalo ? <HomeHeader /> : <SiteHeader />)}
+        {!isBeta && !isSignup && !isFeedback && (isHalo ? <HomeHeader showCta={route.type !== 'get-started'} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {isGeo ? (
             <Suspense fallback={null}><GeoPage path={route.path} /></Suspense>
@@ -192,7 +194,7 @@ function App({ initialRoute }) {
             </Suspense>
           ) : route.type === 'get-started' ? (
             <Suspense fallback={null}>
-              <GetStartedPage />
+              {route.legacy ? <LegacySetupPage /> : <GetStartedPage />}
             </Suspense>
           ) : (
             <Home />

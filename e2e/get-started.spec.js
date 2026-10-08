@@ -17,10 +17,11 @@ const test = base.extend({
 })
 
 async function phoneStep(page, answers = draft) {
-  await page.goto('/get-started')
+  await page.goto('/get-started/setup')
   await page.evaluate((answers) => localStorage.setItem('oro_get_started_responses', JSON.stringify(answers)), answers)
   await page.reload()
   await continueToPhone(page)
+  await page.getByRole('checkbox').check()
 }
 
 async function continueToPhone(page) {
@@ -42,7 +43,7 @@ async function verify(page, code = '123456') {
 }
 
 test('approved setup completes by keyboard with oro-kit controls and clears the draft', async ({ page, api }) => {
-  await page.goto('/get-started')
+  await page.goto('/get-started/setup')
   await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
   await page.getByRole('button', { name: 'Let’s get you settled' }).click()
   await page.keyboard.press('Tab')
@@ -94,7 +95,7 @@ test('held Enter submits each onboarding request once', async ({ page, api }) =>
   await page.keyboard.down('Enter')
   await page.keyboard.down('Enter')
   await page.keyboard.up('Enter')
-  await expect(page.getByRole('heading', { name: 'Youâ€™re all set.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'You’re all set.' })).toBeVisible()
   expect(api.requests.map((request) => request.action)).toEqual(['start', 'verify'])
 })
 
@@ -132,6 +133,7 @@ test('pasted international numbers update the dropdown and survive a reload', as
   expect(saved).toMatchObject({ phoneCountry: 'PK', phone: '0301 2345678', country: 'CA' })
   await page.reload()
   await continueToPhone(page)
+  await page.getByRole('checkbox').check()
   await expect(page.getByRole('combobox', { name: 'Country code' })).toHaveValue('PK')
   await page.getByRole('button', { name: 'Send verification code.' }).click()
   await verify(page)
