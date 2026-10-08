@@ -1,18 +1,53 @@
 import { Heading, Text } from 'oro-kit'
+import { useCallback, useEffect, useState } from 'react'
 import useScrolled from '../../hooks/useScrolled'
-import { trackCtaClick } from '../../lib/analytics'
+import { trackCtaClick, trackEvent } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
+import { getOroTextLink, isMobileMessagingDevice } from '../../lib/textOro'
+import TextOroModal from '../overlays/TextOroModal'
 
 function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
 }
 
 export function HomeCta({ place, children, className = '' }) {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [smsLink, setSmsLink] = useState(() => getOroTextLink(''))
+  const closeModal = useCallback(() => setModalOpen(false), [])
+
+  useEffect(() => setSmsLink(getOroTextLink()), [])
+
+  const handleClick = (event) => {
+    const mobile = isMobileMessagingDevice()
+    trackCtaClick('get_number_click', {
+      location: place,
+      destination: mobile ? 'sms' : 'qr_handoff',
+      device_class: mobile ? 'mobile' : 'desktop',
+    })
+    if (mobile) {
+      trackEvent('message_app_open', { location: place, method: 'cta' })
+      return
+    }
+    event.preventDefault()
+    setModalOpen(true)
+  }
+
   return (
-    <a href="/signup?step=phone" className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-      onClick={() => trackCtaClick('get_started_click', { location: place, destination: 'signup' })}>
-      {children}
-    </a>
+    <>
+      <a href={smsLink} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
+        onClick={handleClick}>
+        {(place === 'hero' || place === 'closer') && (
+          <svg className="halo-cta-message" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 4.5h14v10.8H9.2L5 19.5v-15Z" />
+          </svg>
+        )}
+        <span>{children}</span>
+        <svg className="halo-cta-arrow" viewBox="0 0 24 24" aria-hidden="true" data-button-icon="right">
+          <path d="M5 12h13m-5-5 5 5-5 5" />
+        </svg>
+      </a>
+      <TextOroModal open={modalOpen} onClose={closeModal} source={place} />
+    </>
   )
 }
 
@@ -31,7 +66,7 @@ export function HomeHeader({ showCta = true }) {
   )
 }
 
-export function HomeFooter({ landing = false, closerTitle = 'want her number?', closerText = "give us yours and you'll have hers", closerAction }) {
+export function HomeFooter({ landing = false, closerTitle = 'want her number?', closerText = "one text. no download. she's all yours.", closerAction }) {
   if (!landing) {
     return (
       <footer className="halo-footer halo-container">
