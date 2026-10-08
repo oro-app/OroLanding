@@ -132,7 +132,7 @@ export const ROUTE_SEO = {
     priority: '0.5',
   },
   'get-started': {
-    path: '/get-started',
+    path: '/getstarted',
     title: 'text your personal stylist - oro',
     description:
       'start a conversation with oro, your personal stylist in your texts. open Messages or scan the QR code from your computer.',
