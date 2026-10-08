@@ -32,7 +32,7 @@ export default function MessageModal({ dialogRef, onClose }) {
         <p>scan the code or tap the number, then send the prefilled message to get started.</p>
         <a className="home-message-number" href={smsHref}>
           <PhoneIcon />
-          <span><small>text</small><strong>+1 (855) 676-2419</strong></span>
+          <strong>+1 (855) 676-2419</strong>
         </a>
       </div>
       <div className="home-message-visual">
