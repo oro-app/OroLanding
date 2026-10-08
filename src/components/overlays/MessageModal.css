@@ -1,4 +1,4 @@
-.home-message-dialog { box-sizing: border-box; width: min(620px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 32px 40px; border: 1px solid var(--oro-color-border); border-radius: 20px; overflow: auto; background: var(--oro-color-surface); color: var(--oro-color-ink); box-shadow: 0 24px 64px rgb(27 20 42 / 24%); }
+.home-message-dialog { box-sizing: border-box; width: min(620px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 36px 40px; border: 1px solid var(--oro-color-border); border-radius: 20px; overflow: auto; background: var(--oro-color-surface); color: var(--oro-color-ink); box-shadow: 0 24px 64px rgb(27 20 42 / 24%); }
 .home-message-dialog::backdrop { background: rgb(0 0 0 / 55%); }
 .home-message-dialog[open] { display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 32px; }
 .home-message-close { position: absolute; top: 8px; right: 8px; z-index: 3; display: grid; place-items: center; width: 44px; height: 44px; line-height: 1; margin: 0; padding: 8px; background: transparent; color: var(--oro-color-ink); border: 0; font-size: 1.5rem; cursor: pointer; }
@@ -14,7 +14,7 @@
 .home-message-visual { position: relative; display: grid; place-items: center; align-content: center; background: var(--oro-color-surface); }
 .home-message-qr { box-sizing: border-box; position: relative; z-index: 2; width: min(100%, 210px); aspect-ratio: 1; padding: 6px; border: 1px solid var(--oro-color-border); border-radius: 14px; background: var(--oro-color-surface); box-shadow: 0 12px 30px color-mix(in srgb, var(--oro-plum-deep) 24%, transparent); }
 .home-message-qr img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
-.home-message-footer { grid-column: 1 / -1; margin-top: 20px; color: var(--oro-color-muted); font-size: 0.75rem; text-align: center; }
+.home-message-footer { grid-column: 1 / -1; margin-top: 12px; color: var(--oro-color-muted); font-size: 0.75rem; text-align: center; }
 .home-message-footer p { margin: 0; }
 .home-message-footer a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: 0.15em; }
 
