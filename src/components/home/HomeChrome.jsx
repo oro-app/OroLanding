@@ -62,7 +62,7 @@ export function HomeCta({ place, children, className = '' }) {
           </div>
         </div>
         <div className="home-message-footer">
-          <p>Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.</p>
+          <p>By continuing, you agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
         </div>
       </dialog>
     </>
