@@ -2,7 +2,7 @@
 
 `/getstarted` opens a conversation instead of repeating the signup questionnaire. There is no form, OTP request, or account write on this page. The phone button opens Messages with a greeting; the person still taps Send. Oro confirms missing eligibility and service-texting consent in the conversation before creating their account.
 
-On desktop, the QR contains a direct SMS draft to Oro with the greeting `hey oro, your newest oronaut just landed 🚀`. The phone button chooses the SMS draft format for the visitor's device. The visible phone number also works as a fallback.
+On desktop, the QR contains a direct SMS draft to Oro with the greeting `hey oro, let's get started!`. The phone button chooses the SMS draft format for the visitor's device. The visible phone number also works as a fallback.
 
 The screenshots below are real local Chromium renders of the production build, with the bundled fonts loaded, with the cookie banner declined and focus moved off the heading. The phone screenshot is a responsive web viewport, not a native Messages screenshot. Browser tests check iPhone/Android user agents, draft links, CTA visibility, and horizontal overflow.
 
