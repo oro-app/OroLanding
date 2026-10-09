@@ -102,6 +102,6 @@
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/cookies", "destination": "/cookies.html" },
     { "source": "/google-play", "destination": "/google-play.html" },
-    { "source": "/((?!api/)(?!.*\\.).*)", "destination": "/index.html" }
+    { "source": "/((?!api/)(?!signup/?$)(?!.*\\.).*)", "destination": "/index.html" }
   ]
 }

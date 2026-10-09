@@ -1,6 +1,6 @@
-# Connect beta invite requests
+# Archived beta invite writer
 
-The website saves invite requests through `POST /api/beta-request`. That server-side function validates the answers, normalizes the phone, checks the Vercel rate limit, and calls a dedicated Apps Script writer. Apps Script saves one row in a private Google Sheet. Only a confirmed save returns the request reference shown on the website.
+The website no longer offers beta signup or onboarding forms. The `/beta`, campaign, and `/invite` pages hand visitors directly to Messages or a QR code, and the former `/api/beta-request` web endpoint is not deployed. The Apps Script and its contract remain in this repository to preserve the existing response Sheet, signup counts, tester referral lookups, and historical verification coverage. The instructions below document the retired writer and must not be used to reopen browser intake.
 
 No Google Form is required. No Google credentials, Sheet ID, or writer secret belong in browser code. This flow does not create accounts, approve testers, send confirmation emails, add contacts to the newsletter, or start conversations. Questions go to sunny@buildingoro.ca.
 

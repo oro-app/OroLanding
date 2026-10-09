@@ -16,7 +16,7 @@ function importedStylesheets(key, seen = new Set()) {
 const betaCss = [...new Set(importedStylesheets('src/components/beta/Beta.jsx'))]
 
 test('beta HTML remains on the welcome screen without a temporary status banner', () => {
-  assert.match(html, /class="beta-page beta-page--welcome /,
+  assert.match(html, /class="beta-page beta-page--welcome"/,
     'Build first with npm run build in preview or production mode')
   assert.match(html, /id="welcome-title"/)
   assert.doesNotMatch(html, /class="beta-draft-bar"/)
@@ -49,6 +49,8 @@ test('beta and invite entry URLs serve prerendered HTML before the homepage fall
     assert.equal(config.rewrites[index].destination, '/beta/index.html')
   }
   assert.equal(config.rewrites.some((rule) => rule.source === '/signup'), false)
+  const fallback = config.rewrites.find((rule) => rule.destination === '/index.html')
+  assert.match(fallback.source, /signup/)
 })
 
 test('all poster openings arrive prerendered with their own copy, styles and noindex', async () => {

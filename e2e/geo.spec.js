@@ -40,7 +40,6 @@ const REPRESENTATIVE_PATHS = new Set([
 
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.route('**/api/beta-request', (route) => route.fulfill({ json: { enabled: false } }))
   await page.route('**/api/beta-count', (route) => route.fulfill({ json: { count: 0 } }))
   await page.route('**/api/waitlist', (route) => route.fulfill({ status: 405, json: { error: 'No signup submission is part of GEO verification' } }))
 })
@@ -203,7 +202,6 @@ test.describe('GEO articles with JavaScript disabled', () => {
 for (const width of [1440, 390]) {
   test(`GEO related navigation and beta welcome work at ${width}px without submitting`, async ({ page }) => {
     await page.setViewportSize({ width, height: width === 1440 ? 1000 : 844 })
-    await page.route('**/api/beta-request', (route) => route.fulfill({ json: { enabled: true } }))
     const writes = []
     page.on('request', (request) => {
       if (request.method() === 'POST') writes.push(request.url())
@@ -216,13 +214,9 @@ for (const width of [1440, 390]) {
     await expect(page).toHaveURL(/\/beta\/?$/)
     await expect(page.getByRole('heading', { name: 'heard you were looking for my number.', exact: true })).toBeVisible()
     await expect(page.getByRole('form')).toHaveCount(0)
-    await page.getByRole('button', { name: 'want her number?', exact: true }).click()
-    await expect(page).toHaveURL(/\/beta\/?\?step=phone$/)
-    await expect(page.getByRole('heading', { name: 'where should oro text you?', exact: true })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Back', exact: true })).toBeVisible()
-    await page.getByRole('button', { name: 'Back', exact: true }).click()
+    await page.locator('.beta-welcome').getByRole('link', { name: 'want her number?', exact: true }).click()
     await expect(page).toHaveURL(/\/beta\/?$/)
-    await expect(page.getByRole('heading', { name: 'heard you were looking for my number.', exact: true })).toBeVisible()
+    await expect(page.getByRole('dialog', { name: "get oro's number" })).toBeVisible()
     await expect(page.getByRole('form')).toHaveCount(0)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     expect(writes).toEqual([])
