@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.route('**/api/beta-request', (route) => route.fulfill({ json: { enabled: false } }))
   await page.goto('/beta')
-  await expect(page.getByRole('heading', { name: 'Help us make oro yours.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Invites open soon.' })).toBeVisible()
   test.skip(await page.locator('.beta-draft-bar').count() > 0, 'Design previews keep the form available for testing')
 })
 
@@ -18,12 +18,7 @@ for (const width of [1440, 390]) {
       if (url.origin === 'https://vercel.live' && url.pathname === '/login/validate') return
       if (request.method() === 'POST') writes.push(request.url())
     })
-    await page.getByRole('button', { name: 'See details', exact: true }).click()
-    await expect(page.getByRole('heading', { name: 'Beta perks', exact: true })).toBeVisible()
-    await expect(page.getByText('oro is in beta. Join the waitlist and help shape what comes next.', { exact: true })).toBeVisible()
-    await expect(page.getByText('Free lifetime access to oro.', { exact: true }).first()).toBeVisible()
-    await page.getByRole('button', { name: 'Continue', exact: true }).click()
-    await expect(page.getByRole('heading', { name: 'Invites open soon.' })).toBeFocused()
+    await expect(page.getByRole('heading', { name: 'Invites open soon.' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Email us' })).toHaveAttribute('href', 'mailto:sunny@buildingoro.ca')
     await expect(page.locator('form, input, textarea')).toHaveCount(0)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
@@ -34,7 +29,7 @@ for (const width of [1440, 390]) {
 
 test('@smoke beta uses the home header and direct form links cannot open the unfinished form', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Blog' })).toHaveCount(0)
-  await expect(page.getByRole('link', { name: 'want her number?' })).toHaveAttribute('href', '/signup?step=phone')
+  await expect(page.locator('header').getByRole('link', { name: 'want her number?' })).toHaveAttribute('href', /^sms:/)
   for (const step of formSteps) {
     await page.goto(`/beta${step.hash}`)
     await expect(page.getByRole('link', { name: 'Blog' })).toHaveCount(0)

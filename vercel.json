@@ -94,7 +94,6 @@
     { "source": "/beta/dating", "destination": "/beta/dating/index.html" },
     { "source": "/beta", "destination": "/beta/index.html" },
     { "source": "/invite", "destination": "/beta/index.html" },
-    { "source": "/signup", "destination": "/signup/index.html" },
     { "source": "/feedback", "destination": "/feedback/index.html" },
     { "source": "/app/terms", "destination": "/app/terms.html" },
     { "source": "/app/privacy", "destination": "/app/privacy.html" },

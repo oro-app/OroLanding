@@ -20,7 +20,7 @@ const openings = {
   },
 }
 
-export default function BetaWelcome({ campaign, enabled, href, titleRef }) {
+export default function BetaWelcome({ campaign, enabled, onStart, titleRef }) {
   const opening = openings[campaign] || openings.general
   return <section className="beta-application beta-welcome" aria-labelledby="welcome-title" data-campaign={campaign}>
     <div className="beta-story-halo" aria-hidden="true" />
@@ -31,7 +31,7 @@ export default function BetaWelcome({ campaign, enabled, href, titleRef }) {
         {opening.copy && <Text className="beta-welcome-copy">{opening.copy}</Text>}
         <Text className={opening.image ? 'beta-welcome-intro' : 'beta-welcome-copy'}>your personal ai stylist,<br />right in your texts.</Text>
         {enabled
-          ? <a className="oro-button oro-button--primary beta-welcome-cta" href={href}>want her number? <ButtonArrow /></a>
+          ? <button type="button" className="oro-button oro-button--primary beta-welcome-cta" onClick={onStart}>want her number? <ButtonArrow /></button>
           : <button type="button" className="oro-button oro-button--primary beta-welcome-cta" disabled>want her number? <ButtonArrow /></button>}
         <Text className="beta-welcome-note" variant="support" muted>arriving october 8. get in line to meet her.</Text>
       </div>

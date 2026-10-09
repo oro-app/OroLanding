@@ -20,7 +20,7 @@ function WrittenAnswer({ name, label, value, update, error, ...props }) {
   return <TextField id={name} name={name} label={label} value={value} onChange={(event) => update(name, event.target.value)} maxLength={textLimits[name] || 64} required error={error} {...props} />
 }
 
-export default function Beta({ campaign = 'general', landing = false }) {
+export default function Beta({ campaign = 'general' }) {
   const [draft] = useState(readBetaDraft)
   const [attribution] = useState(browserBetaAttribution)
   const campaignSource = draft?.campaignSource || attribution.source
@@ -53,14 +53,12 @@ export default function Beta({ campaign = 'general', landing = false }) {
   const currentPhone = useRef(answers.phone)
   const currentCode = useRef(code)
   const currentStep = useRef(0)
-  const previousEndpointChecked = useRef(false)
   const allowForm = previewForm || enabled
   const entryView = allowForm || enabled === null ? 'welcome' : 'coming-soon'
   const saving = status === 'saving'
   const message = submissionMessages[status]
-  const [view, setView] = useState(landing ? entryView : 'form')
+  const [view, setView] = useState(entryView)
   const [step, setStep] = useState(0)
-  const [showPhoneBack, setShowPhoneBack] = useState(false)
   const formRef = useRef(null)
   const stepTitleRef = useRef(null)
   const receiptRef = useRef(null)
@@ -87,14 +85,6 @@ export default function Beta({ campaign = 'general', landing = false }) {
   }, [answers, campaignSource])
   useEffect(() => () => clearTimeout(copyTimeout.current), [])
   useEffect(() => {
-    if (landing || previousEndpointChecked.current) return
-    previousEndpointChecked.current = true
-    try {
-      setShowPhoneBack(sessionStorage.getItem('oro_signup_previous_endpoint') === '/beta')
-      sessionStorage.removeItem('oro_signup_previous_endpoint')
-    } catch {}
-  }, [landing])
-  useEffect(() => {
     if (resendLeft <= 0) return undefined
     const timeout = setTimeout(() => setResendLeft((seconds) => Math.max(0, seconds - 1)), 1000)
     return () => clearTimeout(timeout)
@@ -110,15 +100,6 @@ export default function Beta({ campaign = 'general', landing = false }) {
     document.title = 'help us make oro yours. - oro'
     const syncLocation = () => {
       const url = new URL(window.location.href)
-      if (landing) {
-        url.searchParams.delete('step')
-        url.hash = ''
-        window.history.replaceState(null, '', `${url.pathname}${url.search}`)
-        currentStep.current = -1
-        setStep(0)
-        setView(entryView)
-        return
-      }
       let requestedStep = url.searchParams.get('step') || url.hash.slice(1)
       if (requestedStep === 'verify-phone' && !codeSent.current) {
         requestedStep = 'phone'
@@ -137,12 +118,12 @@ export default function Beta({ campaign = 'general', landing = false }) {
         setStep(index)
         setView(allowForm || enabled === null ? 'form' : 'coming-soon')
       } else {
-        url.searchParams.set('step', formSteps[0].hash.slice(1))
+        url.searchParams.delete('step')
         url.hash = ''
         window.history.replaceState(null, '', `${url.pathname}${url.search}`)
-        currentStep.current = 0
+        currentStep.current = -1
         setStep(0)
-        setView(allowForm || enabled === null ? 'form' : 'coming-soon')
+        setView(entryView)
       }
     }
     syncLocation()
@@ -152,7 +133,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
       window.removeEventListener('popstate', syncLocation)
       window.removeEventListener('hashchange', syncLocation)
     }
-  }, [entryView, allowForm, enabled, landing])
+  }, [entryView, allowForm, enabled])
 
   useEffect(() => {
     if (view !== 'form') return
@@ -191,10 +172,6 @@ export default function Beta({ campaign = 'general', landing = false }) {
 
   function openStep(index) {
     if (submitting.current) return
-    if (index < 0 && !landing) {
-      window.location.assign('/beta')
-      return
-    }
     const url = new URL(window.location.href)
     if (index < 0) url.searchParams.delete('step')
     else url.searchParams.set('step', formSteps[index].hash.slice(1))
@@ -203,13 +180,6 @@ export default function Beta({ campaign = 'general', landing = false }) {
     currentStep.current = index
     setStep(Math.max(0, index))
     setView(index < 0 ? entryView : 'form')
-  }
-
-  function rememberSignupSource(event) {
-    if (!landing || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || window.location.pathname.replace(/\/+$/, '') !== '/beta') return
-    const link = event.target.closest?.('a[href]')
-    if (!link || new URL(link.href).pathname.replace(/\/+$/, '') !== '/signup') return
-    try { sessionStorage.setItem('oro_signup_previous_endpoint', '/beta') } catch {}
   }
 
   async function verifyPhone(action) {
@@ -368,7 +338,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
   if (tester && view === 'receipt') return <TesterReferrals initialReceipt={{ referral_code: ownReferralCode, referred_signups: referredSignups }} />
 
   return (
-    <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true" onClickCapture={rememberSignupSource}>
+    <div className={`beta-page beta-page--${view} ph-no-capture`} data-private="true">
       <HomeHeader />
       {previewForm && enabled === false && <div className="beta-draft-bar"><div className="halo-container"><span>Design preview · Nothing is submitted</span>{view === 'receipt' ? <button onClick={() => setView('form')}>Back to form <span data-button-icon="up-right" aria-hidden="true">↗</span></button> : <><button onClick={() => previewReceipt()}>Preview confirmation <span data-button-icon="up-right" aria-hidden="true">↗</span></button>{import.meta.env.DEV && <button onClick={() => previewReceipt(true)}>Preview referral milestone <span data-button-icon="up-right" aria-hidden="true">↗</span></button>}</>}</div></div>}
       {view === 'coming-soon' && <section className="beta-application beta-coming-soon" aria-labelledby="coming-soon-title">
@@ -379,7 +349,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
           <a className="oro-button oro-button--secondary" href="mailto:sunny@buildingoro.ca">Email us <ButtonArrow direction="up-right" /></a>
         </div>
       </section>}
-      {view === 'welcome' && <BetaWelcome campaign={campaign} enabled={allowForm} href="/signup?step=phone" titleRef={welcomeRef} />}
+      {view === 'welcome' && <BetaWelcome campaign={campaign} enabled={allowForm} onStart={() => openStep(0)} titleRef={welcomeRef} />}
       {(allowForm || enabled === null) && view === 'form' && <section className="beta-application" aria-labelledby="request-title" data-scene={step % 3}>
         <div className="beta-story-halo" aria-hidden="true" />
         <div className="beta-form-progress" role="progressbar" aria-label="Invite request progress" aria-valuemin={0} aria-valuemax={formSteps.length} aria-valuenow={step + 1} aria-valuetext={`Step ${step + 1} of ${formSteps.length}`}><span style={{ width: `${(step + 1) / formSteps.length * 100}%` }} /></div>
@@ -398,7 +368,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
               <Text variant="support" muted>By submitting this request, I agree to oro’s <a href="/terms" target="_blank" rel="noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>, and to receive marketing emails and texts from oro, including product updates and promotions. I can unsubscribe at any time.</Text>
             </div>}
             <div className="beta-step-actions">
-              {(step > 0 || showPhoneBack) && <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>}
+              <button type="button" className="beta-page-arrow beta-form-back" aria-label="Back" disabled={saving || verificationStatus === 'sending' || verificationStatus === 'checking'} onClick={() => openStep(step - 1)}><ButtonArrow direction="left" size={18} /></button>
               {!finalStep && <Button type="submit" className="beta-form-next" disabled={(step !== 0 && enabled === null) || (step === 0 && resendLeft > 0) || verificationStatus === 'sending' || verificationStatus === 'checking'}>
                 {verificationStatus === 'sending' ? 'sending your code…' : verificationStatus === 'checking' ? 'checking…' : step === 0 && resendLeft > 0 ? `send a new code in ${resendLeft}s` : step === 0 ? 'send my code' : phoneProof ? 'check my signup' : 'verify my number'}
                 <ButtonArrow size={18} />
@@ -421,7 +391,7 @@ export default function Beta({ campaign = 'general', landing = false }) {
             <div className="beta-referral-actions">
               {messagesHref && <a className="oro-button oro-button--primary" href={messagesHref}>share in messages</a>}
               <Button variant="secondary" className="beta-hero-invite" onClick={copyInvite} disabled={!inviteLink}><span>{copied ? 'copied!' : 'copy my invite link'}</span><CopyIcon /></Button>
-              <a className="beta-resend" href="/signup?step=phone">check my place</a>
+              <a className="beta-resend" href="/beta?step=phone">check my place</a>
             </div>
             {requestId && <p className="beta-request-reference">Request reference: {requestId}</p>}
           </div>
