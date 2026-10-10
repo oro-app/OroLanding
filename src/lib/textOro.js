@@ -2,9 +2,10 @@ export const ORO_TEXT_NUMBER = '+18556762419'
 export const ORO_TEXT_NUMBER_DISPLAY = '+1 (855) 676-2419'
 export const ORO_FIRST_MESSAGE = 'hey oro, your newest oronaut just landed 🚀'
 
-export function getOroTextLink(userAgent = typeof navigator === 'undefined' ? '' : navigator.userAgent) {
+export function getOroTextLink(userAgent = typeof navigator === 'undefined' ? '' : navigator.userAgent, inviteUrl = '') {
   const apple = /iPhone|iPad|iPod|Macintosh/.test(userAgent)
-  return `sms:${ORO_TEXT_NUMBER}${apple ? '&' : '?'}body=${encodeURIComponent(ORO_FIRST_MESSAGE)}`
+  const body = inviteUrl ? `${ORO_FIRST_MESSAGE}\n${inviteUrl}` : ORO_FIRST_MESSAGE
+  return `sms:${ORO_TEXT_NUMBER}${apple ? '&' : '?'}body=${encodeURIComponent(body)}`
 }
 
 export function isMobileMessagingDevice() {

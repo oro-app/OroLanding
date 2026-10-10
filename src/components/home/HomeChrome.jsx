@@ -11,12 +11,12 @@ function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
 }
 
-export function HomeCta({ place, children, className = '' }) {
+export function HomeCta({ place, children, className = '', inviteUrl = '' }) {
   const [modalOpen, setModalOpen] = useState(false)
-  const [smsLink, setSmsLink] = useState(() => getOroTextLink(''))
+  const [smsLink, setSmsLink] = useState(() => getOroTextLink('', inviteUrl))
   const closeModal = useCallback(() => setModalOpen(false), [])
 
-  useEffect(() => setSmsLink(getOroTextLink()), [])
+  useEffect(() => setSmsLink(getOroTextLink(undefined, inviteUrl)), [inviteUrl])
 
   const handleClick = (event) => {
     const mobile = isMobileMessagingDevice()
@@ -40,7 +40,7 @@ export function HomeCta({ place, children, className = '' }) {
         {place !== 'header' && <MessagesIcon className="halo-cta-message" />}
         <span>{children}</span>
       </a>
-      <TextOroModal open={modalOpen} onClose={closeModal} source={place} />
+      <TextOroModal open={modalOpen} onClose={closeModal} source={place} inviteUrl={inviteUrl} />
     </>
   )
 }
