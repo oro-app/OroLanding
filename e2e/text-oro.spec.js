@@ -12,7 +12,7 @@ test('desktop handoff has a QR, phone fallback and no account-creation requests'
   await expect(page.getByRole('heading', { name: 'one text away from your next fit.' })).not.toBeFocused()
   await expect(page.getByText('opens Messages with a hello ready to send.')).toHaveCount(0)
   const draft = await page.getByRole('link', { name: 'text oro', exact: true }).getAttribute('href')
-  expect(decodeURIComponent(draft.split('body=')[1])).toBe('hey oro, your newest oronaut just landed 🚀')
+  expect(decodeURIComponent(draft.split('body=')[1])).toBe('hey oro, let\'s get started!')
   expect(await page.locator('input').count()).toBe(0)
   expect(writes).toEqual([])
 })
