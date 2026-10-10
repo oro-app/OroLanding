@@ -8,12 +8,12 @@ import MessagesIcon from '../MessagesIcon'
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
-export default function TextOroModal({ open, onClose, source }) {
+export default function TextOroModal({ open, onClose, source, inviteUrl = '' }) {
   const titleId = useId()
   const dialogRef = useRef(null)
   const closeRef = useRef(null)
   const [qrCode, setQrCode] = useState('')
-  const smsLink = getOroTextLink()
+  const smsLink = getOroTextLink(undefined, inviteUrl)
 
   useEffect(() => {
     if (!open) return undefined

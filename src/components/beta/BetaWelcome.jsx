@@ -1,5 +1,5 @@
 import { Heading, Text } from 'oro-kit'
-import ButtonArrow from '../ButtonArrow'
+import { HomeCta } from '../home/HomeChrome'
 import mascot from '../../assets/mascot/oro_hi.webp'
 import careerOutfit from '../../assets/poster-campaign/career.webp'
 import datingOutfit from '../../assets/poster-campaign/dating.webp'
@@ -20,20 +20,17 @@ const openings = {
   },
 }
 
-export default function BetaWelcome({ campaign, enabled, href, titleRef }) {
+export default function BetaWelcome({ campaign, inviteUrl = '' }) {
   const opening = openings[campaign] || openings.general
   return <section className="beta-application beta-welcome" aria-labelledby="welcome-title" data-campaign={campaign}>
     <div className="beta-story-halo" aria-hidden="true" />
     <div className={`beta-form-panel beta-welcome-layout${opening.image ? ' beta-welcome-layout--example' : ''}`}>
       <div className="beta-welcome-content">
-        <Heading ref={titleRef} tabIndex={-1} as="h1" variant="title" id="welcome-title">{opening.title}</Heading>
+        <Heading as="h1" variant="title" id="welcome-title">{opening.title}</Heading>
         {!opening.image && <div className="beta-welcome-portrait"><img className="beta-welcome-mascot" src={mascot} alt="oro waving hello" width="280" height="280" /></div>}
         {opening.copy && <Text className="beta-welcome-copy">{opening.copy}</Text>}
         <Text className={opening.image ? 'beta-welcome-intro' : 'beta-welcome-copy'}>your personal ai stylist,<br />right in your texts.</Text>
-        {enabled
-          ? <a className="oro-button oro-button--primary beta-welcome-cta" href={href}>want her number? <ButtonArrow /></a>
-          : <button type="button" className="oro-button oro-button--primary beta-welcome-cta" disabled>want her number? <ButtonArrow /></button>}
-        <Text className="beta-welcome-note" variant="support" muted>arriving october 8. get in line to meet her.</Text>
+        <HomeCta place={`beta_${campaign}`} className="beta-welcome-cta" inviteUrl={inviteUrl}>want her number?</HomeCta>
       </div>
       {opening.image && <div className="beta-welcome-demo" aria-label="a preview of styling with oro">
         <p className="beta-welcome-demo-label">a little preview</p>
