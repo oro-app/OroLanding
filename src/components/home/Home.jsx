@@ -6,7 +6,7 @@ import { useHomeMotion } from './useHomeMotion'
 import ProductDemo from './ProductDemo'
 import StyleAdviceDemo from './StyleAdviceDemo'
 import wardrobeDemo from '../../assets/demos/wardrobe.png'
-import IterationDemo from './IterationDemo'
+import cargosLook from '../../assets/fit-gen-demo/mens-cargos.webp'
 import jotting from '../../assets/mascot/jotting.webp'
 import { hasAnalyticsConsent, trackEvent } from '../../lib/analytics'
 
@@ -22,7 +22,10 @@ const FEATURES = [
   {
     title: 'don’t like it? tell her.',
     description: 'make it warmer. less basic. swap the jeans. start over. keep going until it actually feels like you.',
-    demo: true,
+    image: cargosLook,
+    imageAlt: 'Streetwear outfit with olive cargo pants, a brown leather jacket, a graphic tee, and silver sneakers.',
+    width: 1086,
+    height: 1448,
   },
   {
     title: 'the more you text her, the better she gets',
@@ -122,10 +125,8 @@ export default function Home() {
             </Text>
           </section>
           <section className="home-features" aria-label="oro features">
-            {FEATURES.map((feature, index) => feature.demo ? (
-              <IterationDemo key={feature.title} title={feature.title} description={feature.description} />
-            ) : (
-              <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal data-analytics-section={index === 0 ? 'closet' : 'learns_preferences'}>
+            {FEATURES.map((feature, index) => (
+              <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal data-analytics-section={index === 0 ? 'closet' : index === 1 ? 'outfit_iteration_demo' : 'learns_preferences'}>
                 <div className="home-feature-copy home-stagger">
                   <Heading as="h2" variant="title">{index === 2 ? <>the more you text her,<br />the better she gets</> : feature.title}</Heading>
                   <Text muted className="home-description">{feature.description}</Text>
