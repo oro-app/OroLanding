@@ -71,8 +71,8 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-hero-typing i { width: 7px; height: 7px; border-radius: 50%; background: #6e6e73; animation: oroBlink 1.4s ease-in-out infinite; }
 .home-hero-typing i:nth-child(2) { animation-delay: .2s; }
 .home-hero-typing i:nth-child(3) { animation-delay: .4s; }
-.home-hero-replies { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding: 12px 10px 0; border-top: 1px solid var(--oro-color-border); }
-.home-hero-replies button { min-height: 44px; padding: 8px 16px; border: 1px solid #0068d9; border-radius: 999px; background: transparent; color: #0068d9; font: inherit; cursor: pointer; }
+.home-hero-replies { display: flex; flex-wrap: nowrap; justify-content: flex-end; gap: 6px; padding: 12px 10px 0; border-top: 1px solid var(--oro-color-border); }
+.home-hero-replies button { flex: 1 1 0; min-width: 0; min-height: 44px; padding: 8px 10px; border: 1px solid #0068d9; border-radius: 999px; background: transparent; color: #0068d9; font: inherit; font-size: 13px; white-space: nowrap; cursor: pointer; }
 .home-hero-replies button:hover:not(:disabled) { background: #0068d9; color: #fff; }
 .home-hero-replies button:disabled { opacity: .55; cursor: default; }
 .home-moments-panel { min-height: auto; margin-inline: auto; align-items: center; text-align: center; }
