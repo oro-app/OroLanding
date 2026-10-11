@@ -129,7 +129,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .home-panel .oro-heading--display { font-size: var(--oro-type-display-mobile-size); letter-spacing: var(--oro-type-display-mobile-tracking); }
 }
 @media (min-width: 601px) {
-  .home-feature:nth-child(2) .home-feature-copy { align-self: start; }
+  .home-feature:nth-child(2) .home-feature-copy { padding-left: clamp(24px, 4vw, 64px); }
 }
 @media (max-width: 900px) {
   .halo-container { width: calc(100% - 48px); }
