@@ -6,6 +6,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-site :is(a, button, [tabindex]):focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
 .halo-container { width: min(100% - 96px, 1120px); margin-inline: auto; }
 .halo-header { position: sticky; top: 0; z-index: 20; isolation: isolate; }
+.halo-header--static { position: relative; }
 .halo-header::before { content: ''; position: absolute; inset: 0; z-index: -1; background: color-mix(in srgb, var(--oro-color-canvas) 85%, transparent); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; }
 .halo-header--scrolled::before { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
@@ -26,7 +27,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-site .halo-cta:hover { background: var(--halo-cta-background-hover); }
 .halo-site .halo-cta--header { min-height: 48px; padding-inline: 20px; font-size: 1rem; }
 .halo-cta-message { flex: 0 0 auto; width: 34px; height: 34px; color: currentColor; }
-.halo-site :is(.halo-cta--hero, .halo-cta--closer) {
+.halo-site :is(.halo-cta--hero, .halo-cta--closer, .halo-cta--floating) {
   width: 286px;
   max-width: 100%;
   min-height: 68px;
@@ -41,12 +42,15 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   font-weight: 700;
   letter-spacing: -0.01em;
 }
-.halo-site :is(.halo-cta--hero, .halo-cta--closer) .halo-cta-message { width: 38px; height: 38px; }
-.halo-site :is(.halo-cta--hero, .halo-cta--closer):hover {
+.halo-site :is(.halo-cta--hero, .halo-cta--closer, .halo-cta--floating) .halo-cta-message { width: 38px; height: 38px; }
+.halo-site :is(.halo-cta--hero, .halo-cta--closer, .halo-cta--floating):hover {
   background: var(--halo-cta-background-hover);
   box-shadow: 0 20px 48px rgba(43, 22, 70, 0.34), 0 6px 16px rgba(43, 22, 70, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
-.halo-site :is(.halo-cta--hero, .halo-cta--closer):focus-visible { outline-color: var(--oro-gold); }
+.halo-site :is(.halo-cta--hero, .halo-cta--closer, .halo-cta--floating):focus-visible { outline-color: var(--oro-gold); }
+
+.home-floating-cta { position: fixed; z-index: 18; right: 0; bottom: max(20px, env(safe-area-inset-bottom)); left: 0; display: flex; justify-content: center; padding-inline: 24px; pointer-events: none; }
+.home-floating-cta .halo-cta { pointer-events: auto; }
 
 .home-copy { padding-bottom: var(--oro-space-24); }
 .home-panel { max-width: 560px; min-height: calc(100dvh - var(--halo-header-height)); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-block: var(--oro-space-16); }
@@ -117,12 +121,14 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-home[data-motion="ready"] [data-home-reveal]:focus-within .home-stagger { opacity: 1; transform: none; transition: none; }
   .halo-site .halo-cta { transition: color var(--oro-motion-duration) var(--oro-motion-easing), background-color var(--oro-motion-duration) var(--oro-motion-easing), box-shadow 240ms ease, transform 240ms var(--home-ease); }
   .halo-site :is(.halo-cta--hero, .halo-cta--closer):hover { transform: translateY(-2px); }
+  .home-floating-cta { animation: homeFloatingCtaIn 360ms var(--home-ease) both; }
   .halo-home .halo-cta:focus-visible { animation: none; opacity: 1; transform: none; transition: none; }
 }
 
 @keyframes homeTypeChar { from { opacity: 0; } to { opacity: 1; } }
 @keyframes homeTypeCaret { 0%, 92% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes homeEnter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes homeFloatingCtaIn { from { opacity: 0; transform: translateY(calc(100% + 20px)); } to { opacity: 1; transform: none; } }
 
 
 @media (min-width: 901px) and (max-width: 1100px) {

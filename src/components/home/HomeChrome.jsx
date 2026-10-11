@@ -45,11 +45,11 @@ export function HomeCta({ place, children, className = '', inviteUrl = '' }) {
   )
 }
 
-export function HomeHeader({ showCta = true }) {
+export function HomeHeader({ showCta = true, sticky = true }) {
   const scrolled = useScrolled()
 
   return (
-    <header className={`halo-header${scrolled ? ' halo-header--scrolled' : ''}`}>
+    <header className={`halo-header${sticky ? '' : ' halo-header--static'}${scrolled ? ' halo-header--scrolled' : ''}`}>
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">

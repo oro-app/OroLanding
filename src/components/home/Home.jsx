@@ -59,8 +59,21 @@ function TypedHeadline() {
 
 export default function Home() {
   const motionRef = useHomeMotion()
+  const heroRef = useRef(null)
   const viewedSectionsRef = useRef(new Set())
   const [entryCount, setEntryCount] = useState(null)
+  const [showFloatingCta, setShowFloatingCta] = useState(false)
+
+  useEffect(() => {
+    const hero = heroRef.current
+    if (!hero) return
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setShowFloatingCta(!entry.isIntersecting && entry.boundingClientRect.bottom <= 0)
+    })
+    observer.observe(hero)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     let observer
@@ -106,7 +119,7 @@ export default function Home() {
       <GoldBackground />
       <div className="home-grid halo-container">
         <div className="home-copy">
-          <section className="home-panel" aria-labelledby="home-title" data-analytics-section="hero">
+          <section className="home-panel" ref={heroRef} aria-labelledby="home-title" data-analytics-section="hero">
             <Heading as="h1" variant="display" id="home-title" aria-label={HEADLINE}>
               <span aria-hidden="true"><TypedHeadline /></span>
             </Heading>
@@ -142,6 +155,11 @@ export default function Home() {
           </section>}
         </div>
       </div>
+      {showFloatingCta && (
+        <div className="home-floating-cta">
+          <HomeCta place="floating">get her number</HomeCta>
+        </div>
+      )}
     </div>
   )
 }

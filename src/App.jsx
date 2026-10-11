@@ -148,7 +148,7 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={route.type !== 'get-started'} /> : <SiteHeader />)}
+        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={route.type !== 'get-started'} sticky={!isHome} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {isGeo ? (
             <Suspense fallback={null}><GeoPage path={route.path} /></Suspense>
