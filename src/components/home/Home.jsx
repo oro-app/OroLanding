@@ -60,10 +60,8 @@ function TypedHeadline() {
 
 function HeroChat() {
   const [messages, setMessages] = useState([
-    { from: 'you', text: 'dinner tonight. cute, but not trying too hard?' },
-    { from: 'oro', text: 'say less. what’s the weather doing?' },
+    { from: 'oro', text: 'what are we dressing for today?' },
   ])
-  const [draft, setDraft] = useState('')
   const [typing, setTyping] = useState(false)
   const timerRef = useRef()
   const threadRef = useRef(null)
@@ -73,27 +71,17 @@ function HeroChat() {
     if (threadRef.current) threadRef.current.scrollTop = threadRef.current.scrollHeight
   }, [messages, typing])
 
-  const sendMessage = (event) => {
-    event.preventDefault()
-    const text = draft.trim()
-    if (!text || typing) return
-    setMessages((current) => [...current, { from: 'you', text }])
-    setDraft('')
+  const sendMessage = (text, reply) => {
     setTyping(true)
+    setMessages((current) => [...current, { from: 'you', text }])
     timerRef.current = setTimeout(() => {
-      setMessages((current) => [...current, { from: 'oro', text: 'perfect. give me a sec — i’m building your look ✨' }])
+      setMessages((current) => [...current, { from: 'oro', text: reply }])
       setTyping(false)
     }, 700)
   }
 
   return <div className="home-hero-chat" aria-label="Chat with oro">
-    <div className="home-hero-chat-bar">
-      <span aria-hidden="true">‹</span>
-      <div><strong>oro</strong><small>Text Message</small></div>
-      <span aria-hidden="true" />
-    </div>
     <div className="home-hero-chat-thread" ref={threadRef} role="log" aria-live="polite" aria-relevant="additions">
-      <p>Today 8:42 AM</p>
       {messages.map((message, index) => <div className={`home-hero-message home-hero-message--${message.from}`} key={`${message.from}-${index}`}>
         <SmsBubble tone={message.from === 'you' ? 'dark-purple' : 'cream'} side={message.from === 'you' ? 'right' : 'left'}>
           <span className="sr-only">{message.from}: </span>{message.text}
@@ -101,11 +89,11 @@ function HeroChat() {
       </div>)}
       {typing && <div className="home-hero-typing" aria-label="oro is typing"><i /><i /><i /></div>}
     </div>
-    <form className="home-hero-compose" onSubmit={sendMessage}>
-      <label className="sr-only" htmlFor="home-hero-message">Message oro</label>
-      <input id="home-hero-message" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="iMessage" autoComplete="off" />
-      <button type="submit" aria-label="Send message" disabled={typing}><span aria-hidden="true">↑</span></button>
-    </form>
+    <div className="home-hero-replies" aria-label="Choose a reply">
+      <button type="button" disabled={typing} onClick={() => sendMessage('office, but make it interesting.', 'easy. starting with those trousers you never know how to style.')}>office</button>
+      <button type="button" disabled={typing} onClick={() => sendMessage('dinner tonight. cute, not trying too hard.', 'say less. the suede jacket is coming out tonight.')}>dinner</button>
+      <button type="button" disabled={typing} onClick={() => sendMessage('weekend errands, but i still want to look good.', 'comfy, pulled together, and no boring leggings. i’ve got you.')}>weekend</button>
+    </div>
   </div>
 }
 
