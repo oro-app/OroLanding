@@ -62,33 +62,18 @@
 .beta-welcome-layout--example .beta-welcome-content { text-align: left; justify-items: start; }
 .beta-welcome-layout--example .oro-heading { font-size: clamp(44px, 5vw, 68px); }
 .beta-welcome-intro.oro-text { font-size: 17px; color: var(--oro-color-muted); }
-.beta-welcome-chat { width: min(100%, 390px); height: min(590px, 68svh); margin-inline: auto; display: flex; flex-direction: column; overflow: hidden; border: 8px solid #171319; border-radius: 38px; background: #fff; box-shadow: 0 24px 64px color-mix(in srgb, var(--oro-color-ink) 20%, transparent); color: #111; }
-.beta-chat-bar { min-height: 82px; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; padding: 8px 10px; border-bottom: 1px solid #d1d1d6; background: #f8f8f8; color: #007aff; font-size: 34px; }
-.beta-chat-bar > div { display: grid; justify-items: center; gap: 2px; color: #111; font-size: 12px; }
-.beta-chat-bar img { display: block; object-fit: contain; border-radius: 50%; background: #e5e5ea; }
-.beta-chat-thread { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 14px 12px; overscroll-behavior: contain; }
-.beta-chat-time { margin: 0 0 4px; color: #6e6e73; font-size: 11px; text-align: center; }
-.beta-chat-message { display: grid; justify-items: start; gap: 8px; }
-.beta-chat-message--you { justify-items: end; }
-.beta-chat-message .sms-bubble { max-width: 82%; padding: 9px 13px; border-radius: 19px; box-shadow: none; font-size: 15px; line-height: 1.3; }
-.beta-chat-message--you .sms-bubble { background: #0068d9; color: #fff; }
-.beta-chat-message--oro .sms-bubble { background: #e9e9eb; color: #111; }
-.beta-chat-outfit { display: block; width: min(68%, 210px); height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 18px; }
-.beta-chat-typing { display: flex; align-items: center; gap: 4px; width: fit-content; padding: 12px 16px; border-radius: 19px; background: #e9e9eb; }
-.beta-chat-typing i { width: 7px; height: 7px; border-radius: 50%; background: #6e6e73; animation: oroBlink 1.4s ease-in-out infinite; }
-.beta-chat-typing i:nth-child(2) { animation-delay: .2s; }
-.beta-chat-typing i:nth-child(3) { animation-delay: .4s; }
-.beta-chat-compose { display: grid; grid-template-columns: 1fr 44px; align-items: center; gap: 6px; padding: 8px 10px 12px; border-top: 1px solid #d1d1d6; }
-.beta-chat-compose input { min-width: 0; height: 44px; padding: 0 16px; border: 1px solid #8e8e93; border-radius: 22px; background: #fff; color: #111; font: inherit; }
-.beta-chat-compose input::placeholder { color: #6e6e73; }
-.beta-chat-compose button { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: #0068d9; color: #fff; font-size: 26px; font-weight: 600; cursor: pointer; }
-.beta-chat-compose button:disabled { background: #6e6e73; cursor: default; }
+.beta-welcome-demo { display: grid; justify-items: start; gap: 14px; width: min(100%, 400px); margin-inline: auto; }
+.beta-welcome-demo-label { margin: 0; color: var(--oro-color-muted); font-size: 12px; letter-spacing: .12em; }
+.beta-welcome-message { margin: 0; padding: 14px 18px; border-radius: 22px 22px 22px 6px; background: var(--oro-color-surface); color: var(--oro-color-ink); font-size: 16px; line-height: 1.45; box-shadow: 0 8px 28px color-mix(in srgb, var(--oro-color-ink) 6%, transparent); }
+.beta-welcome-message--you { justify-self: end; max-width: 88%; border-radius: 22px 22px 6px 22px; background: var(--oro-color-accent); color: var(--oro-color-on-accent); }
+.beta-welcome-outfit { display: block; width: min(75%, 240px); height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 20px; margin-left: 48px; box-shadow: 0 12px 32px color-mix(in srgb, var(--oro-color-ink) 8%, transparent); }
+.beta-welcome-reply { display: flex; align-items: end; gap: 8px; }
+.beta-welcome-reply > img { flex: none; object-fit: contain; }
 @media (max-width: 760px) {
   .beta-welcome-layout--example { grid-template-columns: 1fr; gap: 36px; padding-bottom: 24px; }
   .beta-welcome-layout--example .beta-welcome-content { text-align: center; justify-items: center; }
   .beta-welcome-layout--example .oro-heading { font-size: clamp(42px, 10vw, 60px); }
 }
-@media (forced-colors: active) { .beta-welcome-chat, .beta-chat-bar, .beta-chat-compose, .beta-chat-compose input, .beta-chat-compose button, .beta-chat-message .sms-bubble { border: 1px solid CanvasText; } }
 .beta-form-heading:has(+ .beta-form .beta-choice-hint) { margin-bottom: var(--oro-space-3); }
 .beta-form-heading:has(+ .beta-form #before-send) { margin-bottom: var(--oro-space-12); }
 .beta-form-heading .oro-heading { font-size: var(--oro-type-section-size); line-height: var(--oro-type-section-line-height); text-wrap: balance; }
@@ -199,7 +184,7 @@
   .beta-chapter--hero .beta-lead, .beta-story-date { animation: beta-copy-in 240ms ease-out 1050ms both; }
   .beta-form-panel { animation: beta-step-in 420ms cubic-bezier(.22, 1, .36, 1) both; }
   .beta-welcome-content { animation: none; }
-  .beta-welcome-content > :is(.oro-heading, .beta-welcome-copy, .beta-welcome-intro, .beta-welcome-cta, .beta-welcome-note), .beta-welcome-chat { animation: beta-welcome-in 560ms cubic-bezier(.22, 1, .36, 1) backwards; }
+  .beta-welcome-content > :is(.oro-heading, .beta-welcome-copy, .beta-welcome-intro, .beta-welcome-cta, .beta-welcome-note), .beta-welcome-demo { animation: beta-welcome-in 560ms cubic-bezier(.22, 1, .36, 1) backwards; }
   .beta-welcome-mascot { animation: beta-welcome-hello 760ms cubic-bezier(.22, 1, .36, 1) 70ms backwards; }
   .beta-welcome-portrait::before { animation: beta-welcome-glow 800ms ease-out 70ms backwards; }
   .beta-welcome-copy.oro-text, .beta-welcome-intro.oro-text { animation-delay: 160ms; }
@@ -223,7 +208,7 @@
   100% { opacity: 1; transform: none; }
 }
 @keyframes beta-welcome-glow { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: scale(1); } }
-@media (prefers-reduced-motion: reduce) { .beta-option { transition: none; } .beta-chapter-content { opacity: 1; transform: none; filter: none; } .beta-chat-typing i { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .beta-option { transition: none; } .beta-chapter-content { opacity: 1; transform: none; filter: none; } }
 @media (max-width: 760px) {
   .beta-chapter { width: calc(100% - 48px); padding-block: var(--oro-space-8); flex: 0 0 auto; }
   .beta-chapter .oro-heading--title { font-size: var(--oro-type-section-size); line-height: 1.15; }
