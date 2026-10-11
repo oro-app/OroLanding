@@ -69,7 +69,9 @@ function HeroChat() {
   const threadRef = useRef(null)
 
   useEffect(() => () => clearTimeout(timerRef.current), [])
-  useEffect(() => threadRef.current?.scrollTo({ top: threadRef.current.scrollHeight }), [messages, typing])
+  useEffect(() => {
+    if (threadRef.current) threadRef.current.scrollTop = threadRef.current.scrollHeight
+  }, [messages, typing])
 
   const sendMessage = (event) => {
     event.preventDefault()
