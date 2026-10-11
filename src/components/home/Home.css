@@ -59,12 +59,14 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-panel:first-child { max-width: 100%; min-height: min(calc(100dvh - var(--halo-header-height)), 720px); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 390px); align-items: center; gap: clamp(48px, 8vw, 112px); }
 .home-hero-copy { text-align: left; }
 .home-hero-chat { width: 100%; height: 440px; display: flex; flex-direction: column; color: var(--oro-color-ink); }
-.home-hero-chat-thread { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; overflow-y: auto; padding: 18px 10px; overscroll-behavior: contain; }
+.home-hero-chat-thread { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; padding: 18px 10px; overscroll-behavior: contain; }
+.home-hero-chat-thread::before { content: ''; margin-top: auto; }
 .home-hero-message { display: grid; justify-items: start; }
 .home-hero-message--you { justify-items: end; }
 .home-hero-message .sms-bubble { max-width: 82%; padding: 10px 14px; border-radius: 19px; box-shadow: none; font-size: 16px; line-height: 1.3; }
 .home-hero-chat .home-hero-message--you .sms-bubble { background: #0068d9; color: #fff; }
 .home-hero-chat .home-hero-message--oro .sms-bubble { background: #e9e9eb; color: #111; }
+.home-hero-chat-image { display: block; width: min(72%, 220px); max-height: 210px; margin-top: 10px; border-radius: 18px; object-fit: contain; object-position: left center; }
 .home-hero-typing { display: flex; gap: 4px; width: fit-content; padding: 13px 16px; border-radius: 19px; background: #e9e9eb; }
 .home-hero-typing i { width: 7px; height: 7px; border-radius: 50%; background: #6e6e73; animation: oroBlink 1.4s ease-in-out infinite; }
 .home-hero-typing i:nth-child(2) { animation-delay: .2s; }
