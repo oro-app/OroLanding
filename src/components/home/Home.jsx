@@ -66,12 +66,20 @@ export default function Home() {
 
   useEffect(() => {
     const hero = heroRef.current
-    if (!hero) return
+    const footer = document.querySelector('.halo-footer--landing')
+    if (!hero || !footer) return
 
-    const observer = new IntersectionObserver(([entry]) => {
-      setShowFloatingCta(!entry.isIntersecting && entry.boundingClientRect.bottom <= 0)
+    let heroPassed = false
+    let footerVisible = false
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.target === hero) heroPassed = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0
+        if (entry.target === footer) footerVisible = entry.isIntersecting
+      })
+      setShowFloatingCta(heroPassed && !footerVisible)
     })
     observer.observe(hero)
+    observer.observe(footer)
     return () => observer.disconnect()
   }, [])
 
