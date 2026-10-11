@@ -36,7 +36,7 @@ export const GEO_GUIDES = [
         heading: 'Where an AI answer needs your judgment',
         paragraphs: [
           'A conversation cannot establish every detail of fit, movement, or comfort. Try the outfit on, sit down, and check whether you can move freely. Confirm any required dress code with the host or workplace. You are the person wearing the clothes, so a recommendation should remain open to your feedback.',
-          'Oro is currently in beta. Start with the beta signup to request access and bring your own outfit question to the conversation.',
+          'Oro is currently in beta. Text Oro to start a conversation and bring your own outfit question.',
         ],
       },
     ],
@@ -81,7 +81,7 @@ export const GEO_GUIDES = [
         heading: 'Check the outfit in real life',
         paragraphs: [
           'Try the combination on before you leave. Look at it with the coat and bag you will actually use, then move and sit in it. Text can help organize a choice, but your comfort and the real setting still decide whether it works.',
-          'Oro is currently in beta. Use the beta signup to request access when you are ready to try a conversation about your own wardrobe.',
+          'Oro is currently in beta. Text Oro when you are ready to try a conversation about your own wardrobe.',
         ],
       },
     ],

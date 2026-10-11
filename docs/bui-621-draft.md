@@ -2,7 +2,7 @@
 
 ## Connected submission flow
 
-The website now saves through `/api/beta-request`, a dedicated Apps Script writer, and a private Google Sheet. See [the setup and rehearsal guide](beta-signup-setup.md) for configuration, deployment, retry behavior, and operator handoff.
+This document describes the retired browser beta signup. The website now hands visitors directly to Messages or QR and does not deploy `/api/beta-request`. See [the archived setup guide](beta-signup-setup.md) for Sheet maintenance and historical implementation details.
 
 Production remains closed by default. A server availability check opens the form only when intake is enabled and its required settings are valid. Missing configuration shows “Invites open soon.” Local development and Vercel preview builds retain the design-only form while saving is disabled. Preview receipts are visibly labeled; real confirmation requires a saved request reference from the writer. URL parameters and browser storage cannot enable server writes.
 

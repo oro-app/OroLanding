@@ -35,6 +35,11 @@ test.describe('vercel.json rewrites and redirects', () => {
     expect(new URL(page.url()).pathname).toBe('/from-the-closet')
   })
 
+  test('/signup is not served by the SPA fallback', async ({ request }) => {
+    const response = await request.get('/signup', { maxRedirects: 0 })
+    expect(response.status()).toBe(404)
+  })
+
   test('legal page /terms serves static HTML @smoke', async ({ page }) => {
     const response = await page.goto('/terms')
     expect(response.status()).toBe(200)

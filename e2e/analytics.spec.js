@@ -8,7 +8,6 @@ for (const [path, routeType] of [
   ['/getstarted', 'get-started'],
 ]) {
   test(`${path} loads consent-gated analytics with the current route tag`, async ({ page }) => {
-    await page.route('**/api/beta-request', (route) => route.fulfill({ json: { enabled: false } }))
     await page.addInitScript(() => {
       localStorage.setItem('oro_cookie_consent', 'accepted')
       window.dataLayer = []
@@ -31,7 +30,6 @@ for (const [path, routeType] of [
 }
 
 test('accepting on a private route tags the consent page view', async ({ page }) => {
-  await page.route('**/api/beta-request', (route) => route.fulfill({ json: { enabled: false } }))
   await page.goto('/beta')
   await page.locator('.cookie-consent-accept').click()
 

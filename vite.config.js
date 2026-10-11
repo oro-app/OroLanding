@@ -74,7 +74,6 @@ export default defineConfig({
   },
   define: {
     __DEV__: JSON.stringify(false),
-    __BETA_FORM_PREVIEW__: JSON.stringify(process.env.VERCEL_ENV === 'preview'),
   },
   ssr: {
     noExternal: [
