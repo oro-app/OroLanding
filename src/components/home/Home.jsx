@@ -163,11 +163,9 @@ export default function Home() {
           </section>}
         </div>
       </div>
-      {showFloatingCta && (
-        <div className="home-floating-cta">
-          <HomeCta place="floating">get her number</HomeCta>
-        </div>
-      )}
+      <div className={`home-floating-cta${showFloatingCta ? ' home-floating-cta--visible' : ''}`} inert={showFloatingCta ? undefined : ''}>
+        <HomeCta place="floating">get her number</HomeCta>
+      </div>
     </div>
   )
 }

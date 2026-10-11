@@ -50,8 +50,9 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-site :is(.halo-cta--hero, .halo-cta--closer, .halo-cta--floating):focus-visible { outline-color: var(--oro-gold); }
 .halo-site .halo-cta--floating { width: auto; min-height: 48px; padding: 8px 20px; font-size: 1rem; }
 
-.home-floating-cta { position: fixed; z-index: 18; right: 0; bottom: max(20px, env(safe-area-inset-bottom)); left: 0; display: flex; justify-content: center; padding-inline: 24px; pointer-events: none; }
-.home-floating-cta .halo-cta { pointer-events: auto; }
+.home-floating-cta { position: fixed; z-index: 18; right: 0; bottom: max(20px, env(safe-area-inset-bottom)); left: 0; display: flex; justify-content: center; padding-inline: 24px; opacity: 0; visibility: hidden; transform: translateY(calc(100% + 20px)); pointer-events: none; }
+.home-floating-cta--visible { opacity: 1; visibility: visible; transform: none; }
+.home-floating-cta--visible .halo-cta { pointer-events: auto; }
 
 .home-copy { padding-bottom: var(--oro-space-24); }
 .home-panel { max-width: 560px; min-height: calc(100dvh - var(--halo-header-height)); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-block: var(--oro-space-16); }
@@ -122,14 +123,14 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-home[data-motion="ready"] [data-home-reveal]:focus-within .home-stagger { opacity: 1; transform: none; transition: none; }
   .halo-site .halo-cta { transition: color var(--oro-motion-duration) var(--oro-motion-easing), background-color var(--oro-motion-duration) var(--oro-motion-easing), box-shadow 240ms ease, transform 240ms var(--home-ease); }
   .halo-site :is(.halo-cta--hero, .halo-cta--closer):hover { transform: translateY(-2px); }
-  .home-floating-cta { animation: homeFloatingCtaIn 360ms var(--home-ease) both; }
+  .home-floating-cta { transition: opacity 360ms ease, transform 360ms var(--home-ease), visibility 0s linear 360ms; }
+  .home-floating-cta--visible { transition-delay: 0s; }
   .halo-home .halo-cta:focus-visible { animation: none; opacity: 1; transform: none; transition: none; }
 }
 
 @keyframes homeTypeChar { from { opacity: 0; } to { opacity: 1; } }
 @keyframes homeTypeCaret { 0%, 92% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes homeEnter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@keyframes homeFloatingCtaIn { from { opacity: 0; transform: translateY(calc(100% + 20px)); } to { opacity: 1; transform: none; } }
 
 
 @media (min-width: 901px) and (max-width: 1100px) {
