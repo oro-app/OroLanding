@@ -37,7 +37,7 @@ export function HomeCta({ place, children, className = '', inviteUrl = '' }) {
     <>
       <a href={smsLink} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
         onClick={handleClick}>
-        {place !== 'header' && <MessagesIcon className="halo-cta-message" />}
+        {!['header', 'floating'].includes(place) && <MessagesIcon className="halo-cta-message" />}
         <span>{children}</span>
       </a>
       <TextOroModal open={modalOpen} onClose={closeModal} source={place} inviteUrl={inviteUrl} />
