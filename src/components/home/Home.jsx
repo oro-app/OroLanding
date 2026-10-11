@@ -5,6 +5,7 @@ import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
 import ProductDemo from './ProductDemo'
 import StyleAdviceDemo from './StyleAdviceDemo'
+import SmsBubble from './SmsBubble'
 import wardrobeDemo from '../../assets/demos/wardrobe.png'
 import cargosLook from '../../assets/fit-gen-demo/mens-cargos.webp'
 import jotting from '../../assets/mascot/jotting.webp'
@@ -55,6 +56,55 @@ function TypedHeadline() {
       </Fragment>
     )
   })
+}
+
+function HeroChat() {
+  const [messages, setMessages] = useState([
+    { from: 'you', text: 'dinner tonight. cute, but not trying too hard?' },
+    { from: 'oro', text: 'say less. what’s the weather doing?' },
+  ])
+  const [draft, setDraft] = useState('')
+  const [typing, setTyping] = useState(false)
+  const timerRef = useRef()
+  const threadRef = useRef(null)
+
+  useEffect(() => () => clearTimeout(timerRef.current), [])
+  useEffect(() => threadRef.current?.scrollTo({ top: threadRef.current.scrollHeight }), [messages, typing])
+
+  const sendMessage = (event) => {
+    event.preventDefault()
+    const text = draft.trim()
+    if (!text || typing) return
+    setMessages((current) => [...current, { from: 'you', text }])
+    setDraft('')
+    setTyping(true)
+    timerRef.current = setTimeout(() => {
+      setMessages((current) => [...current, { from: 'oro', text: 'perfect. give me a sec — i’m building your look ✨' }])
+      setTyping(false)
+    }, 700)
+  }
+
+  return <div className="home-hero-chat" aria-label="Chat with oro">
+    <div className="home-hero-chat-bar">
+      <span aria-hidden="true">‹</span>
+      <div><strong>oro</strong><small>Text Message</small></div>
+      <span aria-hidden="true" />
+    </div>
+    <div className="home-hero-chat-thread" ref={threadRef} role="log" aria-live="polite" aria-relevant="additions">
+      <p>Today 8:42 AM</p>
+      {messages.map((message, index) => <div className={`home-hero-message home-hero-message--${message.from}`} key={`${message.from}-${index}`}>
+        <SmsBubble tone={message.from === 'you' ? 'dark-purple' : 'cream'} side={message.from === 'you' ? 'right' : 'left'}>
+          <span className="sr-only">{message.from}: </span>{message.text}
+        </SmsBubble>
+      </div>)}
+      {typing && <div className="home-hero-typing" aria-label="oro is typing"><i /><i /><i /></div>}
+    </div>
+    <form className="home-hero-compose" onSubmit={sendMessage}>
+      <label className="sr-only" htmlFor="home-hero-message">Message oro</label>
+      <input id="home-hero-message" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="iMessage" autoComplete="off" />
+      <button type="submit" aria-label="Send message" disabled={typing}><span aria-hidden="true">↑</span></button>
+    </form>
+  </div>
 }
 
 export default function Home() {
@@ -128,15 +178,18 @@ export default function Home() {
       <div className="home-grid halo-container">
         <div className="home-copy">
           <section className="home-panel" ref={heroRef} aria-labelledby="home-title" data-analytics-section="hero">
-            <Heading as="h1" variant="display" id="home-title" aria-label={HEADLINE}>
-              <span aria-hidden="true"><TypedHeadline /></span>
-            </Heading>
-            <Text muted className="home-description home-enter">
-              personalized outfit advice for your closet, your style, and your plans.
-            </Text>
-            <div className="home-action">
-              <HomeCta place="hero" className="home-enter">get her number</HomeCta>
+            <div className="home-hero-copy">
+              <Heading as="h1" variant="display" id="home-title" aria-label={HEADLINE}>
+                <span aria-hidden="true"><TypedHeadline /></span>
+              </Heading>
+              <Text muted className="home-description home-enter">
+                personalized outfit advice for your closet, your style, and your plans.
+              </Text>
+              <div className="home-action">
+                <HomeCta place="hero" className="home-enter">get her number</HomeCta>
+              </div>
             </div>
+            <HeroChat />
           </section>
           <ProductDemo />
           <section className="home-panel home-moments-panel" aria-labelledby="home-moments-title" data-home-reveal data-analytics-section="personalized_style">
