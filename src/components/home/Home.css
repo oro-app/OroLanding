@@ -55,6 +55,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .home-floating-cta--visible .halo-cta { pointer-events: auto; }
 
 .home-copy { padding-bottom: var(--oro-space-24); }
+.halo-home .sms-bubble--dark-purple { background: #0068d9; color: #fff; }
 .home-panel { max-width: 560px; min-height: calc(100dvh - var(--halo-header-height)); display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-block: var(--oro-space-16); }
 .home-panel:first-child { max-width: 100%; min-height: min(calc(100dvh - var(--halo-header-height)), 720px); margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 390px); align-items: center; gap: clamp(48px, 8vw, 112px); }
 .home-hero-copy { text-align: left; }
