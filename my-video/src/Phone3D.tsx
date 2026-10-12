@@ -33,6 +33,11 @@ export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
     .lineTo(-113, 710).quadraticCurveTo(-175, 710, -175, 648)
     .lineTo(-175, 62).quadraticCurveTo(-175, 0, -113, 0), []);
 
+  const island = useMemo(() => new Shape()
+    .moveTo(-32, -13).lineTo(32, -13).quadraticCurveTo(45.5, -13, 45.5, 0)
+    .quadraticCurveTo(45.5, 13, 32, 13).lineTo(-32, 13)
+    .quadraticCurveTo(-45.5, 13, -45.5, 0).quadraticCurveTo(-45.5, -13, -32, -13), []);
+
   useEffect(() => {
     mounted.current = true;
     return () => {mounted.current = false;};
@@ -69,10 +74,9 @@ export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
       <ambientLight intensity={1.2} />
       <directionalLight position={[-400, 600, 800]} intensity={3} />
       <directionalLight position={[500, -100, 400]} intensity={1.5} />
-      {/* Viewer-forward is the user's +X, represented by Three's +Z. Only rigid translation and rotation animate. */}
-      <group position={[0, -height / 2 - interpolate(phoneIn, [0, 1], [760, 0]), interpolate(frame, [354, 401], [0, 900], {easing: Easing.in(Easing.quad), extrapolateLeft: "clamp", extrapolateRight: "clamp"})]} rotation={[-interpolate(frame, [354, 392], [0, Math.PI / 2], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}), 0, 0]} scale={0.94}>
+      <group position={[interpolate(frame, [184, 226], [0, 300], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}), -334 - interpolate(phoneIn, [0, 1], [760, 0]), 0]} rotation={[0, interpolate(frame, [184, 207, 226], [0, -0.16, -0.06], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}), 0]} scale={0.94}>
         <mesh position={[0, 0, -8]}>
-          <extrudeGeometry args={[shape, {depth: 8, bevelEnabled: false, curveSegments: 24}]} />
+          <extrudeGeometry args={[shape, {depth: 8, bevelEnabled: true, bevelSize: 2, bevelThickness: 2, bevelSegments: 3, curveSegments: 24}]} />
           <meshStandardMaterial color="#383538" metalness={0.7} roughness={0.28} />
         </mesh>
         <mesh position={[-176.5, 557.5, -4]}>
@@ -83,8 +87,20 @@ export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
           <boxGeometry args={[3, 90, 5]} />
           <meshStandardMaterial color="#383538" metalness={0.7} roughness={0.28} />
         </mesh>
+        <mesh position={[0, 3.5, 2.1]} scale={[0.98, 0.99, 1]}>
+          <shapeGeometry args={[shape]} />
+          <meshPhysicalMaterial color="#080808" metalness={0.1} roughness={0.12} clearcoat={1} />
+        </mesh>
+        <mesh position={[0, 680, 3.5]}>
+          <extrudeGeometry args={[island, {depth: 1, bevelEnabled: false, curveSegments: 16}]} />
+          <meshStandardMaterial color="#080808" roughness={0.22} />
+        </mesh>
+        <mesh position={[29, 680, 4.6]}>
+          <circleGeometry args={[4, 24]} />
+          <meshPhysicalMaterial color="#182334" roughness={0.1} metalness={0.5} />
+        </mesh>
         {/* Keep the glass distinct from the chassis in the camera's depth buffer. */}
-        <mesh position={[0, 355, 0.5]}>
+        <mesh position={[0, 355, 3]}>
           <planeGeometry args={[350, 710]} />
           <meshBasicMaterial map={texture} transparent alphaTest={0.1} toneMapped={false} />
         </mesh>
