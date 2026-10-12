@@ -65,7 +65,7 @@ export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
     <div aria-hidden="true" style={{position: "absolute", left: -10000, width: 350, height: 710}}>
       <div ref={source} style={{position: "relative", width: 350, height: 710}}><Freeze frame={screenFrame}>{children}</Freeze></div>
     </div>
-    {screen && <ThreeCanvas width={width} height={height} style={{position: "absolute", inset: 0, visibility: frame < 88 ? "hidden" : "visible"}} camera={{position: [0, 0, 4000], fov: 2 * Math.atan(height / 8000) * 180 / Math.PI, near: 1, far: 5000}} gl={{alpha: true, antialias: true}}>
+    {screen && <ThreeCanvas width={width} height={height} style={{position: "absolute", inset: 0, visibility: frame < 88 ? "hidden" : "visible"}} camera={{position: [0, 0, 4000], fov: 2 * Math.atan(height / 8000) * 180 / Math.PI, near: 100, far: 5000}} gl={{alpha: true, antialias: true}}>
       <ambientLight intensity={1.2} />
       <directionalLight position={[-400, 600, 800]} intensity={3} />
       <directionalLight position={[500, -100, 400]} intensity={1.5} />
@@ -83,7 +83,8 @@ export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
           <boxGeometry args={[3, 90, 5]} />
           <meshStandardMaterial color="#383538" metalness={0.7} roughness={0.28} />
         </mesh>
-        <mesh position={[0, 355, 0.1]}>
+        {/* Keep the glass distinct from the chassis in the camera's depth buffer. */}
+        <mesh position={[0, 355, 0.5]}>
           <planeGeometry args={[350, 710]} />
           <meshBasicMaterial map={texture} transparent alphaTest={0.1} toneMapped={false} />
         </mesh>
