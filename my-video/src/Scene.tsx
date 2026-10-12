@@ -47,7 +47,7 @@ const Phone: React.FC = () => {
   const secondSent = frame >= 276;
   const firstReply = frame >= 169;
   const finalReply = frame >= 330;
-  return <div style={{position: "absolute", left: "50%", top: 20, width: 350, height: 710, perspective: 1100, translate: "-50% 0"}}><div style={{position: "absolute", inset: 0, borderRadius: 62, padding: 9, background: "linear-gradient(145deg, #111 0%, #777278 46%, #121113 100%)", boxShadow: "0 42px 76px rgba(47,30,57,.3), 0 13px 0 #2a282b, inset 0 0 0 1px #aaa5aa", translate: `0 ${interpolate(phoneIn, [0, 1], [760, 0]) + interpolate(phoneOut, [0, 1], [0, 760])}px`, rotate: "1 0 0 5deg", scale: 0.94, opacity: phoneIn * interpolate(phoneOut, [0, 0.88, 1], [1, 1, 0]), transformOrigin: "50% 50%"}}>
+  return <div style={{position: "absolute", left: "50%", top: 20, width: 350, height: 710, perspective: 1100, translate: "-50% 0"}}><div style={{position: "absolute", inset: 0, borderRadius: 62, padding: 9, background: "linear-gradient(145deg, #111 0%, #777278 46%, #121113 100%)", boxShadow: "0 42px 76px rgba(47,30,57,.3), 0 13px 0 #2a282b, inset 0 0 0 1px #aaa5aa", transform: `translate3d(0, ${interpolate(phoneIn, [0, 1], [760, 0]) + interpolate(phoneOut, [0, 1], [0, 620])}px, ${interpolate(phoneOut, [0, 1], [0, 440])}px) rotateX(${interpolate(phoneOut, [0, 1], [5, 78])}deg) scale(.94)`, opacity: phoneIn * interpolate(phoneOut, [0, 0.88, 1], [1, 1, 0]), transformOrigin: "50% 100%"}}>
     <div style={{position: "absolute", left: -3, top: 120, width: 3, height: 65, borderRadius: "3px 0 0 3px", background: "#383538"}} />
     <div style={{position: "absolute", right: -3, top: 154, width: 3, height: 90, borderRadius: "0 3px 3px 0", background: "#383538"}} />
     <div style={{position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 53, background: "#fff", fontFamily: bodyFont}}>
@@ -62,7 +62,7 @@ const Phone: React.FC = () => {
         {frame >= 302 && !finalReply && <TypingDots show={302} hide={330} />}
         {finalReply && <Bubble show={330}>say less. black blazer, soft knit, dark denim, loafers. clean, easy, done.</Bubble>}
       </div>
-      <div style={{position: "absolute", left: 11, right: 11, bottom: 10}}><ComposeBar text={firstSent ? (secondSent ? "" : secondDraft) : firstDraft} caret={(!firstSent && frame >= 42) || (firstReply && !secondSent)} /></div>
+      <div style={{position: "absolute", left: 11, right: 11, bottom: 24}}><ComposeBar text={firstSent ? (secondSent ? "" : secondDraft) : firstDraft} caret={(!firstSent && frame >= 42) || (firstReply && !secondSent)} /></div>
     </div>
   </div></div>;
 };
