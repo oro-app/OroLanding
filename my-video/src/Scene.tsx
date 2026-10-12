@@ -1,5 +1,5 @@
 import React from "react";
-import {PhoneExit} from "./PhoneExit";
+import {Phone3D} from "./Phone3D";
 import {WavingMascot} from "./WavingMascot";
 import {IoAdd, IoArrowUp, IoBatteryFull, IoCellular, IoChatbubble, IoChevronBack, IoChevronForward, IoMic, IoVideocamOutline, IoWifi} from "react-icons/io5";
 import {BiSolidPointer} from "react-icons/bi";
@@ -46,17 +46,15 @@ const ComposeBar: React.FC<{text: string; caret: boolean}> = ({text, caret}) => 
   return <div style={{height: 39, display: "flex", alignItems: "center", gap: 7, color: "#8e8e93", fontFamily: bodyFont, fontSize: 14}}><span style={{width: 35, height: 35, flex: "0 0 35px", borderRadius: "50%", display: "grid", placeItems: "center", border: "1.5px solid #8e8e93"}}><IoAdd aria-hidden="true" focusable="false" size={21} /></span><span style={{height: 37, minWidth: 0, flex: 1, border: "1.5px solid #8e8e93", borderRadius: 22, display: "flex", alignItems: "center", padding: "0 4px 0 12px", color: text ? "#000" : "#8e8e93"}}><span style={{flex: 1, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden"}}>{text || "iMessage"}{caret && <span style={{display: "inline-block", width: 2, height: 16, marginLeft: 2, verticalAlign: -3, background: "#007aff", opacity: Math.floor(frame / 8) % 2 ? 0 : 1}} />}</span>{text ? <span style={{width: 29, height: 29, borderRadius: "50%", display: "grid", placeItems: "center", background: "#007aff", color: "#fff"}}><IoArrowUp aria-hidden="true" focusable="false" size={20} /></span> : <IoMic aria-hidden="true" focusable="false" size={20} />}</span></div>;
 };
 
-const Phone: React.FC<{snapshot?: boolean}> = ({snapshot = false}) => {
+const PhoneScreen: React.FC = () => {
   const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const phoneIn = spring({frame: frame - 88, fps, config: {damping: 18, stiffness: 92, mass: 1.15}});
   const firstDraft = typed("first date tonight. help?", frame, 130, 1);
   const secondDraft = typed("quiet but sharp.", frame, 230, 1);
   const firstSent = frame >= 160;
   const secondSent = frame >= 258;
   const firstReply = frame >= 200;
   const finalReply = frame >= 294;
-  const face = <div style={{position: "absolute", inset: 0, boxSizing: "border-box", borderRadius: 62, padding: 9, background: "linear-gradient(145deg, #111 0%, #777278 46%, #121113 100%)"}}>
+  return <div style={{position: "absolute", inset: 0, boxSizing: "border-box", borderRadius: 62, padding: 9, background: "linear-gradient(145deg, #111 0%, #777278 46%, #121113 100%)"}}>
     <div style={{position: "absolute", left: -3, top: 120, width: 3, height: 65, borderRadius: "3px 0 0 3px", background: "#383538"}} />
     <div style={{position: "absolute", right: -3, top: 154, width: 3, height: 90, borderRadius: "0 3px 3px 0", background: "#383538"}} />
     <div style={{position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 53, background: "#fff", fontFamily: bodyFont}}>
@@ -74,8 +72,7 @@ const Phone: React.FC<{snapshot?: boolean}> = ({snapshot = false}) => {
       <div style={{position: "absolute", left: 11, right: 11, bottom: 24}}><ComposeBar text={firstSent ? (secondSent ? "" : secondDraft) : firstDraft} caret={(!firstSent && frame >= 130) || (firstReply && !secondSent)} /></div>
     </div>
   </div>;
-  if (snapshot) return face;
-  return <div style={{position: "absolute", left: "50%", bottom: 0, width: 350, height: 710, translate: `-50% ${interpolate(phoneIn, [0, 1], [760, 0])}px`, scale: 0.94, transformOrigin: "50% 100%", opacity: Math.min(1, phoneIn)}}>{face}</div>;
+
 };
 
 export const Scene: React.FC = () => {
@@ -84,8 +81,7 @@ export const Scene: React.FC = () => {
   const lockup = spring({frame: frame - 408, fps, config: {damping: 20, stiffness: 90}});
   return <AbsoluteFill style={{overflow: "hidden", background: "radial-gradient(circle at 50% 38%, #fffdf8 0%, #f3e8d8 48%, #dcc5e2 100%)", color: "#291c31", fontFamily: bodyFont}}>
     <Notification />
-    {frame < 354 && <Phone />}
-    {frame >= 324 && frame <= 401 && <PhoneExit><Phone snapshot /></PhoneExit>}
+    {frame <= 401 && <Phone3D><PhoneScreen /></Phone3D>}
     <WavingMascot />
     <div style={{position: "absolute", left: "35%", top: "50%", width: 560, textAlign: "center", opacity: lockup, translate: `-50% calc(-50% + ${interpolate(lockup, [0, 1], [72, 0], {easing: Easing.out(Easing.cubic)})}px)`}}><div style={{fontFamily: displayFont, fontSize: 62, lineHeight: 1.04, letterSpacing: "-0.04em"}}>get dressed.<br /><span style={{color: "#76520d", fontStyle: "italic"}}>keep living.</span></div><div style={{width: 250, margin: "28px auto 0", paddingTop: 18, borderTop: "1px solid #816f85", fontSize: 15, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#59366c"}}>oro is here</div></div>
   </AbsoluteFill>;
