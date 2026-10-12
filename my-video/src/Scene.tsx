@@ -1,4 +1,5 @@
 import React from "react";
+import {WavingMascot} from "./WavingMascot";
 import {IoAdd, IoArrowUp, IoBatteryFull, IoCellular, IoChatbubble, IoChevronBack, IoChevronForward, IoMic, IoVideocamOutline, IoWifi} from "react-icons/io5";
 import {BiSolidPointer} from "react-icons/bi";
 import {loadFont as loadFraunces} from "@remotion/google-fonts/Fraunces";
@@ -83,6 +84,7 @@ export const Scene: React.FC = () => {
   return <AbsoluteFill style={{overflow: "hidden", background: "radial-gradient(circle at 50% 38%, #fffdf8 0%, #f3e8d8 48%, #dcc5e2 100%)", color: "#291c31", fontFamily: bodyFont}}>
     <Notification />
     <Phone />
-    <div style={{position: "absolute", left: "50%", top: "50%", width: 560, textAlign: "center", opacity: lockup, translate: `-50% calc(-50% + ${interpolate(lockup, [0, 1], [72, 0], {easing: Easing.out(Easing.cubic)})}px)`}}><div style={{fontFamily: displayFont, fontSize: 62, lineHeight: 1.04, letterSpacing: "-0.04em"}}>get dressed.<br /><span style={{color: "#76520d", fontStyle: "italic"}}>keep living.</span></div><div style={{width: 250, margin: "28px auto 0", paddingTop: 18, borderTop: "1px solid #816f85", fontSize: 15, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#59366c"}}>oro is here</div></div>
+    <WavingMascot />
+    <div style={{position: "absolute", left: "35%", top: "50%", width: 560, textAlign: "center", opacity: lockup, translate: `-50% calc(-50% + ${interpolate(lockup, [0, 1], [72, 0], {easing: Easing.out(Easing.cubic)})}px)`}}><div style={{fontFamily: displayFont, fontSize: 62, lineHeight: 1.04, letterSpacing: "-0.04em"}}>get dressed.<br /><span style={{color: "#76520d", fontStyle: "italic"}}>keep living.</span></div><div style={{width: 250, margin: "28px auto 0", paddingTop: 18, borderTop: "1px solid #816f85", fontSize: 15, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#59366c"}}>oro is here</div></div>
   </AbsoluteFill>;
 };
