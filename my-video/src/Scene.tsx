@@ -19,6 +19,23 @@ const Icon: React.FC<{name: "back" | "video" | "plus" | "mic" | "send"; size?: n
 
 const typed = (text: string, frame: number, start: number, speed = 2) => text.slice(0, Math.max(0, Math.floor((frame - start) / speed)));
 
+const Notification: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const notificationIn = spring({frame: frame - 8, fps, config: {damping: 16, stiffness: 170, mass: 0.7}});
+  const notificationOut = interpolate(frame, [74, 86], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const cursorX = interpolate(frame, [28, 66], [690, 1045], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const cursorY = interpolate(frame, [28, 66], [510, 120], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const click = interpolate(frame, [64, 68, 72], [1, 0.82, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  return <>
+    <div style={{position: "absolute", top: 42, right: 46, width: 370, display: "flex", gap: 14, padding: 16, borderRadius: 22, background: "rgba(255,255,255,.94)", color: "#111", boxShadow: "0 18px 50px rgba(47,30,57,.18), inset 0 0 0 1px rgba(0,0,0,.08)", opacity: notificationIn * notificationOut, transform: `translateY(${interpolate(notificationIn, [0, 1], [-34, 0])}px) scale(${click})`, transformOrigin: "65% 50%"}}>
+      <div style={{width: 50, height: 50, flex: "0 0 50px", display: "grid", placeItems: "center", borderRadius: 13, background: "#34c759"}}><span style={{position: "relative", width: 30, height: 23, borderRadius: "50%", background: "#fff"}}><span style={{position: "absolute", left: 3, bottom: -3, width: 9, height: 9, background: "#fff", rotate: "32deg"}} /></span></div>
+      <div style={{minWidth: 0, flex: 1}}><div style={{display: "flex", justifyContent: "space-between", color: "#48484a", fontSize: 12, fontWeight: 600, letterSpacing: ".04em"}}><span>MESSAGES</span><span>now</span></div><div style={{marginTop: 4, fontSize: 16, fontWeight: 700}}>oro</div><div style={{marginTop: 2, fontSize: 15, color: "#303033"}}>Your closet is ready when you are.</div></div>
+    </div>
+    <svg aria-hidden="true" focusable="false" width="40" height="48" viewBox="0 0 40 48" style={{position: "absolute", left: cursorX, top: cursorY, overflow: "visible", opacity: interpolate(frame, [22, 27, 75, 84], [0, 1, 1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}), transform: `scale(${click})`, filter: "drop-shadow(0 2px 2px rgba(0,0,0,.28))"}}><path d="M5 3v33l9-8 7 16 7-4-7-15h13z" fill="#fff" stroke="#111" strokeWidth="2.5" strokeLinejoin="round" /></svg>
+  </>;
+};
+
 const Bubble: React.FC<{children: React.ReactNode; side?: "oro" | "you"; show: number}> = ({children, side = "oro", show}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -39,15 +56,15 @@ const ComposeBar: React.FC<{text: string; caret: boolean}> = ({text, caret}) => 
 const Phone: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const phoneIn = spring({frame, fps, config: {damping: 18, stiffness: 92, mass: 1.15}});
-  const phoneOut = interpolate(frame, [370, 410], [0, 1], {easing: Easing.in(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-  const firstDraft = typed("first date tonight. help?", frame, 42, 1.7);
-  const secondDraft = typed("quiet but sharp.", frame, 231, 1.8);
-  const firstSent = frame >= 93;
-  const secondSent = frame >= 276;
-  const firstReply = frame >= 169;
-  const finalReply = frame >= 330;
-  return <div style={{position: "absolute", left: "50%", top: 20, width: 350, height: 710, perspective: 1100, translate: "-50% 0"}}><div style={{position: "absolute", inset: 0, borderRadius: 62, padding: 9, background: "linear-gradient(145deg, #111 0%, #777278 46%, #121113 100%)", boxShadow: "0 42px 76px rgba(47,30,57,.3), 0 13px 0 #2a282b, inset 0 0 0 1px #aaa5aa", transform: `translate3d(0, ${interpolate(phoneIn, [0, 1], [760, 0]) + interpolate(phoneOut, [0, 1], [0, 620])}px, ${interpolate(phoneOut, [0, 1], [0, 440])}px) rotateX(${interpolate(phoneOut, [0, 1], [5, 78])}deg) scale(.94)`, opacity: phoneIn * interpolate(phoneOut, [0, 0.88, 1], [1, 1, 0]), transformOrigin: "50% 100%"}}>
+  const phoneIn = spring({frame: frame - 88, fps, config: {damping: 18, stiffness: 92, mass: 1.15}});
+  const phoneOut = interpolate(frame, [458, 505], [0, 1], {easing: Easing.in(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"});
+  const firstDraft = typed("first date tonight. help?", frame, 130, 1.7);
+  const secondDraft = typed("quiet but sharp.", frame, 319, 1.8);
+  const firstSent = frame >= 181;
+  const secondSent = frame >= 364;
+  const firstReply = frame >= 257;
+  const finalReply = frame >= 418;
+  return <div style={{position: "absolute", left: "50%", top: 10, width: 350, height: 710, perspective: 1100, perspectiveOrigin: "50% 100%", translate: "-50% 0"}}><div style={{position: "absolute", inset: 0, borderRadius: 62, padding: 9, background: "linear-gradient(145deg, #111 0%, #777278 46%, #121113 100%)", boxShadow: "0 42px 76px rgba(47,30,57,.3), 0 13px 0 #2a282b, inset 0 0 0 1px #aaa5aa", transform: `translate3d(0, ${interpolate(phoneIn, [0, 1], [760, 0])}px, ${interpolate(phoneOut, [0, 1], [0, 520])}px) rotateX(${interpolate(phoneOut, [0, 1], [5, -84])}deg) scale(.94)`, opacity: phoneIn * interpolate(phoneOut, [0, 0.9, 1], [1, 1, 0]), transformOrigin: "50% 100%"}}>
     <div style={{position: "absolute", left: -3, top: 120, width: 3, height: 65, borderRadius: "3px 0 0 3px", background: "#383538"}} />
     <div style={{position: "absolute", right: -3, top: 154, width: 3, height: 90, borderRadius: "0 3px 3px 0", background: "#383538"}} />
     <div style={{position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 53, background: "#fff", fontFamily: bodyFont}}>
@@ -55,14 +72,14 @@ const Phone: React.FC = () => {
       <div style={{height: 82, display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #d1d1d6"}}><span style={{position: "absolute", left: 18, top: 61, color: "#007aff"}}><Icon name="back" size={27} /></span><span style={{position: "absolute", right: 19, top: 61, color: "#007aff"}}><Icon name="video" size={27} /></span><div style={{textAlign: "center"}}><div style={{width: 45, height: 45, margin: "0 auto 2px", borderRadius: "50%", display: "grid", placeItems: "center", background: "#e9e9eb", overflow: "hidden"}}><CanvasImage src={staticFile("oro-mascot.webp")} premountFor={fps} style={{width: 38, height: 38, objectFit: "contain"}} /></div><div style={{fontSize: 13, fontWeight: 600, color: "#000"}}>oro <span style={{color: "#8e8e93"}}>&gt;</span></div></div></div>
       <div style={{padding: "14px 20px 0", textAlign: "center", fontSize: 12, color: "#636366"}}>today 9:41 AM</div>
       <div style={{display: "flex", flexDirection: "column", gap: 9, padding: "14px 15px 62px"}}>
-        {firstSent && <Bubble side="you" show={93}>first date tonight. help?</Bubble>}
-        {frame >= 121 && !firstReply && <TypingDots show={121} hide={169} />}
-        {firstReply && <Bubble show={169}>cute. how do you want to feel when you walk in?</Bubble>}
-        {secondSent && <Bubble side="you" show={276}>quiet but sharp.</Bubble>}
-        {frame >= 302 && !finalReply && <TypingDots show={302} hide={330} />}
-        {finalReply && <Bubble show={330}>say less. black blazer, soft knit, dark denim, loafers. clean, easy, done.</Bubble>}
+        {firstSent && <Bubble side="you" show={181}>first date tonight. help?</Bubble>}
+        {frame >= 209 && !firstReply && <TypingDots show={209} hide={257} />}
+        {firstReply && <Bubble show={257}>cute. how do you want to feel when you walk in?</Bubble>}
+        {secondSent && <Bubble side="you" show={364}>quiet but sharp.</Bubble>}
+        {frame >= 390 && !finalReply && <TypingDots show={390} hide={418} />}
+        {finalReply && <Bubble show={418}>say less. black blazer, soft knit, dark denim, loafers. clean, easy, done.</Bubble>}
       </div>
-      <div style={{position: "absolute", left: 11, right: 11, bottom: 24}}><ComposeBar text={firstSent ? (secondSent ? "" : secondDraft) : firstDraft} caret={(!firstSent && frame >= 42) || (firstReply && !secondSent)} /></div>
+      <div style={{position: "absolute", left: 11, right: 11, bottom: 24}}><ComposeBar text={firstSent ? (secondSent ? "" : secondDraft) : firstDraft} caret={(!firstSent && frame >= 130) || (firstReply && !secondSent)} /></div>
     </div>
   </div></div>;
 };
@@ -70,8 +87,9 @@ const Phone: React.FC = () => {
 export const Scene: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const lockup = spring({frame: frame - 392, fps, config: {damping: 20, stiffness: 90}});
+  const lockup = spring({frame: frame - 512, fps, config: {damping: 20, stiffness: 90}});
   return <AbsoluteFill style={{overflow: "hidden", background: "radial-gradient(circle at 50% 38%, #fffdf8 0%, #f3e8d8 48%, #dcc5e2 100%)", color: "#291c31", fontFamily: bodyFont}}>
+    <Notification />
     <Phone />
     <div style={{position: "absolute", left: "50%", top: "50%", width: 560, textAlign: "center", opacity: lockup, translate: `-50% calc(-50% + ${interpolate(lockup, [0, 1], [72, 0], {easing: Easing.out(Easing.cubic)})}px)`}}><div style={{fontFamily: displayFont, fontSize: 62, lineHeight: 1.04, letterSpacing: "-0.04em"}}>get dressed.<br /><span style={{color: "#76520d", fontStyle: "italic"}}>keep living.</span></div><div style={{width: 250, margin: "28px auto 0", paddingTop: 18, borderTop: "1px solid #816f85", fontSize: 15, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#59366c"}}>oro is here</div></div>
   </AbsoluteFill>;
