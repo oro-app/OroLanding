@@ -58,7 +58,7 @@
 .beta-welcome-mascot { display: block; width: 100%; height: auto; object-fit: contain; transform-origin: 50% 75%; }
 .beta-welcome-copy.oro-text { font-size: clamp(20px, 3vw, 26px); line-height: 1.4; }
 .beta-welcome-cta { width: min(100%, 320px); min-height: 60px; gap: var(--oro-space-3); font-size: 18px; }
-.beta-welcome-layout--example { width: min(100%, 1080px); display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(20px, 3vw, 40px); padding-block: var(--oro-space-4); }
+.beta-welcome-layout--example { width: min(100%, 1080px); display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(10px, 2vw, 20px); padding-block: var(--oro-space-4); }
 .beta-welcome-layout--example .beta-welcome-content { text-align: left; justify-items: start; }
 .beta-welcome-layout--example .oro-heading { font-size: clamp(44px, 5vw, 68px); }
 .beta-welcome-intro.oro-text { font-size: 17px; color: var(--oro-color-muted); }
