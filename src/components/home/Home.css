@@ -126,7 +126,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-skip-link { position: absolute; z-index: 120; top: var(--oro-space-2); left: var(--oro-space-4); transform: translateY(-160%); padding: var(--oro-space-3); border-radius: var(--oro-radius-field); background: var(--oro-color-surface); }
 .halo-skip-link:focus { transform: translateY(0); }
 
-.home-type-word { white-space: nowrap; }
+.home-type-word { margin-inline: -.06em; padding-inline: .06em; white-space: nowrap; }
 .home-type-char { position: relative; }
 .halo-home { --home-ease: cubic-bezier(0.2, 0.7, 0.2, 1); }
 .home-stagger { --home-delay: 0ms; }
