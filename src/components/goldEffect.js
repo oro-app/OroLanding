@@ -23,6 +23,27 @@ export function createGoldEffect() {
         ctx.lineWidth *= .28
         ctx.strokeStyle = `rgba(255,242,206,${life * strength})`
         ctx.stroke()
+        if (Math.floor(a.time / 90) !== Math.floor(b.time / 90)) {
+          const shimmer = Math.sin(life * Math.PI)
+          const size = 2 + shimmer * 3
+          const x = b.x + Math.sin(b.time) * 9
+          const y = b.y + Math.cos(b.time) * 9
+          ctx.beginPath()
+          ctx.moveTo(x, y - size)
+          ctx.lineTo(x + size * .25, y - size * .25)
+          ctx.lineTo(x + size, y)
+          ctx.lineTo(x + size * .25, y + size * .25)
+          ctx.lineTo(x, y + size)
+          ctx.lineTo(x - size * .25, y + size * .25)
+          ctx.lineTo(x - size, y)
+          ctx.lineTo(x - size * .25, y - size * .25)
+          ctx.closePath()
+          ctx.fillStyle = `rgba(255,242,206,${shimmer * strength})`
+          ctx.shadowColor = `rgba(212,174,108,${shimmer * strength})`
+          ctx.shadowBlur = 7
+          ctx.fill()
+          ctx.shadowBlur = 0
+        }
       }
       const end = points.at(-1)
       if (!end) return
