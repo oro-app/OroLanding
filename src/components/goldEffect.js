@@ -24,10 +24,11 @@ export function createGoldEffect() {
         ctx.strokeStyle = `rgba(255,242,206,${life * strength})`
         ctx.stroke()
         if (Math.floor(a.time / 90) !== Math.floor(b.time / 90)) {
-          const shimmer = Math.sin(life * Math.PI)
-          const size = 2 + shimmer * 3
-          const x = b.x + Math.sin(b.time) * 9
-          const y = b.y + Math.cos(b.time) * 9
+          const age = (time - b.time) / 1000
+          const shimmer = life * Math.min(age / .08, 1)
+          const size = (2.5 + Math.abs(Math.sin(b.time)) * 2) * (.6 + life * .4)
+          const x = b.x + Math.sin(b.time) * (5 + age * 12)
+          const y = b.y + age * 12 + 110 * age * age
           ctx.beginPath()
           ctx.moveTo(x, y - size)
           ctx.lineTo(x + size * .25, y - size * .25)
