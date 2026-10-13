@@ -1,4 +1,3 @@
-import StickyFeatures from './StickyFeatures'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import '../GoldBackground.css'
 import { Heading, Text } from 'oro-kit'
@@ -6,6 +5,8 @@ import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
 import ProductDemo from './ProductDemo'
 import StyleAdviceDemo from './StyleAdviceDemo'
+import HeadlineMascot from './HeadlineMascot'
+import StickyFeatures from './StickyFeatures'
 import wardrobeDemo from '../../assets/demos/wardrobe.png'
 import cargosLook from '../../assets/fit-gen-demo/mens-cargos.webp'
 import jotting from '../../assets/mascot/jotting.webp'
@@ -37,25 +38,32 @@ const FEATURES = [
     height: 1500,
   },
 ]
-const HEADLINE = 'the ai fashion assistant you can text'
+const HEADLINE = 'the ai fashion assistant'
 const TYPE_STEP = 34
 
 function TypedHeadline() {
+  const [finished, setFinished] = useState(false)
   let index = 0
-  return HEADLINE.split(' ').map((word, wordIndex, words) => {
-    const Word = wordIndex === words.length - 1 ? 'em' : 'span'
+  return <>{HEADLINE.split(' ').map((word, wordIndex, words) => {
+    const Word = 'span'
     return (
       <Fragment key={wordIndex}>
         <Word className="home-type-word">
           {[...word].map((char, charIndex) => (
             <span className="home-type-char" key={charIndex}
+              onAnimationEnd={wordIndex === words.length - 1 && charIndex === word.length - 1 ? (event) => {
+                if (event.animationName === 'homeTypeChar') setFinished(true)
+              } : undefined}
               style={{ '--home-char-delay': `${80 + index++ * TYPE_STEP}ms` }}>{char}</span>
           ))}
         </Word>
+        {wordIndex === 2 && <HeadlineMascot revealed={finished} />}
         {wordIndex === 3 ? <br /> : wordIndex < words.length - 1 ? ' ' : null}
       </Fragment>
     )
-  })
+  })}<em className="home-rotating-line">
+    {['you can text.', 'with your closet.', 'that knows your taste.'].map((phrase, index) => <span className="home-rotating-phrase" key={phrase} style={{ '--home-phrase-delay': `${index * 3}s` }}>{phrase}</span>)}
+  </em></>
 }
 
 export default function Home() {
@@ -129,11 +137,11 @@ export default function Home() {
         <div className="home-copy">
           <section className="home-panel" ref={heroRef} aria-labelledby="home-title" data-analytics-section="hero">
             <div className="home-hero-copy">
-              <Heading as="h1" variant="display" id="home-title" aria-label={HEADLINE}>
+              <Heading as="h1" variant="display" id="home-title" aria-label={`${HEADLINE} you can text., with your closet., that knows your taste.`}>
                 <span aria-hidden="true"><TypedHeadline /></span>
               </Heading>
               <Text muted className="home-description home-enter">
-                personalized outfit advice for your closet, your style, and your plans.
+                not another digital closet, not another chatbot
               </Text>
               <div className="home-action">
                 <HomeCta place="hero" className="home-enter">get her number</HomeCta>

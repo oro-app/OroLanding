@@ -110,6 +110,21 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 
 .home-type-word { margin-inline: -.06em; padding-inline: .06em; white-space: nowrap; }
 .home-type-char { position: relative; }
+.home-rotating-line { display: grid; color: var(--oro-color-display); font-style: normal; }
+.home-rotating-phrase { grid-area: 1 / 1; visibility: hidden; }
+.home-rotating-phrase:first-child { visibility: visible; }
+@media (prefers-reduced-motion: no-preference) {
+  .home-rotating-phrase { animation: homeHeadlinePeek 9s linear var(--home-phrase-delay) infinite; }
+}
+@keyframes homeHeadlinePeek {
+  0% { visibility: visible; opacity: 0; transform: translateY(.15em); }
+  3%, 30% { visibility: visible; opacity: 1; transform: none; }
+  33.333%, 100% { visibility: hidden; opacity: 0; transform: translateY(-.15em); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-rotating-phrase { animation: none; }
+  .home-rotating-phrase:first-child { visibility: visible; opacity: 1; transform: none; }
+}
 .halo-home { --home-ease: cubic-bezier(0.2, 0.7, 0.2, 1); }
 .home-stagger { --home-delay: 0ms; }
 
