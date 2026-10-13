@@ -20,6 +20,13 @@ const ORGANIZATION_ID = `${SITE_URL}/#organization`
 const WEBSITE_ID = `${SITE_URL}/#website`
 
 export const ROUTE_SEO = {
+  checkout: {
+    path: '/checkout',
+    title: 'Meet your personal stylist - Oro',
+    description: 'Complete your Oro subscription securely.',
+    h1: 'Your next good outfit.',
+    noindex: true,
+  },
   feedback: {
     path: '/feedback',
     title: 'beta feedback - oro',
