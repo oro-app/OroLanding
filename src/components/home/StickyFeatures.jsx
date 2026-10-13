@@ -64,7 +64,7 @@ export default function StickyFeatures({ features }) {
         <div className="home-features-stage">
           {features.map((feature, index) => (
             <article className="home-feature home-feature--slide" key={feature.title}
-              style={{ '--feature-offset': index - active, opacity: index === active ? 1 : 0 }}>
+              style={{ '--feature-offset': index - active, '--feature-opacity': index === active ? 1 : 0 }}>
               <div className="home-feature-copy">
                 <Heading as="h2" variant="title">{feature.title}</Heading>
                 <Text muted className="home-description">{feature.description}</Text>

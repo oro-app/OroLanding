@@ -1,9 +1,12 @@
-.home-features--sticky { min-height: 300svh; }
+.home-features--sticky { min-height: 450svh; }
 .home-features-pin { position: sticky; top: var(--halo-header-height); min-height: calc(100svh - var(--halo-header-height)); display: grid; align-items: center; }
 .home-features-stage { display: grid; overflow: clip; }
-.home-features-stage .home-feature--slide { grid-area: 1 / 1; grid-template-areas: "media copy"; border: 0; transform: translateY(calc(var(--feature-offset) * 110%)); }
+.home-features-stage .home-feature--slide { grid-area: 1 / 1; grid-template-areas: "media copy"; border: 0; }
+.home-feature--slide .home-feature-copy { transform: translateY(calc(var(--feature-offset) * 110%)); opacity: var(--feature-opacity); }
+.home-feature--slide .home-feature-media { opacity: var(--feature-opacity); }
 @media (prefers-reduced-motion: no-preference) {
-  .home-feature--slide { transition: transform 650ms var(--home-ease), opacity 450ms ease; }
+  .home-feature--slide .home-feature-copy { transition: transform 650ms var(--home-ease), opacity 450ms ease; }
+  .home-feature--slide .home-feature-media { transition: opacity 650ms ease-in-out; }
 }
 @media (max-width: 600px) {
   .home-features-stage .home-feature--slide { grid-template-areas: "media" "copy"; gap: var(--oro-space-4); }
@@ -13,10 +16,10 @@
   .home-features--sticky { min-height: auto; }
   .home-features-pin { position: static; min-height: auto; }
   .home-features-stage { display: block; overflow: visible; }
-  .home-features-stage .home-feature--slide { transform: none; opacity: 1 !important; }
+  .home-feature--slide .home-feature-copy, .home-feature--slide .home-feature-media { transform: none; opacity: 1; }
 }
 @media print {
   .home-features--sticky, .home-features-pin { min-height: auto; position: static; }
   .home-features-stage { display: block; overflow: visible; }
-  .home-features-stage .home-feature--slide { transform: none; opacity: 1 !important; }
+  .home-feature--slide .home-feature-copy, .home-feature--slide .home-feature-media { transform: none; opacity: 1; }
 }
