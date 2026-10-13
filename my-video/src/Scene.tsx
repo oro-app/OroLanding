@@ -1,6 +1,5 @@
 import React from "react";
 import {Phone3D} from "./Phone3D";
-import {EndingTextingMascot} from "./EndingTextingMascot";
 import "./fonts.css";
 import {IoBatteryFull, IoCellular, IoChatbubble, IoChevronBack, IoChevronForward, IoVideocamOutline, IoWifi} from "react-icons/io5";
 import {BiSolidPointer} from "react-icons/bi";
@@ -57,24 +56,26 @@ const PhoneScreen: React.FC = () => {
 
 };
 
+const GoldText: React.FC<{children: React.ReactNode; show: number; hide?: number}> = ({children, show, hide}) => {
+  const frame = useCurrentFrame();
+  return <div style={{position: "absolute", inset: 0, opacity: interpolate(frame, [show, show + 18], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) * (hide === undefined ? 1 : interpolate(frame, [hide, hide + 18], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})), translate: `0 ${interpolate(frame, [show, show + 18], [65, 0], {easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}) + (hide === undefined ? 0 : interpolate(frame, [hide, hide + 18], [0, -65], {easing: Easing.in(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}))}px`}}>{children}</div>;
+};
+
 export const Scene: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const purpleIn = spring({frame: frame - 312, fps, config: {damping: 20, stiffness: 90}});
-  const goldIn = spring({frame: frame - 340, fps, config: {damping: 15, stiffness: 110, overshootClamping: true}});
-  return <AbsoluteFill role="img" aria-label="You send: i'm going on second date. Oro replies: EXCITING! this would look super cute. Oro then sends an outfit image with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers. Oro texts beside: less outfit panic. more main character. your stylist, one text away." style={{overflow: "hidden", background: "radial-gradient(ellipse at 18% 24%, #FFF2D780 0%, transparent 48%), radial-gradient(ellipse at 78% 76%, #D4A85324 0%, transparent 42%), linear-gradient(135deg, #FFFDF8 0%, #FFF9ED 32%, #eee3ed 65%, #d5c3e2 100%)", color: "#3A2646", fontFamily: bodyFont}}>
+  return <AbsoluteFill role="img" aria-label="You send: i'm going on second date. Oro replies: EXCITING! this would look super cute. Oro then sends an outfit image with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers. Closing text reads: less outfit panic. in your texts. The Oro logo appears." style={{overflow: "hidden", background: "radial-gradient(ellipse at 18% 24%, #FFF2D780 0%, transparent 48%), radial-gradient(ellipse at 78% 76%, #D4A85324 0%, transparent 42%), linear-gradient(135deg, #FFFDF8 0%, #FFF9ED 32%, #eee3ed 65%, #d5c3e2 100%)", color: "#3A2646", fontFamily: bodyFont}}>
     <Notification />
     {frame <= 305 && <Phone3D><PhoneScreen /></Phone3D>}
-    {frame >= 316 && <EndingTextingMascot />}
-    <div style={{position: "absolute", left: 110, top: "50%", width: 620, translate: "0 -50%"}}>
+    <div style={{position: "absolute", left: "50%", top: "50%", width: 1100, translate: "-50% -50%", textAlign: "center", opacity: interpolate(frame, [528, 546], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}>
       <div style={{fontFamily: "Oro Fraunces, serif", fontSize: 72, fontWeight: 400, lineHeight: 1.08, letterSpacing: "-0.04em"}}>
         <div style={{opacity: purpleIn, translate: `0 ${interpolate(purpleIn, [0, 1], [44, 0])}px`}}>less outfit panic.</div>
-        <div style={{color: "#8D691D", fontStyle: "italic", opacity: goldIn, translate: `0 ${interpolate(goldIn, [0, 1], [44, 0])}px`}}>more main<br />character.</div>
-      </div>
-      <div style={{opacity: interpolate(frame, [362, 380], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}>
-        <div style={{width: 72, height: 3, background: "#D4A853", margin: "28px 0 20px"}} />
-        <div style={{fontFamily: "Oro Inter, sans-serif", fontSize: 20, fontWeight: 500}}>your stylist, one text away.</div>
+        <div style={{position: "relative", height: 90, marginTop: 12, color: "#8D691D", fontStyle: "italic"}}>
+          <GoldText show={340} hide={400}>in your texts.</GoldText>
+        </div>
       </div>
     </div>
+    {frame >= 546 && <AbsoluteFill style={{alignItems: "center", justifyContent: "center", opacity: interpolate(frame, [546, 564], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}><Img src={staticFile("oro_logo_wordmark_full.webp")} alt="oro" style={{width: 460, height: 260, objectFit: "contain"}} /></AbsoluteFill>}
   </AbsoluteFill>;
 };
