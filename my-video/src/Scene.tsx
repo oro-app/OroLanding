@@ -1,12 +1,10 @@
 import React from "react";
 import {Phone3D} from "./Phone3D";
-import {IoAdd, IoArrowUp, IoBatteryFull, IoCellular, IoChatbubble, IoChevronBack, IoChevronForward, IoMic, IoVideocamOutline, IoWifi} from "react-icons/io5";
+import {IoBatteryFull, IoCellular, IoChatbubble, IoChevronBack, IoChevronForward, IoVideocamOutline, IoWifi} from "react-icons/io5";
 import {BiSolidPointer} from "react-icons/bi";
 import {AbsoluteFill, Img, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
 
 const bodyFont = '"SF Pro Text", "SF Pro", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
-
-const typed = (text: string, frame: number, start: number, speed = 2) => text.slice(0, Math.max(0, Math.floor((frame - start) / speed)));
 
 const Notification: React.FC = () => {
   const frame = useCurrentFrame();
@@ -37,14 +35,8 @@ const TypingDots: React.FC<{show: number; hide: number}> = ({show, hide}) => {
   return <div style={{display: "flex", gap: 5, alignSelf: "flex-start", padding: "14px 16px", borderRadius: "21px 21px 21px 6px", background: "#e9e9eb", opacity: interpolate(frame, [show, show + 5, hide - 5, hide], [0, 1, 1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}>{[0, 1, 2].map((dot) => <span key={dot} style={{width: 7, height: 7, borderRadius: "50%", background: "#636366", translate: `0 ${Math.sin((frame - show - dot * 3) * 0.28) * 2}px`}} />)}</div>;
 };
 
-const ComposeBar: React.FC<{text: string; caret: boolean}> = ({text, caret}) => {
-  const frame = useCurrentFrame();
-  return <div style={{height: 39, display: "flex", alignItems: "center", gap: 7, color: "#636366", fontFamily: bodyFont, fontSize: 14}}><span style={{width: 35, height: 35, flex: "0 0 35px", borderRadius: "50%", display: "grid", placeItems: "center", border: "1.5px solid #636366"}}><IoAdd aria-hidden="true" focusable="false" size={21} /></span><span style={{height: 37, minWidth: 0, flex: 1, border: "1.5px solid #636366", borderRadius: 22, display: "flex", alignItems: "center", padding: "0 4px 0 12px", color: text ? "#000" : "#636366"}}><span style={{flex: 1, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden"}}>{text || "iMessage"}{caret && <span style={{display: "inline-block", width: 2, height: 16, marginLeft: 2, verticalAlign: -3, background: "#0066d6", opacity: Math.floor(frame / 8) % 2 ? 0 : 1}} />}</span>{text ? <span style={{width: 29, height: 29, borderRadius: "50%", display: "grid", placeItems: "center", background: "#0066d6", color: "#fff"}}><IoArrowUp aria-hidden="true" focusable="false" size={20} /></span> : <IoMic aria-hidden="true" focusable="false" size={20} />}</span></div>;
-};
-
 const PhoneScreen: React.FC = () => {
   const frame = useCurrentFrame();
-  const draft = typed("Style me for a date", frame, 130, 1);
   const sent = frame >= 160;
   const reply = frame >= 220;
   return <div style={{position: "absolute", inset: 0, boxSizing: "border-box", padding: 9}}>
@@ -52,12 +44,11 @@ const PhoneScreen: React.FC = () => {
       <div style={{height: 39, display: "flex", alignItems: "center", padding: "0 23px", fontSize: 12, fontWeight: 700}}><span>9:41</span><span aria-hidden="true" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: 4}}><IoCellular size={15} /><IoWifi size={16} /><IoBatteryFull size={22} /></span></div>
       <div style={{height: 82, display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #d1d1d6"}}><span style={{position: "absolute", left: 18, top: 61, color: "#0066d6"}}><IoChevronBack aria-hidden="true" focusable="false" size={27} /></span><span style={{position: "absolute", right: 19, top: 61, color: "#0066d6"}}><IoVideocamOutline aria-hidden="true" focusable="false" size={27} /></span><div style={{textAlign: "center"}}><div aria-hidden="true" style={{width: 45, height: 45, margin: "0 auto 2px", borderRadius: "50%", display: "grid", placeItems: "center", background: "#e9e9eb", overflow: "hidden"}}><Img src={staticFile("oro-mascot.webp")} alt="" style={{width: 38, height: 38, objectFit: "contain"}} /></div><div style={{fontSize: 13, fontWeight: 600, color: "#000"}}>oro <IoChevronForward aria-hidden="true" focusable="false" size={10} style={{color: "#636366"}} /></div></div></div>
       <div style={{padding: "14px 20px 0", textAlign: "center", fontSize: 12, color: "#636366"}}>today 9:41 AM</div>
-      <div style={{display: "flex", flexDirection: "column", gap: 9, padding: "14px 15px 62px"}}>
+      <div style={{display: "flex", flexDirection: "column", gap: 9, padding: "14px 15px"}}>
         {sent && <Bubble side="you" show={160}>Style me for a date</Bubble>}
         {frame >= 175 && !reply && <TypingDots show={175} hide={220} />}
         {reply && <Bubble show={220}>Black blazer, soft knit, dark denim, and loafers. Relaxed, polished, date-ready.</Bubble>}
       </div>
-      <div style={{position: "absolute", left: 11, right: 11, bottom: 24}}><ComposeBar text={sent ? "" : draft} caret={!sent && frame >= 130} /></div>
     </div>
   </div>;
 

@@ -74,7 +74,7 @@ export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
       <ambientLight intensity={1.2} />
       <directionalLight position={[-400, 600, 800]} intensity={3} />
       <directionalLight position={[500, -100, 400]} intensity={1.5} />
-      <group position={[0, -334 - interpolate(phoneIn, [0, 1], [920, 0]), 0]} scale={1.2}>
+      <group position={[0, height / 2 - 900 - interpolate(phoneIn, [0, 1], [920, 0], {extrapolateRight: "clamp"}), 0]} scale={1.2}>
         <mesh position={[0, 0, -8]}>
           <extrudeGeometry args={[shape, {depth: 8, bevelEnabled: true, bevelSize: 2, bevelThickness: 2, bevelSegments: 3, curveSegments: 24}]} />
           <meshStandardMaterial color="#383538" metalness={0.7} roughness={0.28} />
