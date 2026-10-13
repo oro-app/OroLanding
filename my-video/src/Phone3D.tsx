@@ -17,8 +17,8 @@ const DrawScreen: React.FC<{onReady: () => void}> = ({onReady}) => {
 export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
   const frame = useCurrentFrame();
   const {width, height, fps} = useVideoConfig();
-  const screenFrame = Math.min(frame, 354);
-  const phoneIn = spring({frame: frame - 88, fps, config: {damping: 18, stiffness: 92, mass: 1.15}});
+  const screenFrame = Math.min(frame, 258);
+  const phoneIn = spring({frame: frame - 88, fps, durationInFrames: 42, config: {damping: 18, stiffness: 92, mass: 1.15}});
   const source = useRef<HTMLDivElement>(null);
   const fontCSS = useRef<Promise<string> | null>(null);
   const captureVersion = useRef(0);
@@ -74,7 +74,7 @@ export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
       <ambientLight intensity={1.2} />
       <directionalLight position={[-400, 600, 800]} intensity={3} />
       <directionalLight position={[500, -100, 400]} intensity={1.5} />
-      <group position={[interpolate(frame, [184, 226], [0, 300], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}), -334 - interpolate(phoneIn, [0, 1], [760, 0]), 0]} rotation={[0, interpolate(frame, [184, 207, 226], [0, -0.16, -0.06], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}), 0]} scale={0.94}>
+      <group position={[0, height / 2 - 900 - interpolate(phoneIn, [0, 1], [920, 0], {extrapolateRight: "clamp"}) - interpolate(frame, [258, 305], [0, 920], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}), 0]} scale={1.2}>
         <mesh position={[0, 0, -8]}>
           <extrudeGeometry args={[shape, {depth: 8, bevelEnabled: true, bevelSize: 2, bevelThickness: 2, bevelSegments: 3, curveSegments: 24}]} />
           <meshStandardMaterial color="#383538" metalness={0.7} roughness={0.28} />
