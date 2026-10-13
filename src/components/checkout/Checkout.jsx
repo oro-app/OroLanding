@@ -7,7 +7,6 @@ import CheckoutForm from './CheckoutForm'
 import './Checkout.css'
 
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
-const stripe = publishableKey ? loadStripe(publishableKey) : null
 const PAID_STATES = ['ready', 'already_subscribed', 'already_has_access']
 
 export default function Checkout() {
@@ -18,6 +17,10 @@ export default function Checkout() {
   const [now, setNow] = useState(Date.now)
   const [checking, setChecking] = useState(false)
   const [polls, setPolls] = useState(0)
+  const stripe = useMemo(() => {
+    const key = data?.publishable_key || publishableKey
+    return key ? loadStripe(key) : null
+  }, [data?.publishable_key])
   const refresh = useCallback(async (signal) => {
     setLoading(true)
     setError('')

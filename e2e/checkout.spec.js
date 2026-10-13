@@ -3,7 +3,7 @@ import { test, expect } from './fixtures.js'
 const token = 'synthetic.personal.token'
 const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 1250,
   first_month_discount_percent: 50, launch_offer_ends_at: '2026-10-14T04:00:00Z' }
-const native = { status: 'checkout', offer, client_secret: 'cs_test_native_secret', session_id: 'cs_test_native' }
+const native = { status: 'checkout', offer, client_secret: 'cs_test_native_secret', session_id: 'cs_test_native', publishable_key: 'pk_test_synthetic' }
 
 async function mockStripe(page) {
   await page.addInitScript(() => {

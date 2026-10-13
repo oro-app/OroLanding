@@ -12,9 +12,11 @@ An expired link asks the customer to text Oro for a fresh link.
 
 ## Deployment
 
-1. Set `VITE_STRIPE_PUBLISHABLE_KEY` in Vercel to the publishable key for the same
-   Stripe account and mode as the backend. Preview should use a test key and a test
-   backend; a key is never enough to create a checkout without a valid personal link.
+1. Set `STRIPE_PUBLISHABLE_KEY` on oro-central for the same Stripe account and mode
+   as its secret key. Checkout receives that public key in its authenticated
+   response. `VITE_STRIPE_PUBLISHABLE_KEY` in Vercel is an optional fallback.
+   Preview should use a test backend; a key is never enough to create checkout
+   without a valid personal link.
 2. Deploy the landing and companion backend PRs before enabling native links.
 3. On oro-central, keep the existing $25 USD monthly price and set
    `PUBLIC_LAUNCH_COUPON_ID=nCmCcEjB`. The coupon must give 50% off once and belong
