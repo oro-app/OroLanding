@@ -2,7 +2,7 @@ import React from "react";
 import {CanvasImage, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
 
 export const WavingMascot: React.FC = () => {
-  const frame = useCurrentFrame() - 412;
+  const frame = useCurrentFrame() - 316;
   const {fps} = useVideoConfig();
   const entrance = spring({frame, fps, config: {damping: 13, stiffness: 120}});
   const wave = Math.sin(Math.max(0, frame - 12) / fps * Math.PI * 4)
