@@ -68,7 +68,7 @@ export const Scene: React.FC = () => {
   return <AbsoluteFill role="img" aria-label="You send: i'm going on second date. Oro replies: EXCITING! this would look super cute. Oro then sends an outfit image with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers. Closing text reads: your personal stylist, Gold phrases cycle in order: in your texts; with your closet; who gets your taste. The Oro logo appears." style={{overflow: "hidden", background: "radial-gradient(ellipse at 18% 24%, #FFF2D780 0%, transparent 48%), radial-gradient(ellipse at 78% 76%, #D4A85324 0%, transparent 42%), linear-gradient(135deg, #FFFDF8 0%, #FFF9ED 32%, #eee3ed 65%, #d5c3e2 100%)", color: "#3A2646", fontFamily: bodyFont}}>
     <Notification />
     {frame <= 305 && <Phone3D><PhoneScreen /></Phone3D>}
-    <div style={{position: "absolute", left: "50%", top: "50%", width: 1100, translate: "-50% -50%", textAlign: "center", opacity: interpolate(frame, [588, 606], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}>
+    <div style={{position: "absolute", left: "50%", top: "50%", width: 1100, translate: "-50% -50%", textAlign: "center", opacity: interpolate(frame, [573, 591], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}>
       <div style={{fontFamily: "Oro Fraunces, serif", fontSize: 96, fontWeight: 400, lineHeight: 1.08, letterSpacing: "-0.04em"}}>
         <div style={{opacity: purpleIn, translate: `0 ${interpolate(purpleIn, [0, 1], [44, 0])}px`}}>your personal stylist,</div>
         <div style={{position: "relative", height: 120, overflow: "hidden", marginTop: 12, color: "#8D691D", fontStyle: "italic"}}>
@@ -78,6 +78,6 @@ export const Scene: React.FC = () => {
         </div>
       </div>
     </div>
-    {frame >= 606 && <AbsoluteFill style={{alignItems: "center", justifyContent: "center", opacity: interpolate(frame, [606, 624], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}><Img src={staticFile("oro_logo_wordmark_full.webp")} alt="oro" style={{width: 900, height: 510, objectFit: "contain"}} /></AbsoluteFill>}
+    {frame >= 591 && <AbsoluteFill style={{alignItems: "center", justifyContent: "center", opacity: interpolate(frame, [591, 609], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}><Img src={staticFile("oro_logo_wordmark_full.webp")} alt="oro" style={{width: 900, height: 510, objectFit: "contain"}} /></AbsoluteFill>}
   </AbsoluteFill>;
 };
