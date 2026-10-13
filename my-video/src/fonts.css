@@ -1,0 +1,18 @@
+@font-face {
+  font-family: "Oro Fraunces";
+  src: url("../public/fonts/fraunces-regular.woff2") format("woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Oro Fraunces";
+  src: url("../public/fonts/fraunces-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Oro Inter";
+  src: url("../public/fonts/inter-medium.woff2") format("woff2");
+  font-weight: 500;
+}
