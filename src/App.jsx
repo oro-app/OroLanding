@@ -25,9 +25,11 @@ const TesterReferrals = lazy(() => import('./components/beta/TesterReferrals'))
 const BetaPage = lazy(() => import('./components/beta/Beta'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
 const GeoPage = lazy(() => import('./components/geo/GeoPage'))
+const CheckoutPage = lazy(() => import('./components/checkout/Checkout'))
 
 export function getRouteFromPath(pathname = '/', search = '') {
   const path = pathname.replace(/\/+$/, '') || '/'
+  if (path === '/checkout') return { type: 'checkout' }
   if (GEO_PATHS.includes(path)) return { type: 'geo', path }
   if (isFeedbackPath(path)) return { type: 'feedback' }
   const newsletterMatch = path.match(/^\/newsletter\/([^/]+)$/)
@@ -65,9 +67,10 @@ function App({ initialRoute }) {
   const isHome = route.type === 'home'
   const isBeta = route.type === 'beta'
   const isFeedback = route.type === 'feedback'
+  const isCheckout = route.type === 'checkout'
   const isGeo = route.type === 'geo'
   const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
-  const isPrivateForm = isBeta || isFeedback || route.type === 'get-started'
+  const isPrivateForm = isBeta || isFeedback || isCheckout || route.type === 'get-started'
   const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
   const pageViewParams = {
     route_type: route.type,
@@ -75,6 +78,7 @@ function App({ initialRoute }) {
   }
 
   useEffect(() => {
+    if (isCheckout) return
     if (hasAnalyticsConsent()) {
       initAnalytics()
       trackPageView(pageViewParams)
@@ -82,6 +86,7 @@ function App({ initialRoute }) {
   }, [route.slug, route.type])
 
   useEffect(() => {
+    if (isCheckout) return
     const handleLinkClick = (event) => {
       const link = event.target.closest?.('a[href]')
       if (!link) return
@@ -148,9 +153,11 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={route.type !== 'get-started'} sticky={!isHome} /> : <SiteHeader />)}
+        {!isBeta && !isFeedback && !isCheckout && (isHalo ? <HomeHeader showCta={route.type !== 'get-started'} sticky={!isHome} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
-          {isGeo ? (
+          {isCheckout ? (
+            <Suspense fallback={null}><CheckoutPage /></Suspense>
+          ) : isGeo ? (
             <Suspense fallback={null}><GeoPage path={route.path} /></Suspense>
           ) : isFeedback ? (
             <Suspense fallback={null}><FeedbackPage /></Suspense>
@@ -198,8 +205,8 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && !isBeta && <HomeFooter landing={isHome} />}
-        <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />
+        {isHalo && !isFeedback && !isBeta && !isCheckout && <HomeFooter landing={isHome} />}
+        {!isCheckout && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>
   )
