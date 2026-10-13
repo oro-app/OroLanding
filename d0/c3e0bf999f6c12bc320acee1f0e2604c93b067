@@ -1,0 +1,19 @@
+docs/checkout.md
+  s_61719c0abe2d5f::t_a96d22db265d0a 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d0c3e0bf999f6c12bc320acee1f0e2604c93b067",
+  "prompts": {},
+  "sessions": {
+    "s_61719c0abe2d5f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1356a-b002-7652-9189-c85b94969ca3",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
