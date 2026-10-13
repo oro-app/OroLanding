@@ -14,57 +14,17 @@ test('home page loads cleanly @smoke', async ({ page }) => {
 })
 
 for (const place of ['header', 'hero', 'closer']) {
-  test(`${place} CTA opens the text handoff`, async ({ page }) => {
+  test(`${place} CTA opens the phone-first checkout entry`, async ({ page }) => {
     await page.goto('/')
     const cta = page.locator(`.halo-cta--${place}`)
+    await expect(cta).toHaveAttribute('href', '/get-started')
     await cta.click()
-    const dialog = page.getByRole('dialog', { name: "get oro's number" })
-    await expect(dialog).toBeVisible()
-    await expect(dialog.getByText('+1 (855) 676-2419')).toBeVisible()
-    await expect(dialog.getByAltText('QR code to start a text with oro')).toBeVisible()
-    await page.keyboard.press('Escape')
-    await expect(dialog).toBeHidden()
-    await expect(cta).toBeFocused()
+    await expect(page.getByLabel('Phone number')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'meet my stylist' })).toBeVisible()
   })
 }
 
-test('mobile get-her-number CTA is a prefilled SMS deep link', async ({ page }) => {
-  await page.addInitScript(() => {
-    Object.defineProperty(navigator, 'userAgent', {
-      configurable: true,
-      value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148',
-    })
-  })
-  await page.goto('/')
-  const cta = page.locator('.halo-cta--hero')
-  await expect(cta).toHaveAttribute('href', `sms:+18556762419&body=${encodeURIComponent('hey oro, your newest oronaut just landed 🚀')}`)
-  await expect(page.getByText('text oro — no app needed')).toHaveCount(0)
-})
-
-test('get-her-number handoff records CTA and modal analytics', async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem('oro_cookie_consent', 'accepted')
-    window.dataLayer = []
-    window.gtag = (...args) => window.dataLayer.push(args)
-  })
-  await page.goto('/')
-  await page.locator('.halo-cta--hero').click()
-  await expect.poll(() => page.evaluate(() => window.dataLayer.some((entry) => (
-    Array.isArray(entry)
-      && entry[0] === 'event'
-      && entry[1] === 'get_number_click'
-      && entry[2]?.location === 'hero'
-      && entry[2]?.destination === 'qr_handoff'
-  )))).toBe(true)
-  await expect.poll(() => page.evaluate(() => window.dataLayer.some((entry) => (
-    Array.isArray(entry)
-      && entry[0] === 'event'
-      && entry[1] === 'text_handoff_open'
-      && entry[2]?.location === 'hero'
-  )))).toBe(true)
-})
-
-test('all CTAs share one purple treatment and the handoff keeps the same visual language', async ({ page }) => {
+test('all CTAs share one purple treatment', async ({ page }) => {
   await page.goto('/')
   const header = page.locator('.halo-cta--header')
   const hero = page.locator('.halo-cta--hero')
@@ -86,15 +46,7 @@ test('all CTAs share one purple treatment and the handoff keeps the same visual 
   expect(heroStyle.backgroundImage).toBe('none')
   await expect(page.locator('.halo-cta-message circle')).toHaveCount(0)
 
-  await hero.click()
-  const dialog = page.getByRole('dialog', { name: "get oro's number" })
-  await expect(dialog.getByRole('heading', { name: "get oro's number" })).toHaveCSS('font-family', 'Fraunces, Georgia, serif')
-  await expect(dialog.locator('.text-oro-number svg')).toHaveCSS('color', heroStyle.backgroundColor)
-  await expect(dialog.locator('.text-oro-number-value')).toHaveCSS('color', heroStyle.backgroundColor)
-  await expect(dialog.locator('.text-oro-number-value')).toHaveCSS('text-decoration-line', 'underline')
-  await expect(dialog.getByText(/scan the code with your phone/i)).toHaveCount(0)
-  await expect(dialog.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', '/terms')
-  await expect(dialog.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy')
+
 })
 
 test('centered hero gives way to the rest of the page on scroll', async ({ page }) => {
