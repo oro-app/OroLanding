@@ -12,7 +12,7 @@
 .home-mascot-eye { transform: translate(var(--eye-x, 0%), var(--eye-y, 0%)); }
 @media (prefers-reduced-motion: no-preference) {
   .home-headline-mascot { transition: width 450ms var(--home-ease); }
-  .home-headline-mascot[data-revealed="true"] .home-headline-mascot-art { animation: homeMascotPop 480ms ease-out 300ms both; }
+  .home-headline-mascot[data-revealed="true"] .home-headline-mascot-art { transform-origin: 46% 87%; animation: homeMascotPop 480ms ease-out 300ms both; }
   .home-mascot-eye { transition: transform 140ms ease-out; }
 }
 @keyframes homeMascotPop {
