@@ -1,3 +1,4 @@
+import StickyFeatures from './StickyFeatures'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import GoldBackground from '../GoldBackground'
 import { Heading, Text } from 'oro-kit'
@@ -147,17 +148,7 @@ export default function Home() {
               oro learns what you wear and what you like, so her advice gets more personal the more you text.
             </Text>
           </section>
-          <section className="home-features" aria-label="oro features">
-            {FEATURES.map((feature, index) => (
-              <article className={`home-feature${index % 2 === 0 ? ' home-feature--media-left' : ''}`} key={feature.title} data-home-reveal data-analytics-section={index === 0 ? 'closet' : index === 1 ? 'outfit_iteration_demo' : 'learns_preferences'}>
-                <div className="home-feature-copy home-stagger">
-                  <Heading as="h2" variant="title">{index === 2 ? <>the more you text her,<br />the better she gets</> : feature.title}</Heading>
-                  <Text muted className="home-description">{feature.description}</Text>
-                </div>
-                <img className="home-feature-media home-stagger" src={feature.image} alt={feature.imageAlt} loading="lazy" decoding="async" width={feature.width} height={feature.height} />
-              </article>
-            ))}
-          </section>
+          <StickyFeatures features={FEATURES} />
           <StyleAdviceDemo />
           {entryCount !== null && <section className="home-social-proof home-moments-panel" aria-labelledby="home-social-title" data-home-reveal data-analytics-section="social_proof">
             <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
