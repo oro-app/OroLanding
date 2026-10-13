@@ -38,15 +38,15 @@ const TypingDots: React.FC<{show: number; hide: number}> = ({show, hide}) => {
 
 const PhoneScreen: React.FC = () => {
   const frame = useCurrentFrame();
-  const reply = frame >= 148;
+  const reply = frame >= 177;
   return <div style={{position: "absolute", inset: 0, boxSizing: "border-box", padding: 9}}>
     <div style={{position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 53, background: "#fff", fontFamily: bodyFont}}>
       <div style={{height: 39, display: "flex", alignItems: "center", padding: "0 23px", fontSize: 12, fontWeight: 700}}><span>9:41</span><span aria-hidden="true" style={{marginLeft: "auto", display: "flex", alignItems: "center", gap: 4}}><IoCellular size={15} /><IoWifi size={16} /><IoBatteryFull size={22} /></span></div>
       <div style={{height: 82, display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #d1d1d6"}}><span style={{position: "absolute", left: 18, top: 61, color: "#0066d6"}}><IoChevronBack aria-hidden="true" focusable="false" size={27} /></span><span style={{position: "absolute", right: 19, top: 61, color: "#0066d6"}}><IoVideocamOutline aria-hidden="true" focusable="false" size={27} /></span><div style={{textAlign: "center"}}><div aria-hidden="true" style={{width: 45, height: 45, margin: "0 auto 2px", borderRadius: "50%", display: "grid", placeItems: "center", background: "#e9e9eb", overflow: "hidden"}}><Img src={staticFile("oro-mascot.webp")} alt="" style={{width: 38, height: 38, objectFit: "contain"}} /></div><div style={{fontSize: 13, fontWeight: 600, color: "#000"}}>oro <IoChevronForward aria-hidden="true" focusable="false" size={10} style={{color: "#636366"}} /></div></div></div>
       <div style={{display: "flex", flexDirection: "column", gap: 9, padding: "14px 15px"}}>
-        <Bubble side="you" show={0}>Style me for a date</Bubble>
-        {frame >= 103 && !reply && <TypingDots show={103} hide={148} />}
-        {reply && <Bubble show={148}>Black blazer, soft knit, dark denim, and loafers. Relaxed, polished, date-ready.</Bubble>}
+        {frame >= 132 && <Bubble side="you" show={132}>i'm going on second date</Bubble>}
+        {frame >= 144 && !reply && <TypingDots show={144} hide={177} />}
+        {reply && <Bubble show={177}>oh cute, a sequel. wear this.<Img src={staticFile("cherry-outfit.webp")} alt="Outfit with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers" width={180} height={240} style={{display: "block", marginTop: 8, borderRadius: 12}} /></Bubble>}
       </div>
     </div>
   </div>;
@@ -57,7 +57,7 @@ export const Scene: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const lockup = spring({frame: frame - 312, fps, config: {damping: 20, stiffness: 90}});
-  return <AbsoluteFill role="img" aria-label="Oro styles a date outfit. You send: Style me for a date. Oro thinks, then replies: Black blazer, soft knit, dark denim, and loafers. Relaxed, polished, date-ready. Oro waves: get dressed. keep living. oro is here." style={{overflow: "hidden", background: "radial-gradient(circle at 50% 38%, #fffdf8 0%, #f3e8d8 48%, #dcc5e2 100%)", color: "#291c31", fontFamily: bodyFont}}>
+  return <AbsoluteFill role="img" aria-label="You send: i'm going on second date. Oro replies: oh cute, a sequel. wear this. Oro sends an outfit with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers. Oro waves: get dressed. keep living. oro is here." style={{overflow: "hidden", background: "radial-gradient(circle at 50% 38%, #fffdf8 0%, #f3e8d8 48%, #dcc5e2 100%)", color: "#291c31", fontFamily: bodyFont}}>
     <Notification />
     {frame <= 305 && <Phone3D><PhoneScreen /></Phone3D>}
     <WavingMascot />

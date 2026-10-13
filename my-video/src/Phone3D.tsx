@@ -18,7 +18,7 @@ export const Phone3D: React.FC<{children: React.ReactNode}> = ({children}) => {
   const frame = useCurrentFrame();
   const {width, height, fps} = useVideoConfig();
   const screenFrame = Math.min(frame, 258);
-  const phoneIn = spring({frame: frame - 88, fps, config: {damping: 18, stiffness: 92, mass: 1.15}});
+  const phoneIn = spring({frame: frame - 88, fps, durationInFrames: 42, config: {damping: 18, stiffness: 92, mass: 1.15}});
   const source = useRef<HTMLDivElement>(null);
   const fontCSS = useRef<Promise<string> | null>(null);
   const captureVersion = useRef(0);
