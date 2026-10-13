@@ -1,6 +1,6 @@
 import StickyFeatures from './StickyFeatures'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import GoldBackground from '../GoldBackground'
+import '../GoldBackground.css'
 import { Heading, Text } from 'oro-kit'
 import { HomeCta } from './HomeChrome'
 import { useHomeMotion } from './useHomeMotion'
@@ -125,7 +125,6 @@ export default function Home() {
 
   return (
     <div className="halo-home" ref={motionRef}>
-      <GoldBackground />
       <div className="home-grid halo-container">
         <div className="home-copy">
           <section className="home-panel" ref={heroRef} aria-labelledby="home-title" data-analytics-section="hero">

@@ -3,7 +3,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { getCountries, getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js/max'
 import ButtonArrow from '../ButtonArrow'
 import { postOnboarding } from './onboardingApi'
-import GoldBackground from '../GoldBackground'
+import '../GoldBackground.css'
 import { getOroTextLink, ORO_TEXT_NUMBER_DISPLAY } from '../../lib/textOro'
 import './GetStarted.css'
 
@@ -353,7 +353,6 @@ export default function GetStarted() {
 
   return (
     <section className="gs ph-no-capture" data-private data-view={view} aria-busy={loading}>
-      <GoldBackground />
       {/* Top bar: back + progress. Only shown on the question screens. */}
       {onQuestion && (
         <div className="gs-bar">
