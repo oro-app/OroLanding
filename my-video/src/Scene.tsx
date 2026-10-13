@@ -58,7 +58,7 @@ const PhoneScreen: React.FC = () => {
 
 const GoldText: React.FC<{children: React.ReactNode; show: number; hide?: number}> = ({children, show, hide}) => {
   const frame = useCurrentFrame();
-  return <div style={{position: "absolute", inset: 0, opacity: interpolate(frame, [show, show + 18], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) * (hide === undefined ? 1 : interpolate(frame, [hide, hide + 18], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})), translate: `0 ${interpolate(frame, [show, show + 18], [65, 0], {easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}) + (hide === undefined ? 0 : interpolate(frame, [hide, hide + 18], [0, -65], {easing: Easing.in(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}))}px`}}>{children}</div>;
+  return <div style={{position: "absolute", inset: 0, opacity: interpolate(frame, [show, show + 18], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"}) * (hide === undefined ? 1 : interpolate(frame, [hide, hide + 18], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})), translate: `0 ${interpolate(frame, [show, show + 18], [100, 0], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}) + (hide === undefined ? 0 : interpolate(frame, [hide, hide + 18], [0, -100], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp"}))}px`}}>{children}</div>;
 };
 
 export const Scene: React.FC = () => {
@@ -71,13 +71,13 @@ export const Scene: React.FC = () => {
     <div style={{position: "absolute", left: "50%", top: "50%", width: 1100, translate: "-50% -50%", textAlign: "center", opacity: interpolate(frame, [528, 546], [1, 0], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}>
       <div style={{fontFamily: "Oro Fraunces, serif", fontSize: 72, fontWeight: 400, lineHeight: 1.08, letterSpacing: "-0.04em"}}>
         <div style={{opacity: purpleIn, translate: `0 ${interpolate(purpleIn, [0, 1], [44, 0])}px`}}>less outfit panic.</div>
-        <div style={{position: "relative", height: 90, marginTop: 12, color: "#8D691D", fontStyle: "italic"}}>
+        <div style={{position: "relative", height: 90, overflow: "hidden", marginTop: 12, color: "#8D691D", fontStyle: "italic"}}>
           <GoldText show={340} hide={400}>in your texts</GoldText>
           <GoldText show={400} hide={460}>with your closet</GoldText>
           <GoldText show={460}>who gets your taste</GoldText>
         </div>
       </div>
     </div>
-    {frame >= 546 && <AbsoluteFill style={{alignItems: "center", justifyContent: "center", opacity: interpolate(frame, [546, 564], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}><Img src={staticFile("oro_logo_wordmark_full.webp")} alt="oro" style={{width: 460, height: 260, objectFit: "contain"}} /></AbsoluteFill>}
+    {frame >= 546 && <AbsoluteFill style={{alignItems: "center", justifyContent: "center", opacity: interpolate(frame, [546, 564], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}><Img src={staticFile("oro_logo_wordmark_full.webp")} alt="oro" style={{width: 690, height: 390, objectFit: "contain"}} /></AbsoluteFill>}
   </AbsoluteFill>;
 };
