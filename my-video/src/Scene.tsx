@@ -1,6 +1,7 @@
 import React from "react";
 import {Phone3D} from "./Phone3D";
-import {WavingMascot} from "./WavingMascot";
+import {EndingTextingMascot} from "./EndingTextingMascot";
+import "./fonts.css";
 import {IoBatteryFull, IoCellular, IoChatbubble, IoChevronBack, IoChevronForward, IoVideocamOutline, IoWifi} from "react-icons/io5";
 import {BiSolidPointer} from "react-icons/bi";
 import {AbsoluteFill, Img, Easing, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from "remotion";
@@ -46,7 +47,8 @@ const PhoneScreen: React.FC = () => {
       <div style={{display: "flex", flexDirection: "column", gap: 9, padding: "14px 15px"}}>
         {frame >= 132 && <Bubble side="you" show={132}>i'm going on second date</Bubble>}
         {frame >= 144 && !reply && <TypingDots show={144} hide={177} />}
-        {reply && <Bubble show={177}>oh cute, a sequel. wear this.<Img src={staticFile("cherry-outfit.webp")} alt="Outfit with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers" width={180} height={240} style={{display: "block", marginTop: 8, borderRadius: 12}} /></Bubble>}
+        {reply && <Bubble show={177}>EXCITING! this would look super cute</Bubble>}
+        {frame >= 195 && <Img src={staticFile("cherry-outfit.webp")} alt="Outfit with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers" width={180} height={240} style={{display: "block", alignSelf: "flex-start", opacity: interpolate(frame, [195, 201], [0, 1], {extrapolateRight: "clamp"})}} />}
       </div>
     </div>
   </div>;
@@ -57,10 +59,14 @@ export const Scene: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const lockup = spring({frame: frame - 312, fps, config: {damping: 20, stiffness: 90}});
-  return <AbsoluteFill role="img" aria-label="You send: i'm going on second date. Oro replies: oh cute, a sequel. wear this. Oro sends an outfit with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers. Oro waves: get dressed. keep living. oro is here." style={{overflow: "hidden", background: "radial-gradient(circle at 50% 38%, #fffdf8 0%, #f3e8d8 48%, #dcc5e2 100%)", color: "#291c31", fontFamily: bodyFont}}>
+  return <AbsoluteFill role="img" aria-label="You send: i'm going on second date. Oro replies: EXCITING! this would look super cute. Oro then sends an outfit image with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers. Oro texts beside: less outfit panic. more main character. your stylist, one text away." style={{overflow: "hidden", background: "radial-gradient(ellipse at 18% 24%, #FFF2D780 0%, transparent 48%), radial-gradient(ellipse at 78% 76%, #D4A85324 0%, transparent 42%), linear-gradient(135deg, #FFFDF8 0%, #FFF9ED 32%, #eee3ed 65%, #d5c3e2 100%)", color: "#3A2646", fontFamily: bodyFont}}>
     <Notification />
     {frame <= 305 && <Phone3D><PhoneScreen /></Phone3D>}
-    <WavingMascot />
-    <div style={{position: "absolute", left: "35%", top: "50%", width: 560, textAlign: "center", opacity: lockup, translate: `-50% calc(-50% + ${interpolate(lockup, [0, 1], [72, 0], {easing: Easing.out(Easing.cubic)})}px)`}}><div style={{fontSize: 62, lineHeight: 1.04, letterSpacing: "-0.04em"}}>get dressed.<br /><span style={{color: "#76520d", fontStyle: "italic"}}>keep living.</span></div><div style={{width: 250, margin: "28px auto 0", paddingTop: 18, borderTop: "1px solid #816f85", fontSize: 15, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#59366c"}}>oro is here</div></div>
+    {frame >= 316 && <EndingTextingMascot />}
+    <div style={{position: "absolute", left: 110, top: "50%", width: 620, opacity: lockup, translate: `0 calc(-50% + ${interpolate(lockup, [0, 1], [72, 0], {easing: Easing.out(Easing.cubic)})}px)`}}>
+      <div style={{fontFamily: "Oro Fraunces, serif", fontSize: 72, fontWeight: 400, lineHeight: 1.08, letterSpacing: "-0.04em"}}>less outfit panic.<br /><span style={{color: "#8D691D", fontStyle: "italic"}}>more main<br />character.</span></div>
+      <div style={{width: 72, height: 3, background: "#D4A853", margin: "28px 0 20px"}} />
+      <div style={{fontFamily: "Oro Inter, sans-serif", fontSize: 20, fontWeight: 500}}>your stylist, one text away.</div>
+    </div>
   </AbsoluteFill>;
 };
