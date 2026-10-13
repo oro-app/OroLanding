@@ -39,6 +39,8 @@ const TypingDots: React.FC<{show: number; hide: number}> = ({show, hide}) => {
 
 const PhoneScreen: React.FC = () => {
   const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const imageIn = spring({frame: frame - 195, fps, config: {damping: 18, stiffness: 180, mass: 0.7}});
   const reply = frame >= 177;
   return <div style={{position: "absolute", inset: 0, boxSizing: "border-box", padding: 9}}>
     <div style={{position: "relative", width: "100%", height: "100%", overflow: "hidden", borderRadius: 53, background: "#fff", fontFamily: bodyFont}}>
@@ -48,7 +50,7 @@ const PhoneScreen: React.FC = () => {
         {frame >= 132 && <Bubble side="you" show={132}>i'm going on second date</Bubble>}
         {frame >= 144 && !reply && <TypingDots show={144} hide={177} />}
         {reply && <Bubble show={177}>EXCITING! this would look super cute</Bubble>}
-        {frame >= 195 && <Img src={staticFile("cherry-outfit.webp")} alt="Outfit with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers" width={180} height={240} style={{display: "block", alignSelf: "flex-start", opacity: interpolate(frame, [195, 201], [0, 1], {extrapolateRight: "clamp"})}} />}
+        {frame >= 195 && <Img src={staticFile("cherry-outfit.webp")} alt="Outfit with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers" width={180} height={240} style={{display: "block", alignSelf: "flex-start", opacity: interpolate(frame, [195, 201], [0, 1], {extrapolateRight: "clamp"}), translate: `0 ${interpolate(imageIn, [0, 1], [70, 0])}px`, scale: interpolate(imageIn, [0, 1], [0.8, 1]), transformOrigin: "bottom left"}} />}
       </div>
     </div>
   </div>;
@@ -59,17 +61,17 @@ export const Scene: React.FC = () => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const purpleIn = spring({frame: frame - 312, fps, config: {damping: 20, stiffness: 90}});
-  const goldIn = spring({frame: frame - 328, fps, config: {damping: 15, stiffness: 110, overshootClamping: true}});
+  const goldIn = spring({frame: frame - 340, fps, config: {damping: 15, stiffness: 110, overshootClamping: true}});
   return <AbsoluteFill role="img" aria-label="You send: i'm going on second date. Oro replies: EXCITING! this would look super cute. Oro then sends an outfit image with a cherry-print top, cream cardigan, flared jeans, red belt, silver hoops, and white sneakers. Oro texts beside: less outfit panic. more main character. your stylist, one text away." style={{overflow: "hidden", background: "radial-gradient(ellipse at 18% 24%, #FFF2D780 0%, transparent 48%), radial-gradient(ellipse at 78% 76%, #D4A85324 0%, transparent 42%), linear-gradient(135deg, #FFFDF8 0%, #FFF9ED 32%, #eee3ed 65%, #d5c3e2 100%)", color: "#3A2646", fontFamily: bodyFont}}>
     <Notification />
     {frame <= 305 && <Phone3D><PhoneScreen /></Phone3D>}
     {frame >= 316 && <EndingTextingMascot />}
     <div style={{position: "absolute", left: 110, top: "50%", width: 620, translate: "0 -50%"}}>
       <div style={{fontFamily: "Oro Fraunces, serif", fontSize: 72, fontWeight: 400, lineHeight: 1.08, letterSpacing: "-0.04em"}}>
-        <div style={{opacity: purpleIn, translate: `${interpolate(purpleIn, [0, 1], [-44, 0])}px 0`}}>less outfit panic.</div>
-        <div style={{color: "#8D691D", fontStyle: "italic", clipPath: `inset(0 ${interpolate(goldIn, [0, 1], [100, 0])}% 0 0)`, scale: interpolate(goldIn, [0, 1], [0.94, 1]), transformOrigin: "left center"}}>more main<br />character.</div>
+        <div style={{opacity: purpleIn, translate: `0 ${interpolate(purpleIn, [0, 1], [44, 0])}px`}}>less outfit panic.</div>
+        <div style={{color: "#8D691D", fontStyle: "italic", opacity: goldIn, translate: `0 ${interpolate(goldIn, [0, 1], [44, 0])}px`}}>more main<br />character.</div>
       </div>
-      <div style={{opacity: interpolate(frame, [350, 368], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}>
+      <div style={{opacity: interpolate(frame, [362, 380], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"})}}>
         <div style={{width: 72, height: 3, background: "#D4A853", margin: "28px 0 20px"}} />
         <div style={{fontFamily: "Oro Inter, sans-serif", fontSize: 20, fontWeight: 500}}>your stylist, one text away.</div>
       </div>
