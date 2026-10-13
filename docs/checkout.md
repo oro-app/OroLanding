@@ -1,3 +1,23 @@
+## Website phone entry
+
+All signup CTAs use `/get-started` (also available at `/getstarted`). The page
+collects only a phone number and displays the combined terms/privacy, eligibility
+and texting notice beside Continue to payment. It calls
+`/api/checkout?operation=phone`, which forwards only the number and acceptance
+flags to `/public-onboarding/phone`. Deploy backend migration `n1013public006`
+and that endpoint before deploying the website.
+
+New enrollment returns a checkout-only token; the page saves it for this browser
+tab and opens the existing `/checkout` with the token in the URL fragment. The
+checkout removes it from the visible URL and uses the existing payment UI,
+pricing, payment verification and paid activation. Returning to the entry in the
+same tab reuses the saved checkout for the same number. No OTP is requested.
+Existing billing/checkouts return a generic text handoff rather than disclosing
+another customer's payment session. Invitation links survive the website entry
+and are included in the existing text handoff after checkout or on recovery.
+Direct texters retain their current pre-payment onboarding. Billing starts at
+payment, even if the customer has not texted yet.
+
 # Native checkout
 
 `/checkout` uses Stripe Elements and the existing public-onboarding checkout and

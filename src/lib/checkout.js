@@ -16,6 +16,29 @@ export function readCheckoutToken() {
   }
 }
 
+export function saveCheckoutToken(token) {
+  if (!TOKEN.test(token) || token.length > 2048) throw new Error('We couldn’t start your checkout. Please try again.')
+  memoryToken = token
+  try { sessionStorage.setItem(CHECKOUT_TOKEN_KEY, token) } catch {}
+}
+
+export async function startPhoneCheckout(phone, signal) {
+  const response = await fetch('/api/checkout?operation=phone', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone, terms_accepted: true, texting_consent: true }),
+    signal, cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer', redirect: 'error',
+  })
+  if (response.status === 429) throw new Error('Please wait a minute before trying again.')
+  if (response.status === 403) throw new Error('Text Oro to continue with this number.')
+  if (!response.ok) throw new Error('We couldn’t start checkout. Please try again.')
+  const data = await response.json()
+  if (data.status === 'continue_in_text') return data
+  if (data.status !== 'checkout_ready' || !validOffer(data.offer)) throw new Error('We couldn’t verify your checkout. Please try again.')
+  saveCheckoutToken(data.token)
+  try { sessionStorage.setItem('oro_checkout_phone', phone) } catch {}
+  return data
+}
+
 export function validOffer(offer) {
   return offer?.amount === 2500 && offer.currency === 'usd' && offer.interval === 'month'
     && ((offer.first_month_amount === 1250 && offer.first_month_discount_percent === 50

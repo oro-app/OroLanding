@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import handler from '../api/checkout.js'
-import { checkoutRequest, countdown, validOffer } from '../src/lib/checkout.js'
+import { checkoutRequest, countdown, validOffer, startPhoneCheckout } from '../src/lib/checkout.js'
 
 const token = 'synthetic.personal.token'
 const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 1250,
@@ -62,4 +62,30 @@ test('proxy forwards only the approved endpoint and never exposes an upstream er
   assert.equal(options.redirect, 'error')
   assert.equal(result.code, 401)
   assert.equal(JSON.stringify(result.body).includes(token), false)
+})
+
+
+test('phone entry forwards only the number and notice acceptance without a credential', async t => {
+  const mock = t.mock.method(globalThis, 'fetch', async () => Response.json({ status: 'checkout_ready', offer, token }))
+  const result = response()
+  await handler({ method: 'POST', query: { operation: 'phone' }, headers: {},
+    body: { phone: '+14165550123', terms_accepted: true, texting_consent: true, user_id: 'ignored' } }, result)
+  const [url, options] = mock.mock.calls[0].arguments
+  assert.equal(url.pathname, '/public-onboarding/phone')
+  assert.equal(options.headers.Authorization, undefined)
+  assert.deepEqual(JSON.parse(options.body), { phone: '+14165550123', terms_accepted: true, texting_consent: true })
+  assert.equal(result.code, 200)
+})
+
+test('phone entry rejects absent acceptance before contacting the backend', async t => {
+  const mock = t.mock.method(globalThis, 'fetch', async () => { throw new Error('Must not call') })
+  const result = response()
+  await handler({ method: 'POST', query: { operation: 'phone' }, headers: {}, body: { phone: '+14165550123' } }, result)
+  assert.equal(result.code, 400)
+  assert.equal(mock.mock.callCount(), 0)
+})
+
+test('browser phone entry handles text recovery without treating it as a new checkout', async t => {
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ status: 'continue_in_text', offer }))
+  assert.equal((await startPhoneCheckout('+14165550123')).status, 'continue_in_text')
 })

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
 import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance } from '../../lib/checkout'
-import { ORO_TEXT_NUMBER } from '../../lib/textOro'
+import { getOroTextLink } from '../../lib/textOro'
 import CheckoutForm from './CheckoutForm'
 import './Checkout.css'
 
@@ -74,7 +74,12 @@ export default function Checkout() {
   const paid = data && PAID_STATES.includes(data.status)
   const discounted = offer?.first_month_discount_percent === 50 && !expired
   const remaining = discounted ? countdown(offer.launch_offer_ends_at, now) : null
-  const textLink = `sms:${ORO_TEXT_NUMBER}`
+  let inviteUrl = ''
+  try {
+    const url = new URL(sessionStorage.getItem('oro_checkout_invite') || '')
+    if (url.origin === window.location.origin && url.pathname === '/invite' && /^[0-9a-f]{64}$/.test(url.searchParams.get('ref') || '')) inviteUrl = url.href
+  } catch {}
+  const textLink = getOroTextLink(undefined, inviteUrl)
 
   return <div className="checkout-page halo-container">
     <header className="checkout-header"><a href="/" aria-label="Oro home"><img src="/oro-logo.webp" alt="Oro" width="104" height="59" /></a></header>
