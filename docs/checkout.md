@@ -19,7 +19,7 @@ An expired link asks the customer to text Oro for a fresh link.
    without a valid personal link.
 2. Deploy the landing and companion backend PRs before enabling native links.
 3. On oro-central, keep the existing $25 USD monthly price and set
-   `PUBLIC_LAUNCH_COUPON_ID=nCmCcEjB`. The coupon must give 50% off once and belong
+   `PUBLIC_LAUNCH_COUPON_ID=Rwi8d2cu`. The coupon must give 50% off once and belong
    to the same Stripe mode and product as the price. Test mode needs its own coupon.
 4. Set `STRIPE_NATIVE_CHECKOUT_ENABLED=true` and
    `STRIPE_NATIVE_CHECKOUT_URL=https://www.askoro.now/checkout` on oro-central.
