@@ -1,5 +1,6 @@
 .home-headline-mascot { display: inline-block; position: relative; width: 0; height: .85em; vertical-align: baseline; }
-.home-headline-mascot-art { position: absolute; width: 1.3em; height: 1.3em; left: 50%; top: 50%; transform: translate(-50%, -55%); }
+/* Balance the following word space and the mascot asset's uneven transparent padding. */
+.home-headline-mascot-art { position: absolute; width: 1.3em; height: 1.3em; left: calc(50% + .1em); top: 50%; transform: translate(-50%, -55%); }
 .home-headline-mascot-art > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 .home-headline-mascot[data-revealed="false"] .home-headline-mascot-art { visibility: hidden; }
 .home-headline-mascot[data-revealed="true"] { width: 1.1em; }
@@ -12,6 +13,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .home-headline-mascot { transition: width 450ms var(--home-ease); }
   .home-headline-mascot-art { transition: opacity 250ms ease 300ms; }
+  .home-mascot-eye { transition: transform 140ms ease-out; }
   .home-headline-mascot[data-revealed="false"] .home-headline-mascot-art { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -14,9 +14,11 @@ export default function HeadlineMascot({ revealed }) {
     const follow = (event) => {
       if (!revealed || preference.matches || event.pointerType === 'touch') return
       const rect = ref.current.getBoundingClientRect()
-      const angle = Math.atan2(event.clientY - rect.top - rect.height * .39, event.clientX - rect.left - rect.width * .52)
-      ref.current.style.setProperty('--eye-x', `${Math.cos(angle) * 1.2}%`)
-      ref.current.style.setProperty('--eye-y', `${Math.sin(angle) * 1.2}%`)
+      const dx = event.clientX - rect.left - rect.width * .52
+      const dy = event.clientY - rect.top - rect.height * .39
+      const distance = Math.max(160, Math.hypot(dx, dy))
+      ref.current.style.setProperty('--eye-x', `${dx / distance * .8}%`)
+      ref.current.style.setProperty('--eye-y', `${dy / distance * .8}%`)
     }
     window.addEventListener('pointermove', follow, { passive: true })
     document.documentElement.addEventListener('pointerleave', reset)
