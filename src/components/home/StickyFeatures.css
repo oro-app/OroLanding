@@ -2,6 +2,7 @@
 .home-features-pin { position: sticky; top: var(--halo-header-height); min-height: calc(100svh - var(--halo-header-height)); display: grid; align-items: center; }
 .home-features-stage { display: grid; overflow: clip; }
 .home-features-stage .home-feature--slide { grid-area: 1 / 1; grid-template-areas: "media copy"; border: 0; }
+.home-features-stage .home-feature.home-feature--slide .home-feature-copy { justify-self: stretch; width: auto; }
 .home-feature--slide .home-feature-copy { transform: translateY(calc(var(--feature-offset) * 110%)); opacity: var(--feature-opacity); }
 .home-feature--slide .home-feature-media { opacity: var(--feature-opacity); }
 @media (prefers-reduced-motion: no-preference) {
