@@ -5,7 +5,7 @@ test.use({ seedStorage: false })
 for (const [path, routeType] of [
   ['/beta', 'beta'],
   ['/feedback', 'feedback'],
-  ['/getstarted', 'get-started'],
+  ['/get-started/setup', 'get-started'],
 ]) {
   test(`${path} loads consent-gated analytics with the current route tag`, async ({ page }) => {
     await page.addInitScript(() => {
