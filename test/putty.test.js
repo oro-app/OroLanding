@@ -23,6 +23,24 @@ test('money is parsed into exact integer cents without rounding an invalid bid',
   for (const invalid of ['1.001', '-10', '1e3', '', 'Infinity', '1000000']) assert.equal(cents(invalid), null)
 })
 
+test('live board responses use id and make every known placement selectable', async () => {
+  const board = { currency: 'usd', enabled: true, leaderboard: [],
+    spots: ['front', ...'ABCDEFGH'.split('').flatMap(row => [1, 2, 3, 4, 5, 6].map(column => `${row}${column}`))]
+      .map(id => ({ id, name: null, total: 0, minimum: id === 'front' ? 50000 : 1000, held: false })) }
+  assert.equal(validPuttyResponse('board', board), true)
+  for (const invalid of [{ id: 'Z1' }, { total: '0' }, { minimum: -1 }, { held: 'false' }, { id: 'A1' }]) {
+    assert.equal(validPuttyResponse('board', { ...board, spots: [{ ...board.spots[0], ...invalid }, ...board.spots.slice(1)] }), false)
+  }
+  const original = globalThis.fetch
+  globalThis.fetch = async () => Response.json(board)
+  try {
+    const live = await puttyRequest('board')
+    assert.equal(live.enabled, true)
+    assert.equal(hoodieSpots(live).length, 49)
+    assert.ok(hoodieSpots(live).every(spot => !spot.unknown && !spot.held))
+  } finally { globalThis.fetch = original }
+})
+
 test('backend conflict remains a conflict and never becomes a local claim', async () => {
   const original = globalThis.fetch
   globalThis.fetch = async () => ({ ok: false, status: 409, json: async () => ({ detail: 'A square is held.' }) })
