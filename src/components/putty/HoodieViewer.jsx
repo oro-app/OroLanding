@@ -22,7 +22,15 @@ function artworkStyle(spot, spots) {
   }
 }
 
-function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, onInspect, ready, onReady, linkable = true }) {
+function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, ready, onReady, linkable = true }) {
+  const [historyState, setHistoryState] = useState({ id: null, pointer: false, focus: false, dismissed: false })
+
+  function updateHistory(id, change) {
+    setHistoryState(current => current.id === id
+      ? { ...current, ...change }
+      : { id, pointer: false, focus: false, dismissed: false, ...change })
+  }
+
   return <div className="putty-artwork" data-ready={ready}>
     <img src={side === 'back' ? back : front} alt={`Black hoodie, ${side} view`} width="800" height="1200" onLoad={(event) => {
       const image = event.currentTarget
@@ -41,19 +49,47 @@ function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, o
           && (item.image_group || item.id) === (spot.image_group || spot.id))
         const firstArtworkSpot = artwork && artwork[0]?.id === spot.id
         const url = linkable && puttySpotUrl(spot, leaderboard)
+        const hasHistory = linkable && spot.history?.length >= 2
+        const historyId = `putty-history-${spot.id}`
+        const historyOpen = hasHistory && historyState.id === spot.id && !historyState.dismissed
+          && (historyState.pointer || historyState.focus)
+        const historyEvents = hasHistory ? {
+          onPointerEnter: () => updateHistory(spot.id, { pointer: true, dismissed: false }),
+          onPointerLeave: () => updateHistory(spot.id, { pointer: false }),
+          onFocus: () => updateHistory(spot.id, { focus: true, dismissed: false }),
+          onBlur: () => updateHistory(spot.id, { focus: false }),
+          onKeyDown: event => {
+            if (event.key === 'Escape' && historyOpen) {
+              updateHistory(spot.id, { dismissed: true })
+              event.stopPropagation()
+            }
+          },
+        } : {}
+        const historyPopover = hasHistory && <div id={historyId} className="putty-history-popover" hidden={!historyOpen}>
+          <strong>{label} history</strong>
+          <ul>
+            {spot.history.map((owner, index) => <li key={`${owner.name}-${owner.total}-${index}`}>
+              <span>{owner.name}</span>
+              <span>{formatPrice(owner.total)}</span>
+            </li>)}
+          </ul>
+        </div>
         if (mode === 'preview' && url) return <a key={spot.id} className="putty-square putty-square--preview putty-square--claimed"
             href={url} target="_blank" rel="noopener noreferrer" style={artworkStyle(spot, spots)}
             aria-label={`${label}: ${spot.name || 'Claimed artwork'} (opens in a new tab)`}
-            onPointerEnter={() => onInspect(spot.id)} onFocus={() => onInspect(spot.id)}>
+            aria-details={hasHistory ? historyId : undefined} {...historyEvents}>
           {spot.name && !spot.image_url && <span>{spot.name}</span>}
+          {historyPopover}
         </a>
         if (mode === 'preview') return <span key={spot.id} className={`putty-square putty-square--preview${spot.name ? ' putty-square--claimed' : ''}`}
             style={artworkStyle(spot, spots)} role={spot.name || firstArtworkSpot ? 'img' : undefined}
-            aria-label={firstArtworkSpot ? `${artwork.map(item => item.id).join(', ')}: ${spot.name || 'Claimed artwork'}. ${spot.image_alt}`
+            aria-label={hasHistory ? `${label}: ${spot.name || 'Claimed artwork'}`
+              : firstArtworkSpot ? `${artwork.map(item => item.id).join(', ')}: ${spot.name || 'Claimed artwork'}. ${spot.image_alt}`
               : !spot.image_url && spot.name ? `${label}: ${spot.name}` : undefined}
-            aria-hidden={spot.image_url ? !firstArtworkSpot : !spot.name}
-            onPointerEnter={() => onInspect(spot.id)}>
+            aria-hidden={hasHistory ? undefined : spot.image_url ? !firstArtworkSpot : !spot.name}
+            tabIndex={hasHistory ? 0 : undefined} aria-details={hasHistory ? historyId : undefined} {...historyEvents}>
           {spot.name && !spot.image_url && <span>{spot.name}</span>}
+          {historyPopover}
         </span>
         return <button key={spot.id} type="button" className={`putty-square putty-square--choose${spot.total ? ' putty-square--claimed' : ''}`} aria-pressed={spot.id in selected}
             style={{ ...(spot.total ? { '--putty-price-hue': puttyPriceHue(spot, spots) } : {}), ...artworkStyle(spot, spots) }}
@@ -72,7 +108,6 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
   const [zoom, setZoom] = useState(0)
   const [loadedSide, setLoadedSide] = useState(null)
   const [magnifying, setMagnifying] = useState(false)
-  const [inspected, setInspected] = useState('A1')
   const canvas = useRef(null)
   const viewport = useRef(null)
 
@@ -89,14 +124,10 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
   }
 
   const ready = !loading && loadedSide === side
-  const visibleSpots = spots.filter(spot => side === 'front' ? spot.id === 'front' : spot.id !== 'front')
-  const inspectedSpot = visibleSpots.find(spot => spot.id === inspected) || visibleSpots[0]
-  const history = inspectedSpot?.history || []
-
   return <div className={`putty-gallery putty-gallery--${mode}`}>
     <div className="putty-thumbnails" role="group" aria-label="Hoodie view">
       {[['front', front], ['back', back]].map(([view, image]) => <button key={view} type="button" aria-label={`Show hoodie ${view}`} aria-pressed={side === view}
-        onClick={() => { setSide(view); setInspected(view === 'front' ? 'front' : 'A1') }}>
+        onClick={() => setSide(view)}>
         <img src={image} alt="" width="800" height="1200" />
       </button>)}
     </div>
@@ -111,24 +142,15 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
           onPointerEnter={moveMagnifier} onPointerMove={moveMagnifier} onPointerLeave={() => setMagnifying(false)}>
           {!ready && <div className="putty-canvas-skeleton" aria-hidden="true" />}
           <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
-            onInspect={setInspected} ready={ready} onReady={setLoadedSide} />
+            ready={ready} onReady={setLoadedSide} />
           {mode === 'preview' && magnifying && <div className="putty-magnifier" aria-hidden="true">
             <div className="putty-magnifier-content">
               <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
-                onInspect={setInspected} ready={ready} onReady={setLoadedSide} linkable={false} />
+                ready={ready} onReady={setLoadedSide} linkable={false} />
             </div>
           </div>}
         </div>
       </div>
-      {mode === 'preview' && inspectedSpot && <div className="putty-history">
-        <label htmlFor="putty-history-spot">Grid history</label>
-        <select id="putty-history-spot" value={inspectedSpot.id} aria-describedby="putty-history-details"
-          onChange={event => setInspected(event.target.value)}>
-          {visibleSpots.map(spot => <option key={spot.id} value={spot.id}>{spot.id === 'front' ? 'Front left chest' : spot.id}</option>)}
-        </select>
-        <p id="putty-history-details"><strong>{inspectedSpot.id === 'front' ? 'Front left chest' : inspectedSpot.id}:</strong>{' '}
-          {history.length ? history.map(owner => `${owner.name} (${formatPrice(owner.total)})`).join(' → ') : 'No ownership history yet.'}</p>
-      </div>}
     </div>
   </div>
 }
