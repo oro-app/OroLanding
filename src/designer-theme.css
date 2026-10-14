@@ -1,0 +1,189 @@
+
+@property --oro-cta-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 250deg;
+}
+
+.halo-cta--hero,
+.halo-cta--closer {
+  --oro-cta-fill: #573969;
+  --oro-cta-edge: #c7a6f0;
+  --oro-cta-edge-hi: #f3e9ff;
+  isolation: isolate;
+  border: 1px solid transparent !important;
+  background:
+    linear-gradient(var(--oro-cta-fill), var(--oro-cta-fill)) padding-box,
+    conic-gradient(from var(--oro-cta-angle),
+      rgba(199, 166, 240, 0.15),
+      var(--oro-cta-edge) 20%,
+      var(--oro-cta-edge-hi) 40%,
+      var(--oro-cta-edge) 60%,
+      rgba(199, 166, 240, 0.15) 80%) border-box !important;
+  transition:
+    box-shadow 0.35s ease,
+    transform 0.24s cubic-bezier(0.2, 0.7, 0.2, 1),
+    --oro-cta-angle 0.6s ease;
+}
+
+.halo-cta--hero > svg,
+.halo-cta--hero > span,
+.halo-cta--closer > svg,
+.halo-cta--closer > span {
+  position: relative;
+  z-index: 2;
+}
+
+.oro-cta-pixels {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.halo-cta--hero.oro-cta-hot,
+.halo-cta--closer.oro-cta-hot {
+  animation: oroCtaSpin 3.2s linear infinite;
+  box-shadow:
+    0 0 0 1px rgba(199, 166, 240, 0.35),
+    0 0 22px rgba(176, 132, 232, 0.55),
+    0 16px 38px rgba(43, 22, 70, 0.3),
+    inset 0 0 18px rgba(214, 186, 255, 0.45) !important;
+}
+
+@keyframes oroCtaSpin {
+  to { --oro-cta-angle: 610deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halo-cta--hero.oro-cta-hot,
+  .halo-cta--closer.oro-cta-hot { animation: none; }
+}
+
+
+@property --oro-blink {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+#home-title .oro-hi-anchor::after {
+  --oro-eye: #382427;
+  --oro-ex: var(--oro-eye-x, 0%);
+  --oro-ey: var(--oro-eye-y, 0%);
+  content: "";
+  display: inline-block;
+  width: 0.93em;
+  height: 1em;
+  margin-left: 0.25em;
+  vertical-align: -0.12em;
+  background:
+    radial-gradient(ellipse 4.5% calc(5.3% * var(--oro-blink)) at calc(40.5% + var(--oro-ex)) calc(38.5% + var(--oro-ey)),
+      var(--oro-eye) 88%, transparent 100%),
+    radial-gradient(ellipse 4.2% calc(5.2% * var(--oro-blink)) at calc(73.2% + var(--oro-ex)) calc(31.2% + var(--oro-ey)),
+      var(--oro-eye) 88%, transparent 100%),
+    url("/oro-hi/oro_hi_body.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  transform-origin: 50% 90%;
+
+  animation:
+    oroHiMakeRoom 480ms cubic-bezier(.65,0,.35,1) 1250ms both,
+    oroHiPop 620ms cubic-bezier(.22,.9,.32,1.25) 1650ms both,
+    oroHiBlink 4.6s ease-in-out 2.8s infinite;
+}
+
+@keyframes oroHiMakeRoom {
+  from { width: 0; margin-left: 0; }
+  to   { width: 0.93em; margin-left: 0.25em; }
+}
+
+@keyframes oroHiPop {
+  0%   { opacity: 0; transform: scale(0.2) rotate(-18deg); }
+  60%  { opacity: 1; transform: scale(1.12) rotate(6deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+
+@keyframes oroHiBlink {
+  0%, 40%, 46%, 86%, 90%, 94%, 100% { --oro-blink: 1; }
+  43%, 88%, 92% { --oro-blink: 0.08; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #home-title .oro-hi-anchor::after { animation: none; }
+}
+
+
+#home-title .oro-rot {
+  display: inline-grid;
+  justify-items: center;
+  vertical-align: top;
+}
+#home-title .oro-rot-phrase {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  transition: opacity 0.8s, filter 0.8s, transform 0.9s cubic-bezier(0.5, 0, 0, 1);
+}
+#home-title .oro-rot-phrase[data-state="in"] { opacity: 1; filter: blur(0); transform: none; }
+#home-title .oro-rot-phrase[data-state="out"] { opacity: 0; filter: blur(0.152em); transform: translateY(-45%); }
+#home-title .oro-rot-phrase[data-state="wait"] { opacity: 0; filter: blur(0.152em); transform: translateY(45%); transition: none; }
+
+
+@media (max-width: 650px) {
+  #home-title .oro-rot { display: grid; }
+  #home-title .oro-rot-phrase { white-space: normal; text-wrap: balance; }
+}
+
+
+#home-title .oro-rot-phrase,
+#home-title .oro-rot-phrase .home-type-word {
+  color: var(--oro-color-display);
+}
+
+#home-title .oro-rot-phrase {
+  transition: opacity 1.2s, filter 1.2s, transform 1.35s cubic-bezier(0.5, 0, 0, 1);
+}
+#home-title .oro-rot-phrase[data-state="wait"] { transition: none; }
+
+
+:root,
+.oro-theme,
+.oro-editorial,
+.legal-page {
+  --oro-background-base: #ffffff !important;
+  --oro-background-light: #ffffff !important;
+  --oro-background-gold: rgba(205, 187, 233, 0.32) !important;
+  --oro-background-lavender: rgba(205, 187, 233, 0.55) !important;
+  --oro-color-warm-glow: rgba(205, 187, 233, 0.45) !important;
+}
+
+html,
+body {
+  background: #ffffff;
+}
+
+
+.halo-header .halo-logo,
+.legal-page > header img[src="/oro-logo.webp"] {
+  content: url("/oro-logo/oro-logo-ink.webp");
+}
+
+
+:root:has(.halo-site) { --halo-header-height: 88px; }
+.halo-header-inner { padding-top: 24px; min-height: 88px; }
+@media (max-width: 650px) {
+  :root:has(.halo-site) { --halo-header-height: 78px; }
+  .halo-header-inner { padding-top: 14px; min-height: 78px; }
+}
+
+
+.halo-header::before {
+  background: none !important;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+.oro-editorial .halo-header::after { display: none; }

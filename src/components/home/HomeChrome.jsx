@@ -2,6 +2,7 @@ import { Heading, Text } from 'oro-kit'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 import MessagesIcon from '../MessagesIcon'
+import CtaSparkles from './CtaSparkles'
 
 function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
@@ -14,6 +15,7 @@ export function HomeCta({ place, children, className = '', inviteUrl = '', href:
       onClick={customHref ? undefined : () => trackCtaClick('get_number_click', { location: place, destination: 'web_checkout' })}>
       {showIcon && !['header', 'floating'].includes(place) && <MessagesIcon className="halo-cta-message" />}
       <span>{children}</span>
+      {['hero', 'closer'].includes(place) && <CtaSparkles />}
     </a>
   )
 }

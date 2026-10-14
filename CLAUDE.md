@@ -76,9 +76,11 @@ All non-home pages are `React.lazy` + `Suspense` code-split. `vercel.json` redir
 
 ### Homepage design system
 
-The homepage uses the published `oro-kit` package for Halo colors, DM Sans and Outfit fonts, typography, and controls. Its layout and motion live in `home/Home.css`; the left column scrolls normally and the conversation demo stays sticky on desktop. Mobile places the demo after the hero. Reduced motion and keyboard focus must keep all content accessible.
+The homepage uses the published `oro-kit` package for colors, DM Sans and Outfit fonts, typography, and controls. `DesignerHeadline`, `DesignerChat`, and `DesignerFeatures` render the homepage design in React. The conversation toggle previews iMessage or WhatsApp; it never opens a conversation or calls a messaging API. `useDesignerChat` coordinates scroll progress, sequential typing, both message lists, and the phone clocks. Keep effect listeners, observers, timers, and animation frames scoped to their components and cleaned up on unmount.
 
-Only the homepage uses Halo. `postcss.config.js` scopes kit recipes to `.halo-site` and excludes legacy `@oro/web` recipes from that surface because both packages define `.oro-chip`. Preserve this isolation and the existing theme behavior on other routes. Homepage CTAs link to `/get-started` with the existing analytics event.
+`src/designer-theme.css` contains the shared lavender background, logo, mascot, and CTA treatments; `DesignerHome.css` contains the phone, ribbon, and feature-row layouts. Shared theme styles are imported by both `site.css` and `legal.css`, so standalone legal pages receive the same visual changes. Homepage CTAs preserve the `/checkout` destination and existing analytics event. Reduced motion exposes the full conversation in a scrollable phone and stacks the feature rows without the fixed fade treatment.
+
+`postcss.config.js` scopes kit recipes to `.halo-site` and excludes legacy `@oro/web` recipes from that surface because both packages define `.oro-chip`. Preserve this isolation and the existing theme behavior on other routes.
 
 ### SEO pipeline (`src/lib/seo.js` + `scripts/generate-seo.mjs`)
 

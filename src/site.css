@@ -21,3 +21,6 @@
 @import './components/home/BrandDetails.css';
 @import './serif-headings.css';
 @import './brand-background.css';
+
+@import './designer-theme.css';
+@import './components/home/DesignerHome.css';

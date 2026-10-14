@@ -1,0 +1,878 @@
+
+.oro-grid {
+  --g-line: var(--oro-color-border, #e1d8ee);
+  --g-side: 25%;
+  --g-inset: 24px;
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  overflow: clip;
+
+  background: linear-gradient(to bottom,
+    transparent 0,
+    var(--oro-color-canvas, #fcfbff) 360px,
+    var(--oro-color-canvas, #fcfbff) calc(100% - 360px),
+    transparent 100%);
+  color: var(--oro-color-ink, #332d46);
+}
+.oro-grid-list {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 64px;
+}
+.oro-grid-row { position: relative; }
+.oro-grid-cell {
+  position: relative;
+  padding: 64px 16px;
+  text-align: center;
+}
+.oro-grid-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+.oro-grid-label {
+  margin: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--oro-color-muted, #71637f);
+}
+.oro-grid-title {
+  margin: 0;
+  max-width: 14ch;
+  font-family: var(--oro-font-family-body, "DM Sans", sans-serif);
+  font-weight: 500;
+  font-size: clamp(2.1rem, 3.6vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  color: var(--oro-color-ink, #332d46);
+  transition: color 0.45s ease;
+}
+.oro-grid-row.is-faded .oro-grid-title { color: color-mix(in srgb, var(--oro-color-ink, #332d46) 45%, var(--oro-color-canvas, #fcfbff)); }
+.oro-grid-figure { margin: 0 16px; overflow: hidden; }
+.oro-grid-figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 4 / 5;
+}
+
+@media (min-width: 1024px) {
+  .oro-grid-list { padding: 180px 0; }
+  .oro-grid-row {
+    display: grid;
+    grid-template-columns: var(--g-side) 1fr var(--g-side);
+  }
+
+  .oro-grid-cell {
+    grid-row: 1;
+    grid-column: 2;
+    padding: 0;
+    clip-path: inset(0);
+  }
+  .oro-grid-copy { position: fixed; inset: 0; gap: 28px; }
+
+  .oro-grid-figure { grid-row: 1; margin: 0; }
+  .oro-grid-row--right .oro-grid-figure { grid-column: 3; margin-right: var(--g-inset); }
+  .oro-grid-row--left .oro-grid-figure { grid-column: 1; margin-left: var(--g-inset); }
+  .oro-grid-figure img { aspect-ratio: 3 / 4; }
+  .oro-grid-figure img { transform: scale(1.08); transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+  .oro-grid-row.is-in .oro-grid-figure img { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oro-grid-title, .oro-grid-figure img { transition: none; }
+}
+
+
+.oro-grid-sub {
+  margin: -8px 0 0;
+  max-width: 34ch;
+  font-family: var(--oro-font-family-body, "DM Sans", sans-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  text-wrap: balance;
+  color: var(--oro-color-muted, #71637f);
+}
+
+
+.oro-channel {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 4px;
+  padding: 4px;
+  border: 1px solid var(--oro-color-border, #e1d8ee);
+  border-radius: 999px;
+  background: var(--oro-color-surface, #fff);
+}
+.oro-channel-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--oro-color-muted, #71637f);
+  font: 500 0.95rem/1 var(--oro-font-family-body, "DM Sans", sans-serif);
+  text-transform: none;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.oro-channel-opt svg { width: 22px; height: 22px; flex: none; }
+.oro-channel-opt:hover { color: var(--oro-color-ink, #332d46); }
+.oro-channel-opt[aria-pressed="true"] {
+  background: var(--oro-color-soft, #ece6f7);
+  color: var(--oro-color-ink, #332d46);
+  box-shadow: 0 1px 2px #332d4614;
+}
+.oro-channel-opt:focus-visible { outline: 2px solid var(--oro-color-accent, #6c52ab); outline-offset: 2px; }
+
+
+@media (min-width: 1024px) {
+  .oro-grid-row { min-height: 37.5vw; }
+}
+
+
+@media (min-width: 1024px) {
+  .oro-grid .oro-grid-row {
+    min-height: 120vh;
+    min-height: 120svh;
+  }
+  .oro-grid .oro-grid-row .oro-grid-figure {
+    align-self: center;
+  }
+
+
+  .oro-grid .oro-grid-cell {
+    --oro-grid-fade: clamp(140px, 22vh, 260px);
+    clip-path: none;
+    -webkit-mask-image: linear-gradient(to bottom,
+      transparent 0,
+      #000 var(--oro-grid-fade),
+      #000 calc(100% - var(--oro-grid-fade)),
+      transparent 100%);
+    mask-image: linear-gradient(to bottom,
+      transparent 0,
+      #000 var(--oro-grid-fade),
+      #000 calc(100% - var(--oro-grid-fade)),
+      transparent 100%);
+  }
+
+
+  .oro-grid .oro-grid-copy {
+    --oro-grid-lift: 100px;
+    bottom: calc(var(--oro-grid-lift) * 2);
+  }
+}
+
+
+.oro-grid-copy.oro-closet {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: start;
+  align-content: center;
+  gap: 32px;
+  text-align: left;
+}
+.oro-closet-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+.oro-closet .oro-grid-title,
+.oro-closet .oro-grid-sub {
+  text-align: left;
+}
+.oro-closet .oro-grid-title { text-wrap: balance; }
+.oro-closet .oro-grid-sub { text-wrap: pretty; }
+.oro-closet .oro-grid-sub { margin: -8px 0 0; }
+.oro-closet-media {
+  margin: 0;
+  width: 100%;
+}
+.oro-closet-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+
+@media (min-width: 1024px) {
+  .oro-grid-copy.oro-closet {
+    grid-template-columns: minmax(0, 420px) minmax(0, 600px);
+    justify-content: center;
+    align-items: center;
+    column-gap: clamp(48px, 6vw, 112px);
+    padding: 0 32px;
+  }
+  .oro-closet-text { gap: 28px; }
+  .oro-closet-media img {
+    max-height: min(560px, 52vh);
+    width: auto;
+    max-width: 100%;
+    margin-left: auto;
+  }
+}
+
+
+@media (min-width: 1024px) {
+  .oro-grid .oro-closet-row .oro-grid-cell { grid-column: 1 / -1; }
+}
+
+
+@media (min-width: 1024px) {
+  .oro-grid-copy.oro-closet.oro-tellher {
+    grid-template-columns: minmax(0, 600px) minmax(0, 420px);
+  }
+  .oro-tellher .oro-closet-media { grid-column: 1; grid-row: 1; }
+  .oro-tellher .oro-closet-text  { grid-column: 2; grid-row: 1; }
+  .oro-tellher .oro-closet-media img {
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+
+@media (min-width: 1024px) {
+  .oro-grid-copy.oro-closet.oro-texther {
+    grid-template-columns: minmax(0, 540px) minmax(0, 600px);
+  }
+  .oro-texther .oro-grid-title { max-width: none; white-space: nowrap; }
+}
+
+
+.oro-intro {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+
+  padding: 150px 16px 120px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .oro-intro { gap: 28px; }
+}
+
+
+@media (min-width: 600px) {
+
+  .oro-intro .oro-grid-title { max-width: none; }
+  .oro-intro .oro-grid-title > span { display: block; white-space: nowrap; }
+  .oro-intro .oro-grid-sub {
+    max-width: none;
+    white-space: nowrap;
+  }
+}
+
+
+.oro-phones {
+  --pw: min(440px, calc(100vw - 32px));
+  display: grid;
+  justify-items: center;
+  align-items: end;
+  width: 100%;
+  margin-top: 20px;
+}
+.oro-phones > * {
+  grid-area: 1 / 1;
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(.2, .7, .2, 1), visibility 0s linear 0s;
+}
+.oro-intro[data-channel="whatsapp"] .oro-phones > .product-demo,
+.oro-intro:not([data-channel="whatsapp"]) .oro-phones > .oro-wa-phone {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+
+.oro-phones > .product-demo {
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.oro-phones > .product-demo .product-demo-inner {
+  width: var(--pw) !important;
+  max-width: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.oro-phones .home-demo-title,
+.oro-phones .home-demo-description {
+  display: none;
+}
+
+
+.oro-marquee {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 48px 0;
+  overflow: hidden;
+}
+.oro-marquee-band {
+  width: 100%;
+  background: var(--oro-plum-deep, #3A2646);
+  color: var(--oro-cream, #FFF9ED);
+  overflow: hidden;
+}
+.oro-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: oro-marquee 48s linear infinite;
+}
+.oro-marquee-item {
+  display: flex;
+  align-items: center;
+  flex: none;
+  padding: 0.32em 0;
+  font-family: var(--oro-font-family-body, "DM Sans", sans-serif);
+  font-weight: 700;
+  font-size: clamp(2rem, 4.6vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.oro-marquee-item svg {
+  width: 0.42em;
+  height: 0.42em;
+  margin: 0 0.6em;
+  flex: none;
+  fill: currentColor;
+}
+@keyframes oro-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .oro-marquee-track { animation: none; }
+}
+
+
+.oro-wa-phone {
+  --wa-bar: #f6f5f3;
+  --wa-line: rgba(0, 0, 0, 0.12);
+  --wa-chat: #efeae2;
+  --wa-out: #d9fdd3;
+  --wa-in: #ffffff;
+  --wa-ink: #111b21;
+  --wa-meta: #667781;
+  --wa-tick: #53bdeb;
+  --wa-fs: calc(var(--pw) * 0.038);
+  position: relative;
+  width: var(--pw);
+  height: calc(var(--pw) * 2.044);
+  margin: 0 auto;
+  font-family: -apple-system, "SF Pro Text", "SF Pro Display", system-ui, "Helvetica Neue", sans-serif;
+  color: var(--wa-ink);
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+  -webkit-font-smoothing: antialiased;
+}
+.oro-wa-phone *, .oro-wa-phone *::before, .oro-wa-phone *::after { text-transform: none; }
+
+.oro-wa-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+
+.oro-wa-clock {
+  position: absolute;
+  z-index: 4;
+  left: calc(var(--pw) * 0.2165);
+  top: calc(var(--pw) * 0.1364 + 0.21em);
+  transform: translate(-50%, -100%);
+  font: 600 calc(var(--pw) * 0.0386) / 1 -apple-system, "SF Pro Text", "SF Pro Display", system-ui, "Helvetica Neue", sans-serif;
+  letter-spacing: -0.01em;
+  color: #030303;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.oro-wa-screen {
+  position: absolute;
+  z-index: 1;
+  left: calc(var(--pw) * 0.0534);
+  right: calc(var(--pw) * 0.0545);
+  top: calc(var(--pw) * 0.0318);
+  bottom: calc(var(--pw) * 0.0511);
+  border-radius: calc(var(--pw) * 0.14);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--wa-chat);
+}
+
+
+.oro-wa-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--pw) * 0.022);
+  box-sizing: content-box;
+  height: calc(var(--pw) * 0.118);
+  padding: calc(var(--pw) * 0.122) calc(var(--pw) * 0.03) 0;
+  background: var(--wa-bar);
+  border-bottom: 1px solid var(--wa-line);
+}
+.oro-wa-head svg { flex: none; display: block; }
+.oro-wa-back { width: calc(var(--pw) * 0.03); height: calc(var(--pw) * 0.05); }
+.oro-wa-avatar {
+  flex: none;
+  width: calc(var(--pw) * 0.082);
+  height: calc(var(--pw) * 0.082);
+  border-radius: 50%;
+  background: #fbf3e6 50% 40% / 96% no-repeat;
+}
+.oro-wa-who { flex: 1; min-width: 0; line-height: 1.15; }
+.oro-wa-name { display: block; font-weight: 600; font-size: calc(var(--wa-fs) * 1.02); }
+.oro-wa-status {
+  display: block;
+  font-size: calc(var(--wa-fs) * 0.72);
+  color: var(--wa-meta);
+}
+.oro-wa-status.is-typing { color: #1fa855; }
+.oro-wa-icon { width: calc(var(--pw) * 0.058); height: calc(var(--pw) * 0.058); }
+
+
+.oro-wa-chat {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.oro-wa-thread {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--pw) * 0.008);
+  margin: 0;
+  padding: calc(var(--pw) * 0.024) calc(var(--pw) * 0.03);
+  list-style: none;
+}
+.oro-wa-day {
+  align-self: center;
+  margin-bottom: calc(var(--pw) * 0.012);
+  padding: calc(var(--pw) * 0.008) calc(var(--pw) * 0.022);
+  border-radius: calc(var(--pw) * 0.02);
+  background: rgba(255, 255, 255, 0.92);
+  font-size: calc(var(--wa-fs) * 0.74);
+  color: var(--wa-meta);
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+}
+.oro-wa-msg { display: flex; }
+.oro-wa-msg--out { justify-content: flex-end; }
+.oro-wa-msg--out + .oro-wa-msg--in,
+.oro-wa-msg--in + .oro-wa-msg--out { margin-top: calc(var(--pw) * 0.014); }
+
+.oro-wa-bubble {
+  position: relative;
+  max-width: 78%;
+  padding: calc(var(--pw) * 0.014) calc(var(--pw) * 0.02) calc(var(--pw) * 0.012);
+  border-radius: calc(var(--pw) * 0.018);
+  font-size: var(--wa-fs);
+  line-height: 1.3;
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+}
+.oro-wa-msg--out .oro-wa-bubble { background: var(--wa-out); }
+.oro-wa-msg--in .oro-wa-bubble { background: var(--wa-in); }
+
+
+.oro-wa-msg--tail .oro-wa-bubble::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: calc(var(--pw) * 0.02);
+  height: calc(var(--pw) * 0.026);
+  background: inherit;
+}
+.oro-wa-msg--out.oro-wa-msg--tail .oro-wa-bubble { border-top-right-radius: 0; }
+.oro-wa-msg--out.oro-wa-msg--tail .oro-wa-bubble::before { right: calc(var(--pw) * -0.018); clip-path: polygon(0 0, 100% 0, 0 100%); }
+.oro-wa-msg--in.oro-wa-msg--tail .oro-wa-bubble { border-top-left-radius: 0; }
+.oro-wa-msg--in.oro-wa-msg--tail .oro-wa-bubble::before { left: calc(var(--pw) * -0.018); clip-path: polygon(0 0, 100% 0, 100% 100%); }
+
+
+.oro-wa-meta {
+  float: right;
+  position: relative;
+  top: calc(var(--pw) * 0.012);
+  margin-left: calc(var(--pw) * 0.022);
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--pw) * 0.006);
+  font-size: calc(var(--wa-fs) * 0.66);
+  color: var(--wa-meta);
+  line-height: 1;
+}
+.oro-wa-meta svg { width: calc(var(--pw) * 0.036); height: calc(var(--pw) * 0.024); color: var(--wa-tick); }
+
+
+.oro-wa-bubble--photo { padding: calc(var(--pw) * 0.007); }
+.oro-wa-bubble--photo img {
+  display: block;
+  width: calc(var(--pw) * 0.46);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: calc(var(--pw) * 0.014);
+}
+.oro-wa-bubble--photo .oro-wa-meta {
+  position: absolute;
+  float: none;
+  top: auto;
+  right: calc(var(--pw) * 0.022);
+  bottom: calc(var(--pw) * 0.018);
+  margin: 0;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+
+.oro-wa-bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--pw) * 0.026);
+  padding: calc(var(--pw) * 0.018) calc(var(--pw) * 0.03) calc(var(--pw) * 0.075);
+  background: var(--wa-bar);
+  border-top: 1px solid var(--wa-line);
+}
+.oro-wa-bar svg { flex: none; width: calc(var(--pw) * 0.058); height: calc(var(--pw) * 0.058); }
+.oro-wa-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: calc(var(--pw) * 0.074);
+  padding: 0 calc(var(--pw) * 0.02);
+  border: 1px solid var(--wa-line);
+  border-radius: calc(var(--pw) * 0.037);
+  background: #fff;
+}
+.oro-wa-input svg { width: calc(var(--pw) * 0.046); height: calc(var(--pw) * 0.046); }
+
+
+.oro-wa-msg.is-pending { visibility: hidden; }
+.oro-wa-msg.is-in .oro-wa-bubble { animation: oroWaPop 380ms cubic-bezier(.2, .9, .3, 1.2) both; }
+.oro-wa-msg--out.is-in .oro-wa-bubble { transform-origin: 100% 0; }
+.oro-wa-msg--in.is-in .oro-wa-bubble { transform-origin: 0 0; }
+@keyframes oroWaPop {
+  0%   { opacity: 0; transform: translateY(6px) scale(0.9); }
+  100% { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .oro-wa-msg.is-in .oro-wa-bubble { animation: none; }
+}
+
+
+.product-demo-message.oro-chat-swapped > .sms-bubble { display: none; }
+
+.oro-chat-msg {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+.oro-chat-msg img {
+  display: block;
+
+  width: calc(var(--oro-chat-w) * 1px * 52 / 58);
+  height: auto;
+  max-width: 100%;
+}
+
+
+.oro-chat-pending .oro-chat-msg img,
+.product-demo-message.oro-chat-pending > .sms-bubble:not([hidden]) {
+  opacity: 0;
+}
+.oro-chat-pending.oro-chat-photo > .sms-bubble,
+.oro-chat-pending.oro-chat-photo > .sms-avatar { opacity: 0; }
+
+.oro-chat-pop {
+  animation: oroChatPop 420ms cubic-bezier(.2, .9, .3, 1.25) both;
+}
+@keyframes oroChatPop {
+  0%   { opacity: 0; transform: translateY(8px) scale(0.86); }
+  100% { opacity: 1; transform: none; }
+}
+.oro-chat-msg--left .oro-chat-pop,
+.oro-chat-msg--left.oro-chat-pop { transform-origin: 0% 100%; }
+.oro-chat-msg--right .oro-chat-pop,
+.oro-chat-msg--right.oro-chat-pop { transform-origin: 100% 100%; }
+
+
+.oro-chat-typing {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 23px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.18s ease, transform 0.22s cubic-bezier(.2, .9, .3, 1.2);
+  pointer-events: none;
+}
+.oro-chat-msg--left .oro-chat-typing  { left: 0;  transform-origin: 0% 100%; background: #e9e9eb; }
+.oro-chat-msg--right .oro-chat-typing { right: 0; transform-origin: 100% 100%; background: linear-gradient(#8f53a9, #653c77); }
+.oro-chat-typing.is-on { opacity: 1; transform: none; }
+
+.oro-chat-typing i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  animation: oroChatDot 1.1s ease-in-out infinite;
+}
+.oro-chat-msg--left .oro-chat-typing i  { background: #8e8e93; }
+.oro-chat-msg--right .oro-chat-typing i { background: rgba(255, 255, 255, 0.85); }
+.oro-chat-typing i:nth-child(2) { animation-delay: 0.16s; }
+.oro-chat-typing i:nth-child(3) { animation-delay: 0.32s; }
+@keyframes oroChatDot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.45; }
+  30%           { transform: translateY(-5px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oro-chat-pop { animation: none; }
+  .oro-chat-typing i { animation: none; }
+}
+
+
+[data-analytics-section="outfit_demo"] .product-demo-inner {
+  --pw: min(440px, calc(100vw - 32px));
+  position: relative;
+
+  padding-bottom: calc(var(--pw) * 0.216);
+}
+[data-analytics-section="outfit_demo"] .product-demo-inner::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: var(--pw);
+  height: calc(var(--pw) * 2.044);
+  transform: translateX(-50%);
+  background: url("/oro-phone/phone.png") center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+
+[data-analytics-section="outfit_demo"] .product-demo-thread {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: calc(var(--pw) * 0.892);
+  height: calc(var(--pw) * 1.362);
+  margin: calc(var(--pw) * 0.4661 + 32px) auto 0;
+  padding: 6px 14px 14px;
+  overflow: hidden;
+
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 18px);
+}
+
+
+[data-analytics-section="outfit_demo"] .product-demo-message .sms-bubble > img {
+  width: min(250px, calc(var(--pw) * 0.892 - 28px - 52px));
+}
+
+
+.oro-intro .oro-phones {
+  margin-top: -28px;
+}
+
+
+[data-analytics-section="outfit_demo"] .product-demo-thread {
+  gap: calc(var(--pw) * 0.014);
+
+  padding: 0 calc(var(--pw) * 0.0255) calc(var(--pw) * 0.03);
+
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--pw) * 0.045));
+  mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--pw) * 0.045));
+}
+
+[data-analytics-section="outfit_demo"] .product-demo-message {
+  padding-left: 0 !important;
+}
+[data-analytics-section="outfit_demo"] .product-demo-message .sms-avatar {
+  display: none;
+}
+
+
+[data-analytics-section="outfit_demo"] .product-demo-message .sms-bubble:has(> img) {
+  padding: 0;
+  max-width: none;
+  background: none;
+  box-shadow: none;
+  border: 0;
+  border-radius: calc(var(--pw) * 0.02);
+}
+[data-analytics-section="outfit_demo"] .product-demo-message .sms-bubble:has(> img)::after {
+  display: none;
+}
+[data-analytics-section="outfit_demo"] .product-demo-message .sms-bubble > img {
+  width: calc(var(--pw) * 0.4115) !important;
+  aspect-ratio: 3 / 4;
+  height: auto;
+  object-fit: cover;
+  border-radius: calc(var(--pw) * 0.02);
+}
+
+
+[data-analytics-section="outfit_demo"] .oro-chat-msg img {
+  width: calc(var(--oro-chat-w) * var(--pw) * 0.001566);
+}
+
+
+[data-analytics-section="outfit_demo"] .oro-chat-typing {
+  height: calc(var(--pw) * 0.09);
+  padding: 0 calc(var(--pw) * 0.036);
+  gap: calc(var(--pw) * 0.011);
+  border-radius: calc(var(--pw) * 0.045);
+}
+[data-analytics-section="outfit_demo"] .oro-chat-typing i {
+  width: calc(var(--pw) * 0.017);
+  height: calc(var(--pw) * 0.017);
+}
+
+
+[data-analytics-section="outfit_demo"] .product-demo-inner::after {
+  content: attr(data-oro-time);
+  position: absolute;
+  left: calc(50% - var(--pw) / 2 + var(--pw) * 0.2165);
+  bottom: calc(var(--pw) * (2.044 - 0.1364) - 0.21em);
+  transform: translateX(-50%);
+  font: 600 calc(var(--pw) * 0.0386) / 1 -apple-system, "SF Pro Text", "SF Pro Display", system-ui, "Helvetica Neue", sans-serif;
+  letter-spacing: -0.01em;
+  color: #030303;
+  text-transform: none;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+
+.oro-intro.oro-scrollchat {
+  display: block;
+}
+.oro-intro.oro-scrollchat::after {
+  content: "";
+  display: block;
+  height: var(--oro-chat-track, 0px);
+}
+.oro-intro-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+@media (min-width: 1024px) {
+  .oro-intro-pin { gap: 28px; }
+}
+.oro-intro.oro-scrollchat .oro-intro-pin {
+  position: sticky;
+  top: var(--oro-pin-top, 0px);
+}
+
+
+.oro-intro.oro-scrollchat .product-demo[data-demo-motion=ready] .product-demo-message[data-reveal-state=pending] {
+  opacity: 1;
+  transform: none;
+}
+
+
+.oro-intro.oro-scrollchat [data-analytics-section="outfit_demo"] .product-demo-thread:not(.oro-scrolled) {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+
+.oro-intro.oro-scrollchat [data-analytics-section="outfit_demo"] .product-demo-thread {
+  padding-bottom: calc(var(--pw) * 1.1);
+}
+
+
+.oro-intro.oro-scrollchat .oro-wa-thread {
+  padding-bottom: calc(var(--pw) * 1.1);
+}
+
+
+.oro-phone3d-shadow {
+  grid-area: 1 / 1;
+  align-self: end;
+  position: relative;
+  z-index: 0;
+  width: var(--pw);
+  height: calc(var(--pw) * 2.044);
+  pointer-events: none;
+}
+.oro-phone3d-shadow::before {
+  content: "";
+  position: absolute;
+  left: 4%;
+  right: 0;
+  top: 6%;
+  bottom: 0;
+  border-radius: calc(var(--pw) * 0.18);
+  background: rgba(58, 38, 78, 0.16);
+  filter: blur(calc(var(--pw) * 0.05));
+  transform: translate(calc(var(--pw) * 0.04), calc(var(--pw) * 0.03));
+}
+
+
+.oro-phones > .product-demo,
+.oro-phones > .oro-wa-phone {
+  position: relative;
+  z-index: 1;
+}
+
+.halo-home .home-hero-copy { width: 100%; }
+@media (min-width: 820px) {
+  .halo-home .home-hero-copy .home-description { max-width: none; white-space: nowrap; }
+}
+.oro-intro .product-demo-thread:focus-visible,
+.oro-intro .oro-wa-chat:focus-visible { outline-offset: -3px; }
+@media (prefers-reduced-motion: reduce) {
+  .oro-intro .oro-phones > * { transition: none; }
+  .oro-grid .oro-grid-copy { position: static; min-height: 70vh; padding-block: 48px; }
+  .oro-grid .oro-grid-cell { mask-image: none; -webkit-mask-image: none; }
+  .oro-grid .oro-grid-row { min-height: auto; }
+  .oro-intro .product-demo-thread,
+  .oro-intro .oro-wa-chat { overflow-y: auto; }
+}
+.halo-home .home-panel:first-child { max-width: 100%; }
+@media (max-width: 1023px) {
+  .oro-tellher .oro-closet-media { grid-row: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #home-title .oro-rot-phrase { transition: none; }
+  .oro-cta-pixels { display: none; }
+}

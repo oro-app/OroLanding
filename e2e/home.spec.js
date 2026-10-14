@@ -38,11 +38,11 @@ test('all CTAs share one purple treatment', async ({ page }) => {
     return { width: style.width, height: style.height, backgroundColor: style.backgroundColor, backgroundImage: style.backgroundImage }
   })
   expect(closerStyle).toEqual(heroStyle)
-  await expect(header).toHaveCSS('background-color', heroStyle.backgroundColor)
-  await expect(hero).toHaveCSS('background-color', 'rgb(87, 57, 105)')
+  await expect(header).toHaveCSS('background-color', 'rgb(87, 57, 105)')
+  expect(heroStyle.backgroundImage).toContain('conic-gradient')
   await expect(header).toContainText('want her number?')
   await expect(header.locator('.halo-cta-message')).toHaveCount(0)
-  expect(heroStyle.backgroundImage).toBe('none')
+  await expect(hero.locator('.oro-cta-pixels')).toHaveCount(1)
   await expect(page.locator('.halo-cta-message circle')).toHaveCount(0)
 
 
@@ -59,8 +59,8 @@ test('centered hero gives way to the rest of the page on scroll', async ({ page 
   const headingTop = await heading.evaluate((element) => element.getBoundingClientRect().top)
   await page.evaluate(() => window.scrollTo({ top: 300, behavior: 'instant' }))
   expect(await heading.evaluate((element) => element.getBoundingClientRect().top)).toBeCloseTo(headingTop - 300, 0)
-  await page.locator('#home-moments-title').scrollIntoViewIfNeeded()
-  await expect(page.getByRole('heading', { name: 'she gets your style. and your life.' })).toBeInViewport()
+  await page.locator('.oro-marquee').scrollIntoViewIfNeeded()
+  await expect(page.getByRole('region', { name: 'she gets your style. and your life.' })).toBeInViewport()
   await expect(page.locator('.home-panel[aria-hidden="true"]')).toHaveCount(0)
 })
 
@@ -89,8 +89,11 @@ test('Halo stays light without changing a saved dark preference', async ({ page 
 test('enabling reduced motion immediately reveals all page content', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
-  await expect(page.locator('.home-feature-copy').first()).toHaveCSS('opacity', '0')
+  await expect(page.locator('.oro-intro')).toHaveClass(/oro-scrollchat/)
+  await expect(page.locator('.oro-chat-pending')).toHaveCount(6)
   await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(page.locator('.oro-chat-pending')).toHaveCount(0)
+  await expect(page.locator('.oro-intro')).not.toHaveClass(/oro-scrollchat/)
   const movingElements = page.locator('.home-type-char, .home-enter, .home-stagger')
   for (const element of await movingElements.all()) {
     await expect(element).toHaveCSS('opacity', '1')
