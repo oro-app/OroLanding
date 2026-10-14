@@ -1,8 +1,7 @@
 # Merch
 
-`/merch` reuses the native Oro checkout's Stripe Elements packages,
-`stripeAppearance()`, `formatPrice()`, and checkout styles. Subscription consent
-and subscription prices are not reused: Putty is a one-time placement bid.
+`/merch` sends payment to Stripe-hosted Checkout. Subscription consent and
+subscription prices are not reused: Putty is a one-time placement bid.
 
 The form requires email, bid totals, and terms/privacy acceptance. Display name is optional. No
 phone, email verification, account signup, artwork, or file upload is required.
@@ -37,6 +36,8 @@ and temporarily in the payment-return fragment. No email or name is saved in
 browser storage. Analytics and cookie overlays are suppressed on this payment
 route, as on `/checkout`. Email-only credit attribution intentionally does not
 prove identity; it must never authorize private account access or refunds.
+After Stripe returns to `/merch`, the page checks the order with the backend.
+Only Stripe's verified paid Session changes the page to the confirmed claim state.
 
 No auction closing date is configured; the date in the supplied form reference
 was not treated as a requested deadline. Outbid customer contact and artwork

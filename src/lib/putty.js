@@ -29,6 +29,14 @@ export async function puttyRequest(operation, body, signal) {
   return data
 }
 
+export function puttyCheckoutUrl(value) {
+  try {
+    const url = new URL(value)
+    if (url.protocol === 'https:' && url.hostname === 'checkout.stripe.com') return url.href
+  } catch {}
+  return ''
+}
+
 export function readPuttyOrder() {
   if (typeof window === 'undefined') return null
   const fromUrl = new URLSearchParams(window.location.hash.slice(1)).get('order')

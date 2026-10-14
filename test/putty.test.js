@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cents, clearPuttyDraft, hoodieSpots, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft } from '../src/lib/putty.js'
+import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft } from '../src/lib/putty.js'
 
 test('all placements render before the API responds, without pretending they are available', () => {
   const spots = hoodieSpots(null)
@@ -28,6 +28,13 @@ test('backend conflict remains a conflict and never becomes a local claim', asyn
   globalThis.fetch = async () => ({ ok: false, status: 409, json: async () => ({ detail: 'A square is held.' }) })
   try { await assert.rejects(puttyRequest('checkout', {}), error => error.status === 409 && error.message === 'A square is held.') }
   finally { globalThis.fetch = original }
+})
+
+test('merch checkout only follows Stripe hosted payment URLs', () => {
+  assert.equal(puttyCheckoutUrl('https://checkout.stripe.com/c/pay/test'), 'https://checkout.stripe.com/c/pay/test')
+  for (const value of ['https://example.com/checkout', 'http://checkout.stripe.com/test', 'not a url']) {
+    assert.equal(puttyCheckoutUrl(value), '')
+  }
 })
 
 test('server rendering does not require browser checkout storage', () => {
