@@ -74,12 +74,14 @@
 .putty-leaderboard-help { margin: 1.5rem 0 0; color: var(--oro-color-muted); }
 .putty-leaderboard-help a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: .18em; }
 .putty-leaderboard-table { overflow-x: auto; }
-.putty-leaderboard table { width: 100%; border-collapse: collapse; }
+.putty-leaderboard table { width: 100%; border-collapse: separate; border-spacing: 0 .5rem; }
 .putty-leaderboard caption { padding: 1.5rem 0 .75rem; color: var(--oro-color-muted); text-align: left; }
 .putty-leaderboard th, .putty-leaderboard td { padding: 1rem .75rem; border-bottom: 1px solid var(--oro-color-muted); text-align: left; }
 .putty-leaderboard thead th { font-size: .75rem; font-weight: 500; color: var(--oro-color-muted); }
 .putty-leaderboard tbody th { font-weight: 500; }
-.putty-leaderboard tbody .putty-leaderboard-top { background: var(--oro-color-soft); }
+.putty-leaderboard tbody .putty-leaderboard-top > * { border-block: 1px solid var(--oro-color-muted); background: var(--oro-color-soft); }
+.putty-leaderboard tbody .putty-leaderboard-top > :first-child { border-inline-start: 1px solid var(--oro-color-muted); border-radius: .75rem 0 0 .75rem; }
+.putty-leaderboard tbody .putty-leaderboard-top > :last-child { border-inline-end: 1px solid var(--oro-color-muted); border-radius: 0 .75rem .75rem 0; }
 .putty-leaderboard tbody .putty-leaderboard-top th { font-weight: 700; }
 .putty-leaderboard-rank { display: inline-flex; align-items: center; gap: .35rem; font-weight: 700; }
 .putty-leaderboard-top:first-child .putty-leaderboard-rank { font-size: 1.125rem; }
