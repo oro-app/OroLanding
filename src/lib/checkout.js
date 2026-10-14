@@ -1,4 +1,5 @@
 export const CHECKOUT_TOKEN_KEY = 'oro_checkout_token'
+export const MONTHLY_AMOUNT = 2500
 const TOKEN = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/
 let memoryToken = ''
 
@@ -49,10 +50,10 @@ export function saveCheckoutInvite() {
 }
 
 export function validOffer(offer) {
-  return offer?.amount === 2500 && offer.currency === 'usd' && offer.interval === 'month'
+  return offer?.amount === MONTHLY_AMOUNT && offer.currency === 'usd' && offer.interval === 'month'
     && ((offer.first_month_amount === 1250 && offer.first_month_discount_percent === 50
       && Number.isFinite(Date.parse(offer.launch_offer_ends_at)))
-      || (offer.first_month_amount === 2500 && offer.first_month_discount_percent === 0))
+      || (offer.first_month_amount === MONTHLY_AMOUNT && offer.first_month_discount_percent === 0))
 }
 
 export function countdown(end, now) {

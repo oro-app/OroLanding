@@ -33,7 +33,7 @@ for (const width of [320, 390, 1440]) {
     await expect(page.locator('.newsletter-mdx > p').first()).toHaveCSS('font-family', '"DM Sans", sans-serif')
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1)
     await page.locator('.halo-cta--newsletter_article').click()
-    await expect(page).toHaveURL(/\/checkout(?:\?|$)/)
+    await expect(page).toHaveURL(/\/meet-oro(?:\?|$)/)
   })
 }
 

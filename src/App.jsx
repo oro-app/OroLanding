@@ -26,11 +26,13 @@ const BetaPage = lazy(() => import('./components/beta/Beta'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
 const GeoPage = lazy(() => import('./components/geo/GeoPage'))
 const CheckoutPage = lazy(() => import('./components/checkout/Checkout'))
+const MeetOroPage = lazy(() => import('./components/meet-oro/MeetOro'))
 const PuttyPage = lazy(() => import('./components/putty/Putty'))
 
 export function getRouteFromPath(pathname = '/', search = '') {
   const path = pathname.replace(/\/+$/, '') || '/'
   if (path === '/checkout') return { type: 'checkout' }
+  if (path === '/meet-oro') return { type: 'demo' }
   if (path === '/merch' || path === '/putty') return { type: 'merch' }
   if (GEO_PATHS.includes(path)) return { type: 'geo', path }
   if (isFeedbackPath(path)) return { type: 'feedback' }
@@ -73,7 +75,7 @@ function App({ initialRoute }) {
   const isGeo = route.type === 'geo'
   const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
   const isPrivateForm = isBeta || isFeedback || isCheckout || route.type === 'get-started'
-  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
+  const isHalo = isHome || isPrivateForm || route.type === 'demo' || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
   const pageViewParams = {
     route_type: route.type,
     ...(route.slug ? { newsletter_slug: route.slug } : {}),
@@ -155,12 +157,14 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started'].includes(route.type)} /> : <SiteHeader />)}
+        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started', 'demo'].includes(route.type)} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {route.type === 'merch' ? (
             <Suspense fallback={<p role="status">Loading merch…</p>}><PuttyPage /></Suspense>
           ) : isCheckout ? (
             <Suspense fallback={null}><CheckoutPage /></Suspense>
+          ) : route.type === 'demo' ? (
+            <Suspense fallback={null}><MeetOroPage /></Suspense>
           ) : isGeo ? (
             <Suspense fallback={null}><GeoPage path={route.path} /></Suspense>
           ) : isFeedback ? (

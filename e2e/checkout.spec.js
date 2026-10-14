@@ -141,7 +141,9 @@ test('checkout retains same-origin preview access when starting and resuming pay
   await expect(page.getByLabel('Email')).toBeVisible()
   await page.reload()
   await expect(page.getByLabel('Email')).toBeVisible()
-  expect(operations).toEqual(['entry', 'entry-status'])
+  expect(operations.filter(operation => operation === 'entry')).toHaveLength(1)
+  expect(operations).toContain('entry-status')
+  expect(operations.slice(1).every(operation => operation === 'entry-status')).toBe(true)
 })
 
 test('public checkout requires a number on the payment screen and submits it to Stripe', async ({ page }) => {

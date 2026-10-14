@@ -14,12 +14,12 @@ test('home page loads cleanly @smoke', async ({ page }) => {
 })
 
 for (const place of ['header', 'hero', 'closer']) {
-  test(`${place} CTA opens the existing branded checkout`, async ({ page }) => {
+  test(`${place} CTA opens the product demo before checkout`, async ({ page }) => {
     await page.goto('/')
     const cta = page.locator(`.halo-cta--${place}`)
-    await expect(cta).toHaveAttribute('href', '/checkout')
+    await expect(cta).toHaveAttribute('href', '/meet-oro')
     await cta.click()
-    await expect(page).toHaveURL(/\/checkout(?:\?|$)/)
+    await expect(page).toHaveURL(/\/meet-oro(?:\?|$)/)
   })
 }
 

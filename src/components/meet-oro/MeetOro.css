@@ -1,0 +1,55 @@
+.meet-oro { padding-block: var(--oro-space-12); }
+.meet-oro-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  grid-template-rows: 1fr auto;
+  column-gap: clamp(40px, 7vw, 112px);
+  row-gap: var(--oro-space-8);
+  max-width: 1000px;
+  margin-inline: auto;
+}
+.meet-oro-copy { grid-area: 1 / 1; align-self: end; padding-top: var(--oro-space-8); }
+.meet-oro-eyebrow { margin-bottom: var(--oro-space-6); }
+.meet-oro-copy .oro-heading { max-width: 10ch; color: var(--oro-color-ink); text-wrap: balance; }
+.meet-oro-copy .oro-heading em { color: var(--oro-color-display); }
+.meet-oro-description { margin-top: var(--oro-space-6); max-width: 36ch; text-wrap: pretty; }
+.meet-oro-demo { grid-area: 1 / 2 / 3 / 3; margin: 0; width: min(100%, 340px); justify-self: center; }
+.meet-oro-video-wrap { position: relative; overflow: hidden; border-radius: var(--oro-radius-card); background: var(--oro-color-ink); box-shadow: var(--oro-shadow-action-hover); }
+.meet-oro-demo video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: contain; }
+.meet-oro-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--oro-radius-pill);
+  border: 1px solid var(--oro-color-on-accent);
+  background: var(--oro-color-accent);
+  color: var(--oro-color-on-accent);
+  box-shadow: var(--oro-shadow-action-hover);
+  cursor: pointer;
+}
+.meet-oro-play svg { width: 30px; height: 30px; fill: currentColor; }
+.meet-oro-demo figcaption { margin-top: var(--oro-space-4); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); color: var(--oro-color-muted); text-align: center; text-wrap: balance; }
+.meet-oro-transcript { margin-top: var(--oro-space-3); color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); }
+.meet-oro-transcript summary { width: fit-content; margin-inline: auto; cursor: pointer; text-underline-offset: 3px; }
+.meet-oro-transcript p { margin-top: var(--oro-space-3); }
+.meet-oro-action { grid-area: 2 / 1; align-self: start; padding-bottom: var(--oro-space-8); }
+.halo-site .meet-oro-action .halo-cta { width: auto; max-width: 100%; min-height: 56px; padding: 14px 24px; font-size: var(--oro-type-body-size); text-align: center; }
+.meet-oro-price { color: var(--oro-color-ink); font-size: var(--oro-type-label-size); line-height: var(--oro-type-label-line-height); margin-top: var(--oro-space-4); text-transform: none; }
+.meet-oro-payment-note { color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); margin-top: var(--oro-space-2); }
+@media (max-width: 700px) {
+  .meet-oro { padding-block: var(--oro-space-6) var(--oro-space-12); }
+  .meet-oro-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; row-gap: var(--oro-space-6); text-align: center; }
+  .meet-oro-copy { grid-area: 1 / 1; padding-top: 0; }
+  .meet-oro-eyebrow { margin-bottom: var(--oro-space-4); }
+  .meet-oro-copy .oro-heading { font-size: var(--oro-type-display-mobile-size); line-height: var(--oro-type-display-mobile-line-height); letter-spacing: var(--oro-type-display-mobile-tracking); margin-inline: auto; max-width: 13ch; }
+  .meet-oro-description { margin-inline: auto; margin-top: var(--oro-space-4); }
+  .meet-oro-demo { grid-area: 2 / 1; width: min(100%, 290px); }
+  .meet-oro-action { grid-area: 3 / 1; padding-bottom: var(--oro-space-8); }
+  .halo-site .meet-oro-action .halo-cta { width: 100%; padding-inline: var(--oro-space-4); }
+  .meet-oro-transcript { text-align: left; }
+}
