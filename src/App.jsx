@@ -155,7 +155,7 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && (!isCheckout || route.type === 'merch') && (isHalo ? <HomeHeader showCta={route.type !== 'get-started'} sticky={!isHome} /> : <SiteHeader />)}
+        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started'].includes(route.type)} sticky={!isHome} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {route.type === 'merch' ? (
             <Suspense fallback={<p role="status">Loading merch…</p>}><PuttyPage /></Suspense>

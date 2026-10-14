@@ -3,7 +3,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
 import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance, startPublicCheckout, isPublicCheckoutToken, saveCheckoutInvite } from '../../lib/checkout'
 import { getOroTextLink } from '../../lib/textOro'
-import CheckoutForm from './CheckoutForm'
+import CheckoutForm, { CheckoutFormSkeleton } from './CheckoutForm'
 import './Checkout.css'
 
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
@@ -98,11 +98,11 @@ export default function Checkout() {
   const textLink = getOroTextLink(undefined, inviteUrl)
 
   return <div className="checkout-page halo-container">
-    <header className="checkout-header"><a href="/" aria-label="Oro home"><img src="/oro-logo.webp" alt="Oro" width="104" height="59" /></a></header>
     <div className="checkout-layout">
       <section className="checkout-story">
-        <h1>{discounted ? <>A little<br />launch <em>gift.</em></> : <>Your next<br />good <em>outfit.</em></>}</h1>
-        {remaining && <div className="checkout-countdown">
+        {loading && !data ? <div className="checkout-story-skeleton" aria-hidden="true"><span /><span /></div>
+          : <h1>{discounted ? <>A little<br />launch <em>gift.</em></> : <>Your next<br />good <em>outfit.</em></>}</h1>}
+        {remaining && !loading && <div className="checkout-countdown">
           <p>Offer ends in</p>
           <div className="checkout-clock" role="timer" aria-label="Time until midnight Eastern Time on October 14">
             {remaining.map((value, index) => <div key={index}><span>{value}</span><small>{['hours', 'minutes', 'seconds'][index]}</small></div>)}
@@ -114,7 +114,7 @@ export default function Checkout() {
           <h2>You’re <em>in.</em></h2><p>Your stylist is ready. Head back to your conversation.</p><a className="oro-button" href={textLink}>Back to Oro ↗</a>
         </> : checking || data?.status === 'payment_pending' ? <>
           <h2>Getting you ready.</h2><p role="status">We’re confirming your payment and setting up your stylist.</p><button className="oro-button" onClick={() => { setPolls(0); refresh() }}>Check status</button>
-        </> : loading ? <p role="status">Loading your checkout…</p> : data?.status === 'checkout' ? <>
+        </> : loading && !data ? <CheckoutFormSkeleton /> : data?.status === 'checkout' ? <>
           <div className="checkout-price"><span>{formatPrice(offer.first_month_amount)}</span>{discounted && <del aria-label="Regular price $25">{formatPrice(offer.amount)}</del>}</div>
           {discounted ? <div className="checkout-discount">50% off your first month</div> : <p className="checkout-period">per month</p>}
           {data.client_secret && stripe ? <CheckoutElementsProvider key={data.session_id} stripe={stripe} options={options}>
