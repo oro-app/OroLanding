@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cents, hoodieSpots, puttyRequest, readPuttyOrder } from '../src/lib/putty.js'
+import { cents, clearPuttyDraft, hoodieSpots, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft } from '../src/lib/putty.js'
 
 test('all placements render before the API responds, without pretending they are available', () => {
   const spots = hoodieSpots(null)
@@ -32,4 +32,24 @@ test('backend conflict remains a conflict and never becomes a local claim', asyn
 
 test('server rendering does not require browser checkout storage', () => {
   assert.equal(readPuttyOrder(), null)
+})
+
+test('hoodie choices persist for the browser session until explicitly cleared', () => {
+  const values = new Map()
+  globalThis.window = {}
+  globalThis.sessionStorage = {
+    getItem: key => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, value),
+    removeItem: key => values.delete(key),
+  }
+  try {
+    const draft = { selected: { A1: '20.00', front: '500.00' }, email: 'oro@example.com', name: 'Oro', consent: true }
+    savePuttyDraft(draft)
+    assert.deepEqual(readPuttyDraft(), draft)
+    clearPuttyDraft()
+    assert.deepEqual(readPuttyDraft(), { selected: {}, email: '', name: '', consent: false })
+  } finally {
+    delete globalThis.window
+    delete globalThis.sessionStorage
+  }
 })

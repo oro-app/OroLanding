@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
 import { formatPrice, stripeAppearance } from '../../lib/checkout'
-import { cents, hoodieSpots, puttyRequest, readPuttyOrder, savePuttyOrder } from '../../lib/putty'
+import { cents, clearPuttyDraft, hoodieSpots, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft, savePuttyOrder } from '../../lib/putty'
 import { useTheme } from '../../context/ThemeContext'
 import HoodieViewer from './HoodieViewer'
 import PuttyPayment from './PuttyPayment'
@@ -11,10 +11,11 @@ import './Putty.css'
 
 export default function Putty() {
   const { theme } = useTheme()
+  const draft = useRef(readPuttyDraft()).current
   const [board, setBoard] = useState(null)
-  const [selected, setSelected] = useState({})
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
+  const [selected, setSelected] = useState(draft.selected)
+  const [email, setEmail] = useState(draft.email)
+  const [name, setName] = useState(draft.name)
   const [quote, setQuote] = useState(null)
   const [order, setOrder] = useState(null)
   const [orderId, setOrderId] = useState(null)
@@ -22,7 +23,7 @@ export default function Putty() {
   const [error, setError] = useState('')
   const [boardError, setBoardError] = useState('')
   const [now, setNow] = useState(Date.now)
-  const [consent, setConsent] = useState(false)
+  const [consent, setConsent] = useState(draft.consent)
   const boardRequest = useRef(0)
   const submitting = useRef(false)
   const mounted = useRef(true)
@@ -45,6 +46,7 @@ export default function Putty() {
     setOrder(data)
     setOrderId(data.order_id)
     savePuttyOrder(data.order_id)
+    if (data.status === 'paid') clearPuttyDraft()
     refresh()
   }, [refresh])
 
@@ -63,6 +65,10 @@ export default function Putty() {
     const timer = setInterval(() => refresh(controller.signal), 10000)
     return () => { controller.abort(); clearInterval(timer) }
   }, [refresh])
+
+  useEffect(() => {
+    savePuttyDraft({ selected, email, name, consent })
+  }, [selected, email, name, consent])
 
   useEffect(() => {
     if (!orderId || (order && order.status !== 'pending')) return
@@ -152,11 +158,17 @@ export default function Putty() {
   }
 
   function reset() {
+    const paid = order?.status === 'paid'
     savePuttyOrder(null)
     setOrderId(null)
     setOrder(null)
     setQuote(null)
-    setSelected({})
+    if (paid) {
+      setSelected({})
+      setEmail('')
+      setName('')
+      setConsent(false)
+    }
     setError('')
     refresh()
   }
@@ -201,11 +213,12 @@ export default function Putty() {
             {Object.entries(selected).map(([id, value]) => {
               const spot = spots.find(item => item.id === id)
               const label = id === 'front' ? 'Front left chest' : `Square ${id}`
+              const minimum = spot.minimum ?? cents(value) ?? 0
               return <div key={id} className="putty-bid-row">
                 <label htmlFor={`bid-${id}`}>{label}</label>
-                <div className="putty-price"><span aria-hidden="true">$</span><input id={`bid-${id}`} type="number" inputMode="decimal" min={spot.minimum / 100} step="0.01" required value={value}
-                  aria-label={`${label} price, minimum ${formatPrice(spot.minimum)}`} onChange={event => { setQuote(null); setSelected(old => ({ ...old, [id]: event.target.value })) }}
-                  onBlur={() => { if ((cents(value) ?? -1) < spot.minimum) setSelected(old => ({ ...old, [id]: (spot.minimum / 100).toFixed(2) })) }} /></div>
+                <div className="putty-price"><span aria-hidden="true">$</span><input id={`bid-${id}`} type="number" inputMode="decimal" min={minimum / 100} step="0.01" required value={value}
+                  aria-label={`${label} price, minimum ${formatPrice(minimum)}`} onChange={event => { setQuote(null); setSelected(old => ({ ...old, [id]: event.target.value })) }}
+                  onBlur={() => { if ((cents(value) ?? -1) < minimum) setSelected(old => ({ ...old, [id]: (minimum / 100).toFixed(2) })) }} /></div>
                 <button type="button" aria-label={`Remove ${label}`} onClick={() => toggle(spot)}><span aria-hidden="true">×</span></button>
               </div>
             })}

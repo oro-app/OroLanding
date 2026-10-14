@@ -46,3 +46,28 @@ export function savePuttyOrder(id) {
     else sessionStorage.removeItem('putty-order')
   } catch { /* Storage is optional; the server remains the source of truth. */ }
 }
+
+export function readPuttyDraft() {
+  if (typeof window === 'undefined') return { selected: {}, email: '', name: '', consent: false }
+  try {
+    const draft = JSON.parse(sessionStorage.getItem('putty-draft'))
+    if (!draft || typeof draft !== 'object') throw new Error()
+    return {
+      selected: Object.fromEntries(Object.entries(draft.selected || {}).filter(([id, value]) =>
+        (id === 'front' || /^[A-H][1-6]$/.test(id)) && typeof value === 'string' && value.length <= 12)),
+      email: typeof draft.email === 'string' ? draft.email.slice(0, 254) : '',
+      name: typeof draft.name === 'string' ? draft.name.slice(0, 60) : '',
+      consent: draft.consent === true,
+    }
+  } catch { return { selected: {}, email: '', name: '', consent: false } }
+}
+
+export function savePuttyDraft(draft) {
+  try { sessionStorage.setItem('putty-draft', JSON.stringify(draft)) }
+  catch { /* The form remains usable when session storage is unavailable. */ }
+}
+
+export function clearPuttyDraft() {
+  try { sessionStorage.removeItem('putty-draft') }
+  catch { /* The completed order is still authoritative. */ }
+}
