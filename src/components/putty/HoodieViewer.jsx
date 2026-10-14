@@ -3,14 +3,14 @@ import { formatPrice } from '../../lib/checkout'
 import front from '../../assets/blanks/front.webp'
 import back from '../../assets/blanks/back.webp'
 
-function Artwork({ side, spots, selected, locked, checking, onSelect }) {
+function Artwork({ side, spots, selected, locked, onSelect }) {
   return <div className="putty-artwork">
     <img src={side === 'back' ? back : front} alt={`Black hoodie, ${side} view`} width="800" height="1200" />
     <div className={`putty-grid putty-grid--${side}`}>
       {spots.filter(spot => side === 'front' ? spot.id === 'front' : spot.id !== 'front').map(spot => {
-        const content = <><span>{spot.id in selected ? '✓ ' : ''}{spot.id === 'front' ? 'left chest' : spot.id}</span><small>{checking === spot.id ? 'checking…' : spot.held ? 'held' : spot.name || '+'}</small></>
+        const content = <><span>{spot.id === 'front' ? 'left chest' : spot.id}</span><small>{spot.held ? 'held' : spot.name || '+'}</small></>
         return <button key={spot.id} type="button" className="putty-square" aria-pressed={spot.id in selected}
-            disabled={locked || Boolean(checking)}
+            disabled={locked || (!(spot.id in selected) && (spot.unknown || spot.held))}
             aria-label={`${spot.id === 'front' ? 'Front left chest' : spot.id}: ${spot.unknown ? 'availability not checked' : spot.name ? `${spot.name}, current bid ${formatPrice(spot.total)}` : 'Unclaimed'}${spot.minimum ? `, minimum ${formatPrice(spot.minimum)} USD` : ''}${spot.held ? ', payment in progress' : ''}`}
             onClick={() => onSelect(spot)}>{content}</button>
       })}
@@ -18,7 +18,7 @@ function Artwork({ side, spots, selected, locked, checking, onSelect }) {
   </div>
 }
 
-export default function HoodieViewer({ spots, selected, locked, checking, onSelect }) {
+export default function HoodieViewer({ spots, selected, locked, onSelect }) {
   const [side, setSide] = useState('back')
   const [zoom, setZoom] = useState(0)
   const canvas = useRef(null)
@@ -43,7 +43,7 @@ export default function HoodieViewer({ spots, selected, locked, checking, onSele
       </div>
       <div ref={viewport} className="putty-canvas-scroll" tabIndex={0} role="region" aria-label="Hoodie placements; scroll to explore the image">
         <div ref={canvas} className="putty-canvas" style={{ width: `${(1 + zoom) * 100}%` }}>
-          <Artwork side={side} spots={spots} selected={selected} locked={locked} checking={checking} onSelect={onSelect} />
+          <Artwork side={side} spots={spots} selected={selected} locked={locked} onSelect={onSelect} />
         </div>
       </div>
     </div>

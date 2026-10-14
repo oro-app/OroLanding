@@ -23,8 +23,6 @@ export default function Putty() {
   const [boardError, setBoardError] = useState('')
   const [now, setNow] = useState(Date.now)
   const [consent, setConsent] = useState(false)
-  const [checkingSpot, setCheckingSpot] = useState(null)
-  const selecting = useRef(false)
   const boardRequest = useRef(0)
   const submitting = useRef(false)
   const mounted = useRef(true)
@@ -39,7 +37,7 @@ export default function Putty() {
       if (!signal?.aborted && mounted.current && request === boardRequest.current) { setBoard(data); setBoardError('') }
       return data
     } catch (failure) {
-      if (!signal?.aborted && mounted.current && request === boardRequest.current) setBoardError('Live availability is unavailable. Please try selecting a square again shortly.')
+      if (!signal?.aborted && mounted.current && request === boardRequest.current) setBoardError('Live availability is unavailable. Retrying shortly.')
       return null
     }
   }, [])
@@ -89,30 +87,21 @@ export default function Putty() {
     return () => { controller.abort(); clearTimeout(timer) }
   }, [orderId, order?.status, acceptOrder])
 
-  const locked = busy || Boolean(orderId) || Boolean(checkingSpot)
+  const locked = busy || Boolean(orderId)
   const spots = hoodieSpots(board)
   const count = Object.keys(selected).length
   const seconds = order ? Math.max(0, Math.ceil((Date.parse(order.hold_until) - now) / 1000)) : 0
 
-  async function toggle(spot) {
-    if (locked || selecting.current) return
+  function toggle(spot) {
+    if (locked) return
     setQuote(null)
     if (spot.id in selected) {
       setSelected(previous => { const next = { ...previous }; delete next[spot.id]; return next })
       return
     }
-    selecting.current = true
-    setCheckingSpot(spot.id)
+    if (!board?.enabled || spot.unknown || spot.held) return
     setError('')
-    try {
-      const current = await refresh()
-      if (!mounted.current) return
-      if (!current) return
-      const fresh = current.spots.find(item => item.id === spot.id)
-      if (!current.enabled) { setError('Bidding is not open yet.'); return }
-      if (!fresh || fresh.held) { setError('This placement is held for another payment. Please choose another square or try again shortly.'); return }
-      setSelected(previous => ({ ...previous, [spot.id]: (fresh.minimum / 100).toFixed(2) }))
-    } finally { selecting.current = false; if (mounted.current) setCheckingSpot(null) }
+    setSelected(previous => ({ ...previous, [spot.id]: (spot.minimum / 100).toFixed(2) }))
   }
 
   async function review(event) {
@@ -177,8 +166,8 @@ export default function Putty() {
     </div>
     <div className="putty-layout">
       <section aria-label="Choose hoodie placements" className="putty-preview">
-        <HoodieViewer spots={spots} selected={selected} locked={locked} checking={checkingSpot} onSelect={toggle} />
-        <p role="status" className="putty-availability">{checkingSpot ? `Checking ${checkingSpot}…` : boardError || (!board ? 'Checking availability…' : !board.enabled ? 'Bidding is not open yet.' : '')}</p>
+        <HoodieViewer spots={spots} selected={selected} locked={locked || !board?.enabled} onSelect={toggle} />
+        <p role="status" className="putty-availability">{boardError || (!board ? 'Checking availability…' : !board.enabled ? 'Bidding is not open yet.' : '')}</p>
       </section>
       <section className="checkout-card putty-card" aria-labelledby="putty-bid-heading">
         <h2 id="putty-bid-heading">{order?.status === 'paid' ? 'You made your mark.' : 'Claim your space.'}</h2>
