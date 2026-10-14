@@ -59,7 +59,7 @@ export function validPuttyResponse(operation, data) {
         && (spot.image_group == null || typeof spot.image_group === 'string')
         && (spot.image_alt == null || typeof spot.image_alt === 'string'))
       && Array.isArray(data.leaderboard) && data.leaderboard.every(entry => entry
-        && typeof entry.name === 'string' && Number.isSafeInteger(entry.area) && entry.area > 0 && entry.area <= 49
+        && typeof entry.name === 'string' && Number.isSafeInteger(entry.area) && entry.area >= 0 && entry.area <= 49
         && (entry.total_paid == null || money(entry.total_paid))
         && (entry.url == null || Boolean(puttyPublicUrl(entry.url))))
   }
