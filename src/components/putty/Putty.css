@@ -1,0 +1,62 @@
+.putty-page { color: var(--oro-color-ink); --oro-color-border: var(--oro-color-muted); }
+.putty-header { justify-content: space-between; gap: 1rem; }
+.putty-header > span { color: var(--oro-color-muted); font-size: .875rem; }
+.putty-intro { padding: 3.5rem 0 2rem; }
+.putty-eyebrow { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--oro-color-muted); }
+.putty-intro h1 { font-family: Fraunces, Georgia, serif; font-weight: 400; font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.08; margin: .75rem 0 1.25rem; }
+.putty-intro h1 em { color: var(--oro-color-accent); }
+.putty-intro > p:last-child { line-height: 1.7; color: var(--oro-color-muted); }
+.putty-layout { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr); gap: 2rem; align-items: start; }
+.putty-preview { min-width: 0; }
+.putty-switch { display: flex; gap: .5rem; flex-wrap: wrap; }
+.putty-page button { min-height: 44px; min-width: 44px; cursor: pointer; }
+.putty-page button:disabled { cursor: not-allowed; }
+.putty-switch button, .putty-refresh button, .putty-order-actions button { padding: .65rem 1rem; border: 1px solid var(--oro-color-muted); border-radius: var(--oro-radius-pill); background: var(--oro-color-surface); color: var(--oro-color-ink); }
+.putty-switch button[aria-pressed="true"] { border: 2px solid var(--oro-color-ink); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.putty-page .putty-note { font-size: .875rem; line-height: 1.6; color: var(--oro-color-muted); }
+.putty-canvas-scroll { overflow-x: auto; border-radius: var(--oro-radius-card); background: var(--oro-color-soft); }
+.putty-canvas { position: relative; width: 100%; min-width: 680px; aspect-ratio: 2 / 3; }
+.putty-canvas > img { display: block; width: 100%; height: auto; }
+.putty-grid { position: absolute; display: grid; }
+.putty-grid--back { left: 27.5%; top: 35.8%; width: 45%; height: 36%; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); }
+.putty-grid--front { left: 57.5%; top: 37.5%; width: 15%; height: 6%; }
+.putty-page .putty-square { min-width: 44px; min-height: 44px; padding: 2px; border: 1px solid #fff; background: #252229; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.25; }
+.putty-square small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .625rem; }
+.putty-square[aria-pressed="true"] { background: #f1e7ff; color: #252229; border: 2px solid #252229; }
+.putty-square:disabled:not([aria-pressed="true"]) { border-style: dashed; }
+.putty-page :focus-visible { outline: 3px solid var(--oro-color-ink); outline-offset: 3px; }
+.putty-page .putty-square:focus-visible { position: relative; z-index: 1; outline: 3px solid #fff; box-shadow: 0 0 0 6px #252229; }
+.putty-refresh, .putty-order-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.putty-refresh label { display: flex; align-items: center; gap: .5rem; min-height: 44px; font-size: .875rem; }
+.putty-refresh input { width: 20px; height: 20px; accent-color: var(--oro-color-accent); }
+.putty-bids { border: 0; margin: 1.5rem 0 0; padding: 0; min-width: 0; }
+.putty-bids legend { font-size: .875rem; margin-bottom: .75rem; }
+.putty-bid-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(80px, 110px) 44px; align-items: center; gap: .5rem; margin-bottom: 1rem; }
+.putty-bid-row label { overflow-wrap: anywhere; }
+.putty-bid-row label small { display: block; color: var(--oro-color-muted); }
+.putty-bid-row > button { border: 1px solid var(--oro-color-muted); color: var(--oro-color-ink); border-radius: var(--oro-radius-field); background: var(--oro-color-surface); font-size: 1.5rem; }
+.putty-price { display: flex; align-items: center; gap: .25rem; padding-inline: .6rem; border: 1px solid var(--oro-color-muted); border-radius: var(--oro-radius-field); background: var(--oro-color-surface); }
+.putty-price input { width: 100%; min-width: 0; min-height: 44px; background: transparent; color: var(--oro-color-ink); border: 0; font-size: 1rem; }
+.putty-minimum { grid-column: 1 / -1; color: var(--oro-color-muted); }
+.putty-page .oro-input { border-color: var(--oro-color-muted); min-height: 48px; width: 100%; }
+.putty-page .oro-input::placeholder { color: var(--oro-color-muted); opacity: 1; }
+.putty-summary { margin-top: 1.5rem; padding-top: .5rem; border-top: 1px solid var(--oro-color-muted); }
+.putty-summary > p:not(.putty-note) { display: flex; justify-content: space-between; gap: 1rem; }
+.putty-hold { font-variant-numeric: tabular-nums; }
+.putty-page .checkout-error:empty { display: none; }
+.putty-page .checkout-button { white-space: normal; height: auto; }
+.putty-order-actions { margin-top: 1.5rem; }
+@media (max-width: 1000px) {
+  .putty-layout { grid-template-columns: 1fr; }
+  .putty-card { max-width: 680px; width: 100%; }
+}
+@media (max-width: 480px) {
+  .putty-header > span { max-width: 140px; }
+  .putty-intro { padding-top: 2rem; }
+  .putty-card { padding: 1rem; }
+}
+@media (forced-colors: active) {
+  .putty-page .putty-square { background: ButtonFace; color: ButtonText; border-color: ButtonText; }
+  .putty-page .putty-square[aria-pressed="true"] { border: 3px double Highlight; }
+  .putty-page :focus-visible { outline-color: Highlight; }
+}

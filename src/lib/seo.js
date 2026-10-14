@@ -20,6 +20,11 @@ const ORGANIZATION_ID = `${SITE_URL}/#organization`
 const WEBSITE_ID = `${SITE_URL}/#website`
 
 export const ROUTE_SEO = {
+  putty: {
+    path: '/putty', title: 'Putty — claim a piece of the hoodie | Oro',
+    description: 'Choose your square on the Putty hoodie. Back placements start at $10 USD; the front left chest starts at $500 USD.',
+    h1: 'Make your mark.', noindex: true,
+  },
   checkout: {
     path: '/checkout',
     title: 'Meet your personal stylist - Oro',

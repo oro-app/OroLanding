@@ -3,6 +3,14 @@
   "outputDirectory": "dist",
   "headers": [
     {
+      "source": "/putty",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    },
+    {
       "source": "/checkout(/.*)?",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" },
@@ -98,6 +106,7 @@
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
   "rewrites": [
+    { "source": "/putty", "destination": "/putty/index.html" },
     { "source": "/beta/career", "destination": "/beta/career/index.html" },
     { "source": "/beta/dating", "destination": "/beta/dating/index.html" },
     { "source": "/beta", "destination": "/beta/index.html" },

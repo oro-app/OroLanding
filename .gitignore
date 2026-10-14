@@ -1,4 +1,5 @@
 node_modules
+.putty-backend/
 dist
 .DS_Store
 *.local
