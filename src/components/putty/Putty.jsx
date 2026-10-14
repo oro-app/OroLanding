@@ -103,7 +103,7 @@ export default function Putty() {
   const spots = hoodieSpots(board)
   const count = Object.keys(selected).length
   const seconds = order ? Math.max(0, Math.ceil((Date.parse(order.hold_until) - now) / 1000)) : 0
-  const bidSeconds = now == null ? null : Math.max(0, Math.ceil((Date.parse('2026-10-14T13:50:00-05:00') - now) / 1000))
+  const bidSeconds = now == null ? null : Math.max(0, Math.ceil((Date.parse('2026-10-14T13:50:00-04:00') - now) / 1000))
   const bidTime = bidSeconds == null ? '--:--:--' : [Math.floor(bidSeconds / 3600), Math.floor(bidSeconds % 3600 / 60), bidSeconds % 60]
     .map(value => String(value).padStart(2, '0')).join(':')
   const checkoutUrl = puttyCheckoutUrl(order?.checkout_url)
@@ -176,7 +176,7 @@ export default function Putty() {
     <div className="putty-intro">
       <div className="putty-intro-heading">
         <h1>Make your <em>mark.</em></h1>
-        <p className="putty-countdown" role="timer" aria-label={bidSeconds === 0 ? 'Bidding closed.' : bidSeconds == null ? 'Bidding ends at 1:50 p.m. EST.' : `${bidTime} left to bid. Bidding ends at 1:50 p.m. EST.`}>
+        <p className="putty-countdown" role="timer" aria-label={bidSeconds === 0 ? 'Bidding closed.' : bidSeconds == null ? 'Bidding ends at 1:50 p.m. Eastern time.' : `${bidTime} left to bid. Bidding ends at 1:50 p.m. Eastern time.`}>
           <span>{bidSeconds === 0 ? 'Bidding closed' : bidTime}</span>
           {bidSeconds !== 0 && <small>left to bid</small>}
         </p>
