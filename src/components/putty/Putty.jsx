@@ -173,7 +173,7 @@ export default function Putty() {
   return <div className="checkout-page putty-page halo-container">
     <div className="putty-intro">
       <h1>Make your <em>mark.</em></h1>
-      <p>Your name, on our hoodie. Back squares from $10. Front placement from $500.</p>
+      <p>Put whatever you want on the hoodie. Someone took your spot? Outbid them.</p>
     </div>
     <div className="putty-layout">
       <section aria-label="Choose hoodie placements" className="putty-preview">
