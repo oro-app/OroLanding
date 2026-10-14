@@ -1,0 +1,22 @@
+test/putty.test.js
+  s_8f2552b47d89dd::t_969d4d28d3986a 26-43
+src/lib/putty.js
+  s_8f2552b47d89dd::t_5b17ab1944dc26 37
+  s_8f2552b47d89dd::t_969d4d28d3986a 17-18,29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d621c6189f2d02535845040e6c8725c0f9390635",
+  "prompts": {},
+  "sessions": {
+    "s_8f2552b47d89dd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13886-17ac-76b0-a4e9-1197fe7e52e1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
