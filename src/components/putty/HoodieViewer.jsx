@@ -20,7 +20,7 @@ function Artwork({ side, spots, selected, locked, checking, onSelect }) {
 
 export default function HoodieViewer({ spots, selected, locked, checking, onSelect }) {
   const [side, setSide] = useState('back')
-  const [zoom, setZoom] = useState(1)
+  const [zoom, setZoom] = useState(0)
   const canvas = useRef(null)
   const viewport = useRef(null)
 
@@ -30,19 +30,19 @@ export default function HoodieViewer({ spots, selected, locked, checking, onSele
 
   return <div className="putty-gallery">
     <div className="putty-thumbnails" role="group" aria-label="Hoodie view">
-      {[['front', front], ['back', back]].map(([view, image]) => <button key={view} type="button" aria-pressed={side === view}
+      {[['front', front], ['back', back]].map(([view, image]) => <button key={view} type="button" aria-label={`Show hoodie ${view}`} aria-pressed={side === view}
         onClick={() => setSide(view)}>
-        <img src={image} alt="" width="800" height="1200" /><span>{view}</span>
+        <img src={image} alt="" width="800" height="1200" />
       </button>)}
     </div>
     <div className="putty-viewer">
       <div className="putty-canvas-tools" role="group" aria-label="Image viewing tools">
-        <button type="button" aria-label="Shrink hoodie image" disabled={zoom === 1} onClick={() => setZoom(value => Math.max(1, value - .25))}>−</button>
+        <button type="button" aria-label="Shrink hoodie image" disabled={zoom === 0} onClick={() => setZoom(value => Math.max(0, value - .25))}>−</button>
         <span>{Math.round(zoom * 100)}%</span>
         <button type="button" aria-label="Enlarge hoodie image" disabled={zoom === 2} onClick={() => setZoom(value => Math.min(2, value + .25))}>+</button>
       </div>
       <div ref={viewport} className="putty-canvas-scroll" tabIndex={0} role="region" aria-label="Hoodie placements; scroll to explore the image">
-        <div ref={canvas} className="putty-canvas" style={{ width: `${zoom * 100}%`, minWidth: 680 * zoom }}>
+        <div ref={canvas} className="putty-canvas" style={{ width: `${(1 + zoom) * 100}%` }}>
           <Artwork side={side} spots={spots} selected={selected} locked={locked} checking={checking} onSelect={onSelect} />
         </div>
       </div>

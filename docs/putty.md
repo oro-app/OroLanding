@@ -26,9 +26,10 @@ validated by the backend before quote or checkout creation.
 
 The supplied 800 × 1200 blanks use percentage overlays: back at left 27.5%,
 top 35.8%, width 45%, height 36%; front at left 57.5%, top 37.5%, width 15%,
-height 6%. The grid stays six columns by eight rows. The preview has a 680px
-minimum width to preserve 44px targets, and scrolls horizontally on narrow
-screens. Names are truncated inside squares but available in accessible labels
+height 6%. The grid stays six columns by eight rows. At the default 0% added
+zoom, the preview fits the canvas width on a white surface. Enlarge/shrink
+controls adjust magnification. Thumbnails have accessible labels without visible
+front/back captions. Names are truncated inside squares but available in accessible labels
 and selected-square details. Selection survives switching front/back views.
 
 Order UUIDs are private checkout capabilities, saved only in session storage

@@ -10,8 +10,7 @@
 .putty-thumbnails button { padding: .25rem; border: 1px solid var(--oro-color-muted); border-radius: .75rem; background: var(--oro-color-surface); color: var(--oro-color-ink); }
 .putty-thumbnails button[aria-pressed="true"] { border: 2px solid var(--oro-color-accent); text-decoration: underline; text-underline-offset: 3px; }
 .putty-thumbnails img { width: 100%; height: 76px; object-fit: cover; }
-.putty-thumbnails span { display: block; padding: .25rem 0; font-size: .75rem; }
-.putty-viewer { position: relative; min-width: 0; border-radius: 1rem; background: var(--oro-color-soft); overflow: hidden; }
+.putty-viewer { position: relative; min-width: 0; border-radius: 1rem; background: var(--oro-color-surface); overflow: hidden; }
 .putty-canvas-tools { display: flex; align-items: center; justify-content: flex-end; gap: .25rem; padding: .5rem; }
 .putty-canvas-tools button { border: 1px solid var(--oro-color-muted); background: var(--oro-color-surface); color: var(--oro-color-ink); border-radius: 50%; font-size: 1.5rem; display: grid; place-items: center; }
 .putty-canvas-tools > span { min-width: 3rem; text-align: center; font-size: .75rem; font-variant-numeric: tabular-nums; }
@@ -20,13 +19,13 @@
 .putty-order-actions button { padding: .65rem 1rem; border: 1px solid var(--oro-color-muted); border-radius: var(--oro-radius-pill); background: var(--oro-color-surface); color: var(--oro-color-ink); }
 .putty-page .putty-note { font-size: .875rem; line-height: 1.6; color: var(--oro-color-muted); }
 .putty-canvas-scroll { overflow: auto; max-height: 760px; }
-.putty-canvas { position: relative; min-width: 680px; aspect-ratio: 800 / 850; overflow: hidden; }
+.putty-canvas { position: relative; aspect-ratio: 800 / 850; overflow: hidden; }
 .putty-artwork { position: absolute; top: -20.588235%; width: 100%; aspect-ratio: 2 / 3; }
 .putty-artwork > img { display: block; width: 100%; height: auto; }
 .putty-grid { position: absolute; display: grid; }
 .putty-grid--back { left: 27.5%; top: 35.8%; width: 45%; height: 36%; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); }
 .putty-grid--front { left: 57.5%; top: 37.5%; width: 15%; height: 6%; }
-.putty-page .putty-square { min-width: 44px; min-height: 44px; padding: 2px; border: 1px solid #fff; background: #252229; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.25; }
+.putty-page .putty-square { min-width: 0; min-height: 0; padding: 2px; border: 1px solid #fff; background: #252229; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.25; }
 .putty-square small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .625rem; }
 .putty-square[aria-pressed="true"] { background: #f1e7ff; color: #252229; border: 2px solid #252229; }
 .putty-square:disabled:not([aria-pressed="true"]) { border-style: dashed; }
