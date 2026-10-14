@@ -163,10 +163,8 @@ export default function Putty() {
         <p role="status" className="putty-availability">{boardError || (!board ? 'Checking availability…' : !board.enabled ? 'Bidding is not open yet.' : '')}</p>
       </section>
       <section className="putty-leaderboard" aria-labelledby="putty-leaderboard-heading">
-        <p className="putty-leaderboard-kicker">the ones to beat</p>
         <h2 id="putty-leaderboard-heading">Leaderboard</h2>
-        <p>Who has claimed the most space on the hoodie.</p>
-        <p className="putty-leaderboard-perk"><strong>Top three get the spotlight.</strong> We will highlight your name here, add a link, and work with you on the details.</p>
+        <p>These are the people who have claimed the most squares and put the most money toward the hoodie.</p>
         {Array.isArray(board?.leaderboard) ? board.leaderboard.length ? <div className="putty-leaderboard-table" role="region" aria-labelledby="putty-leaderboard-heading" tabIndex="0">
           <table>
             <caption>Current ranking by hoodie placements claimed</caption>
