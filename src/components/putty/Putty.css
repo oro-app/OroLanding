@@ -21,7 +21,8 @@
 .putty-canvas-scroll { overflow: auto; max-height: 760px; }
 .putty-canvas { position: relative; aspect-ratio: 800 / 850; overflow: hidden; }
 .putty-artwork { position: absolute; top: -20.588235%; width: 100%; aspect-ratio: 2 / 3; }
-.putty-artwork > img { display: block; width: 100%; height: auto; }
+.putty-artwork > img { display: block; width: 100%; height: auto; visibility: hidden; }
+.putty-artwork[data-ready='true'] > img { visibility: visible; }
 .putty-axis { position: absolute; color: #fff; display: grid; place-items: center; font-size: .6875rem; font-weight: 700; line-height: 1; text-shadow: 0 1px 2px #252229; }
 .putty-axis--x { left: 27.5%; top: 33.5%; width: 45%; grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .putty-axis--y { left: 24.5%; top: 35.8%; width: 2.5%; height: 36%; grid-template-rows: repeat(8, minmax(0, 1fr)); }
