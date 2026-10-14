@@ -3,12 +3,15 @@
 .putty-intro h1 { font-family: Fraunces, Georgia, serif; font-weight: 400; font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.08; margin: .75rem 0 1.25rem; }
 .putty-intro h1 em { color: var(--oro-color-accent); }
 .putty-intro > p:last-child { line-height: 1.7; color: var(--oro-color-muted); }
-.putty-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(340px, 1fr); gap: 2.5rem; align-items: start; }
+.putty-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(340px, 1fr); gap: 3rem; align-items: start; }
 .putty-preview { min-width: 0; }
-.putty-view-modes { display: flex; gap: .5rem; margin-bottom: 1rem; }
-.putty-view-modes button { flex: 1; padding: .65rem 1rem; border: 1px solid var(--oro-color-muted); border-radius: var(--oro-radius-pill); background: var(--oro-color-surface); color: var(--oro-color-ink); }
+.putty-view-modes { display: inline-flex; align-items: center; margin-bottom: 1rem; }
+.putty-view-modes button { padding: .5rem .875rem; border: 1px solid var(--oro-color-muted); border-radius: 0; background: var(--oro-color-surface); color: var(--oro-color-ink); font-size: .875rem; }
+.putty-view-modes button:first-child { border-radius: var(--oro-radius-pill) 0 0 var(--oro-radius-pill); }
+.putty-view-modes button:last-child { margin-inline-start: -1px; border-radius: 0 var(--oro-radius-pill) var(--oro-radius-pill) 0; }
+.putty-view-modes button:focus-visible { position: relative; z-index: 1; }
 .putty-view-modes button[aria-pressed="true"] { border-color: var(--oro-color-ink); background: var(--oro-color-ink); color: var(--oro-color-surface); font-weight: 700; }
-.putty-gallery { display: grid; grid-template-columns: 60px minmax(0, 1fr); gap: .75rem; max-width: 680px; margin-inline: auto; }
+.putty-gallery { display: grid; grid-template-columns: 60px minmax(0, 1fr); gap: .75rem; max-width: 640px; margin-inline: auto; }
 .putty-thumbnails { display: flex; flex-direction: column; gap: .5rem; }
 .putty-thumbnails button { padding: .25rem; border: 1px solid var(--oro-color-muted); border-radius: .75rem; background: var(--oro-color-surface); color: var(--oro-color-ink); }
 .putty-thumbnails button[aria-pressed="true"] { background-color: var(--oro-color-soft); }
