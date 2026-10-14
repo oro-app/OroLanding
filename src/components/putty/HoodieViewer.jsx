@@ -28,7 +28,7 @@ function Artwork({ side, spots, selected, locked, onSelect, ready, onReady }) {
 export default function HoodieViewer({ spots, selected, locked, onSelect }) {
   const [side, setSide] = useState('back')
   const [zoom, setZoom] = useState(0)
-  const [loadedSide, setLoadedSide] = useState(null)
+  const [loadedSide, setLoadedSide] = useState('back')
   const canvas = useRef(null)
   const viewport = useRef(null)
 
