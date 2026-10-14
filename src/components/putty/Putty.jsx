@@ -238,7 +238,6 @@ export default function Putty() {
                 <div className="putty-price"><span aria-hidden="true">$</span><input id={`bid-${id}`} type="number" inputMode="decimal" min={minimum / 100} step="0.01" required value={value}
                   aria-label={`${label} price, minimum ${formatPrice(minimum)}`} onChange={event => { setQuote(null); setSelected(old => ({ ...old, [id]: event.target.value })) }}
                   onBlur={() => { if ((cents(value) ?? -1) < minimum) setSelected(old => ({ ...old, [id]: (minimum / 100).toFixed(2) })) }} /></div>
-                <button type="button" aria-label={`Remove ${label}`} onClick={() => toggle(spot)}><span aria-hidden="true">×</span></button>
               </div>
             })}
           </fieldset>

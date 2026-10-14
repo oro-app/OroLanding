@@ -40,12 +40,11 @@
 .putty-card { width: min(100%, 760px); margin: 3rem auto; border: 0; padding-top: .5rem; background: transparent; }
 .putty-bids { border: 0; margin: 1.5rem 0; padding: 0; min-width: 0; }
 .putty-bids legend { font-size: .875rem; margin-bottom: .75rem; }
-.putty-bid-header, .putty-bid-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(90px, 120px) 44px; align-items: center; column-gap: .5rem; }
+.putty-bid-header, .putty-bid-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(90px, 120px); align-items: center; column-gap: .5rem; }
 .putty-bid-header { padding: 0 .5rem .4rem; color: var(--oro-color-muted); font-size: .75rem; }
 .putty-bid-row { min-height: 52px; padding: .25rem .5rem; border-top: 1px solid var(--oro-color-muted); }
 .putty-bid-row:last-child { border-bottom: 1px solid var(--oro-color-muted); }
 .putty-bid-row label { overflow-wrap: anywhere; }
-.putty-bid-row > button { border: 0; color: var(--oro-color-ink); background: transparent; font-size: 1rem; }
 .putty-price { display: flex; align-items: center; gap: .2rem; padding-inline: .5rem; border: 1px solid var(--oro-color-muted); border-radius: var(--oro-radius-field); background: var(--oro-color-surface); }
 .putty-price input { width: 100%; min-width: 0; min-height: 40px; background: transparent; color: var(--oro-color-ink); border: 0; font-size: .875rem; }
 .putty-page .oro-input { border-color: var(--oro-color-muted); min-height: 48px; width: 100%; }
