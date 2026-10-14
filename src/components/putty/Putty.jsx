@@ -16,7 +16,6 @@ export default function Putty() {
   const [selected, setSelected] = useState(draft.selected)
   const [email, setEmail] = useState(draft.email)
   const [name, setName] = useState(draft.name)
-  const [quote, setQuote] = useState(null)
   const [order, setOrder] = useState(null)
   const [orderId, setOrderId] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -101,7 +100,6 @@ export default function Putty() {
 
   function toggle(spot) {
     if (locked) return
-    setQuote(null)
     if (spot.id in selected) {
       setSelected(previous => { const next = { ...previous }; delete next[spot.id]; return next })
       return
@@ -111,43 +109,30 @@ export default function Putty() {
     setSelected(previous => ({ ...previous, [spot.id]: (spot.minimum / 100).toFixed(2) }))
   }
 
-  async function review(event) {
+  async function begin(event) {
     event.preventDefault()
     if (submitting.current || !count || !consent || locked) return
     submitting.current = true
     setBusy(true)
     setError('')
     const items = Object.entries(selected).map(([spot_id, value]) => ({ spot_id, total: cents(value) }))
+    let id
     try {
       if (items.some(item => item.total === null)) throw new Error('Enter a price with no more than two decimal places for each square.')
       const lowBid = items.find(item => item.total < spots.find(spot => spot.id === item.spot_id)?.minimum)
       if (lowBid) throw new Error(`${lowBid.spot_id === 'front' ? 'Front left chest' : `Square ${lowBid.spot_id}`} must meet its current minimum price.`)
-      const data = await puttyRequest('quote', { email, display_name: name, items, terms_accepted: consent })
-      setQuote(data)
-    } catch (failure) { setError(failure.message); refresh() }
-    finally { submitting.current = false; setBusy(false) }
-  }
-
-  async function begin() {
-    if (submitting.current || !consent || !quote || locked) return
-    submitting.current = true
-    setBusy(true)
-    setError('')
-    const id = crypto.randomUUID()
-    const request = { order_id: id, email, display_name: name, terms_accepted: consent,
-      items: quote.items.map(({ spot_id, total }) => ({ spot_id, total })) }
-    savePuttyOrder(id)
-    try {
-      const data = await puttyRequest('checkout', request)
+      id = crypto.randomUUID()
+      const data = await puttyRequest('checkout', { order_id: id, email, display_name: name, terms_accepted: consent, items })
       const url = puttyCheckoutUrl(data.checkout_url)
       acceptOrder(data)
       if (url) window.location.assign(url)
       else if (!data.client_secret) throw new Error('Stripe checkout is unavailable. Please try again.')
     } catch (failure) {
       setError(failure.message)
+      if (!id) { refresh(); return }
       try { acceptOrder(await puttyRequest('status', { order_id: id })) }
       catch (statusFailure) {
-        if (statusFailure.status === 404) { savePuttyOrder(null); setQuote(null); refresh() }
+        if (statusFailure.status === 404) { savePuttyOrder(null); refresh() }
         else setOrderId(id)
       }
     } finally { submitting.current = false; setBusy(false) }
@@ -166,7 +151,6 @@ export default function Putty() {
     savePuttyOrder(null)
     setOrderId(null)
     setOrder(null)
-    setQuote(null)
     if (paid) {
       setSelected({})
       setEmail('')
@@ -229,7 +213,7 @@ export default function Putty() {
               <button onClick={() => check(true)} disabled={busy}>Cancel hold</button>
             </div>
           </>}
-        </> : <form onSubmit={review}>
+        </> : <form onSubmit={begin}>
           <p role="status">{count ? `${count} ${count === 1 ? 'placement' : 'placements'} selected` : 'Select a square on the hoodie to begin.'}</p>
           <fieldset disabled={locked} className="putty-bids">
             <legend>Your price</legend>
@@ -241,30 +225,26 @@ export default function Putty() {
               return <div key={id} className="putty-bid-row">
                 <label htmlFor={`bid-${id}`}>{label}</label>
                 <div className="putty-price"><span aria-hidden="true">$</span><input id={`bid-${id}`} type="number" inputMode="decimal" min={minimum / 100} step="0.01" required value={value}
-                  aria-label={`${label} price, minimum ${formatPrice(minimum)}`} onChange={event => { setQuote(null); setSelected(old => ({ ...old, [id]: event.target.value })) }}
+                  aria-label={`${label} price, minimum ${formatPrice(minimum)}`} onChange={event => setSelected(old => ({ ...old, [id]: event.target.value }))}
                   onBlur={() => { if ((cents(value) ?? -1) < minimum) setSelected(old => ({ ...old, [id]: (minimum / 100).toFixed(2) })) }} /></div>
               </div>
             })}
           </fieldset>
           <label className="checkout-label" htmlFor="putty-email">Email</label>
           <input className="oro-input" id="putty-email" type="email" autoComplete="email" maxLength={254} required disabled={locked}
-            value={email} onChange={event => { setEmail(event.target.value); setQuote(null) }} aria-describedby="putty-credit-note" />
+            value={email} onChange={event => setEmail(event.target.value)} aria-describedby="putty-credit-note" />
           <p className="putty-note" id="putty-credit-note">Use the same email to apply previous payments.</p>
           <label className="checkout-label" htmlFor="putty-name">Display name <span>(optional)</span></label>
           <input className="oro-input" id="putty-name" autoComplete="nickname" maxLength={60} disabled={locked} value={name}
-            onChange={event => { setName(event.target.value); setQuote(null) }} placeholder="Your name on the hoodie grid" aria-describedby="putty-name-note" />
+            onChange={event => setName(event.target.value)} placeholder="Your name on the hoodie grid" aria-describedby="putty-name-note" />
           <p className="putty-note" id="putty-name-note">Leave blank to show “Anonymous”.</p>
           <p className="putty-note">All payments are final. No refunds or returns.</p>
           <label className="putty-consent">
-            <input type="checkbox" required checked={consent} disabled={locked} onChange={event => { setConsent(event.target.checked); setQuote(null) }} />
+            <input type="checkbox" required checked={consent} disabled={locked} onChange={event => setConsent(event.target.checked)} />
             <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">terms</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</span>
           </label>
-          {quote ? <div className="putty-summary">
-            <p>Previous payments applied <strong>{formatPrice(quote.items.reduce((sum, item) => sum + item.credit, 0))}</strong></p>
-            <p>Due now <strong>{formatPrice(quote.amount)} USD</strong></p>
-            <button type="button" className="oro-button oro-button--primary checkout-button" onClick={begin} disabled={locked || !consent}>Continue to payment ↗</button>
-            <p className="putty-note">We’ll hold your squares for two minutes.</p>
-          </div> : <button type="submit" className="oro-button oro-button--primary checkout-button" disabled={locked || !count || !board?.enabled}>{busy ? 'Checking your bid…' : 'Review my bid ↗'}</button>}
+          <button type="submit" className="oro-button oro-button--primary checkout-button" disabled={locked || !count || !board?.enabled}>{busy ? 'Opening Stripe checkout…' : 'Continue to payment ↗'}</button>
+          <p className="putty-note">We’ll hold your squares for three minutes while you pay.</p>
         </form>}
     </section>
   </div>

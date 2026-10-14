@@ -49,8 +49,6 @@
 .putty-price input { width: 100%; min-width: 0; min-height: 40px; background: transparent; color: var(--oro-color-ink); border: 0; font-size: .875rem; }
 .putty-page .oro-input { border-color: var(--oro-color-muted); min-height: 48px; width: 100%; }
 .putty-page .oro-input::placeholder { color: var(--oro-color-muted); opacity: 1; }
-.putty-summary { margin-top: 1.5rem; padding-top: .5rem; border-top: 1px solid var(--oro-color-muted); }
-.putty-summary > p:not(.putty-note) { display: flex; justify-content: space-between; gap: 1rem; }
 .putty-hold { font-variant-numeric: tabular-nums; }
 .putty-page .checkout-error:empty { display: none; }
 .putty-page .checkout-button { white-space: normal; height: auto; }

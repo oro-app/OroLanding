@@ -6,9 +6,10 @@ subscription prices are not reused: Putty is a one-time placement bid.
 The form requires email, bid totals, and terms/privacy acceptance. Display name is optional. No
 phone, email verification, account signup, artwork, or file upload is required.
 An omitted name appears as Anonymous. Prices are USD. Each input is the desired
-**cumulative total for that square**, not an additional payment. Review shows
-the backend's prior-payment credit and the amount due before the one-minute
-hold starts. Previously paid contributions remain after someone is outbid.
+**cumulative total for that square**, not an additional payment. Submitting
+the form starts a three-minute hold and opens Stripe Checkout, where the final
+amount is shown before payment. Previously paid contributions remain after
+someone is outbid.
 
 Set `VITE_ORO_API_URL` to the matching backend (default:
 `https://api.buildingoro.ca`). The accompanying backend branch is
@@ -20,8 +21,8 @@ always shows the placement grid with unknown availability, and cannot accept a l
 The old `/putty` URL redirects to `/merch`. API requests use `/merch/*`.
 The existing site navigation is reused. Front/back thumbnails sit to the left
 of the canvas, with enlarge/shrink controls. Availability polls every ten seconds and is checked again when
-selecting a square. Terms/privacy acceptance is required before bid review and
-validated by the backend before quote or checkout creation.
+selecting a square. Terms/privacy acceptance is required and validated by the
+backend before checkout creation.
 
 The supplied 800 × 1200 blanks use percentage overlays: back at left 27.5%,
 top 35.8%, width 45%, height 36%; front at left 57.5%, top 37.5%, width 15%,
