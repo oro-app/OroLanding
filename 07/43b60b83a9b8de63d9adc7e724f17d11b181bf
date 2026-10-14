@@ -1,0 +1,44 @@
+src/components/home/HomeChrome.jsx
+  s_8252b58d803c95::t_ef2b6d81204815 11-12,15
+e2e/checkout.spec.js
+  s_8252b58d803c95::t_cc4c2efbda2bc7 144-146
+e2e/newsletter.spec.js
+  s_8252b58d803c95::t_aa20799a0dad1f 36
+e2e/meet-oro.spec.js
+  s_8252b58d803c95::t_aa20799a0dad1f 1-6,8-28,32-40,42-58,60-61,64-73,75-105,108
+  s_8252b58d803c95::t_6d11c1e663474d 106-107
+  s_8252b58d803c95::t_08164ffb88e34b 29-31,59,62-63
+  s_8252b58d803c95::t_447b125b48db92 7,41,74
+src/lib/checkout.js
+  s_8252b58d803c95::t_ef2b6d81204815 2,53,56
+e2e/home.spec.js
+  s_8252b58d803c95::t_aa20799a0dad1f 17,20,22
+src/App.jsx
+  s_8252b58d803c95::t_ef2b6d81204815 29,35,78,160,166-167
+src/lib/seo.js
+  s_8252b58d803c95::t_ef2b6d81204815 23-29,209
+src/components/meet-oro/MeetOro.css
+  s_8252b58d803c95::t_1e1c0919865617 1-55
+e2e/beta-signup-routing.spec.js
+  s_8252b58d803c95::t_aa20799a0dad1f 3,8,10,18,21
+CLAUDE.md
+  s_8252b58d803c95::t_28c126436c234c 81
+src/components/meet-oro/MeetOro.jsx
+  s_8252b58d803c95::t_c1245d75f5e123 1-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0743b60b83a9b8de63d9adc7e724f17d11b181bf",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
