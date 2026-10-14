@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyPriceHue, puttyRequest, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
+import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyPriceHue, puttyPublicUrl, puttyRequest, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
 
 test('all placements render before the API responds, without pretending they are available', () => {
   const spots = hoodieSpots(null)
@@ -10,8 +10,9 @@ test('all placements render before the API responds, without pretending they are
   assert.equal(spots[1].id, 'A1')
   assert.equal(spots[48].id, 'H6')
   assert.ok(spots.every(spot => spot.unknown && spot.minimum === undefined))
-  const live = hoodieSpots({ spots: [{ id: 'A1', name: 'Alex', total: 2000, minimum: 2001, held: true }] })
+  const live = hoodieSpots({ spots: [{ id: 'A1', name: 'Alex', total: 1000, minimum: 1100, held: true }] })
   assert.equal(live[1].name, 'Alex')
+  assert.equal(live[1].minimum, 1100)
   assert.equal(live[1].held, true)
   assert.equal(live[2].unknown, true)
 })
@@ -27,7 +28,7 @@ test('a refreshed board removes held choices and raises stale bids to the latest
   const selected = refreshPuttySelection({ A1: '10.00', A2: '20.00', A3: '30.00' }, [
     { id: 'A1', minimum: 1250, held: false },
     { id: 'A2', minimum: 1000, held: false },
-    { id: 'A3', minimum: 3001, held: true },
+    { id: 'A3', minimum: 3100, held: true },
   ])
   assert.deepEqual(selected, { A1: '12.50', A2: '20.00' })
 })
@@ -62,14 +63,20 @@ test('merch API responses are validated before the checkout trusts them', async 
 
 test('board responses validate placement ids from the board contract', () => {
   const spots = hoodieSpots(null).map(({ id }) => ({ id, name: null, total: 0, minimum: id === 'front' ? 50000 : 1000, held: false }))
-  const board = { currency: 'usd', enabled: true, leaderboard: [{ name: 'Oro', area: 1 }], spots }
+  const board = { currency: 'usd', enabled: true, leaderboard: [{ name: 'Oro', area: 1, total_paid: 1000, url: 'https://example.com' }], spots }
 
   assert.equal(validPuttyResponse('board', board), true)
   assert.equal(validPuttyResponse('board', { ...board, leaderboard: [{ name: 'Oro', area: 1, total_paid: 1000 }] }), true)
   for (const total_paid of [-1, '1000', 1.5]) {
     assert.equal(validPuttyResponse('board', { ...board, leaderboard: [{ name: 'Oro', area: 1, total_paid }] }), false)
   }
+  assert.equal(validPuttyResponse('board', { ...board, leaderboard: [{ ...board.leaderboard[0], url: 'javascript:alert(1)' }] }), false)
   assert.equal(validPuttyResponse('board', { ...board, spots: spots.map(spot => ({ ...spot, spot_id: spot.id, id: undefined })) }), false)
+})
+
+test('public merch links only accept HTTPS URLs', () => {
+  assert.equal(puttyPublicUrl('https://example.com/image.png'), 'https://example.com/image.png')
+  assert.equal(puttyPublicUrl('javascript:alert(1)'), '')
 })
 
 test('merch checkout only follows Stripe hosted payment URLs', () => {

@@ -28,6 +28,14 @@ const SPOT_ID = /^(?:front|[A-H][1-6])$/
 const ORDER_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 const money = value => Number.isSafeInteger(value) && value >= 0 && value <= 99999999
 
+export function puttyPublicUrl(value) {
+  try {
+    const url = new URL(value)
+    if (url.protocol === 'https:') return url.href
+  } catch {}
+  return ''
+}
+
 function validItem(item) {
   return item && SPOT_ID.test(item.spot_id) && money(item.total)
     && (item.minimum === undefined || money(item.minimum))
@@ -41,10 +49,14 @@ export function validPuttyResponse(operation, data) {
     return typeof data.enabled === 'boolean' && Array.isArray(data.spots)
       && data.spots.length === 49 && new Set(data.spots.map(spot => spot.id)).size === 49
       && data.spots.every(spot => spot && SPOT_ID.test(spot.id) && money(spot.total) && money(spot.minimum) && typeof spot.held === 'boolean'
-        && (spot.name == null || typeof spot.name === 'string'))
+        && (spot.name == null || typeof spot.name === 'string')
+        && (spot.image_url == null || Boolean(puttyPublicUrl(spot.image_url)))
+        && (spot.image_group == null || typeof spot.image_group === 'string')
+        && (spot.image_alt == null || typeof spot.image_alt === 'string'))
       && Array.isArray(data.leaderboard) && data.leaderboard.every(entry => entry
         && typeof entry.name === 'string' && Number.isSafeInteger(entry.area) && entry.area > 0 && entry.area <= 49
-        && (entry.total_paid == null || (Number.isSafeInteger(entry.total_paid) && entry.total_paid >= 0)))
+        && (entry.total_paid == null || money(entry.total_paid))
+        && (entry.url == null || Boolean(puttyPublicUrl(entry.url))))
   }
   return ['checkout', 'status', 'cancel'].includes(operation) && ORDER_ID.test(data.order_id || '')
     && ['pending', 'paid', 'expired'].includes(data.status) && money(data.amount)

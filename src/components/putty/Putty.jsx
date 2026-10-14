@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { formatPrice } from '../../lib/checkout'
-import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyRequest, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, savePuttyOrder } from '../../lib/putty'
+import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyPublicUrl, puttyRequest, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, savePuttyOrder } from '../../lib/putty'
 import HoodieViewer from './HoodieViewer'
 import '../checkout/Checkout.css'
 import './Putty.css'
@@ -189,14 +189,14 @@ export default function Putty() {
       </section>
       <section className="putty-leaderboard" aria-labelledby="putty-leaderboard-heading">
         <h2 id="putty-leaderboard-heading">Leaderboard</h2>
-        <p>These are the people who have claimed the most squares and put the most money toward the hoodie.</p>
+        <p>the most auraful and powerful people.</p>
         {Array.isArray(board?.leaderboard) ? board.leaderboard.length ? <div className="putty-leaderboard-table" role="region" aria-labelledby="putty-leaderboard-heading" tabIndex="0">
           <table>
             <caption>Current ranking by hoodie placements claimed</caption>
             <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Paid (USD)</th><th scope="col">Spots held</th></tr></thead>
             <tbody>{board.leaderboard.map((entry, index) => <tr className={index < 3 ? 'putty-leaderboard-top' : undefined} key={`${entry.name}-${index}`}>
               <td><span className="putty-leaderboard-rank">{index < 3 ? ['1st', '2nd', '3rd'][index] : index + 1}</span></td>
-              <th scope="row">{entry.name}</th>
+              <th scope="row">{entry.url ? <a href={puttyPublicUrl(entry.url)} target="_blank" rel="noopener noreferrer">{entry.name}</a> : entry.name}</th>
               <td>{entry.total_paid == null ? '—' : formatPrice(entry.total_paid)}</td>
               <td>{entry.area} {entry.area === 1 ? 'spot' : 'spots'}</td>
             </tr>)}</tbody>
@@ -241,7 +241,7 @@ export default function Putty() {
           </fieldset>}
           <label className="checkout-label" htmlFor="putty-email">Email</label>
           <input className="oro-input" id="putty-email" type="email" autoComplete="email" maxLength={254} required disabled={locked}
-            value={email} onChange={event => setEmail(event.target.value)} aria-describedby="putty-credit-note" />
+            value={email} onChange={event => setEmail(event.target.value)} />
           <p className="putty-note" id="putty-credit-note">Use the same email to apply previous payments.</p>
           <label className="checkout-label" htmlFor="putty-name">Display name <span>(optional)</span></label>
           <input className="oro-input" id="putty-name" autoComplete="nickname" maxLength={60} disabled={locked} value={name}

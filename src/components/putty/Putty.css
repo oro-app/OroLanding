@@ -35,6 +35,7 @@
 .putty-grid--front { left: 57.5%; top: 37.5%; width: 15%; height: 6%; }
 .putty-page .putty-square { box-sizing: border-box; min-width: 0; min-height: 0; padding: 2px; border: 1px solid #fff; background: rgb(37 34 41 / .5); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.15; text-align: center; transform: none; }
 .putty-page .putty-square--preview { pointer-events: none; overflow-wrap: anywhere; border: 0; background: transparent; box-shadow: none; text-shadow: 0 1px 2px #252229; }
+.putty-page .putty-square[style*="background-image"] { background-repeat: no-repeat; }
 .putty-page .putty-square--choose.putty-square--claimed { box-shadow: inset 0 0 0 1px #fff; }
 .putty-page .putty-square--choose { background: hsl(var(--putty-price-hue) 72% 32% / .5); text-shadow: 0 1px 2px #252229; }
 .putty-page .putty-square--choose small { display: block; font-size: .55rem; line-height: 1; }
@@ -78,6 +79,7 @@
 .putty-leaderboard th, .putty-leaderboard td { padding: 1rem .75rem; border-bottom: 1px solid var(--oro-color-muted); text-align: center; }
 .putty-leaderboard thead th { font-size: .75rem; font-weight: 500; color: var(--oro-color-muted); }
 .putty-leaderboard tbody th { font-weight: 500; }
+.putty-leaderboard tbody th a { color: inherit; text-decoration: underline; text-underline-offset: .18em; }
 .putty-leaderboard tbody .putty-leaderboard-top > * { padding-block: 1.5rem; border-block: 1px solid var(--oro-color-muted); color: #fff; }
 .putty-leaderboard tbody .putty-leaderboard-top:nth-child(1) > * { background: var(--oro-plum-deep); }
 .putty-leaderboard tbody .putty-leaderboard-top:nth-child(2) > * { background: var(--oro-plum-soft); background: color-mix(in srgb, var(--oro-plum-deep) 85%, var(--oro-cream)); }
