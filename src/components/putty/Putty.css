@@ -42,7 +42,7 @@
 .putty-page .putty-square { box-sizing: border-box; min-width: 0; min-height: 0; padding: 2px; border: 1px solid #fff; background: rgb(37 34 41 / .5); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.15; text-align: center; transform: none; }
 .putty-page .putty-square--preview { pointer-events: none; overflow-wrap: anywhere; border: 0; background: transparent; box-shadow: none; text-shadow: 0 1px 2px #252229; }
 .putty-page .putty-square[style*="background-image"] { background-repeat: no-repeat; }
-.putty-page .putty-square--choose.putty-square--claimed { background-color: hsl(var(--putty-price-hue) 72% 32% / .5); box-shadow: inset 0 0 0 1px #fff; }
+.putty-page .putty-square--choose.putty-square--claimed { background-color: hsl(var(--putty-price-hue) 72% 32% / .5); }
 .putty-page .putty-square--choose { background-color: transparent; text-shadow: 0 1px 2px #252229; }
 .putty-page .putty-square--choose small { display: block; font-size: .55rem; line-height: 1; }
 .putty-page .putty-square[aria-pressed="true"] { background-color: #806b8d; border: 3px double #fff; }
@@ -52,7 +52,7 @@
 .putty-consent { display: flex; align-items: center; gap: .75rem; min-height: 44px; font-size: .875rem; line-height: 1.6; margin-top: 1.5rem; }
 .putty-consent input { width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--oro-color-accent); }
 .putty-availability { font-size: .875rem; color: var(--oro-color-muted); }
-.putty-price-key { display: flex; align-items: center; gap: .5rem; margin-top: .75rem; color: var(--oro-color-ink); font-size: .75rem; }
+.putty-price-key { display: flex; align-items: center; gap: .5rem; box-sizing: border-box; width: 100%; max-width: 640px; margin: .75rem auto 0; padding-inline-start: calc(60px + .75rem); color: var(--oro-color-ink); font-size: .75rem; }
 .putty-price-key i { width: clamp(7rem, 30vw, 14rem); height: .625rem; border: 1px solid var(--oro-color-ink); border-radius: var(--oro-radius-pill); background: linear-gradient(to right, hsl(120 72% 32% / .5), hsl(0 72% 32% / .5)); }
 .putty-card { width: min(100%, 760px); margin: 3rem auto; border: 0; padding-top: .5rem; background: transparent; }
 .putty-bids { border: 0; margin: 1.5rem 0; padding: 0; min-width: 0; }
@@ -101,6 +101,7 @@
 }
 @media (max-width: 480px) {
   .putty-gallery { grid-template-columns: 48px minmax(0, 1fr); gap: .375rem; }
+  .putty-price-key { padding-inline-start: calc(48px + .375rem); }
   .putty-thumbnails img { height: 48px; }
   .putty-intro { padding-top: 2rem; }
   .putty-card { padding: 1rem; }
@@ -108,7 +109,6 @@
 @media (forced-colors: active) {
   .putty-page .putty-square { background: ButtonFace; color: ButtonText; border-color: ButtonText; }
   .putty-page .putty-square[aria-pressed="true"] { forced-color-adjust: none; background-color: color-mix(in srgb, ButtonFace 60%, ButtonText); }
-  .putty-page .putty-square--choose.putty-square--claimed { border-style: double; border-width: 3px; }
   .putty-price-key i { background: Canvas; }
   .putty-leaderboard th, .putty-leaderboard td { border-color: CanvasText; }
   .putty-leaderboard { border-color: CanvasText; }
