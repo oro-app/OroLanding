@@ -198,7 +198,7 @@ export default function Putty() {
             <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Total</th><th scope="col">claimed</th></tr></thead>
             <tbody>{board.leaderboard.map((entry, index) => <tr className={index < 3 ? 'putty-leaderboard-top' : undefined} key={`${entry.name}-${index}`}>
               <td><span className="putty-leaderboard-rank">{index < 3 ? ['1st', '2nd', '3rd'][index] : index + 1}</span></td>
-              <th scope="row">{entry.url ? <a href={puttyPublicUrl(entry.url)} target="_blank" rel="noopener noreferrer">{entry.name}</a> : entry.name}</th>
+              <th scope="row">{index < 3 && entry.url ? <a href={puttyPublicUrl(entry.url)} target="_blank" rel="noopener noreferrer">{entry.name}</a> : entry.name}</th>
               <td>{entry.total_paid == null ? '—' : formatPrice(entry.total_paid)}</td>
               <td>{entry.area} {entry.area === 1 ? 'spot' : 'spots'}</td>
             </tr>)}</tbody>
