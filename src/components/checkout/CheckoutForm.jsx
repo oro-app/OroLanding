@@ -36,6 +36,8 @@ export default function CheckoutForm({ offer, onPaid, onExpired, collectPhone = 
     }
   }
 
+  const total = state.checkout.total.total.amount
+
   return <form onSubmit={submit}>
     <label className="checkout-label" htmlFor="checkout-email">Email</label>
     <input className="oro-input" id="checkout-email" type="email" autoComplete="email"
@@ -44,6 +46,7 @@ export default function CheckoutForm({ offer, onPaid, onExpired, collectPhone = 
       <input className="oro-input" id="checkout-phone" type="tel" autoComplete="tel" value={phone}
         onChange={event => setPhone(event.target.value)} placeholder="(416) 555-0123" required maxLength={32} disabled={busy} /></>}
     <div className="checkout-payment"><PaymentElement options={{ layout: 'tabs', ...(collectPhone ? { fields: { billingDetails: { phone: 'never', email: 'never' } } } : {}) }} /></div>
+    <p className="checkout-period">Due today: {total}</p>
     <label className="checkout-consent">
       <input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} disabled={busy} />
       <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>{collectPhone && <>, acknowledge the <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, confirm I’m 16+ and in the US or Canada (excluding Quebec), and consent to recurring automated SMS/MMS from Oro at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.</>}. Renews at $25/month until canceled.</span>

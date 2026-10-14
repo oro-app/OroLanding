@@ -11,7 +11,7 @@ async function mockStripe(page) {
       elements() {}, createToken() {}, createPaymentMethod() {}, confirmCardPayment() {},
       initCheckoutElementsSdk() {
         const actions = {
-          getSession: () => ({}),
+          getSession: () => ({ total: { total: { amount: window.checkoutTotalAmount || '$12.50', minorUnitsAmount: 1250 } } }),
           confirm: async (options) => {
             window.checkoutConfirmOptions = options;
             window.checkoutConfirms = (window.checkoutConfirms || 0) + 1
@@ -94,6 +94,7 @@ test('midnight reloads the server quote and removes the launch promotion', async
   await page.goto(`/checkout#token=${token}`)
   await expect(page.getByRole('timer')).toContainText('02')
   expired = true
+  await page.evaluate(() => { window.checkoutTotalAmount = '$25' })
   await page.clock.setFixedTime(new Date('2026-10-14T04:00:01Z'))
   await page.clock.runFor(1000)
   await expect(page.locator('.checkout-price')).toHaveText('$25')
@@ -144,6 +145,7 @@ test('public checkout requires a number on the payment screen and submits it to 
     return route.fulfill({ json: { ...native, collect_phone: true, status: phase, paid: phase !== 'checkout' } })
   })
   await page.goto('/checkout')
+  await expect(page.getByText('Due today: $12.50')).toBeVisible()
   await page.getByLabel('Email').fill('synthetic@example.com')
   await expect(page.getByLabel('Phone number for texting Oro')).toHaveAttribute('required', '')
   await page.getByRole('checkbox').check()
