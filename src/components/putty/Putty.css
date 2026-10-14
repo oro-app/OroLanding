@@ -8,7 +8,7 @@
 .putty-gallery { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 1rem; }
 .putty-thumbnails { display: flex; flex-direction: column; gap: .75rem; }
 .putty-thumbnails button { padding: .25rem; border: 1px solid var(--oro-color-muted); border-radius: .75rem; background: var(--oro-color-surface); color: var(--oro-color-ink); }
-.putty-thumbnails button[aria-pressed="true"] { border: 2px solid var(--oro-color-accent); text-decoration: underline; text-underline-offset: 3px; }
+.putty-thumbnails button[aria-pressed="true"] { background-color: var(--oro-color-soft); }
 .putty-thumbnails img { width: 100%; height: 76px; object-fit: cover; }
 .putty-viewer { position: relative; min-width: 0; border-radius: 1rem; background: var(--oro-color-surface); overflow: hidden; }
 .putty-canvas-tools { display: flex; align-items: center; justify-content: flex-end; gap: .25rem; padding: .5rem; }
