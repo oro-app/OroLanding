@@ -181,9 +181,9 @@ export default function Putty() {
         </div>
         <HoodieViewer mode={viewMode} spots={spots} selected={selected} locked={locked || !board?.enabled} onSelect={toggle} />
         {viewMode === 'choose' && <div className="putty-price-key" aria-label="Placement price key">
-          <span><i className="putty-price-key__low" aria-hidden="true" />Lower price</span>
-          <span><i className="putty-price-key__high" aria-hidden="true" />Higher price</span>
-          <span><i className="putty-price-key__claimed" aria-hidden="true" />Claimed</span>
+          <span>Lower price</span>
+          <i aria-hidden="true" />
+          <span>Higher price</span>
         </div>}
         <p role="status" className="putty-availability">{boardStatus || boardError || (!board ? 'Checking availability…' : !board.enabled ? 'Bidding is not open yet.' : '')}</p>
       </section>

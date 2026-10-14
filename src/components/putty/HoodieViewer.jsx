@@ -36,7 +36,7 @@ function Artwork({ side, spots, selected, locked, mode, onSelect, ready, onReady
     {ready && <div className={`putty-grid putty-grid--${side}`}>
       {spots.filter(spot => side === 'front' ? spot.id === 'front' : spot.id !== 'front').map(spot => {
         const label = spot.id === 'front' ? 'Front left chest' : spot.id
-        const details = `${label}: ${spot.unknown ? 'availability not checked' : spot.name ? `${spot.name}, current bid ${formatPrice(spot.total)}` : 'Unclaimed'}${spot.minimum ? `, minimum ${formatPrice(spot.minimum)} USD` : ''}${spot.held ? ', payment in progress' : ''}`
+        const details = `${label}: ${spot.unknown ? 'availability not checked' : spot.total ? `${spot.name || 'Anonymous'}, current bid ${formatPrice(spot.total)}` : 'Unclaimed'}${spot.minimum ? `, minimum ${formatPrice(spot.minimum)} USD` : ''}${spot.held ? ', payment in progress' : ''}`
         const artwork = spot.image_url && spots.filter(item => item.image_url === spot.image_url
           && (item.image_group || item.id) === (spot.image_group || spot.id))
         const firstArtworkSpot = artwork && artwork[0]?.id === spot.id
@@ -47,13 +47,12 @@ function Artwork({ side, spots, selected, locked, mode, onSelect, ready, onReady
             aria-hidden={spot.image_url ? !firstArtworkSpot : !spot.name}>
           {spot.name && !spot.image_url && <span>{spot.name}</span>}
         </span>
-        return <button key={spot.id} type="button" className={`putty-square putty-square--choose${spot.name ? ' putty-square--claimed' : ''}`} aria-pressed={spot.id in selected}
-            style={{ '--putty-price-hue': puttyPriceHue(spot, spots), ...artworkStyle(spot, spots) }}
+        return <button key={spot.id} type="button" className={`putty-square putty-square--choose${spot.total ? ' putty-square--claimed' : ''}`} aria-pressed={spot.id in selected}
+            style={{ ...(spot.total ? { '--putty-price-hue': puttyPriceHue(spot, spots) } : {}), ...artworkStyle(spot, spots) }}
             disabled={locked || (!(spot.id in selected) && (spot.unknown || spot.held))}
             aria-label={details} onClick={() => onSelect(spot)}>
           <span>{spot.id === 'front' ? 'chest' : spot.id}</span>
           {!spot.unknown && <small>{formatPrice(spot.minimum)}</small>}
-          {spot.name && <b aria-hidden="true">claimed</b>}
         </button>
       })}
     </div>}
