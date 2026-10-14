@@ -176,8 +176,8 @@ export default function Putty() {
     <div className="putty-layout">
       <section aria-label="Hoodie placement board" className="putty-preview">
         <div className="putty-view-modes" role="group" aria-label="Hoodie board view">
-          <button type="button" aria-pressed={viewMode === 'preview'} onClick={() => setViewMode('preview')}>Preview hoodie</button>
-          <button type="button" aria-pressed={viewMode === 'choose'} onClick={() => setViewMode('choose')}>Choose placements</button>
+          <button type="button" aria-pressed={viewMode === 'preview'} onClick={() => setViewMode('preview')}>Preview</button>
+          <button type="button" aria-pressed={viewMode === 'choose'} onClick={() => setViewMode('choose')}>Select</button>
         </div>
         <HoodieViewer mode={viewMode} spots={spots} selected={selected} locked={locked || !board?.enabled} onSelect={toggle} />
         {viewMode === 'choose' && <div className="putty-price-key" aria-label="Placement price key">

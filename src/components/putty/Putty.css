@@ -6,7 +6,7 @@
 .putty-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(340px, 1fr); gap: 3rem; align-items: start; }
 .putty-preview { min-width: 0; }
 .putty-view-modes { display: inline-flex; align-items: center; margin-bottom: 1rem; }
-.putty-view-modes button { padding: .5rem .875rem; border: 1px solid var(--oro-color-muted); border-radius: 0; background: var(--oro-color-surface); color: var(--oro-color-ink); font-size: .875rem; }
+.putty-view-modes button { flex: 0 0 6rem; padding: .5rem .875rem; border: 1px solid var(--oro-color-muted); border-radius: 0; background: var(--oro-color-surface); color: var(--oro-color-ink); font-size: .875rem; }
 .putty-view-modes button:first-child { border-radius: var(--oro-radius-pill) 0 0 var(--oro-radius-pill); }
 .putty-view-modes button:last-child { margin-inline-start: -1px; border-radius: 0 var(--oro-radius-pill) var(--oro-radius-pill) 0; }
 .putty-view-modes button:focus-visible { position: relative; z-index: 1; }
