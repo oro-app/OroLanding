@@ -40,9 +40,11 @@ export default function Putty() {
       setOrderId(null)
       setOrder(null)
       setViewMode('choose')
-      setBoardStatus('Your hold expired. Availability and prices have been refreshed; you can choose placements again.')
+      setBoardStatus('Your hold expired. Refreshing availability and prices…')
       refresh().then(latest => {
-        if (latest) setSelected(previous => refreshPuttySelection(previous, hoodieSpots(latest)))
+        if (!latest) { setBoardStatus(''); return }
+        setSelected(previous => refreshPuttySelection(previous, hoodieSpots(latest)))
+        setBoardStatus('Availability and prices have been refreshed; you can choose placements again.')
       })
       return
     }
