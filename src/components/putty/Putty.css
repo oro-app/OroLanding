@@ -78,7 +78,10 @@
 .putty-leaderboard th, .putty-leaderboard td { padding: 1rem .75rem; border-bottom: 1px solid var(--oro-color-muted); text-align: left; }
 .putty-leaderboard thead th { font-size: .75rem; font-weight: 500; color: var(--oro-color-muted); }
 .putty-leaderboard tbody th { font-weight: 500; }
-.putty-leaderboard tbody .putty-leaderboard-top > * { border-block: 1px solid var(--oro-color-muted); background: var(--oro-color-soft); }
+.putty-leaderboard tbody .putty-leaderboard-top > * { padding-block: 1.5rem; border-block: 1px solid var(--oro-color-muted); color: #fff; }
+.putty-leaderboard tbody .putty-leaderboard-top:nth-child(1) > * { background: var(--oro-plum-deep); }
+.putty-leaderboard tbody .putty-leaderboard-top:nth-child(2) > * { background: var(--oro-plum-soft); background: color-mix(in srgb, var(--oro-plum-deep) 85%, var(--oro-cream)); }
+.putty-leaderboard tbody .putty-leaderboard-top:nth-child(3) > * { background: var(--oro-plum-soft); background: color-mix(in srgb, var(--oro-plum-deep) 70%, var(--oro-cream)); }
 .putty-leaderboard tbody .putty-leaderboard-top > :first-child { border-inline-start: 1px solid var(--oro-color-muted); border-radius: .75rem 0 0 .75rem; }
 .putty-leaderboard tbody .putty-leaderboard-top > :last-child { border-inline-end: 1px solid var(--oro-color-muted); border-radius: 0 .75rem .75rem 0; }
 .putty-leaderboard tbody .putty-leaderboard-top th { font-weight: 700; }
