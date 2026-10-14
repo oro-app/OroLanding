@@ -10,6 +10,36 @@ export function cents(value) {
   return Number.isSafeInteger(amount) && amount <= 99999999 ? amount : null
 }
 
+const SPOT_ID = /^(?:front|[A-H][1-6])$/
+const ORDER_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+const money = value => Number.isSafeInteger(value) && value >= 0 && value <= 99999999
+
+function validItem(item) {
+  return item && SPOT_ID.test(item.spot_id) && money(item.total)
+    && (item.minimum === undefined || money(item.minimum))
+    && (item.credit === undefined || money(item.credit))
+    && (item.due === undefined || money(item.due))
+}
+
+export function validPuttyResponse(operation, data) {
+  if (!data || typeof data !== 'object' || data.currency !== 'usd') return false
+  if (operation === 'board') {
+    return typeof data.enabled === 'boolean' && Array.isArray(data.spots)
+      && data.spots.length === 49 && new Set(data.spots.map(spot => spot.id)).size === 49
+      && data.spots.every(spot => validItem(spot) && typeof spot.held === 'boolean'
+        && (spot.name == null || typeof spot.name === 'string'))
+      && Array.isArray(data.leaderboard) && data.leaderboard.every(entry => entry
+        && typeof entry.name === 'string' && Number.isSafeInteger(entry.area) && entry.area > 0 && entry.area <= 49)
+  }
+  return ['checkout', 'status', 'cancel'].includes(operation) && ORDER_ID.test(data.order_id || '')
+    && ['pending', 'paid', 'expired'].includes(data.status) && money(data.amount)
+    && Array.isArray(data.items) && data.items.length > 0 && data.items.length <= 49
+    && data.items.every(validItem) && Number.isFinite(Date.parse(data.hold_until))
+    && (data.checkout_url == null || Boolean(puttyCheckoutUrl(data.checkout_url)))
+    && (data.client_secret == null || /^cs_(?:test|live)_/.test(data.client_secret))
+    && (data.publishable_key == null || /^pk_(?:test|live)_/.test(data.publishable_key))
+}
+
 export async function puttyRequest(operation, body, signal) {
   const base = (import.meta.env?.VITE_ORO_API_URL || 'https://api.buildingoro.ca').replace(/\/+$/, '')
   const response = await fetch(`${base}/merch/${operation}`, {
@@ -26,6 +56,7 @@ export async function puttyRequest(operation, body, signal) {
     error.status = response.status
     throw error
   }
+  if (!validPuttyResponse(operation, data)) throw new Error('We couldn’t verify the checkout response. Please try again.')
   return data
 }
 

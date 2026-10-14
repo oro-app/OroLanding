@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft } from '../src/lib/putty.js'
+import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
 
 test('all placements render before the API responds, without pretending they are available', () => {
   const spots = hoodieSpots(null)
@@ -27,6 +27,20 @@ test('backend conflict remains a conflict and never becomes a local claim', asyn
   const original = globalThis.fetch
   globalThis.fetch = async () => ({ ok: false, status: 409, json: async () => ({ detail: 'A square is held.' }) })
   try { await assert.rejects(puttyRequest('checkout', {}), error => error.status === 409 && error.message === 'A square is held.') }
+  finally { globalThis.fetch = original }
+})
+
+test('merch API responses are validated before the checkout trusts them', async () => {
+  const order = { order_id: '17110941-5e75-4ac7-9945-3e65f280d6b1', status: 'pending', amount: 1000,
+    currency: 'usd', hold_until: '2026-10-13T16:03:00Z', items: [{ spot_id: 'A1', total: 1000, credit: 0, due: 1000 }],
+    checkout_url: 'https://checkout.stripe.com/c/pay/test' }
+  assert.equal(validPuttyResponse('checkout', order), true)
+  assert.equal(validPuttyResponse('status', { ...order, amount: '1000' }), false)
+  assert.equal(validPuttyResponse('checkout', { ...order, checkout_url: 'https://example.com/pay' }), false)
+
+  const original = globalThis.fetch
+  globalThis.fetch = async () => Response.json({ ...order, currency: 'cad' })
+  try { await assert.rejects(puttyRequest('checkout', {}), /verify the checkout response/) }
   finally { globalThis.fetch = original }
 })
 
