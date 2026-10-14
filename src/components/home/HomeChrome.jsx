@@ -1,47 +1,21 @@
 import { Heading, Text } from 'oro-kit'
-import { useCallback, useEffect, useState } from 'react'
 import useScrolled from '../../hooks/useScrolled'
-import { trackCtaClick, trackEvent } from '../../lib/analytics'
+import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
-import { getOroTextLink, isMobileMessagingDevice } from '../../lib/textOro'
 import MessagesIcon from '../MessagesIcon'
-import TextOroModal from '../overlays/TextOroModal'
 
 function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
 }
 
 export function HomeCta({ place, children, className = '', inviteUrl = '' }) {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [smsLink, setSmsLink] = useState(() => getOroTextLink('', inviteUrl))
-  const closeModal = useCallback(() => setModalOpen(false), [])
-
-  useEffect(() => setSmsLink(getOroTextLink(undefined, inviteUrl)), [inviteUrl])
-
-  const handleClick = (event) => {
-    const mobile = isMobileMessagingDevice()
-    trackCtaClick('get_number_click', {
-      location: place,
-      destination: mobile ? 'sms' : 'qr_handoff',
-      device_class: mobile ? 'mobile' : 'desktop',
-    })
-    if (mobile) {
-      trackEvent('message_app_open', { location: place, method: 'cta' })
-      return
-    }
-    event.preventDefault()
-    setModalOpen(true)
-  }
-
+  const href = inviteUrl ? `/get-started?invite=${encodeURIComponent(inviteUrl)}` : '/get-started'
   return (
-    <>
-      <a href={smsLink} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-        onClick={handleClick}>
-        {!['header', 'floating'].includes(place) && <MessagesIcon className="halo-cta-message" />}
-        <span>{children}</span>
-      </a>
-      <TextOroModal open={modalOpen} onClose={closeModal} source={place} inviteUrl={inviteUrl} />
-    </>
+    <a href={href} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
+      onClick={() => trackCtaClick('get_number_click', { location: place, destination: 'web_checkout' })}>
+      {!['header', 'floating'].includes(place) && <MessagesIcon className="halo-cta-message" />}
+      <span>{children}</span>
+    </a>
   )
 }
 
