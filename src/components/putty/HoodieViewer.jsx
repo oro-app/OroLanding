@@ -11,7 +11,7 @@ function Artwork({ side, spots, selected, locked, mode, onSelect, ready, onReady
       if (image.decode) image.decode().catch(() => {}).then(() => onReady(side))
       else onReady(side)
     }} />
-    {ready && side === 'back' && <>
+    {ready && side === 'back' && mode === 'choose' && <>
       <div className="putty-axis putty-axis--x" aria-hidden="true">{[1, 2, 3, 4, 5, 6].map(column => <span key={column}>{column}</span>)}</div>
       <div className="putty-axis putty-axis--y" aria-hidden="true">{'ABCDEFGH'.split('').map(row => <span key={row}>{row}</span>)}</div>
     </>}

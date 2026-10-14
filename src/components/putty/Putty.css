@@ -34,9 +34,8 @@
 .putty-grid--back { left: 27.5%; top: 35.8%; width: 45%; height: 36%; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); }
 .putty-grid--front { left: 57.5%; top: 37.5%; width: 15%; height: 6%; }
 .putty-page .putty-square { box-sizing: border-box; min-width: 0; min-height: 0; padding: 2px; border: 1px solid #fff; background: rgb(37 34 41 / .5); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.15; text-align: center; transform: none; }
-.putty-page .putty-square--preview { pointer-events: none; overflow-wrap: anywhere; }
-.putty-page .putty-square--preview:not(.putty-square--claimed) { background: transparent; border-style: dashed; }
-.putty-page .putty-square--claimed { box-shadow: inset 0 0 0 1px #fff; }
+.putty-page .putty-square--preview { pointer-events: none; overflow-wrap: anywhere; border: 0; background: transparent; box-shadow: none; text-shadow: 0 1px 2px #252229; }
+.putty-page .putty-square--choose.putty-square--claimed { box-shadow: inset 0 0 0 1px #fff; }
 .putty-page .putty-square--choose { background: hsl(var(--putty-price-hue) 72% 32% / .5); text-shadow: 0 1px 2px #252229; }
 .putty-page .putty-square--choose small { display: block; font-size: .55rem; line-height: 1; }
 .putty-page .putty-square--choose b { font-size: .45rem; letter-spacing: .04em; text-transform: uppercase; }
@@ -100,7 +99,7 @@
 @media (forced-colors: active) {
   .putty-page .putty-square { background: ButtonFace; color: ButtonText; border-color: ButtonText; }
   .putty-page .putty-square[aria-pressed="true"] { forced-color-adjust: none; background-color: color-mix(in srgb, ButtonFace 60%, ButtonText); }
-  .putty-page .putty-square--claimed { border-style: double; border-width: 3px; }
+  .putty-page .putty-square--choose.putty-square--claimed { border-style: double; border-width: 3px; }
   .putty-price-key i { background: Canvas; }
   .putty-leaderboard th, .putty-leaderboard td { border-color: CanvasText; }
   .putty-leaderboard { border-color: CanvasText; }
