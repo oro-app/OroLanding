@@ -68,7 +68,7 @@ export async function checkoutRequest(token, operation = 'status', signal, body)
     method: operation === 'status' ? 'GET' : 'POST',
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) },
     ...(body ? { body: JSON.stringify(body) } : {}),
-    signal, cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer', redirect: 'error',
+    signal, cache: 'no-store', credentials: 'same-origin', referrerPolicy: 'no-referrer', redirect: 'error',
   })
   if ([401, 403, 410].includes(response.status)) throw new Error('Text Oro for a fresh checkout link.')
   if (!response.ok) throw new Error('Checkout is unavailable right now. Please try again.')

@@ -57,3 +57,21 @@ for (const width of [320, 390, 768, 1440]) {
     expect(missingImages).toEqual([])
   })
 }
+
+
+test('scrolling feature pairs are vertically centered on desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  await page.evaluate(() => document.fonts.ready)
+  for (const row of await page.locator('.oro-grid-row').all()) {
+    await row.evaluate((element) => {
+      const bounds = element.getBoundingClientRect()
+      window.scrollTo({ top: scrollY + bounds.top + bounds.height / 2 - innerHeight / 2, behavior: 'instant' })
+    })
+    const center = await row.locator('.oro-grid-copy').evaluate((element) => {
+      const bounds = element.getBoundingClientRect()
+      return bounds.top + bounds.height / 2
+    })
+    expect(center).toBeCloseTo(450, 0)
+  }
+})

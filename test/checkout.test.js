@@ -33,6 +33,8 @@ test('browser requests send the personal credential only in the authorization he
   assert.equal(options.headers.Authorization, `Bearer ${token}`)
   assert.equal(options.referrerPolicy, 'no-referrer')
   assert.equal(options.cache, 'no-store')
+  assert.equal(options.credentials, 'same-origin')
+  assert.equal(options.redirect, 'error')
   await assert.rejects(checkoutRequest('invalid'), /personal checkout/)
   assert.equal(mock.mock.callCount(), 1)
 })

@@ -168,8 +168,7 @@
 
 
   .oro-grid .oro-grid-copy {
-    --oro-grid-lift: 100px;
-    bottom: calc(var(--oro-grid-lift) * 2);
+    bottom: 0;
   }
 }
 

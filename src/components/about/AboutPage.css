@@ -8,8 +8,7 @@
   margin-top: var(--oro-space-16);
 }
 
-.team-primary-grid,
-.team-supporting-grid {
+.team-primary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--oro-space-6);
@@ -38,31 +37,6 @@
   margin: 0 0 var(--oro-space-1);
 }
 
-.team-section--supporting {
-  padding-top: var(--oro-space-12);
-  border-top: var(--oro-border-width) solid var(--oro-color-border);
-}
-
-.team-card--supporting {
-  display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: var(--oro-space-4);
-  align-items: center;
-}
-
-.team-card--supporting .team-card-image {
-  border-radius: 50%;
-}
-
-.team-card--supporting .team-card-caption {
-  margin: 0;
-  text-align: left;
-}
-
-.team-card--supporting .team-card-caption .oro-heading {
-  font-size: var(--oro-type-subheading-size);
-}
-
 @media (max-width: 800px) {
   .team-primary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -71,12 +45,6 @@
   .team-primary-grid .team-card:first-child {
     grid-column: 1 / -1;
     width: min(100%, 340px);
-    margin-inline: auto;
-  }
-
-  .team-supporting-grid {
-    grid-template-columns: 1fr;
-    width: min(100%, 440px);
     margin-inline: auto;
   }
 }

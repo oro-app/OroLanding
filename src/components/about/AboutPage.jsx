@@ -1,11 +1,11 @@
 import { Heading, Text } from 'oro-kit'
-import AboutContent, { leadership, meta, supportingTeam } from '../../content/about.mdx'
+import AboutContent, { leadership, meta } from '../../content/about.mdx'
 import '../newsletter/NewsletterPage.css'
 import './AboutPage.css'
 
-function TeamCard({ member, supporting = false }) {
+function TeamCard({ member }) {
   return (
-    <figure className={`team-card${supporting ? ' team-card--supporting' : ''}`}>
+    <figure className="team-card">
       <div className="team-card-image-wrap">
         <img
           className="team-card-image"
@@ -45,12 +45,6 @@ export default function AboutPage() {
           <section className="team-section" aria-label="Leadership">
             <div className="team-primary-grid">
               {leadership.map((member) => <TeamCard key={member.name} member={member} />)}
-            </div>
-          </section>
-
-          <section className="team-section team-section--supporting" aria-label="Supporting team">
-            <div className="team-supporting-grid">
-              {supportingTeam.map((member) => <TeamCard key={member.name} member={member} supporting />)}
             </div>
           </section>
         </article>

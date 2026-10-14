@@ -126,6 +126,24 @@ test('checkout fits a narrow phone and keeps its typography on the Oro tokens', 
 
 const entryToken = `header.${Buffer.from(JSON.stringify({ aud: 'public-checkout' })).toString('base64url')}.signature`
 
+test('checkout retains same-origin preview access when starting and resuming payment', async ({ page }, testInfo) => {
+  await page.context().addCookies([{ name: 'synthetic_preview_access', value: 'granted', url: testInfo.project.use.baseURL }])
+  const operations = []
+  await page.route('**/api/checkout?*', async route => {
+    const headers = await route.request().allHeaders()
+    if (!headers.cookie?.includes('synthetic_preview_access=granted')) {
+      return route.fulfill({ status: 302, headers: { location: '/synthetic-preview-login' } })
+    }
+    operations.push(new URL(route.request().url()).searchParams.get('operation'))
+    return route.fulfill({ json: { ...native, token: entryToken, collect_phone: true } })
+  })
+  await page.goto('/checkout')
+  await expect(page.getByLabel('Email')).toBeVisible()
+  await page.reload()
+  await expect(page.getByLabel('Email')).toBeVisible()
+  expect(operations).toEqual(['entry', 'entry-status'])
+})
+
 test('public checkout requires a number on the payment screen and submits it to Stripe', async ({ page }) => {
   let phase = 'checkout'
   let entries = 0
