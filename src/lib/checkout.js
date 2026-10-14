@@ -22,21 +22,30 @@ export function saveCheckoutToken(token) {
   try { sessionStorage.setItem(CHECKOUT_TOKEN_KEY, token) } catch {}
 }
 
-export async function startPhoneCheckout(phone, signal) {
-  const response = await fetch('/api/checkout?operation=phone', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone, terms_accepted: true, texting_consent: true }),
-    signal, cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer', redirect: 'error',
-  })
-  if (response.status === 429) throw new Error('Please wait a minute before trying again.')
-  if (response.status === 403) throw new Error('Text Oro to continue with this number.')
-  if (!response.ok) throw new Error('We couldn’t start checkout. Please try again.')
-  const data = await response.json()
-  if (data.status === 'continue_in_text') return data
-  if (data.status !== 'checkout_ready' || !validOffer(data.offer)) throw new Error('We couldn’t verify your checkout. Please try again.')
-  saveCheckoutToken(data.token)
-  try { sessionStorage.setItem('oro_checkout_phone', phone) } catch {}
-  return data
+let entryPromise
+
+export function isPublicCheckoutToken(token) {
+  try { return JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).aud === 'public-checkout' } catch { return false }
+}
+
+export function startPublicCheckout() {
+  if (!entryPromise) {
+    entryPromise = checkoutRequest('', 'entry', AbortSignal.timeout(25000)).then(data => {
+      saveCheckoutToken(data.token)
+      return data
+    }).finally(() => { entryPromise = null })
+  }
+  return entryPromise
+}
+
+export function saveCheckoutInvite() {
+  if (typeof window === 'undefined') return
+  const invite = new URLSearchParams(window.location.search).get('invite')
+  if (!invite) return
+  try {
+    const url = new URL(invite)
+    if (url.origin === window.location.origin && url.pathname === '/invite' && /^[0-9a-f]{64}$/.test(url.searchParams.get('ref') || '')) sessionStorage.setItem('oro_checkout_invite', url.href)
+  } catch {}
 }
 
 export function validOffer(offer) {
@@ -52,11 +61,13 @@ export function countdown(end, now) {
     .map(value => String(value).padStart(2, '0'))
 }
 
-export async function checkoutRequest(token, operation = 'status', signal) {
-  if (!TOKEN.test(token) || token.length > 2048) throw new Error('Open the personal checkout link Oro sent you.')
-  const response = await fetch(`/api/checkout?operation=${operation}`, {
-    method: operation === 'checkout' ? 'POST' : 'GET',
-    headers: { Authorization: `Bearer ${token}` },
+export async function checkoutRequest(token, operation = 'status', signal, body) {
+  if (operation !== 'entry' && (!TOKEN.test(token) || token.length > 2048)) throw new Error('Open the personal checkout link Oro sent you.')
+  const action = isPublicCheckoutToken(token) ? `entry-${operation}` : operation
+  const response = await fetch(`/api/checkout?operation=${action}`, {
+    method: operation === 'status' ? 'GET' : 'POST',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    ...(body ? { body: JSON.stringify(body) } : {}),
     signal, cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer', redirect: 'error',
   })
   if ([401, 403, 410].includes(response.status)) throw new Error('Text Oro for a fresh checkout link.')

@@ -14,13 +14,12 @@ test('home page loads cleanly @smoke', async ({ page }) => {
 })
 
 for (const place of ['header', 'hero', 'closer']) {
-  test(`${place} CTA opens the phone-first checkout entry`, async ({ page }) => {
+  test(`${place} CTA opens the existing branded checkout`, async ({ page }) => {
     await page.goto('/')
     const cta = page.locator(`.halo-cta--${place}`)
-    await expect(cta).toHaveAttribute('href', '/get-started')
+    await expect(cta).toHaveAttribute('href', '/checkout')
     await cta.click()
-    await expect(page.getByLabel('Phone number')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'meet my stylist' })).toBeVisible()
+    await expect(page).toHaveURL(/\/checkout(?:\?|$)/)
   })
 }
 

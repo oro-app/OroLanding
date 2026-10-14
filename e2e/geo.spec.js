@@ -233,7 +233,7 @@ for (const width of [1440, 390]) {
     })
     await page.goto('/')
     await expect(page.locator('header a[href="/guides"]')).toHaveCount(0)
-    await expect(page.locator('header').getByRole('link', { name: 'want her number?', exact: true })).toHaveAttribute('href', '/get-started')
+    await expect(page.locator('header').getByRole('link', { name: 'want her number?', exact: true })).toHaveAttribute('href', '/checkout')
     await expect(page.locator('a[href="/research"], a[href^="/research/"]')).toHaveCount(0)
     await expect(page.locator('footer a[href="/guides"]')).toHaveCount(0)
     await expect(page.locator('footer').getByRole('link', { name: /^style guides$/i })).toHaveCount(0)
