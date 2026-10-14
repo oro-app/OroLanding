@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
+import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyPriceHue, puttyRequest, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
 
 test('all placements render before the API responds, without pretending they are available', () => {
   const spots = hoodieSpots(null)
@@ -21,6 +21,21 @@ test('money is parsed into exact integer cents without rounding an invalid bid',
   assert.equal(cents('500.01'), 50001)
   assert.equal(cents('10.1'), 1010)
   for (const invalid of ['1.001', '-10', '1e3', '', 'Infinity', '1000000']) assert.equal(cents(invalid), null)
+})
+
+test('a refreshed board removes held choices and raises stale bids to the latest minimum', () => {
+  const selected = refreshPuttySelection({ A1: '10.00', A2: '20.00', A3: '30.00' }, [
+    { id: 'A1', minimum: 1250, held: false },
+    { id: 'A2', minimum: 1000, held: false },
+    { id: 'A3', minimum: 3001, held: true },
+  ])
+  assert.deepEqual(selected, { A1: '12.50', A2: '20.00' })
+})
+
+test('placement price colors run from green at ten dollars to red at the board maximum', () => {
+  const spots = [{ minimum: 1000 }, { minimum: 25500 }, { minimum: 50000 }]
+  assert.equal(puttyPriceHue(spots[0], spots), 120)
+  assert.equal(puttyPriceHue(spots[2], spots), 0)
 })
 
 test('backend conflict remains a conflict and never becomes a local claim', async () => {

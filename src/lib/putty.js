@@ -3,6 +3,20 @@ export function hoodieSpots(board) {
     .map(id => board?.spots?.find(spot => spot.id === id) || { id, unknown: true })
 }
 
+export function refreshPuttySelection(selected, spots) {
+  return Object.fromEntries(Object.entries(selected).flatMap(([id, value]) => {
+    const spot = spots.find(item => item.id === id)
+    if (!spot || spot.unknown || spot.held) return []
+    return [[id, (Math.max(cents(value) ?? 0, spot.minimum) / 100).toFixed(2)]]
+  }))
+}
+
+export function puttyPriceHue(spot, spots) {
+  const price = spot.minimum ?? 1000
+  const maximum = Math.max(1000, ...spots.map(item => item.minimum ?? 1000))
+  return Math.round(120 * (1 - (price - 1000) / (maximum - 1000 || 1)))
+}
+
 export function cents(value) {
   if (!/^\d+(?:\.\d{1,2})?$/.test(String(value))) return null
   const [whole, fraction = ''] = String(value).split('.')

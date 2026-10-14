@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { formatPrice } from '../../lib/checkout'
+import { puttyPriceHue } from '../../lib/putty'
 import front from '../../assets/blanks/front.webp'
 import back from '../../assets/blanks/back.webp'
 
-function Artwork({ side, spots, selected, locked, onSelect, ready, onReady }) {
+function Artwork({ side, spots, selected, locked, mode, onSelect, ready, onReady }) {
   return <div className="putty-artwork" data-ready={ready}>
     <img src={side === 'back' ? back : front} alt={`Black hoodie, ${side} view`} width="800" height="1200" onLoad={(event) => {
       const image = event.currentTarget
@@ -16,16 +17,26 @@ function Artwork({ side, spots, selected, locked, onSelect, ready, onReady }) {
     </>}
     {ready && <div className={`putty-grid putty-grid--${side}`}>
       {spots.filter(spot => side === 'front' ? spot.id === 'front' : spot.id !== 'front').map(spot => {
-        return <button key={spot.id} type="button" className="putty-square" aria-pressed={spot.id in selected}
+        const label = spot.id === 'front' ? 'Front left chest' : spot.id
+        const details = `${label}: ${spot.unknown ? 'availability not checked' : spot.name ? `${spot.name}, current bid ${formatPrice(spot.total)}` : 'Unclaimed'}${spot.minimum ? `, minimum ${formatPrice(spot.minimum)} USD` : ''}${spot.held ? ', payment in progress' : ''}`
+        if (mode === 'preview') return <span key={spot.id} className={`putty-square putty-square--preview${spot.name ? ' putty-square--claimed' : ''}`}
+            role={spot.name ? 'img' : undefined} aria-label={spot.name ? `${label}: ${spot.name}` : undefined} aria-hidden={!spot.name}>
+          {spot.name && <span>{spot.name}</span>}
+        </span>
+        return <button key={spot.id} type="button" className={`putty-square putty-square--choose${spot.name ? ' putty-square--claimed' : ''}`} aria-pressed={spot.id in selected}
+            style={{ '--putty-price-hue': puttyPriceHue(spot, spots) }}
             disabled={locked || (!(spot.id in selected) && (spot.unknown || spot.held))}
-            aria-label={`${spot.id === 'front' ? 'Front left chest' : spot.id}: ${spot.unknown ? 'availability not checked' : spot.name ? `${spot.name}, current bid ${formatPrice(spot.total)}` : 'Unclaimed'}${spot.minimum ? `, minimum ${formatPrice(spot.minimum)} USD` : ''}${spot.held ? ', payment in progress' : ''}`}
-            onClick={() => onSelect(spot)}>{spot.id === 'front' ? 'left chest' : spot.id}</button>
+            aria-label={details} onClick={() => onSelect(spot)}>
+          <span>{spot.id === 'front' ? 'chest' : spot.id}</span>
+          {!spot.unknown && <small>{formatPrice(spot.minimum)}</small>}
+          {spot.name && <b aria-hidden="true">claimed</b>}
+        </button>
       })}
     </div>}
   </div>
 }
 
-export default function HoodieViewer({ spots, selected, locked, onSelect }) {
+export default function HoodieViewer({ spots, selected, locked, mode, onSelect }) {
   const [side, setSide] = useState('back')
   const [zoom, setZoom] = useState(0)
   const [loadedSide, setLoadedSide] = useState('back')
@@ -36,7 +47,7 @@ export default function HoodieViewer({ spots, selected, locked, onSelect }) {
     viewport.current.scrollLeft = (canvas.current.clientWidth - viewport.current.clientWidth) / 2
   }, [zoom])
 
-  return <div className="putty-gallery">
+  return <div className={`putty-gallery putty-gallery--${mode}`}>
     <div className="putty-thumbnails" role="group" aria-label="Hoodie view">
       {[['front', front], ['back', back]].map(([view, image]) => <button key={view} type="button" aria-label={`Show hoodie ${view}`} aria-pressed={side === view}
         onClick={() => setSide(view)}>
@@ -51,7 +62,7 @@ export default function HoodieViewer({ spots, selected, locked, onSelect }) {
       </div>
       <div ref={viewport} className="putty-canvas-scroll" tabIndex={0} role="region" aria-label="Hoodie placements; scroll to explore the image" aria-busy={loadedSide !== side}>
         <div ref={canvas} className="putty-canvas" style={{ width: `${(1 + zoom) * 100}%` }}>
-          <Artwork side={side} spots={spots} selected={selected} locked={locked} onSelect={onSelect}
+          <Artwork side={side} spots={spots} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
             ready={loadedSide === side} onReady={setLoadedSide} />
         </div>
       </div>

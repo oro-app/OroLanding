@@ -20,8 +20,12 @@ always shows the placement grid with unknown availability, and cannot accept a l
 
 The old `/putty` URL redirects to `/merch`. API requests use `/merch/*`.
 The existing site navigation is reused. Front/back thumbnails sit to the left
-of the canvas, with enlarge/shrink controls. Availability polls every ten seconds and is checked again when
-selecting a square. Terms/privacy acceptance is required and validated by the
+of the canvas, with enlarge/shrink controls. The board defaults to a preview of
+claimed display names; a separate choosing view shows placement IDs, minimum prices,
+claimed states, and a green-to-red price scale. Availability polls every ten seconds and is checked again when
+selecting a square. When a hold expires, its status is reconciled, the board is
+refreshed, stale selected prices are raised to the latest minimum, and choosing is
+re-enabled without another button press. Terms/privacy acceptance is required and validated by the
 backend before checkout creation.
 
 The supplied 800 × 1200 blanks use percentage overlays: back at left 27.5%,

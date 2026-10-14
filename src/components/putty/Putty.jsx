@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { formatPrice } from '../../lib/checkout'
-import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft, savePuttyOrder } from '../../lib/putty'
+import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyRequest, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, savePuttyOrder } from '../../lib/putty'
 import HoodieViewer from './HoodieViewer'
 import '../checkout/Checkout.css'
 import './Putty.css'
@@ -16,6 +16,8 @@ export default function Putty() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [boardError, setBoardError] = useState('')
+  const [boardStatus, setBoardStatus] = useState('')
+  const [viewMode, setViewMode] = useState('preview')
   const [now, setNow] = useState(Date.now)
   const [consent, setConsent] = useState(draft.consent)
   const boardRequest = useRef(0)
@@ -33,10 +35,21 @@ export default function Putty() {
     }
   }, [])
   const acceptOrder = useCallback(data => {
+    if (data.status === 'expired') {
+      savePuttyOrder(null)
+      setOrderId(null)
+      setOrder(null)
+      setViewMode('choose')
+      setBoardStatus('Your hold expired. Availability and prices have been refreshed; you can choose placements again.')
+      refresh().then(latest => {
+        if (latest) setSelected(previous => refreshPuttySelection(previous, hoodieSpots(latest)))
+      })
+      return
+    }
     setOrder(data)
     setOrderId(data.order_id)
     savePuttyOrder(data.order_id)
-    if (data.status === 'paid') clearPuttyDraft()
+    if (data.status === 'paid') { clearPuttyDraft(); setViewMode('preview') }
     refresh()
   }, [refresh])
 
@@ -91,6 +104,7 @@ export default function Putty() {
 
   function toggle(spot) {
     if (locked) return
+    setBoardStatus('')
     if (spot.id in selected) {
       setSelected(previous => { const next = { ...previous }; delete next[spot.id]; return next })
       return
@@ -158,9 +172,18 @@ export default function Putty() {
       <p>Put whatever you want on the hoodie. Someone took your spot? Outbid them.</p>
     </div>
     <div className="putty-layout">
-      <section aria-label="Choose hoodie placements" className="putty-preview">
-        <HoodieViewer spots={spots} selected={selected} locked={locked || !board?.enabled} onSelect={toggle} />
-        <p role="status" className="putty-availability">{boardError || (!board ? 'Checking availability…' : !board.enabled ? 'Bidding is not open yet.' : '')}</p>
+      <section aria-label="Hoodie placement board" className="putty-preview">
+        <div className="putty-view-modes" role="group" aria-label="Hoodie board view">
+          <button type="button" aria-pressed={viewMode === 'preview'} onClick={() => setViewMode('preview')}>Preview hoodie</button>
+          <button type="button" aria-pressed={viewMode === 'choose'} onClick={() => setViewMode('choose')}>Choose placements</button>
+        </div>
+        <HoodieViewer mode={viewMode} spots={spots} selected={selected} locked={locked || !board?.enabled} onSelect={toggle} />
+        {viewMode === 'choose' && <div className="putty-price-key" aria-label="Placement price key">
+          <span><i className="putty-price-key__low" aria-hidden="true" />Lower price</span>
+          <span><i className="putty-price-key__high" aria-hidden="true" />Higher price</span>
+          <span><i className="putty-price-key__claimed" aria-hidden="true" />Claimed</span>
+        </div>}
+        <p role="status" className="putty-availability">{boardStatus || boardError || (!board ? 'Checking availability…' : !board.enabled ? 'Bidding is not open yet.' : '')}</p>
       </section>
       <section className="putty-leaderboard" aria-labelledby="putty-leaderboard-heading">
         <h2 id="putty-leaderboard-heading">Leaderboard</h2>
@@ -188,9 +211,6 @@ export default function Putty() {
             <p role="status">Payment confirmed. Your bid claimed {order.items.map(i => i.spot_id).join(', ')}.</p>
             <p>Someone can still outbid you. We’ll handle any follow-up personally.</p>
             <button className="oro-button" onClick={reset}>Choose more squares</button>
-          </> : order?.status === 'expired' ? <>
-            <p role="status">Your hold expired. Choose your squares again to check the latest bids.</p>
-            <button className="oro-button" onClick={reset}>Choose squares again</button>
           </> : <>
             <p role="status">{order ? 'Your squares are held while you pay.' : 'Checking your checkout. Please wait before paying again.'}</p>
             {order && <p className="putty-hold" role="timer">{seconds > 0 ? `${seconds}s left on this hold` : 'Checking payment and releasing any unpaid hold…'}</p>}
