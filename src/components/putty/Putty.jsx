@@ -250,7 +250,7 @@ export default function Putty() {
           <input className="oro-input" id="putty-name" autoComplete="nickname" maxLength={60} disabled={locked} value={name}
             onChange={event => { setName(event.target.value); setQuote(null) }} placeholder="Your name on the hoodie grid" aria-describedby="putty-name-note" />
           <p className="putty-note" id="putty-name-note">Leave blank to show “Anonymous”.</p>
-          <p className="putty-note">Being outbid doesn’t automatically refund your payment.</p>
+          <p className="putty-note">All payments are final. No refunds or returns.</p>
           <label className="putty-consent">
             <input type="checkbox" required checked={consent} disabled={locked} onChange={event => { setConsent(event.target.checked); setQuote(null) }} />
             <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">terms</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</span>
