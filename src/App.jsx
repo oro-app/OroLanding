@@ -49,7 +49,7 @@ export function getRouteFromPath(pathname = '/', search = '') {
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/about')           return { type: 'about' }
-  if (path === '/getstarted' || path === '/get-started') return { type: 'get-started' }
+  if (path === '/getstarted' || path === '/get-started') return { type: 'checkout' }
   if (path === '/get-started/setup') return { type: 'get-started', legacy: true }
   if (path === '/tester/referrals') return { type: 'beta', tester: true }
   if (['/beta', '/invite', '/beta/career', '/beta/dating'].includes(path)) return { type: 'beta', campaign: getBetaCampaign(path, search) }

@@ -1,6 +1,28 @@
-## Website phone entry
+## Direct checkout entry
 
-All signup CTAs use `/get-started` (also available at `/getstarted`). The page
+All signup CTAs now open `/checkout` directly, without a prior phone form.
+`/get-started` and `/getstarted` also render checkout for older links. Without a
+personal link, the page calls `/api/checkout?operation=entry` to start an anonymous
+native Stripe Session. It stores the scoped token in the browser tab and uses
+`entry-status`/`entry-checkout` to resume the same attempt, including after a
+Stripe redirect. Invitation links are retained in the post-payment text handoff.
+
+The existing payment screen requires phone alongside email and payment details.
+Stripe Sessions enable phone collection; the form supplies the normalized number
+to Stripe confirmation. Notice acceptance is recorded through `entry-accept`
+before confirmation, which can send an existing subscriber back to text without
+another charge. Stripe-confirmed payment/contact details supply the final account
+binding, followed by the existing welcome and paid conversation.
+
+Deploy the backend routes and migration `n1014public007` first. The existing
+invoice/subscription webhook configuration is sufficient: initial paid invoices
+retry while Checkout completion is pending, so account linking and welcome do
+not rely on the browser staying open. Legacy personal text checkout
+links keep their existing token, payment and onboarding behavior.
+
+## Legacy website phone entry
+
+Older website builds use `/get-started` (also available at `/getstarted`). The page
 collects only a phone number and displays the combined terms/privacy, eligibility
 and texting notice beside Continue to payment. It calls
 `/api/checkout?operation=phone`, which forwards only the number and acceptance

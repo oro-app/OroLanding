@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import handler from '../api/checkout.js'
-import { checkoutRequest, countdown, validOffer, startPhoneCheckout } from '../src/lib/checkout.js'
+import { checkoutRequest, countdown, validOffer, startPublicCheckout } from '../src/lib/checkout.js'
 
 const token = 'synthetic.personal.token'
 const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 1250,
@@ -85,7 +85,23 @@ test('phone entry rejects absent acceptance before contacting the backend', asyn
   assert.equal(mock.mock.callCount(), 0)
 })
 
-test('browser phone entry handles text recovery without treating it as a new checkout', async t => {
-  t.mock.method(globalThis, 'fetch', async () => Response.json({ status: 'continue_in_text', offer }))
-  assert.equal((await startPhoneCheckout('+14165550123')).status, 'continue_in_text')
+test('public checkout starts without a phone number or personal link', async t => {
+  const mock = t.mock.method(globalThis, 'fetch', async () => Response.json({ status: 'checkout', offer, token, client_secret: 'cs_test_public_secret' }))
+  assert.equal((await startPublicCheckout()).status, 'checkout')
+  const [url, options] = mock.mock.calls[0].arguments
+  assert.equal(url, '/api/checkout?operation=entry')
+  assert.equal(options.headers.Authorization, undefined)
+  assert.equal(options.body, undefined)
+})
+
+test('entry proxy accepts no account data and requires a capability for contact acceptance', async t => {
+  const mock = t.mock.method(globalThis, 'fetch', async () => Response.json({ status: 'checkout', offer, token }))
+  let result = response()
+  await handler({ method: 'POST', query: { operation: 'entry' }, headers: {}, body: { phone: 'ignored', user_id: 'ignored' } }, result)
+  assert.equal(result.code, 200)
+  assert.equal(mock.mock.calls[0].arguments[0].pathname, '/public-onboarding/entry')
+  assert.equal(mock.mock.calls[0].arguments[1].body, undefined)
+  result = response()
+  await handler({ method: 'POST', query: { operation: 'entry-accept' }, headers: {}, body: { phone: '+14165550123', terms_accepted: true, texting_consent: true } }, result)
+  assert.equal(result.code, 401)
 })

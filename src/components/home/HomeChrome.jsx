@@ -9,7 +9,7 @@ function HomeLogo() {
 }
 
 export function HomeCta({ place, children, className = '', inviteUrl = '' }) {
-  const href = inviteUrl ? `/get-started?invite=${encodeURIComponent(inviteUrl)}` : '/get-started'
+  const href = inviteUrl ? `/checkout?invite=${encodeURIComponent(inviteUrl)}` : '/checkout'
   return (
     <a href={href} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
       onClick={() => trackCtaClick('get_number_click', { location: place, destination: 'web_checkout' })}>

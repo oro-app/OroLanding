@@ -11,8 +11,9 @@ async function mockStripe(page) {
       elements() {}, createToken() {}, createPaymentMethod() {}, confirmCardPayment() {},
       initCheckoutElementsSdk() {
         const actions = {
-          getSession: () => ({}),
-          confirm: async () => {
+          getSession: () => ({ total: { total: { amount: window.checkoutTotalAmount || '$12.50', minorUnitsAmount: 1250 } } }),
+          confirm: async (options) => {
+            window.checkoutConfirmOptions = options;
             window.checkoutConfirms = (window.checkoutConfirms || 0) + 1
             return window.checkoutDecline
               ? { type: 'error', error: { message: 'Your card was declined.' } }
@@ -93,6 +94,7 @@ test('midnight reloads the server quote and removes the launch promotion', async
   await page.goto(`/checkout#token=${token}`)
   await expect(page.getByRole('timer')).toContainText('02')
   expired = true
+  await page.evaluate(() => { window.checkoutTotalAmount = '$25' })
   await page.clock.setFixedTime(new Date('2026-10-14T04:00:01Z'))
   await page.clock.runFor(1000)
   await expect(page.locator('.checkout-price')).toHaveText('$25')
@@ -119,4 +121,61 @@ test('checkout fits a narrow phone and keeps its typography on the Oro tokens', 
     return { size: style.fontSize, expected: parseFloat(root.getPropertyValue('--oro-type-title-size')) * 16 }
   })
   expect(parseFloat(styles.size)).toBe(styles.expected)
+})
+
+
+const entryToken = `header.${Buffer.from(JSON.stringify({ aud: 'public-checkout' })).toString('base64url')}.signature`
+
+test('public checkout requires a number on the payment screen and submits it to Stripe', async ({ page }) => {
+  let phase = 'checkout'
+  let entries = 0
+  const notices = []
+  await page.route('**/api/checkout?*', route => {
+    const operation = new URL(route.request().url()).searchParams.get('operation')
+    if (operation === 'entry') {
+      entries += 1
+      expect(route.request().postData()).toBeNull()
+      return route.fulfill({ json: { ...native, token: entryToken, collect_phone: true } })
+    }
+    expect(route.request().headers().authorization).toBe(`Bearer ${entryToken}`)
+    if (operation === 'entry-accept') {
+      notices.push(route.request().postDataJSON())
+      return route.fulfill({ json: { offer, status: 'checkout_ready' } })
+    }
+    return route.fulfill({ json: { ...native, collect_phone: true, status: phase, paid: phase !== 'checkout' } })
+  })
+  await page.goto('/checkout')
+  await expect(page.getByText('Due today: $12.50')).toBeVisible()
+  await page.getByLabel('Email').fill('synthetic@example.com')
+  await expect(page.getByLabel('Phone number for texting Oro')).toHaveAttribute('required', '')
+  await page.getByRole('checkbox').check()
+  await page.getByRole('button', { name: 'Meet my personal stylist' }).click()
+  expect(await page.evaluate(() => window.checkoutConfirms || 0)).toBe(0)
+  await page.getByLabel('Phone number for texting Oro').fill('123')
+  await page.getByRole('button', { name: 'Meet my personal stylist' }).click()
+  await expect(page.getByRole('alert')).toHaveText('Enter a valid phone number for texting Oro.')
+  await page.getByLabel('Phone number for texting Oro').fill('(416) 555-0123')
+  phase = 'ready'
+  await page.getByRole('button', { name: 'Meet my personal stylist' }).click()
+  await expect(page.getByRole('heading', { name: 'You’re in.' })).toBeVisible()
+  expect(notices).toEqual([{ phone: '+14165550123', terms_accepted: true, texting_consent: true }])
+  expect(await page.evaluate(() => window.checkoutConfirmOptions.phoneNumber)).toBe('+14165550123')
+  await page.reload()
+  await expect(page.getByRole('heading', { name: 'You’re in.' })).toBeVisible()
+  expect(entries).toBe(1)
+})
+
+test('an existing subscriber returns to text before Stripe confirmation', async ({ page }) => {
+  await page.route('**/api/checkout?*', route => {
+    const operation = new URL(route.request().url()).searchParams.get('operation')
+    return route.fulfill({ json: operation === 'entry-accept' ? { offer, status: 'continue_in_text' }
+      : { ...native, token: entryToken, collect_phone: true } })
+  })
+  await page.goto('/checkout')
+  await page.getByLabel('Email').fill('synthetic@example.com')
+  await page.getByLabel('Phone number for texting Oro').fill('4165550123')
+  await page.getByRole('checkbox').check()
+  await page.getByRole('button', { name: 'Meet my personal stylist' }).click()
+  await expect(page.getByRole('link', { name: 'Text Oro ↗' })).toBeVisible()
+  expect(await page.evaluate(() => window.checkoutConfirms || 0)).toBe(0)
 })

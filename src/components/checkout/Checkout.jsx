@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
-import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance } from '../../lib/checkout'
+import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance, startPublicCheckout, isPublicCheckoutToken, saveCheckoutInvite } from '../../lib/checkout'
 import { getOroTextLink } from '../../lib/textOro'
 import CheckoutForm from './CheckoutForm'
 import './Checkout.css'
@@ -10,7 +10,8 @@ const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 const PAID_STATES = ['ready', 'already_subscribed', 'already_has_access']
 
 export default function Checkout() {
-  const [token] = useState(readCheckoutToken)
+  const [initialToken] = useState(() => { saveCheckoutInvite(); return readCheckoutToken() })
+  const token = useRef(initialToken)
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
@@ -25,8 +26,14 @@ export default function Checkout() {
     setLoading(true)
     setError('')
     try {
-      let result = await checkoutRequest(token, 'status', signal)
-      if (result.status === 'checkout_ready') result = await checkoutRequest(token, 'checkout', signal)
+      let result
+      if (!token.current) {
+        result = await startPublicCheckout()
+        token.current = result.token
+      } else {
+        result = await checkoutRequest(token.current, 'status', signal)
+        if (result.status === 'checkout_ready') result = await checkoutRequest(token.current, 'checkout', signal)
+      }
       if (!signal?.aborted) {
         setData(result)
         setChecking(result.status === 'payment_pending')
@@ -36,7 +43,7 @@ export default function Checkout() {
     } finally {
       if (!signal?.aborted) setLoading(false)
     }
-  }, [token])
+  }, [])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -54,6 +61,15 @@ export default function Checkout() {
     }, 3000)
     return () => { controller.abort(); clearTimeout(timer) }
   }, [checking, polls, refresh])
+
+  async function acceptNotice(phone) {
+    if (!isPublicCheckoutToken(token.current)) return true
+    const result = await checkoutRequest(token.current, 'accept', undefined, { phone, terms_accepted: true, texting_consent: true })
+    if (result.status === 'checkout_ready') return true
+    setData(result)
+    setChecking(result.status === 'payment_pending')
+    return false
+  }
 
   const offer = data?.offer
   const expired = offer?.launch_offer_ends_at && now >= Date.parse(offer.launch_offer_ends_at)
@@ -102,7 +118,7 @@ export default function Checkout() {
           <div className="checkout-price"><span>{formatPrice(offer.first_month_amount)}</span>{discounted && <del aria-label="Regular price $25">{formatPrice(offer.amount)}</del>}</div>
           {discounted ? <div className="checkout-discount">50% off your first month</div> : <p className="checkout-period">per month</p>}
           {data.client_secret && stripe ? <CheckoutElementsProvider key={data.session_id} stripe={stripe} options={options}>
-            <CheckoutForm offer={offer} onPaid={() => { setChecking(true); setPolls(0); refresh() }} onExpired={() => refresh()} />
+            <CheckoutForm offer={offer} collectPhone={data.collect_phone === true} onAccept={acceptNotice} onPaid={() => { setChecking(true); setPolls(0); refresh() }} onExpired={() => refresh()} />
           </CheckoutElementsProvider> : <><p>Continue to secure checkout to complete your subscription.</p>
             {data.checkout_url && !data.client_secret ? <a className="oro-button" href={data.checkout_url}>Meet my personal stylist ↗</a> : <p role="alert">Secure payment is unavailable. Please text Oro for help.</p>}
           </>}
