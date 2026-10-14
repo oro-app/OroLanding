@@ -179,7 +179,7 @@ export default function Putty() {
           <button type="button" aria-pressed={viewMode === 'preview'} onClick={() => setViewMode('preview')}>Preview</button>
           <button type="button" aria-pressed={viewMode === 'choose'} onClick={() => setViewMode('choose')}>Select</button>
         </div>
-        <HoodieViewer mode={viewMode} spots={spots} selected={selected} locked={locked || !board?.enabled} onSelect={toggle} />
+        <HoodieViewer mode={viewMode} spots={spots} selected={selected} locked={locked || !board?.enabled} loading={!board} onSelect={toggle} />
         {viewMode === 'choose' && <div className="putty-price-key" aria-label="Placement price key">
           <span>Lower price</span>
           <i aria-hidden="true" />
@@ -190,6 +190,9 @@ export default function Putty() {
       <section className="putty-leaderboard" aria-labelledby="putty-leaderboard-heading">
         <h2 id="putty-leaderboard-heading">Leaderboard</h2>
         <p>the most auraful and powerful people.</p>
+        {!board && <div className="putty-leaderboard-skeleton" aria-hidden="true">
+          {[0, 1, 2, 3, 4].map(row => <div key={row}>{[0, 1, 2, 3].map(cell => <span key={cell} />)}</div>)}
+        </div>}
         {Array.isArray(board?.leaderboard) ? board.leaderboard.length ? <div className="putty-leaderboard-table" role="region" aria-labelledby="putty-leaderboard-heading" tabIndex="0">
           <table>
             <caption>Current ranking by hoodie placements claimed</caption>

@@ -26,6 +26,7 @@
 .putty-page .putty-note { font-size: .875rem; line-height: 1.6; color: var(--oro-color-muted); }
 .putty-canvas-scroll { overflow: auto; max-height: 680px; }
 .putty-canvas { position: relative; aspect-ratio: 800 / 850; overflow: hidden; }
+.putty-canvas-skeleton { position: absolute; inset: 0; z-index: 3; background: var(--oro-color-soft); }
 .putty-gallery--choose .putty-canvas { min-width: 660px; }
 .putty-magnifier { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; clip-path: circle(clamp(3.5rem, 10vw, 4.5rem) at var(--putty-magnifier-x) var(--putty-magnifier-y)); }
 .putty-magnifier-content { position: absolute; inset: 0; transform: scale(2); transform-origin: var(--putty-magnifier-x) var(--putty-magnifier-y); }
@@ -76,6 +77,9 @@
 .putty-leaderboard-help { margin: 1.5rem 0 0; color: var(--oro-color-muted); }
 .putty-leaderboard-help a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: .18em; }
 .putty-leaderboard-table { overflow-x: auto; }
+.putty-leaderboard-skeleton { display: grid; gap: .5rem; padding-top: 1.5rem; }
+.putty-leaderboard-skeleton > div { display: grid; grid-template-columns: 15% 45% 16% 24%; align-items: center; min-height: 52px; }
+.putty-leaderboard-skeleton span { width: calc(100% - 1.5rem); height: .875rem; margin-inline: .75rem; border-radius: var(--oro-radius-field); background: var(--oro-color-soft); }
 .putty-leaderboard table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 .5rem; }
 .putty-leaderboard caption { padding: 1.5rem 0 .75rem; color: var(--oro-color-muted); text-align: center; }
 .putty-leaderboard th, .putty-leaderboard td { padding: 1rem .75rem; border-bottom: 1px solid var(--oro-color-muted); text-align: center; }
@@ -106,11 +110,18 @@
   .putty-intro { padding-top: 2rem; }
   .putty-card { padding: 1rem; }
 }
+@media (prefers-reduced-motion: no-preference) {
+  .putty-canvas-skeleton,
+  .putty-leaderboard-skeleton span { background-image: linear-gradient(100deg, transparent 35%, var(--oro-color-surface) 50%, transparent 65%); background-size: 300% 100%; animation: putty-skeleton-shimmer 1.6s ease-in-out infinite; }
+}
+@keyframes putty-skeleton-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 @media (forced-colors: active) {
   .putty-page .putty-square { background: ButtonFace; color: ButtonText; border-color: ButtonText; }
   .putty-page .putty-square[aria-pressed="true"] { forced-color-adjust: none; background-color: color-mix(in srgb, ButtonFace 60%, ButtonText); }
   .putty-price-key i { background: Canvas; }
   .putty-leaderboard th, .putty-leaderboard td { border-color: CanvasText; }
   .putty-leaderboard { border-color: CanvasText; }
+  .putty-canvas-skeleton,
+  .putty-leaderboard-skeleton span { border: 1px solid CanvasText; }
   .putty-page :focus-visible { outline-color: Highlight; }
 }
