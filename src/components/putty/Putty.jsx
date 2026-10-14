@@ -224,7 +224,7 @@ export default function Putty() {
           </>}
         </> : <form onSubmit={begin}>
           <p role="status">{count ? `${count} ${count === 1 ? 'placement' : 'placements'} selected` : 'Select a square on the hoodie to begin.'}</p>
-          <fieldset disabled={locked} className="putty-bids">
+          {count > 0 && <fieldset disabled={locked} className="putty-bids">
             <legend>Your price</legend>
             <div className="putty-bid-header" aria-hidden="true"><span>Placement</span><span>Price</span></div>
             {Object.entries(selected).map(([id, value]) => {
@@ -238,7 +238,7 @@ export default function Putty() {
                   onBlur={() => { if ((cents(value) ?? -1) < minimum) setSelected(old => ({ ...old, [id]: (minimum / 100).toFixed(2) })) }} /></div>
               </div>
             })}
-          </fieldset>
+          </fieldset>}
           <label className="checkout-label" htmlFor="putty-email">Email</label>
           <input className="oro-input" id="putty-email" type="email" autoComplete="email" maxLength={254} required disabled={locked}
             value={email} onChange={event => setEmail(event.target.value)} aria-describedby="putty-credit-note" />
