@@ -2,11 +2,11 @@ import { test, expect } from './fixtures.js'
 
 const continueName = 'let oro help you get dressed'
 const headingName = 'your closet has possibilities.'
-const demoPath = '/demos/oro-message-thread.mp4'
+const demoPath = '/demos/oro-onboarding-demo.mp4'
 const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 2500, first_month_discount_percent: 0 }
 const entryToken = `header.${Buffer.from(JSON.stringify({ aud: 'public-checkout' })).toString('base64url')}.signature`
 
-test('get her number leads to a playable demo with clear subscription pricing', async ({ page }) => {
+test('get her number leads to a playable demo without payment copy', async ({ page }) => {
   const paymentRequests = []
   page.on('request', request => {
     const url = new URL(request.url())
@@ -26,10 +26,15 @@ test('get her number leads to a playable demo with clear subscription pricing', 
   }))
   expect(media).toEqual({ src: demoPath, autoplay: false, paused: true })
   await expect.poll(() => video.evaluate(element => element.readyState)).toBeGreaterThanOrEqual(1)
+  const metadata = await video.evaluate(element => ({ duration: element.duration, width: element.videoWidth, height: element.videoHeight }))
+  expect(metadata.duration).toBeGreaterThan(24)
+  expect(metadata.duration).toBeLessThan(25)
+  expect(metadata).toMatchObject({ width: 600, height: 1298 })
   await page.getByRole('button', { name: 'play oro demo', exact: true }).click()
   await expect.poll(() => video.evaluate(element => element.paused)).toBe(false)
   await expect.poll(() => video.evaluate(element => element.currentTime)).toBeGreaterThan(0)
-  await expect(page.getByText(/\$25\s*USD\s*\/\s*month/i)).toBeVisible()
+  await expect(page.getByText(/\$25\s*USD\s*\/\s*month/i)).toHaveCount(0)
+  await expect(page.getByText('you’ll review your subscription before paying.', { exact: true })).toHaveCount(0)
   await expect(page.getByRole('link', { name: continueName, exact: true })).toHaveAttribute('href', '/checkout')
   expect(paymentRequests).toEqual([])
 })
@@ -60,7 +65,7 @@ test('an unavailable recording keeps checkout available', async ({ page }) => {
   await expect(page.getByRole('link', { name: continueName, exact: true })).toBeVisible()
   await expect(page.getByRole('link', { name: continueName, exact: true })).toHaveAttribute('href', '/checkout')
   await page.getByText('read the demo', { exact: true }).click()
-  await expect(page.getByText('oro shows the updated outfit.', { exact: true })).toBeVisible()
+  await expect(page.getByText('oro sends a try-on image showing you wearing the outfit.', { exact: true })).toBeVisible()
 })
 
 test('the demo carries the invitation into checkout unchanged', async ({ page }) => {
