@@ -245,5 +245,20 @@ export default function Putty() {
         </form>}
       </section>
     </div>
+    {Array.isArray(board?.leaderboard) && <section className="putty-leaderboard" aria-labelledby="putty-leaderboard-heading">
+      <h2 id="putty-leaderboard-heading">Leaderboard</h2>
+      <p>Who has claimed the most space on the hoodie.</p>
+      {board.leaderboard.length ? <div className="putty-leaderboard-table" role="region" aria-labelledby="putty-leaderboard-heading" tabIndex="0">
+        <table>
+          <caption>Current ranking by hoodie placements claimed</caption>
+          <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Area claimed</th></tr></thead>
+          <tbody>{board.leaderboard.map((entry, index) => <tr key={`${entry.name}-${index}`}>
+            <td>{index + 1}</td>
+            <th scope="row">{entry.name}</th>
+            <td>{entry.area} {entry.area === 1 ? 'placement' : 'placements'}</td>
+          </tr>)}</tbody>
+        </table>
+      </div> : <p>No one has claimed a placement yet.</p>}
+    </section>}
   </div>
 }

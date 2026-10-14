@@ -56,6 +56,17 @@
 .putty-page .checkout-error:empty { display: none; }
 .putty-page .checkout-button { white-space: normal; height: auto; }
 .putty-order-actions { margin-top: 1.5rem; }
+.putty-leaderboard { max-width: 760px; margin: 5rem auto 3rem; }
+.putty-leaderboard > h2 { font-family: Fraunces, Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; margin-bottom: .5rem; }
+.putty-leaderboard > p { color: var(--oro-color-muted); line-height: 1.6; }
+.putty-leaderboard-table { overflow-x: auto; }
+.putty-leaderboard table { width: 100%; border-collapse: collapse; }
+.putty-leaderboard caption { padding: 1.5rem 0 .75rem; color: var(--oro-color-muted); text-align: left; }
+.putty-leaderboard th, .putty-leaderboard td { padding: 1rem .75rem; border-bottom: 1px solid var(--oro-color-muted); text-align: left; }
+.putty-leaderboard thead th { font-size: .75rem; font-weight: 500; color: var(--oro-color-muted); }
+.putty-leaderboard tbody th { font-weight: 500; }
+.putty-leaderboard th:first-child, .putty-leaderboard td:first-child { width: 4rem; }
+.putty-leaderboard th:last-child, .putty-leaderboard td:last-child { text-align: right; }
 @media (max-width: 1000px) {
   .putty-layout { grid-template-columns: 1fr; }
   .putty-card { max-width: 680px; width: 100%; }
@@ -69,5 +80,6 @@
 @media (forced-colors: active) {
   .putty-page .putty-square { background: ButtonFace; color: ButtonText; border-color: ButtonText; }
   .putty-page .putty-square[aria-pressed="true"] { forced-color-adjust: none; background-color: color-mix(in srgb, ButtonFace 60%, ButtonText); }
+  .putty-leaderboard th, .putty-leaderboard td { border-color: CanvasText; }
   .putty-page :focus-visible { outline-color: Highlight; }
 }
