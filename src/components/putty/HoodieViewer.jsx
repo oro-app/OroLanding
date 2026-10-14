@@ -138,7 +138,7 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
         <button type="button" aria-label="Enlarge hoodie image" disabled={zoom === 2} onClick={() => setZoom(value => Math.min(2, value + .25))}>+</button>
       </div>
       <div ref={viewport} className="putty-canvas-scroll" tabIndex={0} role="region" aria-label="Hoodie placements; scroll to explore the image" aria-busy={!ready}>
-        <div ref={canvas} className="putty-canvas" style={{ width: `${(1 + zoom) * 100}%` }}
+        <div ref={canvas} className="putty-canvas" data-magnifying={mode === 'preview' && magnifying} style={{ width: `${(1 + zoom) * 100}%` }}
           onPointerEnter={moveMagnifier} onPointerMove={moveMagnifier} onPointerLeave={() => setMagnifying(false)}>
           {!ready && <div className="putty-canvas-skeleton" aria-hidden="true" />}
           <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
