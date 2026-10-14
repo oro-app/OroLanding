@@ -2,19 +2,133 @@ import { test, expect } from './fixtures.js'
 
 const continueName = 'let oro help you get dressed'
 const headingName = 'your closet has possibilities.'
+const questionName = 'what’s the hardest part of getting dressed?'
+const seeDemoName = 'see oro in action'
+const answers = [
+  'i don’t know what goes together',
+  'i keep wearing the same few things',
+  'i forget about clothes i own',
+  'i bounce between styles and feel lost',
+  'i second-guess outfits before leaving',
+  'getting ready takes too long',
+  'i want to experiment without buying more',
+]
 const demoPath = '/demos/oro-onboarding-demo.mp4'
 const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 2500, first_month_discount_percent: 0 }
 const entryToken = `header.${Buffer.from(JSON.stringify({ aud: 'public-checkout' })).toString('base64url')}.signature`
 
-test('get her number leads to a playable demo without payment copy', async ({ page }) => {
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/**', route => route.fulfill({
+    status: new URL(route.request().url()).pathname === '/api/beta-count' ? 200 : 503,
+    json: { count: 0 },
+  }))
+})
+
+test('get her number opens an optional question without loading media or checkout', async ({ page }) => {
+  const earlyRequests = []
+  page.on('request', request => {
+    const url = new URL(request.url())
+    if (url.pathname.startsWith('/demos/') || url.pathname === '/api/checkout' || /(^|\.)stripe\.com$/.test(url.hostname)) earlyRequests.push(request.url())
+  })
+  await page.goto('/')
+  await page.locator('.halo-cta--hero').click()
+  await expect(page).toHaveURL(/\/meet-oro$/)
+  await expect(page.getByRole('heading', { name: questionName, exact: true })).toBeVisible()
+  await expect(page.getByRole('checkbox')).toHaveCount(7)
+  for (const answer of answers) await expect(page.getByRole('checkbox', { name: answer, exact: true })).not.toBeChecked()
+  await expect(page.locator('video')).toHaveCount(0)
+  await expect(page.getByRole('link', { name: continueName, exact: true })).toHaveCount(0)
+  const continueButton = page.getByRole('button', { name: seeDemoName, exact: true })
+  await expect(continueButton).toBeEnabled()
+  expect(earlyRequests).toEqual([])
+  await continueButton.click()
+  await expect(page).toHaveURL(/\/meet-oro#demo$/)
+  await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeFocused()
+})
+
+test('the optional checklist accepts multiple answers and deselection', async ({ page }) => {
+  const writes = []
+  page.on('request', request => { if (request.method() !== 'GET') writes.push(request.url()) })
+  await page.goto('/meet-oro')
+  const first = page.getByRole('checkbox', { name: answers[0], exact: true })
+  const third = page.getByRole('checkbox', { name: answers[2], exact: true })
+  const last = page.getByRole('checkbox', { name: answers[6], exact: true })
+  await first.check()
+  await third.check()
+  await last.check()
+  await first.uncheck()
+  await expect(first).not.toBeChecked()
+  await expect(third).toBeChecked()
+  await expect(last).toBeChecked()
+  await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(2)
+  await expect(page.getByRole('button', { name: seeDemoName, exact: true })).toBeEnabled()
+  expect(writes).toEqual([])
+})
+
+test('native checkboxes and both steps work with the keyboard', async ({ page }) => {
+  await page.goto('/meet-oro')
+  const first = page.getByRole('checkbox', { name: answers[0], exact: true })
+  const second = page.getByRole('checkbox', { name: answers[1], exact: true })
+  await first.focus()
+  await page.keyboard.press('Space')
+  await expect(first).toBeChecked()
+  await page.keyboard.press('Tab')
+  await expect(second).toBeFocused()
+  await page.keyboard.press('Space')
+  await expect(second).toBeChecked()
+  await page.getByRole('button', { name: seeDemoName, exact: true }).focus()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeFocused()
+  await page.getByRole('button', { name: 'back', exact: true }).focus()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('heading', { name: questionName, exact: true })).toBeFocused()
+  await expect(first).toBeChecked()
+  await expect(second).toBeChecked()
+})
+
+test('answers and campaign query survive browser navigation and reload', async ({ page }) => {
+  const path = '/meet-oro?utm_source=instagram&utm_content=a%2Bb'
+  await page.goto(path)
+  await page.getByRole('checkbox', { name: answers[1], exact: true }).check()
+  await page.getByRole('checkbox', { name: answers[4], exact: true }).check()
+  await page.getByRole('button', { name: seeDemoName, exact: true }).click()
+  await expect(page).toHaveURL(`${path}#demo`)
+  await page.goBack()
+  await expect(page).toHaveURL(path)
+  await expect(page.getByRole('checkbox', { name: answers[1], exact: true })).toBeChecked()
+  await expect(page.getByRole('checkbox', { name: answers[4], exact: true })).toBeChecked()
+  await page.getByRole('checkbox', { name: answers[5], exact: true }).check()
+  await page.goForward()
+  await expect(page).toHaveURL(`${path}#demo`)
+  await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeVisible()
+  await page.reload()
+  await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'back', exact: true }).click()
+  await expect(page).toHaveURL(path)
+  await page.reload()
+  for (const index of [1, 4, 5]) await expect(page.getByRole('checkbox', { name: answers[index], exact: true })).toBeChecked()
+  await expect(page.locator('input[type="checkbox"]:checked')).toHaveCount(3)
+})
+
+test('reduced motion leaves both steps immediately readable', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/meet-oro')
+  await expect(page.getByRole('heading', { name: questionName, exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: seeDemoName, exact: true })).toBeEnabled()
+  expect(await page.evaluate(() => document.getAnimations().filter(animation => animation.playState === 'running').length)).toBe(0)
+  await page.getByRole('button', { name: seeDemoName, exact: true }).click()
+  await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeFocused()
+  await expect(page.getByRole('link', { name: continueName, exact: true })).toBeVisible()
+  expect(await page.evaluate(() => document.getAnimations().filter(animation => animation.playState === 'running').length)).toBe(0)
+})
+
+test('the demo plays on request without payment copy', async ({ page }) => {
   const paymentRequests = []
   page.on('request', request => {
     const url = new URL(request.url())
     if (url.pathname === '/api/checkout' || /(^|\.)stripe\.com$/.test(url.hostname)) paymentRequests.push(request.url())
   })
-  await page.goto('/')
-  await page.locator('.halo-cta--hero').click()
-  await expect(page).toHaveURL(/\/meet-oro$/)
+  await page.goto('/meet-oro#demo')
   await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeVisible()
   const video = page.locator('video')
   await expect(video).toHaveAttribute('controls', '')
@@ -45,7 +159,7 @@ test('visitors can continue before playing or finishing the recording', async ({
     checkoutRequests += 1
     return route.fulfill({ json: { status: 'checkout', offer, token: entryToken, checkout_url: 'https://checkout.stripe.com/test' } })
   })
-  await page.goto('/meet-oro')
+  await page.goto('/meet-oro#demo')
   await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeVisible()
   expect(checkoutRequests).toBe(0)
   const video = page.locator('video')
@@ -56,9 +170,61 @@ test('visitors can continue before playing or finishing the recording', async ({
   expect(checkoutRequests).toBe(1)
 })
 
+test('browser Back from checkout returns to an interactive demo', async ({ page }) => {
+  await page.route('**/api/checkout?*', route => route.fulfill({ json: { status: 'checkout', offer, token: entryToken, checkout_url: 'https://checkout.stripe.com/test' } }))
+  await page.goto('/meet-oro#demo')
+  await page.getByRole('button', { name: 'play oro demo', exact: true }).click()
+  await expect.poll(() => page.locator('video').evaluate(element => element.paused)).toBe(false)
+  await page.getByRole('link', { name: continueName, exact: true }).click()
+  await expect(page).toHaveURL(/\/checkout$/)
+  await expect(page.locator('.checkout-price')).toHaveText('$25')
+  await page.goBack()
+  await expect(page).toHaveURL(/\/meet-oro#demo$/)
+  const stage = page.locator('.meet-oro-stage')
+  await expect(stage).toHaveAttribute('data-step', 'demo')
+  await expect(stage).toHaveAttribute('aria-busy', 'false')
+  expect(await stage.evaluate(element => element.inert)).toBe(false)
+  const playButton = page.getByRole('button', { name: 'play oro demo', exact: true })
+  await expect(playButton).toBeVisible()
+  await expect(playButton).toBeEnabled()
+  await playButton.click()
+  await expect.poll(() => page.locator('video').evaluate(element => element.paused)).toBe(false)
+})
+
+test('a persisted pageshow restores a demo that was exiting', async ({ page }) => {
+  let checkoutRequests = 0
+  await page.route('**/api/checkout?*', route => {
+    checkoutRequests += 1
+    return route.fulfill({ status: 503, json: {} })
+  })
+  await page.goto('/meet-oro#demo')
+  await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeVisible()
+  const exitState = await page.getByRole('link', { name: continueName, exact: true }).evaluate(element => new Promise(resolve => {
+    const stage = document.querySelector('.meet-oro-stage')
+    const observer = new MutationObserver(() => {
+      if (stage.dataset.phase !== 'exit') return
+      observer.disconnect()
+      const exiting = { phase: stage.dataset.phase, inert: stage.inert }
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }))
+      resolve(exiting)
+    })
+    observer.observe(stage, { attributes: true, attributeFilter: ['data-phase'] })
+    element.click()
+  }))
+  expect(exitState).toEqual({ phase: 'exit', inert: true })
+  const stage = page.locator('.meet-oro-stage')
+  await expect(stage).toHaveAttribute('data-phase', 'enter')
+  await expect(stage).toHaveAttribute('aria-busy', 'false')
+  expect(await stage.evaluate(element => element.inert)).toBe(false)
+  await page.getByRole('button', { name: 'play oro demo', exact: true }).click()
+  await expect.poll(() => page.locator('video').evaluate(element => element.paused)).toBe(false)
+  await expect(page).toHaveURL(/\/meet-oro#demo$/)
+  expect(checkoutRequests).toBe(0)
+})
+
 test('an unavailable recording keeps checkout available', async ({ page }) => {
   await page.route(`**${demoPath}`, route => route.abort('failed'))
-  await page.goto('/meet-oro')
+  await page.goto('/meet-oro#demo')
   await page.locator('video').evaluate(element => element.load())
   await expect.poll(() => page.locator('video').evaluate(element => Boolean(element.error))).toBe(true)
   await expect(page.getByRole('status')).toContainText('the demo couldn’t load')
@@ -74,6 +240,9 @@ test('the demo carries the invitation into checkout unchanged', async ({ page })
   const inviteUrl = `${new URL(page.url()).origin}/invite?ref=${referralCode}`
   await page.locator('.beta-welcome .halo-cta--beta_general').click()
   await expect(page).toHaveURL(`/meet-oro?invite=${encodeURIComponent(inviteUrl)}`)
+  await page.getByRole('checkbox', { name: answers[0], exact: true }).check()
+  await page.getByRole('button', { name: seeDemoName, exact: true }).click()
+  await expect(page).toHaveURL(`/meet-oro?invite=${encodeURIComponent(inviteUrl)}#demo`)
   const continueLink = page.getByRole('link', { name: continueName, exact: true })
   await expect(continueLink).toHaveAttribute('href', `/checkout?invite=${encodeURIComponent(inviteUrl)}`)
   await page.route('**/api/checkout?*', route => route.fulfill({ json: { status: 'checkout', offer, token: entryToken, checkout_url: 'https://checkout.stripe.com/test' } }))
@@ -84,9 +253,16 @@ test('the demo carries the invitation into checkout unchanged', async ({ page })
 })
 
 for (const width of [320, 390, 1440]) {
-  test(`the demo and subscription action fit a ${width}px viewport`, async ({ page }) => {
+  test(`the checklist, demo, and subscription action fit a ${width}px viewport`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/meet-oro')
+    await expect(page.getByRole('heading', { name: questionName, exact: true })).toBeVisible()
+    await expect(page.getByRole('checkbox')).toHaveCount(7)
+    const seeDemoButton = page.getByRole('button', { name: seeDemoName, exact: true })
+    await seeDemoButton.scrollIntoViewIfNeeded()
+    await expect(seeDemoButton).toBeInViewport()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1)
+    await seeDemoButton.click()
     await expect(page.getByRole('heading', { name: headingName, exact: true })).toBeVisible()
     await expect(page.locator('video')).toBeVisible()
     const continueLink = page.getByRole('link', { name: continueName, exact: true })
@@ -108,6 +284,7 @@ test('personal checkout links bypass the demo', async ({ page }) => {
   await expect(page.locator('.checkout-price')).toHaveText('$25')
   await expect(page).toHaveURL(/\/checkout$/)
   await expect(page.getByRole('heading', { name: headingName, exact: true })).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: questionName, exact: true })).toHaveCount(0)
   expect(operations.length).toBeGreaterThan(0)
   expect(operations.every(operation => operation === 'status')).toBe(true)
 })
