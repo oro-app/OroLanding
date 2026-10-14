@@ -170,11 +170,12 @@ export default function Putty() {
         {Array.isArray(board?.leaderboard) ? board.leaderboard.length ? <div className="putty-leaderboard-table" role="region" aria-labelledby="putty-leaderboard-heading" tabIndex="0">
           <table>
             <caption>Current ranking by hoodie placements claimed</caption>
-            <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Area claimed</th></tr></thead>
+            <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Paid (USD)</th><th scope="col">Spots held</th></tr></thead>
             <tbody>{board.leaderboard.map((entry, index) => <tr className={index < 3 ? 'putty-leaderboard-top' : undefined} key={`${entry.name}-${index}`}>
               <td><span className="putty-leaderboard-rank"><span aria-hidden="true">{index === 0 ? '♦' : index < 3 ? '★' : ''}</span>{index < 3 ? ['1st', '2nd', '3rd'][index] : index + 1}</span></td>
               <th scope="row">{entry.name}</th>
-              <td>{entry.area} {entry.area === 1 ? 'placement' : 'placements'}</td>
+              <td>{entry.total_paid == null ? '—' : formatPrice(entry.total_paid)}</td>
+              <td>{entry.area} {entry.area === 1 ? 'spot' : 'spots'}</td>
             </tr>)}</tbody>
           </table>
         </div> : <p>No one has claimed a placement yet. Be the first.</p> : null}

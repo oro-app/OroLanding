@@ -29,7 +29,8 @@ export function validPuttyResponse(operation, data) {
       && data.spots.every(spot => spot && SPOT_ID.test(spot.id) && money(spot.total) && money(spot.minimum) && typeof spot.held === 'boolean'
         && (spot.name == null || typeof spot.name === 'string'))
       && Array.isArray(data.leaderboard) && data.leaderboard.every(entry => entry
-        && typeof entry.name === 'string' && Number.isSafeInteger(entry.area) && entry.area > 0 && entry.area <= 49)
+        && typeof entry.name === 'string' && Number.isSafeInteger(entry.area) && entry.area > 0 && entry.area <= 49
+        && (entry.total_paid == null || (Number.isSafeInteger(entry.total_paid) && entry.total_paid >= 0)))
   }
   return ['checkout', 'status', 'cancel'].includes(operation) && ORDER_ID.test(data.order_id || '')
     && ['pending', 'paid', 'expired'].includes(data.status) && money(data.amount)
