@@ -39,10 +39,6 @@ route, as on `/checkout`. Email-only credit attribution intentionally does not
 prove identity; it must never authorize private account access or refunds.
 After Stripe returns to `/merch`, the page checks the order with the backend.
 Only Stripe's verified paid Session changes the page to the confirmed claim state.
-Deploy the landing first, then the backend. The landing temporarily retains the
-embedded payment component only to finish Sessions created before the backend
-switches to hosted Checkout.
-
 No auction closing date is configured; the date in the supplied form reference
 was not treated as a requested deadline. Outbid customer contact and artwork
 collection are manual.

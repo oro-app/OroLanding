@@ -1,16 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { loadStripe } from '@stripe/stripe-js'
-import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
-import { formatPrice, stripeAppearance } from '../../lib/checkout'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { formatPrice } from '../../lib/checkout'
 import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyRequest, readPuttyDraft, readPuttyOrder, savePuttyDraft, savePuttyOrder } from '../../lib/putty'
-import { useTheme } from '../../context/ThemeContext'
 import HoodieViewer from './HoodieViewer'
-import PuttyPayment from './PuttyPayment'
 import '../checkout/Checkout.css'
 import './Putty.css'
 
 export default function Putty() {
-  const { theme } = useTheme()
   const draft = useRef(readPuttyDraft()).current
   const [board, setBoard] = useState(null)
   const [selected, setSelected] = useState(draft.selected)
@@ -26,10 +21,6 @@ export default function Putty() {
   const boardRequest = useRef(0)
   const submitting = useRef(false)
   const mounted = useRef(true)
-  const stripe = useMemo(() => order?.publishable_key ? loadStripe(order.publishable_key) : null, [order?.publishable_key])
-  const options = useMemo(() => ({ clientSecret: order?.client_secret,
-    elementsOptions: { appearance: stripeAppearance() },
-  }), [order?.client_secret, theme])
   const refresh = useCallback(async (signal) => {
     const request = ++boardRequest.current
     try {
@@ -126,7 +117,7 @@ export default function Putty() {
       const url = puttyCheckoutUrl(data.checkout_url)
       acceptOrder(data)
       if (url) window.location.assign(url)
-      else if (!data.client_secret) throw new Error('Stripe checkout is unavailable. Please try again.')
+      else throw new Error('Stripe checkout is unavailable. Please try again.')
     } catch (failure) {
       setError(failure.message)
       if (!id) { refresh(); return }
@@ -205,9 +196,6 @@ export default function Putty() {
             <p role="status">{order ? 'Your squares are held while you pay.' : 'Checking your checkout. Please wait before paying again.'}</p>
             {order && <p className="putty-hold" role="timer">{seconds > 0 ? `${seconds}s left on this hold` : 'Checking payment and releasing any unpaid hold…'}</p>}
             {checkoutUrl && <a className="oro-button oro-button--primary checkout-button" href={checkoutUrl}>Continue in Stripe checkout <span aria-hidden="true">↗</span></a>}
-            {!checkoutUrl && order?.client_secret && stripe && <CheckoutElementsProvider key={order.order_id} stripe={stripe} options={options}>
-              <PuttyPayment order={order} onStatus={acceptOrder} />
-            </CheckoutElementsProvider>}
             <div className="putty-order-actions">
               <button onClick={() => check()} disabled={busy}>Check payment status</button>
               <button onClick={() => check(true)} disabled={busy}>Cancel hold</button>

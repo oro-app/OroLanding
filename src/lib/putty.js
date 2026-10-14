@@ -36,6 +36,7 @@ export function validPuttyResponse(operation, data) {
     && Array.isArray(data.items) && data.items.length > 0 && data.items.length <= 49
     && data.items.every(validItem) && Number.isFinite(Date.parse(data.hold_until))
     && (data.checkout_url == null || Boolean(puttyCheckoutUrl(data.checkout_url)))
+    && (operation !== 'checkout' || Boolean(puttyCheckoutUrl(data.checkout_url)))
     && (data.client_secret == null || /^cs_(?:test|live)_/.test(data.client_secret))
     && (data.publishable_key == null || /^pk_(?:test|live)_/.test(data.publishable_key))
 }

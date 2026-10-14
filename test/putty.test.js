@@ -37,6 +37,7 @@ test('merch API responses are validated before the checkout trusts them', async 
   assert.equal(validPuttyResponse('checkout', order), true)
   assert.equal(validPuttyResponse('status', { ...order, amount: '1000' }), false)
   assert.equal(validPuttyResponse('checkout', { ...order, checkout_url: 'https://example.com/pay' }), false)
+  assert.equal(validPuttyResponse('checkout', { ...order, checkout_url: null, client_secret: 'cs_test_legacy' }), false)
 
   const original = globalThis.fetch
   globalThis.fetch = async () => Response.json({ ...order, currency: 'cad' })
