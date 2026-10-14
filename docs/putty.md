@@ -20,8 +20,7 @@ always shows the placement grid with unknown availability, and cannot accept a l
 
 The old `/putty` URL redirects to `/merch`. API requests use `/merch/*`.
 The existing site navigation is reused. Front/back thumbnails sit to the left
-of the canvas, with zoom controls and a magnifier enabled by default (Escape
-dismisses it). Availability polls every ten seconds and is checked again when
+of the canvas, with enlarge/shrink controls. Availability polls every ten seconds and is checked again when
 selecting a square. Terms/privacy acceptance is required before bid review and
 validated by the backend before quote or checkout creation.
 

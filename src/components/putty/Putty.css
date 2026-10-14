@@ -14,10 +14,7 @@
 .putty-viewer { position: relative; min-width: 0; border-radius: 1rem; background: var(--oro-color-soft); overflow: hidden; }
 .putty-canvas-tools { display: flex; align-items: center; justify-content: flex-end; gap: .25rem; padding: .5rem; }
 .putty-canvas-tools button { border: 1px solid var(--oro-color-muted); background: var(--oro-color-surface); color: var(--oro-color-ink); border-radius: 50%; font-size: 1.5rem; display: grid; place-items: center; }
-.putty-canvas-tools button[aria-pressed="true"] { border: 2px solid var(--oro-color-accent); }
 .putty-canvas-tools > span { min-width: 3rem; text-align: center; font-size: .75rem; font-variant-numeric: tabular-nums; }
-.putty-magnifier-icon { width: 16px; height: 16px; border: 2px solid currentColor; border-radius: 50%; position: relative; margin: -4px 4px 0 0; }
-.putty-magnifier-icon::after { content: ''; position: absolute; width: 9px; height: 2px; background: currentColor; transform: rotate(45deg); right: -7px; bottom: -4px; }
 .putty-page button { min-height: 44px; min-width: 44px; cursor: pointer; }
 .putty-page button:disabled { cursor: not-allowed; }
 .putty-order-actions button { padding: .65rem 1rem; border: 1px solid var(--oro-color-muted); border-radius: var(--oro-radius-pill); background: var(--oro-color-surface); color: var(--oro-color-ink); }
@@ -26,16 +23,12 @@
 .putty-canvas { position: relative; min-width: 680px; aspect-ratio: 800 / 850; overflow: hidden; }
 .putty-artwork { position: absolute; top: -20.588235%; width: 100%; aspect-ratio: 2 / 3; }
 .putty-artwork > img { display: block; width: 100%; height: auto; }
-.putty-lens { position: absolute; width: 160px; height: 160px; border: 3px solid var(--oro-color-ink); border-radius: 50%; overflow: hidden; pointer-events: none; background: var(--oro-color-soft); z-index: 2; }
-.putty-lens-image { position: absolute; aspect-ratio: 800 / 850; }
-.putty-page .putty-lens .putty-square { font-size: 1.375rem; }
-.putty-page .putty-lens .putty-square small { font-size: 1.25rem; }
 .putty-grid { position: absolute; display: grid; }
 .putty-grid--back { left: 27.5%; top: 35.8%; width: 45%; height: 36%; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); }
 .putty-grid--front { left: 57.5%; top: 37.5%; width: 15%; height: 6%; }
 .putty-page .putty-square { min-width: 44px; min-height: 44px; padding: 2px; border: 1px solid #fff; background: #252229; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.25; }
 .putty-square small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .625rem; }
-.putty-square[aria-pressed="true"], .putty-square[data-selected="true"] { background: #f1e7ff; color: #252229; border: 2px solid #252229; }
+.putty-square[aria-pressed="true"] { background: #f1e7ff; color: #252229; border: 2px solid #252229; }
 .putty-square:disabled:not([aria-pressed="true"]) { border-style: dashed; }
 .putty-page :focus-visible { outline: 3px solid var(--oro-color-ink); outline-offset: 3px; }
 .putty-page .putty-square:focus-visible { position: relative; z-index: 1; outline: 3px solid #fff; box-shadow: 0 0 0 6px #252229; }
