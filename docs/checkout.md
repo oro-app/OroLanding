@@ -14,9 +14,10 @@ before confirmation, which can send an existing subscriber back to text without
 another charge. Stripe-confirmed payment/contact details supply the final account
 binding, followed by the existing welcome and paid conversation.
 
-Deploy the backend routes and migration `n1014public007` first. Ensure the Stripe
-webhook includes checkout completion/async success events so account linking and
-welcome do not rely on the browser staying open. Legacy personal text checkout
+Deploy the backend routes and migration `n1014public007` first. The existing
+invoice/subscription webhook configuration is sufficient: initial paid invoices
+retry while Checkout completion is pending, so account linking and welcome do
+not rely on the browser staying open. Legacy personal text checkout
 links keep their existing token, payment and onboarding behavior.
 
 ## Legacy website phone entry
