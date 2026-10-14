@@ -10,6 +10,7 @@ function TeamCard({ member }) {
         <img
           className="team-card-image"
           src={member.image}
+          style={member.imageStyle}
           alt=""
           loading="lazy"
           decoding="async"
