@@ -1,10 +1,10 @@
-# Putty
+# Merch
 
-`/putty` reuses the native Oro checkout's Stripe Elements packages,
+`/merch` reuses the native Oro checkout's Stripe Elements packages,
 `stripeAppearance()`, `formatPrice()`, and checkout styles. Subscription consent
 and subscription prices are not reused: Putty is a one-time placement bid.
 
-The form requires only email and bid totals. Display name is optional. No
+The form requires email, bid totals, and terms/privacy acceptance. Display name is optional. No
 phone, email verification, account signup, artwork, or file upload is required.
 An omitted name appears as Anonymous. Prices are USD. Each input is the desired
 **cumulative total for that square**, not an additional payment. Review shows
@@ -16,7 +16,14 @@ Set `VITE_ORO_API_URL` to the matching backend (default:
 `feat/putty-bidding`, in `.putty-backend`. See its `docs/putty.md` for migration,
 environment flags, Stripe webhook events, reconciliation, and staff follow-up.
 Deploy that backend before opening bidding. Without the backend this page
-does not simulate availability or accept a local-only claim.
+always shows the placement grid with unknown availability, and cannot accept a local-only claim.
+
+The old `/putty` URL redirects to `/merch`. API requests use `/merch/*`.
+The existing site navigation is reused. Front/back thumbnails sit to the left
+of the canvas, with zoom controls and a magnifier enabled by default (Escape
+dismisses it). Availability polls every ten seconds and is checked again when
+selecting a square. Terms/privacy acceptance is required before bid review and
+validated by the backend before quote or checkout creation.
 
 The supplied 800 × 1200 blanks use percentage overlays: back at left 27.5%,
 top 35.8%, width 45%, height 36%; front at left 57.5%, top 37.5%, width 15%,

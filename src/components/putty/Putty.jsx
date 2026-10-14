@@ -2,17 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
 import { formatPrice, stripeAppearance } from '../../lib/checkout'
-import { cents, puttyRequest, readPuttyOrder, savePuttyOrder } from '../../lib/putty'
+import { cents, hoodieSpots, puttyRequest, readPuttyOrder, savePuttyOrder } from '../../lib/putty'
 import { useTheme } from '../../context/ThemeContext'
-import front from '../../assets/blanks/front.webp'
-import back from '../../assets/blanks/back.webp'
+import HoodieViewer from './HoodieViewer'
 import PuttyPayment from './PuttyPayment'
 import '../checkout/Checkout.css'
 import './Putty.css'
 
 export default function Putty() {
   const { theme } = useTheme()
-  const [side, setSide] = useState('back')
   const [board, setBoard] = useState(null)
   const [selected, setSelected] = useState({})
   const [email, setEmail] = useState('')
@@ -24,7 +22,10 @@ export default function Putty() {
   const [error, setError] = useState('')
   const [boardError, setBoardError] = useState('')
   const [now, setNow] = useState(Date.now)
-  const [autoRefresh, setAutoRefresh] = useState(true)
+  const [consent, setConsent] = useState(false)
+  const [checkingSpot, setCheckingSpot] = useState(null)
+  const selecting = useRef(false)
+  const boardRequest = useRef(0)
   const submitting = useRef(false)
   const mounted = useRef(true)
   const stripe = useMemo(() => order?.publishable_key ? loadStripe(order.publishable_key) : null, [order?.publishable_key])
@@ -32,10 +33,15 @@ export default function Putty() {
     elementsOptions: { appearance: stripeAppearance() },
   }), [order?.client_secret, theme])
   const refresh = useCallback(async (signal) => {
+    const request = ++boardRequest.current
     try {
       const data = await puttyRequest('board', undefined, signal)
-      if (!signal?.aborted && mounted.current) { setBoard(data); setBoardError('') }
-    } catch (failure) { if (!signal?.aborted && mounted.current) setBoardError(failure.message) }
+      if (!signal?.aborted && mounted.current && request === boardRequest.current) { setBoard(data); setBoardError('') }
+      return data
+    } catch (failure) {
+      if (!signal?.aborted && mounted.current && request === boardRequest.current) setBoardError('Live availability is unavailable. Please try selecting a square again shortly.')
+      return null
+    }
   }, [])
   const acceptOrder = useCallback(data => {
     setOrder(data)
@@ -46,7 +52,7 @@ export default function Putty() {
 
   useEffect(() => {
     mounted.current = true
-    document.title = 'Putty — claim a piece of the hoodie | Oro'
+    document.title = 'Merch — claim a piece of the hoodie | Oro'
     const id = readPuttyOrder()
     if (id) setOrderId(id)
     const timer = setInterval(() => setNow(Date.now()), 1000)
@@ -56,9 +62,9 @@ export default function Putty() {
   useEffect(() => {
     const controller = new AbortController()
     refresh(controller.signal)
-    const timer = autoRefresh ? setInterval(() => refresh(controller.signal), 10000) : null
+    const timer = setInterval(() => refresh(controller.signal), 10000)
     return () => { controller.abort(); clearInterval(timer) }
-  }, [autoRefresh, refresh])
+  }, [refresh])
 
   useEffect(() => {
     if (!orderId || (order && order.status !== 'pending')) return
@@ -83,44 +89,54 @@ export default function Putty() {
     return () => { controller.abort(); clearTimeout(timer) }
   }, [orderId, order?.status, acceptOrder])
 
-  const locked = busy || Boolean(orderId)
-  const spots = board?.spots || []
-  const visible = spots.filter(spot => side === 'front' ? spot.id === 'front' : spot.id !== 'front')
+  const locked = busy || Boolean(orderId) || Boolean(checkingSpot)
+  const spots = hoodieSpots(board)
   const count = Object.keys(selected).length
   const seconds = order ? Math.max(0, Math.ceil((Date.parse(order.hold_until) - now) / 1000)) : 0
 
-  function toggle(spot) {
+  async function toggle(spot) {
+    if (locked || selecting.current) return
     setQuote(null)
-    setSelected(previous => {
-      const next = { ...previous }
-      if (spot.id in next) delete next[spot.id]
-      else next[spot.id] = (spot.minimum / 100).toFixed(2)
-      return next
-    })
+    if (spot.id in selected) {
+      setSelected(previous => { const next = { ...previous }; delete next[spot.id]; return next })
+      return
+    }
+    selecting.current = true
+    setCheckingSpot(spot.id)
+    setError('')
+    try {
+      const current = await refresh()
+      if (!mounted.current) return
+      if (!current) return
+      const fresh = current.spots.find(item => item.id === spot.id)
+      if (!current.enabled) { setError('Bidding is not open yet.'); return }
+      if (!fresh || fresh.held) { setError('This placement is held for another payment. Please choose another square or try again shortly.'); return }
+      setSelected(previous => ({ ...previous, [spot.id]: (fresh.minimum / 100).toFixed(2) }))
+    } finally { selecting.current = false; if (mounted.current) setCheckingSpot(null) }
   }
 
   async function review(event) {
     event.preventDefault()
-    if (submitting.current || !count) return
+    if (submitting.current || !count || !consent || locked) return
     submitting.current = true
     setBusy(true)
     setError('')
     const items = Object.entries(selected).map(([spot_id, value]) => ({ spot_id, total: cents(value) }))
     try {
       if (items.some(item => item.total === null)) throw new Error('Enter a price with no more than two decimal places for each square.')
-      const data = await puttyRequest('quote', { email, display_name: name, items })
+      const data = await puttyRequest('quote', { email, display_name: name, items, terms_accepted: consent })
       setQuote(data)
     } catch (failure) { setError(failure.message); refresh() }
     finally { submitting.current = false; setBusy(false) }
   }
 
   async function begin() {
-    if (submitting.current) return
+    if (submitting.current || !consent || !quote || locked) return
     submitting.current = true
     setBusy(true)
     setError('')
     const id = crypto.randomUUID()
-    const request = { order_id: id, email, display_name: name,
+    const request = { order_id: id, email, display_name: name, terms_accepted: consent,
       items: quote.items.map(({ spot_id, total }) => ({ spot_id, total })) }
     savePuttyOrder(id)
     try {
@@ -155,46 +171,16 @@ export default function Putty() {
   }
 
   return <div className="checkout-page putty-page halo-container">
-    <header className="checkout-header putty-header">
-      <a href="/" aria-label="Oro home"><img src="/oro-logo.webp" alt="Oro" width="104" height="59" /></a>
-      <span>putty / a hoodie by all of us</span>
-    </header>
     <div className="putty-intro">
-      <p className="putty-eyebrow">a little space. a big statement.</p>
       <h1>Make your <em>mark.</em></h1>
-      <p>One hoodie. 48 squares on the back. One special spot up front.<br />Pick your space, place your bid, and make it yours.</p>
+      <p>Your name, on our hoodie. Back squares from $10. Front placement from $500.</p>
     </div>
     <div className="putty-layout">
       <section aria-label="Choose hoodie placements" className="putty-preview">
-        <div className="putty-switch" role="group" aria-label="Hoodie view">
-          <button type="button" aria-pressed={side === 'back'} onClick={() => setSide('back')}>Back · from $10</button>
-          <button type="button" aria-pressed={side === 'front'} onClick={() => setSide('front')}>Front · from $500</button>
-        </div>
-        <p className="putty-note">{side === 'back' ? '6 columns × 8 rows. Select as many squares as you like.' : 'One placement on the wearer’s left chest.'}</p>
-        <div className="putty-canvas-scroll" tabIndex={0} role="region" aria-label="Hoodie image and selectable squares; scroll horizontally on smaller screens">
-          <div className="putty-canvas">
-            <img src={side === 'back' ? back : front} alt={`Black hoodie, ${side} view`} width="800" height="1200" />
-            <div className={`putty-grid putty-grid--${side}`}>
-              {visible.map(spot => <button key={spot.id} type="button"
-                className="putty-square" aria-pressed={spot.id in selected}
-                disabled={locked || !board?.enabled || (spot.held && !(spot.id in selected))}
-                aria-label={`${spot.id === 'front' ? 'Front left chest' : spot.id}: ${spot.name ? `${spot.name}, current bid ${formatPrice(spot.total)}` : 'Unclaimed'}, minimum ${formatPrice(spot.minimum)} USD${spot.held ? ', payment in progress' : ''}`}
-                onClick={() => toggle(spot)}>
-                <span>{spot.id in selected ? '✓ ' : ''}{spot.id === 'front' ? 'left chest' : spot.id}</span>
-                <small>{spot.held ? 'held' : spot.name || '+'}</small>
-              </button>)}
-            </div>
-          </div>
-        </div>
-        <p className="putty-note">Names mark paid claims. You can still outbid them. ✓ means selected.</p>
-        <div className="putty-refresh">
-          <label><input type="checkbox" checked={autoRefresh} onChange={event => setAutoRefresh(event.target.checked)} /> Update availability automatically</label>
-          <button type="button" onClick={() => refresh()}>Refresh squares</button>
-        </div>
-        <p role="status">{!board && !boardError ? 'Loading squares…' : boardError || (!board.enabled ? 'Bidding is not open yet.' : '')}</p>
+        <HoodieViewer spots={spots} selected={selected} locked={locked} checking={checkingSpot} onSelect={toggle} />
+        <p role="status" className="putty-availability">{checkingSpot ? `Checking ${checkingSpot}…` : boardError || (!board ? 'Checking availability…' : !board.enabled ? 'Bidding is not open yet.' : '')}</p>
       </section>
       <section className="checkout-card putty-card" aria-labelledby="putty-bid-heading">
-        <p className="putty-eyebrow">your piece of putty</p>
         <h2 id="putty-bid-heading">{order?.status === 'paid' ? 'You made your mark.' : 'Claim your space.'}</h2>
         <p role="alert" className="checkout-error">{error}</p>
         {orderId ? <>
@@ -219,7 +205,7 @@ export default function Putty() {
         </> : <form onSubmit={review}>
           <p role="status">{count ? `${count} ${count === 1 ? 'placement' : 'placements'} selected` : 'Select a square on the hoodie to begin.'}</p>
           <fieldset disabled={locked} className="putty-bids">
-            <legend>Your total bid per placement (USD)</legend>
+            <legend>Your price</legend>
             {Object.entries(selected).map(([id, value]) => {
               const spot = spots.find(s => s.id === id)
               return <div key={id} className="putty-bid-row">
@@ -227,23 +213,27 @@ export default function Putty() {
                 <div className="putty-price"><span aria-hidden="true">$</span><input id={`bid-${id}`} type="text" inputMode="decimal" required value={value}
                   aria-describedby={`minimum-${id}`} onChange={event => { setQuote(null); setSelected(old => ({ ...old, [id]: event.target.value })) }} /></div>
                 <button type="button" aria-label={`Remove ${id}`} onClick={() => toggle(spot)}>×</button>
-                <small id={`minimum-${id}`} className="putty-minimum">Minimum {formatPrice(spot?.minimum || 0)} USD</small>
+                <small id={`minimum-${id}`} className="putty-minimum">Minimum {formatPrice(spot?.minimum || 0)}</small>
               </div>
             })}
           </fieldset>
           <label className="checkout-label" htmlFor="putty-email">Email</label>
           <input className="oro-input" id="putty-email" type="email" autoComplete="email" maxLength={254} required disabled={locked}
             value={email} onChange={event => { setEmail(event.target.value); setQuote(null) }} aria-describedby="putty-credit-note" />
-          <p className="putty-note" id="putty-credit-note">Bought before? Use the same email. Your previous payments on each square count toward your bid, so you only pay the difference. No verification needed.</p>
+          <p className="putty-note" id="putty-credit-note">Bought before? Use the same email. Your total includes previous payments on each square; you only pay the difference.</p>
           <label className="checkout-label" htmlFor="putty-name">Display name <span>(optional)</span></label>
           <input className="oro-input" id="putty-name" autoComplete="nickname" maxLength={60} disabled={locked} value={name}
             onChange={event => { setName(event.target.value); setQuote(null) }} placeholder="Your name on the hoodie grid" aria-describedby="putty-name-note" />
-          <p className="putty-note" id="putty-name-note">This name is public. Leave it blank to appear as “Anonymous”. Your email stays private. Returning to a square? Its original paid display name stays.</p>
-          <p className="putty-note">Bids are paid contributions. Being outbid doesn’t automatically refund your payment. No artwork is needed today; we’ll follow up about your placement.</p>
+          <p className="putty-note" id="putty-name-note">Shown on your squares. Leave blank for “Anonymous”. Existing paid names stay the same.</p>
+          <p className="putty-note">Being outbid doesn’t automatically refund your payment.</p>
+          <label className="putty-consent">
+            <input type="checkbox" required checked={consent} disabled={locked} onChange={event => { setConsent(event.target.checked); setQuote(null) }} />
+            <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">terms</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.</span>
+          </label>
           {quote ? <div className="putty-summary">
             <p>Previous payments applied <strong>{formatPrice(quote.items.reduce((sum, item) => sum + item.credit, 0))}</strong></p>
             <p>Due now <strong>{formatPrice(quote.amount)} USD</strong></p>
-            <button type="button" className="oro-button oro-button--primary checkout-button" onClick={begin} disabled={locked}>Hold squares & continue to payment ↗</button>
+            <button type="button" className="oro-button oro-button--primary checkout-button" onClick={begin} disabled={locked || !consent}>Continue to payment ↗</button>
             <p className="putty-note">We’ll recheck every square and hold them for one minute. Payment opens right here.</p>
           </div> : <button type="submit" className="oro-button oro-button--primary checkout-button" disabled={locked || !count || !board?.enabled}>{busy ? 'Checking your bid…' : 'Review my bid ↗'}</button>}
         </form>}

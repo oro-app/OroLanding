@@ -31,7 +31,7 @@ const PuttyPage = lazy(() => import('./components/putty/Putty'))
 export function getRouteFromPath(pathname = '/', search = '') {
   const path = pathname.replace(/\/+$/, '') || '/'
   if (path === '/checkout') return { type: 'checkout' }
-  if (path === '/putty') return { type: 'putty' }
+  if (path === '/merch' || path === '/putty') return { type: 'merch' }
   if (GEO_PATHS.includes(path)) return { type: 'geo', path }
   if (isFeedbackPath(path)) return { type: 'feedback' }
   const newsletterMatch = path.match(/^\/newsletter\/([^/]+)$/)
@@ -69,7 +69,7 @@ function App({ initialRoute }) {
   const isHome = route.type === 'home'
   const isBeta = route.type === 'beta'
   const isFeedback = route.type === 'feedback'
-  const isCheckout = route.type === 'checkout' || route.type === 'putty'
+  const isCheckout = route.type === 'checkout' || route.type === 'merch'
   const isGeo = route.type === 'geo'
   const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
   const isPrivateForm = isBeta || isFeedback || isCheckout || route.type === 'get-started'
@@ -155,10 +155,10 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && !isCheckout && (isHalo ? <HomeHeader showCta={route.type !== 'get-started'} sticky={!isHome} /> : <SiteHeader />)}
+        {!isBeta && !isFeedback && (!isCheckout || route.type === 'merch') && (isHalo ? <HomeHeader showCta={route.type !== 'get-started'} sticky={!isHome} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
-          {route.type === 'putty' ? (
-            <Suspense fallback={<p role="status">Loading Putty…</p>}><PuttyPage /></Suspense>
+          {route.type === 'merch' ? (
+            <Suspense fallback={<p role="status">Loading merch…</p>}><PuttyPage /></Suspense>
           ) : isCheckout ? (
             <Suspense fallback={null}><CheckoutPage /></Suspense>
           ) : isGeo ? (

@@ -1,6 +1,20 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cents, puttyRequest, readPuttyOrder } from '../src/lib/putty.js'
+import { cents, hoodieSpots, puttyRequest, readPuttyOrder } from '../src/lib/putty.js'
+
+test('all placements render before the API responds, without pretending they are available', () => {
+  const spots = hoodieSpots(null)
+  assert.equal(spots.length, 49)
+  assert.equal(new Set(spots.map(spot => spot.id)).size, 49)
+  assert.equal(spots[0].id, 'front')
+  assert.equal(spots[1].id, 'A1')
+  assert.equal(spots[48].id, 'H6')
+  assert.ok(spots.every(spot => spot.unknown && spot.minimum === undefined))
+  const live = hoodieSpots({ spots: [{ id: 'A1', name: 'Alex', total: 2000, minimum: 2001, held: true }] })
+  assert.equal(live[1].name, 'Alex')
+  assert.equal(live[1].held, true)
+  assert.equal(live[2].unknown, true)
+})
 
 test('money is parsed into exact integer cents without rounding an invalid bid', () => {
   assert.equal(cents('10'), 1000)

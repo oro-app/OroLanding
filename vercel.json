@@ -3,7 +3,7 @@
   "outputDirectory": "dist",
   "headers": [
     {
-      "source": "/putty",
+      "source": "/merch",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" },
         { "key": "Referrer-Policy", "value": "no-referrer" },
@@ -99,6 +99,7 @@
     }
   ],
   "redirects": [
+    { "source": "/putty", "destination": "/merch", "permanent": true },
     { "source": "/get-started", "destination": "/getstarted", "permanent": true },
     { "source": "/:entry(beta|invite)", "has": [{ "type": "query", "key": "src", "value": "^poster-career(?:-[a-z0-9]+)*$" }], "destination": "/beta/career", "permanent": false },
     { "source": "/:entry(beta|invite)", "has": [{ "type": "query", "key": "src", "value": "^poster-dating(?:-[a-z0-9]+)*$" }], "destination": "/beta/dating", "permanent": false },
@@ -106,7 +107,7 @@
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
   "rewrites": [
-    { "source": "/putty", "destination": "/putty/index.html" },
+    { "source": "/merch", "destination": "/merch/index.html" },
     { "source": "/beta/career", "destination": "/beta/career/index.html" },
     { "source": "/beta/dating", "destination": "/beta/dating/index.html" },
     { "source": "/beta", "destination": "/beta/index.html" },

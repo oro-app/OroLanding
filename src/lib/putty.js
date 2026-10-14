@@ -1,3 +1,8 @@
+export function hoodieSpots(board) {
+  return ['front', ...Array.from({ length: 48 }, (_, i) => `${'ABCDEFGH'[Math.floor(i / 6)]}${i % 6 + 1}`)]
+    .map(id => board?.spots?.find(spot => spot.id === id) || { id, unknown: true })
+}
+
 export function cents(value) {
   if (!/^\d+(?:\.\d{1,2})?$/.test(String(value))) return null
   const [whole, fraction = ''] = String(value).split('.')
@@ -7,7 +12,7 @@ export function cents(value) {
 
 export async function puttyRequest(operation, body, signal) {
   const base = (import.meta.env?.VITE_ORO_API_URL || 'https://api.buildingoro.ca').replace(/\/+$/, '')
-  const response = await fetch(`${base}/putty/${operation}`, {
+  const response = await fetch(`${base}/merch/${operation}`, {
     method: body ? 'POST' : 'GET', signal,
     headers: body ? { 'Content-Type': 'application/json' } : {},
     ...(body ? { body: JSON.stringify(body) } : {}),
