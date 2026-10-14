@@ -1,9 +1,8 @@
 import { useTheme } from '../../context/ThemeContext'
-import useScrolled from '../../hooks/useScrolled'
 import { NAV_COLUMNS } from '../../lib/siteLinks'
 
-// Redesigned site header — sticky, hairline bottom border, theme-aware via
-// --color-* tokens. Its dropdown columns are driven by NAV_COLUMNS;
+// Redesigned site header — sticky and theme-aware via --color-* tokens.
+// Its dropdown columns are driven by NAV_COLUMNS;
 // footer-only links are kept out of this shared data.
 //
 // Theme control is a single sun/moon icon toggle (was two literal
@@ -28,11 +27,10 @@ function MoonIcon() {
 
 export default function SiteHeader() {
   const { theme, toggleTheme } = useTheme()
-  const scrolled = useScrolled()
   const nextTheme = theme === 'dark' ? 'light' : 'dark'
 
   return (
-    <header className={`site-header${scrolled ? ' site-header--scrolled' : ''}`}>
+    <header className="site-header">
       <div className="site-header-inner">
         <a href="/" className="site-header-logo-link" aria-label="oro home">
         <img

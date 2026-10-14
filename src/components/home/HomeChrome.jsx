@@ -1,5 +1,4 @@
 import { Heading, Text } from 'oro-kit'
-import useScrolled from '../../hooks/useScrolled'
 import { trackCtaClick } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
 import MessagesIcon from '../MessagesIcon'
@@ -20,10 +19,8 @@ export function HomeCta({ place, children, className = '', inviteUrl = '' }) {
 }
 
 export function HomeHeader({ showCta = true, sticky = true }) {
-  const scrolled = useScrolled()
-
   return (
-    <header className={`halo-header${sticky ? '' : ' halo-header--static'}${scrolled ? ' halo-header--scrolled' : ''}`}>
+    <header className={`halo-header${sticky ? '' : ' halo-header--static'}`}>
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
