@@ -66,6 +66,12 @@ test('board responses validate placement ids from the board contract', () => {
   const board = { currency: 'usd', enabled: true, leaderboard: [{ name: 'Oro', area: 1, total_paid: 1000, url: 'https://example.com' }], spots }
 
   assert.equal(validPuttyResponse('board', board), true)
+  assert.equal(validPuttyResponse('board', { ...board, spots: spots.map((spot, index) => ({
+    ...spot, history: index ? [] : [{ name: 'Expanse', total: 1000 }, { name: 'Z company', total: 1500 }],
+  })) }), true)
+  assert.equal(validPuttyResponse('board', { ...board, spots: spots.map((spot, index) => ({
+    ...spot, history: index ? [] : [{ name: 'Expanse', total: '1000' }],
+  })) }), false)
   assert.equal(validPuttyResponse('board', { ...board, leaderboard: [{ name: 'Graypass', area: 0, total_paid: 1000 }] }), true)
   assert.equal(validPuttyResponse('board', { ...board, leaderboard: [{ name: 'Oro', area: 1, total_paid: 1000 }] }), true)
   assert.equal(validPuttyResponse('board', { ...board, leaderboard: [{ name: 'Oro', area: -1, total_paid: 1000 }] }), false)

@@ -57,7 +57,9 @@ export function validPuttyResponse(operation, data) {
         && (spot.name == null || typeof spot.name === 'string')
         && (spot.image_url == null || Boolean(puttyPublicUrl(spot.image_url)))
         && (spot.image_group == null || typeof spot.image_group === 'string')
-        && (spot.image_alt == null || typeof spot.image_alt === 'string'))
+        && (spot.image_alt == null || typeof spot.image_alt === 'string')
+        && (spot.history === undefined || Array.isArray(spot.history) && spot.history.every(owner => owner
+          && typeof owner.name === 'string' && money(owner.total))))
       && Array.isArray(data.leaderboard) && data.leaderboard.every(entry => entry
         && typeof entry.name === 'string' && Number.isSafeInteger(entry.area) && entry.area >= 0 && entry.area <= 49
         && (entry.total_paid == null || money(entry.total_paid))

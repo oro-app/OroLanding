@@ -41,7 +41,6 @@
 .putty-grid--front { left: 57.5%; top: 37.5%; width: 15%; height: 6%; }
 .putty-page .putty-square { box-sizing: border-box; min-width: 0; min-height: 0; padding: 2px; border: 1px solid #fff; background: rgb(37 34 41 / .5); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.15; text-align: center; transform: none; }
 .putty-page .putty-square--preview { overflow-wrap: anywhere; border: 0; background: transparent; box-shadow: none; color: #fff; text-decoration: none; text-shadow: 0 1px 2px #252229; }
-.putty-page span.putty-square--preview { pointer-events: none; }
 .putty-page .putty-square[style*="background-image"] { background-repeat: no-repeat; }
 .putty-page .putty-square--choose.putty-square--claimed { background-color: hsl(var(--putty-price-hue) 72% 32% / .5); }
 .putty-page .putty-square--choose { background-color: transparent; text-shadow: 0 1px 2px #252229; }
@@ -49,6 +48,10 @@
 .putty-page .putty-square[aria-pressed="true"] { background-color: #806b8d; border: 3px double #fff; }
 .putty-page :focus-visible { outline: 3px solid var(--oro-color-ink); outline-offset: 3px; }
 .putty-page .putty-square:focus-visible { position: relative; z-index: 1; outline: 3px solid #fff; box-shadow: 0 0 0 6px #252229; }
+.putty-history { padding: .875rem 1rem 1rem; border-top: 1px solid var(--oro-color-muted); color: var(--oro-color-ink); }
+.putty-history label { display: block; margin-bottom: .375rem; font-size: .75rem; font-weight: 700; }
+.putty-history select { width: 100%; min-height: 44px; padding: .5rem; border: 1px solid var(--oro-color-muted); border-radius: var(--oro-radius-field); background: var(--oro-color-surface); color: var(--oro-color-ink); }
+.putty-history p { margin: .75rem 0 0; line-height: 1.5; overflow-wrap: anywhere; }
 .putty-order-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
 .putty-consent { display: flex; align-items: center; gap: .75rem; min-height: 44px; font-size: .875rem; line-height: 1.6; margin-top: 1.5rem; }
 .putty-consent input { width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--oro-color-accent); }
@@ -124,4 +127,5 @@
   .putty-canvas-skeleton,
   .putty-leaderboard-skeleton span { border: 1px solid CanvasText; }
   .putty-page :focus-visible { outline-color: Highlight; }
+  .putty-history, .putty-history select { border-color: CanvasText; }
 }
