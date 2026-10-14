@@ -183,7 +183,26 @@ export default function Putty() {
         <HoodieViewer spots={spots} selected={selected} locked={locked || !board?.enabled} onSelect={toggle} />
         <p role="status" className="putty-availability">{boardError || (!board ? 'Checking availability…' : !board.enabled ? 'Bidding is not open yet.' : '')}</p>
       </section>
-      <section className="checkout-card putty-card" aria-labelledby="putty-bid-heading">
+      <section className="putty-leaderboard" aria-labelledby="putty-leaderboard-heading">
+        <p className="putty-leaderboard-kicker">the ones to beat</p>
+        <h2 id="putty-leaderboard-heading">Leaderboard</h2>
+        <p>Who has claimed the most space on the hoodie.</p>
+        <p className="putty-leaderboard-perk"><strong>Top three get the spotlight.</strong> We will highlight your name here, add a link, and work with you on the details.</p>
+        {Array.isArray(board?.leaderboard) ? board.leaderboard.length ? <div className="putty-leaderboard-table" role="region" aria-labelledby="putty-leaderboard-heading" tabIndex="0">
+          <table>
+            <caption>Current ranking by hoodie placements claimed</caption>
+            <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Area claimed</th></tr></thead>
+            <tbody>{board.leaderboard.map((entry, index) => <tr className={index < 3 ? 'putty-leaderboard-top' : undefined} key={`${entry.name}-${index}`}>
+              <td><span className="putty-leaderboard-rank"><span aria-hidden="true">{index === 0 ? '♦' : index < 3 ? '★' : ''}</span>{index < 3 ? ['1st', '2nd', '3rd'][index] : index + 1}</span></td>
+              <th scope="row">{entry.name}</th>
+              <td>{entry.area} {entry.area === 1 ? 'placement' : 'placements'}</td>
+            </tr>)}</tbody>
+          </table>
+        </div> : <p>No one has claimed a placement yet. Be the first.</p> : null}
+        <p className="putty-leaderboard-help">Questions about your placement or want your link added? <a href="/contact">Send us a message</a> or <a href="mailto:hello@buildingoro.ca">email us</a>.</p>
+      </section>
+    </div>
+    <section className="checkout-card putty-card" aria-labelledby="putty-bid-heading">
         <h2 id="putty-bid-heading">{order?.status === 'paid' ? 'You made your mark.' : 'Claim your space.'}</h2>
         <p role="alert" className="checkout-error">{error}</p>
         {orderId ? <>
@@ -240,25 +259,9 @@ export default function Putty() {
             <p>Previous payments applied <strong>{formatPrice(quote.items.reduce((sum, item) => sum + item.credit, 0))}</strong></p>
             <p>Due now <strong>{formatPrice(quote.amount)} USD</strong></p>
             <button type="button" className="oro-button oro-button--primary checkout-button" onClick={begin} disabled={locked || !consent}>Continue to payment ↗</button>
-            <p className="putty-note">We’ll hold your squares for one minute.</p>
+            <p className="putty-note">We’ll hold your squares for two minutes.</p>
           </div> : <button type="submit" className="oro-button oro-button--primary checkout-button" disabled={locked || !count || !board?.enabled}>{busy ? 'Checking your bid…' : 'Review my bid ↗'}</button>}
         </form>}
-      </section>
-    </div>
-    {Array.isArray(board?.leaderboard) && <section className="putty-leaderboard" aria-labelledby="putty-leaderboard-heading">
-      <h2 id="putty-leaderboard-heading">Leaderboard</h2>
-      <p>Who has claimed the most space on the hoodie.</p>
-      {board.leaderboard.length ? <div className="putty-leaderboard-table" role="region" aria-labelledby="putty-leaderboard-heading" tabIndex="0">
-        <table>
-          <caption>Current ranking by hoodie placements claimed</caption>
-          <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Area claimed</th></tr></thead>
-          <tbody>{board.leaderboard.map((entry, index) => <tr key={`${entry.name}-${index}`}>
-            <td>{index + 1}</td>
-            <th scope="row">{entry.name}</th>
-            <td>{entry.area} {entry.area === 1 ? 'placement' : 'placements'}</td>
-          </tr>)}</tbody>
-        </table>
-      </div> : <p>No one has claimed a placement yet.</p>}
-    </section>}
+    </section>
   </div>
 }
