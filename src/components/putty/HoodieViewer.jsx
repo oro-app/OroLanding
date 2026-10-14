@@ -64,12 +64,21 @@ export default function HoodieViewer({ spots, selected, locked, mode, onSelect }
   const [side, setSide] = useState('back')
   const [zoom, setZoom] = useState(0)
   const [loadedSide, setLoadedSide] = useState('back')
+  const [magnifying, setMagnifying] = useState(false)
   const canvas = useRef(null)
   const viewport = useRef(null)
 
   useEffect(() => {
     viewport.current.scrollLeft = (canvas.current.clientWidth - viewport.current.clientWidth) / 2
   }, [zoom])
+
+  function moveMagnifier(event) {
+    if (mode !== 'preview' || event.pointerType === 'touch') return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    event.currentTarget.style.setProperty('--putty-magnifier-x', `${event.clientX - bounds.left}px`)
+    event.currentTarget.style.setProperty('--putty-magnifier-y', `${event.clientY - bounds.top}px`)
+    setMagnifying(true)
+  }
 
   return <div className={`putty-gallery putty-gallery--${mode}`}>
     <div className="putty-thumbnails" role="group" aria-label="Hoodie view">
@@ -85,9 +94,16 @@ export default function HoodieViewer({ spots, selected, locked, mode, onSelect }
         <button type="button" aria-label="Enlarge hoodie image" disabled={zoom === 2} onClick={() => setZoom(value => Math.min(2, value + .25))}>+</button>
       </div>
       <div ref={viewport} className="putty-canvas-scroll" tabIndex={0} role="region" aria-label="Hoodie placements; scroll to explore the image" aria-busy={loadedSide !== side}>
-        <div ref={canvas} className="putty-canvas" style={{ width: `${(1 + zoom) * 100}%` }}>
+        <div ref={canvas} className="putty-canvas" style={{ width: `${(1 + zoom) * 100}%` }}
+          onPointerEnter={moveMagnifier} onPointerMove={moveMagnifier} onPointerLeave={() => setMagnifying(false)}>
           <Artwork side={side} spots={spots} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
             ready={loadedSide === side} onReady={setLoadedSide} />
+          {mode === 'preview' && magnifying && <div className="putty-magnifier" aria-hidden="true">
+            <div className="putty-magnifier-content">
+              <Artwork side={side} spots={spots} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
+                ready={loadedSide === side} onReady={setLoadedSide} />
+            </div>
+          </div>}
         </div>
       </div>
     </div>
