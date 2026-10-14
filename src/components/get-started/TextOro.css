@@ -46,3 +46,10 @@
 @media (prefers-reduced-motion: reduce) {
   .text-oro-inner { animation: none; }
 }
+
+.text-oro-form { margin-top: 24px; max-width: 420px; text-align: left; }
+.text-oro-form label { display: block; margin-bottom: 8px; }
+.text-oro-form .oro-input { width: 100%; min-height: 48px; }
+.text-oro-form .text-oro-fine-print { margin-top: 16px; }
+.text-oro-form .text-oro-cta { margin-top: 20px; }
+.text-oro-form [role='alert'] { margin-top: 16px; color: var(--oro-color-error); }
