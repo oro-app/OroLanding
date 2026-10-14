@@ -22,15 +22,7 @@ function artworkStyle(spot, spots) {
   }
 }
 
-function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, ready, onReady, linkable = true }) {
-  const [historyState, setHistoryState] = useState({ id: null, pointer: false, focus: false, dismissed: false })
-
-  function updateHistory(id, change) {
-    setHistoryState(current => current.id === id
-      ? { ...current, ...change }
-      : { id, pointer: false, focus: false, dismissed: false, ...change })
-  }
-
+function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, historyState, updateHistory, ready, onReady, linkable = true }) {
   return <div className="putty-artwork" data-ready={ready}>
     <img src={side === 'back' ? back : front} alt={`Black hoodie, ${side} view`} width="800" height="1200" onLoad={(event) => {
       const image = event.currentTarget
@@ -65,21 +57,11 @@ function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, r
             }
           },
         } : {}
-        const historyPopover = hasHistory && <div id={historyId} className="putty-history-popover" hidden={!historyOpen}>
-          <strong>{label} history</strong>
-          <ul>
-            {spot.history.map((owner, index) => <li key={`${owner.name}-${owner.total}-${index}`}>
-              <span>{owner.name}</span>
-              <span>{formatPrice(owner.total)}</span>
-            </li>)}
-          </ul>
-        </div>
         if (mode === 'preview' && url) return <a key={spot.id} className="putty-square putty-square--preview putty-square--claimed"
             href={url} target="_blank" rel="noopener noreferrer" style={artworkStyle(spot, spots)}
             aria-label={`${label}: ${spot.name || 'Claimed artwork'} (opens in a new tab)`}
             aria-details={hasHistory ? historyId : undefined} {...historyEvents}>
           {spot.name && !spot.image_url && <span>{spot.name}</span>}
-          {historyPopover}
         </a>
         if (mode === 'preview') return <span key={spot.id} className={`putty-square putty-square--preview${spot.name ? ' putty-square--claimed' : ''}`}
             style={artworkStyle(spot, spots)} role={spot.name || firstArtworkSpot ? 'img' : undefined}
@@ -89,7 +71,6 @@ function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, r
             aria-hidden={hasHistory ? undefined : spot.image_url ? !firstArtworkSpot : !spot.name}
             tabIndex={hasHistory ? 0 : undefined} aria-details={hasHistory ? historyId : undefined} {...historyEvents}>
           {spot.name && !spot.image_url && <span>{spot.name}</span>}
-          {historyPopover}
         </span>
         return <button key={spot.id} type="button" className={`putty-square putty-square--choose${spot.total ? ' putty-square--claimed' : ''}`} aria-pressed={spot.id in selected}
             style={{ ...(spot.total ? { '--putty-price-hue': puttyPriceHue(spot, spots) } : {}), ...artworkStyle(spot, spots) }}
@@ -108,6 +89,7 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
   const [zoom, setZoom] = useState(0)
   const [loadedSide, setLoadedSide] = useState(null)
   const [magnifying, setMagnifying] = useState(false)
+  const [historyState, setHistoryState] = useState({ id: null, pointer: false, focus: false, dismissed: false })
   const canvas = useRef(null)
   const viewport = useRef(null)
 
@@ -123,7 +105,18 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
     setMagnifying(true)
   }
 
+  function updateHistory(id, change) {
+    setHistoryState(current => current.id === id
+      ? { ...current, ...change }
+      : { id, pointer: false, focus: false, dismissed: false, ...change })
+  }
+
   const ready = !loading && loadedSide === side
+  const historySpots = spots.filter(spot => spot.history?.length >= 2
+    && (side === 'front' ? spot.id === 'front' : spot.id !== 'front'))
+  const historySpot = historySpots.find(spot => spot.id === historyState.id)
+  const showHistory = mode === 'preview' && historySpot?.history?.length >= 2 && !historyState.dismissed
+    && (historyState.pointer || historyState.focus)
   return <div className={`putty-gallery putty-gallery--${mode}`}>
     <div className="putty-thumbnails" role="group" aria-label="Hoodie view">
       {[['front', front], ['back', back]].map(([view, image]) => <button key={view} type="button" aria-label={`Show hoodie ${view}`} aria-pressed={side === view}
@@ -142,11 +135,21 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
           onPointerEnter={moveMagnifier} onPointerMove={moveMagnifier} onPointerLeave={() => setMagnifying(false)}>
           {!ready && <div className="putty-canvas-skeleton" aria-hidden="true" />}
           <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
-            ready={ready} onReady={setLoadedSide} />
+            historyState={historyState} updateHistory={updateHistory} ready={ready} onReady={setLoadedSide} />
+          {mode === 'preview' && historySpots.map(spot => <div key={spot.id} id={`putty-history-${spot.id}`} className="putty-history-popover"
+              hidden={!showHistory || historySpot?.id !== spot.id}>
+            <strong>{spot.id === 'front' ? 'Front left chest' : spot.id} history</strong>
+            <ul>
+              {spot.history.map((owner, index) => <li key={`${owner.name}-${owner.total}-${index}`}>
+                <span>{owner.name}</span>
+                <span>{formatPrice(owner.total)}</span>
+              </li>)}
+            </ul>
+          </div>)}
           {mode === 'preview' && magnifying && <div className="putty-magnifier" aria-hidden="true">
             <div className="putty-magnifier-content">
               <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
-                ready={ready} onReady={setLoadedSide} linkable={false} />
+                historyState={historyState} updateHistory={updateHistory} ready={ready} onReady={setLoadedSide} linkable={false} />
             </div>
           </div>}
         </div>

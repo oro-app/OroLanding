@@ -54,7 +54,7 @@
 .putty-page .putty-square[aria-pressed="true"] { background-color: #806b8d; border: 3px double #fff; }
 .putty-page :focus-visible { outline: 3px solid var(--oro-color-ink); outline-offset: 3px; }
 .putty-page .putty-square:focus-visible { position: relative; z-index: 1; outline: 3px solid #fff; box-shadow: 0 0 0 6px #252229; }
-.putty-history-popover { position: absolute; z-index: 5; inset-block-end: calc(100% + .5rem); inset-inline-start: 50%; inline-size: max-content; min-inline-size: 10rem; max-inline-size: min(14rem, calc(100vw - 2rem)); padding: .75rem; border: 1px solid var(--oro-color-ink); border-radius: .75rem; background: var(--oro-color-surface); color: var(--oro-color-ink); text-align: start; text-shadow: none; transform: translateX(-50%); }
+.putty-history-popover { position: absolute; z-index: 4; inset-block-start: 8%; inset-inline-end: 16%; inline-size: clamp(9rem, 25%, 12rem); max-inline-size: calc(100% - 2rem); padding: .75rem; border: 1px solid var(--oro-color-ink); border-radius: .75rem; background: var(--oro-color-surface); color: var(--oro-color-ink); text-align: start; text-shadow: none; }
 .putty-history-popover[hidden] { display: none; }
 .putty-history-popover > strong { display: block; margin-block-end: .5rem; font-size: .75rem; }
 .putty-history-popover ul { display: grid; gap: .375rem; margin: 0; padding: 0; list-style: none; }
