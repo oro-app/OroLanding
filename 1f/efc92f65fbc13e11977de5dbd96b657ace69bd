@@ -1,0 +1,16 @@
+e2e/checkout.spec.js
+  h_92d6f6e2d85b09 14,97,148
+src/components/checkout/CheckoutForm.jsx
+  h_92d6f6e2d85b09 39-40,49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1fefc92f65fbc13e11977de5dbd96b657ace69bd",
+  "prompts": {},
+  "humans": {
+    "h_92d6f6e2d85b09": {
+      "author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
