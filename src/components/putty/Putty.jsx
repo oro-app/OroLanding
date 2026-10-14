@@ -195,8 +195,7 @@ export default function Putty() {
         </div>}
         {Array.isArray(board?.leaderboard) ? board.leaderboard.length ? <div className="putty-leaderboard-table" role="region" aria-labelledby="putty-leaderboard-heading" tabIndex="0">
           <table>
-            <caption>Current ranking by hoodie placements claimed</caption>
-            <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Paid (USD)</th><th scope="col">Spots held</th></tr></thead>
+            <thead><tr><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Total</th><th scope="col">claimed</th></tr></thead>
             <tbody>{board.leaderboard.map((entry, index) => <tr className={index < 3 ? 'putty-leaderboard-top' : undefined} key={`${entry.name}-${index}`}>
               <td><span className="putty-leaderboard-rank">{index < 3 ? ['1st', '2nd', '3rd'][index] : index + 1}</span></td>
               <th scope="row">{entry.url ? <a href={puttyPublicUrl(entry.url)} target="_blank" rel="noopener noreferrer">{entry.name}</a> : entry.name}</th>
@@ -245,7 +244,6 @@ export default function Putty() {
           <label className="checkout-label" htmlFor="putty-email">Email</label>
           <input className="oro-input" id="putty-email" type="email" autoComplete="email" maxLength={254} required disabled={locked}
             value={email} onChange={event => setEmail(event.target.value)} />
-          <p className="putty-note" id="putty-credit-note">Use the same email to apply previous payments.</p>
           <label className="checkout-label" htmlFor="putty-name">Display name <span>(optional)</span></label>
           <input className="oro-input" id="putty-name" autoComplete="nickname" maxLength={60} disabled={locked} value={name}
             onChange={event => setName(event.target.value)} placeholder="Your name on the hoodie grid" aria-describedby="putty-name-note" />
