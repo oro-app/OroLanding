@@ -144,7 +144,7 @@ export default function Home() {
                 not another digital closet, not another chatbot
               </Text>
               <div className="home-action">
-                <HomeCta place="hero" className="home-enter">get her number</HomeCta>
+                <HomeCta place="hero" className="home-enter" href="/merch" showIcon={false}>make your mark</HomeCta>
               </div>
             </div>
           </section>

@@ -7,12 +7,12 @@ function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
 }
 
-export function HomeCta({ place, children, className = '', inviteUrl = '' }) {
-  const href = inviteUrl ? `/checkout?invite=${encodeURIComponent(inviteUrl)}` : '/checkout'
+export function HomeCta({ place, children, className = '', inviteUrl = '', href: customHref, showIcon = true }) {
+  const href = customHref || (inviteUrl ? `/checkout?invite=${encodeURIComponent(inviteUrl)}` : '/checkout')
   return (
     <a href={href} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-      onClick={() => trackCtaClick('get_number_click', { location: place, destination: 'web_checkout' })}>
-      {!['header', 'floating'].includes(place) && <MessagesIcon className="halo-cta-message" />}
+      onClick={customHref ? undefined : () => trackCtaClick('get_number_click', { location: place, destination: 'web_checkout' })}>
+      {showIcon && !['header', 'floating'].includes(place) && <MessagesIcon className="halo-cta-message" />}
       <span>{children}</span>
     </a>
   )
