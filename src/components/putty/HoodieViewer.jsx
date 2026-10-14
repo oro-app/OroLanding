@@ -1,26 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { formatPrice } from '../../lib/checkout'
-import { puttyPriceHue, puttyPublicUrl, puttySpotUrl } from '../../lib/putty'
+import { puttyArtworkStyle, puttyPriceHue, puttySpotUrl } from '../../lib/putty'
 import front from '../../assets/blanks/front.webp'
 import back from '../../assets/blanks/back.webp'
-
-function artworkStyle(spot, spots) {
-  const image = puttyPublicUrl(spot.image_url)
-  if (!image) return undefined
-  if (spot.id === 'front') return { backgroundImage: `url("${image}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-  const group = spots.filter(item => item.id !== 'front' && item.image_url === spot.image_url
-    && (item.image_group || item.id) === (spot.image_group || spot.id))
-  const rows = group.map(item => item.id.charCodeAt(0) - 65)
-  const columns = group.map(item => Number(item.id.slice(1)) - 1)
-  const top = Math.min(...rows), left = Math.min(...columns)
-  const height = Math.max(...rows) - top + 1, width = Math.max(...columns) - left + 1
-  const row = spot.id.charCodeAt(0) - 65 - top, column = Number(spot.id.slice(1)) - 1 - left
-  return {
-    backgroundImage: `url("${image}")`,
-    backgroundSize: `${width * 100}% ${height * 100}%`,
-    backgroundPosition: `${width === 1 ? 50 : column * 100 / (width - 1)}% ${height === 1 ? 50 : row * 100 / (height - 1)}%`,
-  }
-}
 
 function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, historyState, updateHistory, ready, onReady, linkable = true }) {
   return <div className="putty-artwork" data-ready={ready}>
@@ -58,13 +40,13 @@ function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, h
           },
         } : {}
         if (mode === 'preview' && url) return <a key={spot.id} className="putty-square putty-square--preview putty-square--claimed"
-            href={url} target="_blank" rel="noopener noreferrer" style={artworkStyle(spot, spots)}
+            href={url} target="_blank" rel="noopener noreferrer" style={puttyArtworkStyle(spot, spots)}
             aria-label={`${label}: ${spot.name || 'Claimed artwork'} (opens in a new tab)`}
             aria-details={hasHistory ? historyId : undefined} {...historyEvents}>
           {spot.name && !spot.image_url && <span>{spot.name}</span>}
         </a>
         if (mode === 'preview') return <span key={spot.id} className={`putty-square putty-square--preview${spot.name ? ' putty-square--claimed' : ''}`}
-            style={artworkStyle(spot, spots)} role={spot.name || firstArtworkSpot ? 'img' : undefined}
+            style={puttyArtworkStyle(spot, spots)} role={spot.name || firstArtworkSpot ? 'img' : undefined}
             aria-label={hasHistory ? `${label}: ${spot.name || 'Claimed artwork'}`
               : firstArtworkSpot ? `${artwork.map(item => item.id).join(', ')}: ${spot.name || 'Claimed artwork'}. ${spot.image_alt}`
               : !spot.image_url && spot.name ? `${label}: ${spot.name}` : undefined}
@@ -73,7 +55,7 @@ function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, h
           {spot.name && !spot.image_url && <span>{spot.name}</span>}
         </span>
         return <button key={spot.id} type="button" className={`putty-square putty-square--choose${spot.total ? ' putty-square--claimed' : ''}`} aria-pressed={spot.id in selected}
-            style={{ ...(spot.total ? { '--putty-price-hue': puttyPriceHue(spot, spots) } : {}), ...artworkStyle(spot, spots) }}
+            style={{ ...(spot.total ? { '--putty-price-hue': puttyPriceHue(spot, spots) } : {}), ...puttyArtworkStyle(spot, spots) }}
             disabled={locked || (!(spot.id in selected) && (spot.unknown || spot.held))}
             aria-label={details} onClick={() => onSelect(spot)}>
           <span>{spot.id === 'front' ? 'chest' : spot.id}</span>

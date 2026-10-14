@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyPriceHue, puttyPublicUrl, puttyRequest, puttySpotUrl, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
+import { cents, clearPuttyDraft, hoodieSpots, puttyArtworkStyle, puttyCheckoutUrl, puttyPriceHue, puttyPublicUrl, puttyRequest, puttySpotUrl, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
 
 test('all placements render before the API responds, without pretending they are available', () => {
   const spots = hoodieSpots(null)
@@ -37,6 +37,22 @@ test('placement price colors run from green at ten dollars to red at the board m
   const spots = [{ minimum: 1000 }, { minimum: 25500 }, { minimum: 50000 }]
   assert.equal(puttyPriceHue(spots[0], spots), 120)
   assert.equal(puttyPriceHue(spots[2], spots), 0)
+})
+
+test('artwork can retain its original bounds after part of its placement is outbid', () => {
+  const image_url = 'https://example.com/anticipy.webp'
+  const spots = [
+    { id: 'B5', image_url, image_group: 'anticipy@B5-C6' },
+    { id: 'B6', image_url, image_group: 'anticipy@B5-C6' },
+    { id: 'C5', image_url: 'https://example.com/panda.webp', image_group: 'panda' },
+    { id: 'C6', image_url: 'https://example.com/panda.webp', image_group: 'panda' },
+  ]
+  assert.deepEqual(puttyArtworkStyle(spots[0], spots), {
+    backgroundImage: 'url("https://example.com/anticipy.webp")',
+    backgroundSize: '200% 200%',
+    backgroundPosition: '0% 0%',
+  })
+  assert.equal(puttyArtworkStyle(spots[1], spots).backgroundPosition, '100% 0%')
 })
 
 test('backend conflict remains a conflict and never becomes a local claim', async () => {

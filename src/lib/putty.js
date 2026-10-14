@@ -41,6 +41,25 @@ export function puttySpotUrl(spot, leaderboard = []) {
   return puttyPublicUrl(spot.url || (entries.length === 1 ? entries[0].url : ''))
 }
 
+export function puttyArtworkStyle(spot, spots) {
+  const image = puttyPublicUrl(spot.image_url)
+  if (!image) return undefined
+  if (spot.id === 'front') return { backgroundImage: `url("${image}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
+  const bounds = spot.image_group?.match(/@([A-H][1-6])-([A-H][1-6])$/)
+  const group = bounds ? [{ id: bounds[1] }, { id: bounds[2] }] : spots.filter(item => item.id !== 'front' && item.image_url === spot.image_url
+    && (item.image_group || item.id) === (spot.image_group || spot.id))
+  const rows = group.map(item => item.id.charCodeAt(0) - 65)
+  const columns = group.map(item => Number(item.id.slice(1)) - 1)
+  const top = Math.min(...rows), left = Math.min(...columns)
+  const height = Math.max(...rows) - top + 1, width = Math.max(...columns) - left + 1
+  const row = spot.id.charCodeAt(0) - 65 - top, column = Number(spot.id.slice(1)) - 1 - left
+  return {
+    backgroundImage: `url("${image}")`,
+    backgroundSize: `${width * 100}% ${height * 100}%`,
+    backgroundPosition: `${width === 1 ? 50 : column * 100 / (width - 1)}% ${height === 1 ? 50 : row * 100 / (height - 1)}%`,
+  }
+}
+
 function validItem(item) {
   return item && SPOT_ID.test(item.spot_id) && money(item.total)
     && (item.minimum === undefined || money(item.minimum))
