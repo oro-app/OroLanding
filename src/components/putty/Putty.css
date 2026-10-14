@@ -73,9 +73,9 @@
 .putty-leaderboard-help { margin: 1.5rem 0 0; color: var(--oro-color-muted); }
 .putty-leaderboard-help a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: .18em; }
 .putty-leaderboard-table { overflow-x: auto; }
-.putty-leaderboard table { width: 100%; border-collapse: separate; border-spacing: 0 .5rem; }
-.putty-leaderboard caption { padding: 1.5rem 0 .75rem; color: var(--oro-color-muted); text-align: left; }
-.putty-leaderboard th, .putty-leaderboard td { padding: 1rem .75rem; border-bottom: 1px solid var(--oro-color-muted); text-align: left; }
+.putty-leaderboard table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 .5rem; }
+.putty-leaderboard caption { padding: 1.5rem 0 .75rem; color: var(--oro-color-muted); text-align: center; }
+.putty-leaderboard th, .putty-leaderboard td { padding: 1rem .75rem; border-bottom: 1px solid var(--oro-color-muted); text-align: center; }
 .putty-leaderboard thead th { font-size: .75rem; font-weight: 500; color: var(--oro-color-muted); }
 .putty-leaderboard tbody th { font-weight: 500; }
 .putty-leaderboard tbody .putty-leaderboard-top > * { padding-block: 1.5rem; border-block: 1px solid var(--oro-color-muted); color: #fff; }
@@ -87,8 +87,10 @@
 .putty-leaderboard tbody .putty-leaderboard-top th { font-weight: 700; }
 .putty-leaderboard-rank { display: inline-flex; align-items: center; gap: .35rem; font-weight: 700; }
 .putty-leaderboard-top:first-child .putty-leaderboard-rank { font-size: 1.125rem; }
-.putty-leaderboard th:first-child, .putty-leaderboard td:first-child { width: 4rem; }
-.putty-leaderboard th:last-child, .putty-leaderboard td:last-child { text-align: right; }
+.putty-leaderboard th:first-child, .putty-leaderboard td:first-child { width: 15%; }
+.putty-leaderboard th:nth-child(2), .putty-leaderboard td:nth-child(2) { width: 45%; }
+.putty-leaderboard th:nth-child(3), .putty-leaderboard td:nth-child(3) { width: 16%; }
+.putty-leaderboard th:last-child, .putty-leaderboard td:last-child { width: 24%; }
 @media (max-width: 1000px) {
   .putty-layout { grid-template-columns: 1fr; }
   .putty-card { max-width: 680px; }
