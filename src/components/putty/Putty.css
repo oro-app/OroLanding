@@ -1,7 +1,11 @@
 .putty-page { color: var(--oro-color-ink); --oro-color-border: var(--oro-color-muted); }
 .putty-intro { padding: 2.5rem 0 2rem; }
-.putty-intro h1 { font-family: Fraunces, Georgia, serif; font-weight: 400; font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.08; margin: .75rem 0 1.25rem; }
+.putty-intro-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin: .75rem 0 1.25rem; }
+.putty-intro h1 { font-family: Fraunces, Georgia, serif; font-weight: 400; font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.08; margin: 0; }
 .putty-intro h1 em { color: var(--oro-color-accent); }
+.putty-countdown { flex: none; margin: 0 0 .4rem; text-align: end; }
+.putty-countdown span { display: block; font-size: clamp(1.25rem, 3vw, 2rem); font-variant-numeric: tabular-nums; line-height: 1; }
+.putty-countdown small { display: block; margin-top: .35rem; color: var(--oro-color-muted); font-size: .75rem; }
 .putty-intro > p:last-child { line-height: 1.7; color: var(--oro-color-muted); }
 .putty-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(340px, 1fr); gap: 3rem; align-items: start; }
 .putty-preview { min-width: 0; }

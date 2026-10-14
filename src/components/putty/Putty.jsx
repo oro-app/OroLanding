@@ -18,7 +18,7 @@ export default function Putty() {
   const [boardError, setBoardError] = useState('')
   const [boardStatus, setBoardStatus] = useState('')
   const [viewMode, setViewMode] = useState('preview')
-  const [now, setNow] = useState(Date.now)
+  const [now, setNow] = useState(null)
   const [consent, setConsent] = useState(draft.consent)
   const boardRequest = useRef(0)
   const submitting = useRef(false)
@@ -60,6 +60,7 @@ export default function Putty() {
     document.title = 'Merch — claim a piece of the hoodie | Oro'
     const id = readPuttyOrder()
     if (id) setOrderId(id)
+    setNow(Date.now())
     const timer = setInterval(() => setNow(Date.now()), 1000)
     return () => { mounted.current = false; clearInterval(timer) }
   }, [])
@@ -102,6 +103,9 @@ export default function Putty() {
   const spots = hoodieSpots(board)
   const count = Object.keys(selected).length
   const seconds = order ? Math.max(0, Math.ceil((Date.parse(order.hold_until) - now) / 1000)) : 0
+  const bidSeconds = now == null ? null : Math.max(0, Math.ceil((Date.parse('2026-10-14T14:00:00-05:00') - now) / 1000))
+  const bidTime = bidSeconds == null ? '--:--:--' : [Math.floor(bidSeconds / 3600), Math.floor(bidSeconds % 3600 / 60), bidSeconds % 60]
+    .map(value => String(value).padStart(2, '0')).join(':')
   const checkoutUrl = puttyCheckoutUrl(order?.checkout_url)
 
   function toggle(spot) {
@@ -170,7 +174,13 @@ export default function Putty() {
 
   return <div className="checkout-page putty-page halo-container">
     <div className="putty-intro">
-      <h1>Make your <em>mark.</em></h1>
+      <div className="putty-intro-heading">
+        <h1>Make your <em>mark.</em></h1>
+        <p className="putty-countdown" role="timer" aria-label={bidSeconds === 0 ? 'Bidding closed.' : bidSeconds == null ? 'Bidding ends at 2 p.m. EST.' : `${bidTime} left to bid. Bidding ends at 2 p.m. EST.`}>
+          <span>{bidSeconds === 0 ? 'Bidding closed' : bidTime}</span>
+          {bidSeconds !== 0 && <small>left to bid</small>}
+        </p>
+      </div>
       <p>Put whatever you want on the hoodie. Someone took your spot? Outbid them.</p>
     </div>
     <div className="putty-layout">
