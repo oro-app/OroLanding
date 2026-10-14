@@ -45,6 +45,14 @@ test('merch API responses are validated before the checkout trusts them', async 
   finally { globalThis.fetch = original }
 })
 
+test('board responses validate placement ids from the board contract', () => {
+  const spots = hoodieSpots(null).map(({ id }) => ({ id, name: null, total: 0, minimum: id === 'front' ? 50000 : 1000, held: false }))
+  const board = { currency: 'usd', enabled: true, leaderboard: [{ name: 'Oro', area: 1 }], spots }
+
+  assert.equal(validPuttyResponse('board', board), true)
+  assert.equal(validPuttyResponse('board', { ...board, spots: spots.map(spot => ({ ...spot, spot_id: spot.id, id: undefined })) }), false)
+})
+
 test('merch checkout only follows Stripe hosted payment URLs', () => {
   assert.equal(puttyCheckoutUrl('https://checkout.stripe.com/c/pay/test'), 'https://checkout.stripe.com/c/pay/test')
   for (const value of ['https://example.com/checkout', 'http://checkout.stripe.com/test', 'not a url']) {

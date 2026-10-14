@@ -26,7 +26,7 @@ export function validPuttyResponse(operation, data) {
   if (operation === 'board') {
     return typeof data.enabled === 'boolean' && Array.isArray(data.spots)
       && data.spots.length === 49 && new Set(data.spots.map(spot => spot.id)).size === 49
-      && data.spots.every(spot => validItem(spot) && typeof spot.held === 'boolean'
+      && data.spots.every(spot => spot && SPOT_ID.test(spot.id) && money(spot.total) && money(spot.minimum) && typeof spot.held === 'boolean'
         && (spot.name == null || typeof spot.name === 'string'))
       && Array.isArray(data.leaderboard) && data.leaderboard.every(entry => entry
         && typeof entry.name === 'string' && Number.isSafeInteger(entry.area) && entry.area > 0 && entry.area <= 49)
