@@ -6,13 +6,16 @@ import back from '../../assets/blanks/back.webp'
 function Artwork({ side, spots, selected, locked, onSelect }) {
   return <div className="putty-artwork">
     <img src={side === 'back' ? back : front} alt={`Black hoodie, ${side} view`} width="800" height="1200" />
+    {side === 'back' && <>
+      <div className="putty-axis putty-axis--x" aria-hidden="true">{[1, 2, 3, 4, 5, 6].map(column => <span key={column}>{column}</span>)}</div>
+      <div className="putty-axis putty-axis--y" aria-hidden="true">{'ABCDEFGH'.split('').map(row => <span key={row}>{row}</span>)}</div>
+    </>}
     <div className={`putty-grid putty-grid--${side}`}>
       {spots.filter(spot => side === 'front' ? spot.id === 'front' : spot.id !== 'front').map(spot => {
-        const content = <><span>{spot.id === 'front' ? 'left chest' : spot.id}</span><small>{spot.held ? 'held' : spot.name || '+'}</small></>
         return <button key={spot.id} type="button" className="putty-square" aria-pressed={spot.id in selected}
             disabled={locked || (!(spot.id in selected) && (spot.unknown || spot.held))}
             aria-label={`${spot.id === 'front' ? 'Front left chest' : spot.id}: ${spot.unknown ? 'availability not checked' : spot.name ? `${spot.name}, current bid ${formatPrice(spot.total)}` : 'Unclaimed'}${spot.minimum ? `, minimum ${formatPrice(spot.minimum)} USD` : ''}${spot.held ? ', payment in progress' : ''}`}
-            onClick={() => onSelect(spot)}>{content}</button>
+            onClick={() => onSelect(spot)}>{spot.id === 'front' ? 'left chest' : spot.id}</button>
       })}
     </div>
   </div>

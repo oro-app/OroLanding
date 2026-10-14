@@ -113,6 +113,8 @@ export default function Putty() {
     const items = Object.entries(selected).map(([spot_id, value]) => ({ spot_id, total: cents(value) }))
     try {
       if (items.some(item => item.total === null)) throw new Error('Enter a price with no more than two decimal places for each square.')
+      const lowBid = items.find(item => item.total < spots.find(spot => spot.id === item.spot_id)?.minimum)
+      if (lowBid) throw new Error(`${lowBid.spot_id === 'front' ? 'Front left chest' : `Square ${lowBid.spot_id}`} must meet its current minimum price.`)
       const data = await puttyRequest('quote', { email, display_name: name, items, terms_accepted: consent })
       setQuote(data)
     } catch (failure) { setError(failure.message); refresh() }
@@ -195,25 +197,27 @@ export default function Putty() {
           <p role="status">{count ? `${count} ${count === 1 ? 'placement' : 'placements'} selected` : 'Select a square on the hoodie to begin.'}</p>
           <fieldset disabled={locked} className="putty-bids">
             <legend>Your price</legend>
+            <div className="putty-bid-header" aria-hidden="true"><span>Placement</span><span>Price</span></div>
             {Object.entries(selected).map(([id, value]) => {
-              const spot = spots.find(s => s.id === id)
+              const spot = spots.find(item => item.id === id)
+              const label = id === 'front' ? 'Front left chest' : `Square ${id}`
               return <div key={id} className="putty-bid-row">
-                <label htmlFor={`bid-${id}`}>{id === 'front' ? 'Front left chest' : `Square ${id}`}<small>{spot?.name ? `${spot.name} · ${formatPrice(spot.total)}` : 'Unclaimed'}</small></label>
-                <div className="putty-price"><span aria-hidden="true">$</span><input id={`bid-${id}`} type="text" inputMode="decimal" required value={value}
-                  aria-describedby={`minimum-${id}`} onChange={event => { setQuote(null); setSelected(old => ({ ...old, [id]: event.target.value })) }} /></div>
-                <button type="button" aria-label={`Remove ${id}`} onClick={() => toggle(spot)}>×</button>
-                <small id={`minimum-${id}`} className="putty-minimum">Minimum {formatPrice(spot?.minimum || 0)}</small>
+                <label htmlFor={`bid-${id}`}>{label}</label>
+                <div className="putty-price"><span aria-hidden="true">$</span><input id={`bid-${id}`} type="number" inputMode="decimal" min={spot.minimum / 100} step="0.01" required value={value}
+                  aria-label={`${label} price, minimum ${formatPrice(spot.minimum)}`} onChange={event => { setQuote(null); setSelected(old => ({ ...old, [id]: event.target.value })) }}
+                  onBlur={() => { if ((cents(value) ?? -1) < spot.minimum) setSelected(old => ({ ...old, [id]: (spot.minimum / 100).toFixed(2) })) }} /></div>
+                <button type="button" aria-label={`Remove ${label}`} onClick={() => toggle(spot)}><span aria-hidden="true">×</span></button>
               </div>
             })}
           </fieldset>
           <label className="checkout-label" htmlFor="putty-email">Email</label>
           <input className="oro-input" id="putty-email" type="email" autoComplete="email" maxLength={254} required disabled={locked}
             value={email} onChange={event => { setEmail(event.target.value); setQuote(null) }} aria-describedby="putty-credit-note" />
-          <p className="putty-note" id="putty-credit-note">Bought before? Use the same email. Your total includes previous payments on each square; you only pay the difference.</p>
+          <p className="putty-note" id="putty-credit-note">Use the same email to apply previous payments.</p>
           <label className="checkout-label" htmlFor="putty-name">Display name <span>(optional)</span></label>
           <input className="oro-input" id="putty-name" autoComplete="nickname" maxLength={60} disabled={locked} value={name}
             onChange={event => { setName(event.target.value); setQuote(null) }} placeholder="Your name on the hoodie grid" aria-describedby="putty-name-note" />
-          <p className="putty-note" id="putty-name-note">Shown on your squares. Leave blank for “Anonymous”. Existing paid names stay the same.</p>
+          <p className="putty-note" id="putty-name-note">Leave blank to show “Anonymous”.</p>
           <p className="putty-note">Being outbid doesn’t automatically refund your payment.</p>
           <label className="putty-consent">
             <input type="checkbox" required checked={consent} disabled={locked} onChange={event => { setConsent(event.target.checked); setQuote(null) }} />
@@ -223,7 +227,7 @@ export default function Putty() {
             <p>Previous payments applied <strong>{formatPrice(quote.items.reduce((sum, item) => sum + item.credit, 0))}</strong></p>
             <p>Due now <strong>{formatPrice(quote.amount)} USD</strong></p>
             <button type="button" className="oro-button oro-button--primary checkout-button" onClick={begin} disabled={locked || !consent}>Continue to payment ↗</button>
-            <p className="putty-note">We’ll recheck every square and hold them for one minute. Payment opens right here.</p>
+            <p className="putty-note">We’ll hold your squares for one minute.</p>
           </div> : <button type="submit" className="oro-button oro-button--primary checkout-button" disabled={locked || !count || !board?.enabled}>{busy ? 'Checking your bid…' : 'Review my bid ↗'}</button>}
         </form>}
       </section>
