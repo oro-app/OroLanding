@@ -41,7 +41,8 @@
 .putty-grid--back { left: 27.5%; top: 35.8%; width: 45%; height: 36%; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); }
 .putty-grid--front { left: 57.5%; top: 37.5%; width: 15%; height: 6%; }
 .putty-page .putty-square { box-sizing: border-box; min-width: 0; min-height: 0; padding: 2px; border: 1px solid #fff; background: rgb(37 34 41 / .5); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-size: .6875rem; line-height: 1.15; text-align: center; transform: none; }
-.putty-page .putty-square--preview { pointer-events: none; overflow-wrap: anywhere; border: 0; background: transparent; box-shadow: none; text-shadow: 0 1px 2px #252229; }
+.putty-page .putty-square--preview { overflow-wrap: anywhere; border: 0; background: transparent; box-shadow: none; color: #fff; text-decoration: none; text-shadow: 0 1px 2px #252229; }
+.putty-page span.putty-square--preview { pointer-events: none; }
 .putty-page .putty-square[style*="background-image"] { background-repeat: no-repeat; }
 .putty-page .putty-square--choose.putty-square--claimed { background-color: hsl(var(--putty-price-hue) 72% 32% / .5); }
 .putty-page .putty-square--choose { background-color: transparent; text-shadow: 0 1px 2px #252229; }

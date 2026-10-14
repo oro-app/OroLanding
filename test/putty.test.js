@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyPriceHue, puttyPublicUrl, puttyRequest, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
+import { cents, clearPuttyDraft, hoodieSpots, puttyCheckoutUrl, puttyPriceHue, puttyPublicUrl, puttyRequest, puttySpotUrl, readPuttyDraft, readPuttyOrder, refreshPuttySelection, savePuttyDraft, validPuttyResponse } from '../src/lib/putty.js'
 
 test('all placements render before the API responds, without pretending they are available', () => {
   const spots = hoodieSpots(null)
@@ -77,6 +77,9 @@ test('board responses validate placement ids from the board contract', () => {
 test('public merch links only accept HTTPS URLs', () => {
   assert.equal(puttyPublicUrl('https://example.com/image.png'), 'https://example.com/image.png')
   assert.equal(puttyPublicUrl('javascript:alert(1)'), '')
+  assert.equal(puttySpotUrl({ name: 'Oro' }, [{ name: 'Oro', url: 'https://example.com' }]), 'https://example.com/')
+  assert.equal(puttySpotUrl({ name: 'Oro' }, [{ name: 'Oro', url: 'javascript:alert(1)' }]), '')
+  assert.equal(puttySpotUrl({ name: 'Oro' }, [{ name: 'Oro', url: 'https://one.example' }, { name: 'Oro', url: 'https://two.example' }]), '')
 })
 
 test('merch checkout only follows Stripe hosted payment URLs', () => {

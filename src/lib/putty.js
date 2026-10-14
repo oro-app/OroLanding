@@ -36,6 +36,11 @@ export function puttyPublicUrl(value) {
   return ''
 }
 
+export function puttySpotUrl(spot, leaderboard = []) {
+  const entries = leaderboard.filter(entry => entry.name === spot.name)
+  return puttyPublicUrl(spot.url || (entries.length === 1 ? entries[0].url : ''))
+}
+
 function validItem(item) {
   return item && SPOT_ID.test(item.spot_id) && money(item.total)
     && (item.minimum === undefined || money(item.minimum))

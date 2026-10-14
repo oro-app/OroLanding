@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { formatPrice } from '../../lib/checkout'
-import { puttyPriceHue, puttyPublicUrl } from '../../lib/putty'
+import { puttyPriceHue, puttyPublicUrl, puttySpotUrl } from '../../lib/putty'
 import front from '../../assets/blanks/front.webp'
 import back from '../../assets/blanks/back.webp'
 
@@ -22,7 +22,7 @@ function artworkStyle(spot, spots) {
   }
 }
 
-function Artwork({ side, spots, selected, locked, mode, onSelect, ready, onReady }) {
+function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, ready, onReady, linkable = true }) {
   return <div className="putty-artwork" data-ready={ready}>
     <img src={side === 'back' ? back : front} alt={`Black hoodie, ${side} view`} width="800" height="1200" onLoad={(event) => {
       const image = event.currentTarget
@@ -40,6 +40,12 @@ function Artwork({ side, spots, selected, locked, mode, onSelect, ready, onReady
         const artwork = spot.image_url && spots.filter(item => item.image_url === spot.image_url
           && (item.image_group || item.id) === (spot.image_group || spot.id))
         const firstArtworkSpot = artwork && artwork[0]?.id === spot.id
+        const url = linkable && puttySpotUrl(spot, leaderboard)
+        if (mode === 'preview' && url) return <a key={spot.id} className="putty-square putty-square--preview putty-square--claimed"
+            href={url} target="_blank" rel="noopener noreferrer" style={artworkStyle(spot, spots)}
+            aria-label={`${label}: ${spot.name || 'Claimed artwork'} (opens in a new tab)`}>
+          {spot.name && !spot.image_url && <span>{spot.name}</span>}
+        </a>
         if (mode === 'preview') return <span key={spot.id} className={`putty-square putty-square--preview${spot.name ? ' putty-square--claimed' : ''}`}
             style={artworkStyle(spot, spots)} role={spot.name || firstArtworkSpot ? 'img' : undefined}
             aria-label={firstArtworkSpot ? `${artwork.map(item => item.id).join(', ')}: ${spot.name || 'Claimed artwork'}. ${spot.image_alt}`
@@ -59,7 +65,7 @@ function Artwork({ side, spots, selected, locked, mode, onSelect, ready, onReady
   </div>
 }
 
-export default function HoodieViewer({ spots, selected, locked, loading, mode, onSelect }) {
+export default function HoodieViewer({ spots, leaderboard, selected, locked, loading, mode, onSelect }) {
   const [side, setSide] = useState('back')
   const [zoom, setZoom] = useState(0)
   const [loadedSide, setLoadedSide] = useState(null)
@@ -98,12 +104,12 @@ export default function HoodieViewer({ spots, selected, locked, loading, mode, o
         <div ref={canvas} className="putty-canvas" style={{ width: `${(1 + zoom) * 100}%` }}
           onPointerEnter={moveMagnifier} onPointerMove={moveMagnifier} onPointerLeave={() => setMagnifying(false)}>
           {!ready && <div className="putty-canvas-skeleton" aria-hidden="true" />}
-          <Artwork side={side} spots={spots} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
+          <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
             ready={ready} onReady={setLoadedSide} />
           {mode === 'preview' && magnifying && <div className="putty-magnifier" aria-hidden="true">
             <div className="putty-magnifier-content">
-              <Artwork side={side} spots={spots} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
-                ready={ready} onReady={setLoadedSide} />
+              <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
+                ready={ready} onReady={setLoadedSide} linkable={false} />
             </div>
           </div>}
         </div>
