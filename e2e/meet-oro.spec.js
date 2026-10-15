@@ -1,6 +1,7 @@
 import { test, expect } from './fixtures.js'
 
-const continueName = 'find your next outfit'
+const continueName = 'meet my stylist'
+const endcardQuestion = 'ready to see what oro can do with your closet?'
 const skipName = 'skip video and continue to checkout'
 const demoPath = '/demos/oro-onboarding-demo.mp4'
 const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 2500, first_month_discount_percent: 0 }
@@ -15,7 +16,7 @@ const expectPlaying = async page => {
 }
 
 const finishRecording = async page => {
-  const video = page.locator('video')
+  const video = await expectPlaying(page)
   await expect.poll(() => video.evaluate(element => element.readyState)).toBeGreaterThanOrEqual(1)
   await video.evaluate(async element => {
     element.currentTime = element.duration - 0.08
@@ -97,7 +98,7 @@ test('finishing offers checkout or a replay without starting a payment session',
   await page.goto('/meet-oro')
   await expectPlaying(page)
   await finishRecording(page)
-  await expect(page.getByRole('heading', { name: 'ready to find your next outfit?' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: endcardQuestion })).toBeVisible()
   await expect(page.locator('video')).not.toHaveAttribute('controls')
   await expect(page.getByRole('link', { name: continueName, exact: true })).toHaveAttribute('href', '/checkout')
   expect(checkoutRequests).toBe(0)
@@ -105,13 +106,28 @@ test('finishing offers checkout or a replay without starting a payment session',
   const video = await expectPlaying(page)
   expect(await video.evaluate(element => element.currentTime)).toBeLessThan(2)
   await expect(page.getByRole('link', { name: continueName, exact: true })).toHaveCount(0)
-  await expect(page.getByRole('heading', { name: 'ready to find your next outfit?' })).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: endcardQuestion })).toHaveCount(0)
   await finishRecording(page)
   expect(checkoutRequests).toBe(0)
   await page.getByRole('link', { name: continueName, exact: true }).click()
   await expect(page).toHaveURL(/\/checkout$/)
   await expect(page.locator('.checkout-price')).toHaveText('$25')
   expect(checkoutRequests).toBe(1)
+})
+
+test('the recording holds its opening frame until its entrance completes', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/meet-oro')
+  const video = page.locator('video')
+  const playback = await video.evaluate(element => {
+    const playing = () => ({ time: element.currentTime, opacity: Number(getComputedStyle(element).opacity), blur: getComputedStyle(element).filter })
+    if (!element.paused) return playing()
+    return new Promise(resolve => element.addEventListener('playing', () => resolve(playing()), { once: true }))
+  })
+  expect(playback.opacity).toBe(1)
+  expect(playback.blur).toBe('none')
+  expect(playback.time).toBeLessThan(.5)
+  await expectPlaying(page)
 })
 
 test('the final frame rests before the invitation appears', async ({ page }) => {
@@ -130,7 +146,7 @@ test('the final frame rests before the invitation appears', async ({ page }) => 
     }, { once: true })
   })
   await video.evaluate(element => { element.currentTime = element.duration - .08 })
-  await expect(page.getByRole('heading', { name: 'ready to find your next outfit?' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: endcardQuestion })).toBeVisible()
   expect(await page.evaluate(() => window.oroEndcardDelay)).toBeGreaterThanOrEqual(450)
 })
 

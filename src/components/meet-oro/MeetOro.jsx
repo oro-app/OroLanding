@@ -6,6 +6,7 @@ export default function MeetOro() {
   const videoRef = useRef(null)
   const transitionTimer = useRef(null)
   const leaving = useRef(false)
+  const entering = useRef(true)
   const [phase, setPhase] = useState('enter')
   const [status, setStatus] = useState('starting')
   const [endcardReady, setEndcardReady] = useState(false)
@@ -28,12 +29,26 @@ export default function MeetOro() {
   }, [])
 
   useEffect(() => {
-    play()
+    let cancelled = false
+    const video = videoRef.current
+    const entrance = video.getAnimations().find(animation => animation.animationName === 'meet-oro-picture-enter' && animation.playState !== 'finished')
+    const start = () => {
+      if (cancelled || leaving.current) return
+      entering.current = false
+      play()
+    }
+    if (entrance) {
+      entering.current = true
+      video.pause()
+      video.currentTime = 0
+      entrance.finished.then(start, start)
+    } else start()
     const restoreFromCache = event => {
       if (!event.persisted) return
       clearTimeout(transitionTimer.current)
       transitionTimer.current = null
       leaving.current = false
+      entering.current = false
       setPhase('enter')
       if (videoRef.current?.ended) {
         setStatus('ended')
@@ -43,6 +58,7 @@ export default function MeetOro() {
     }
     window.addEventListener('pageshow', restoreFromCache)
     return () => {
+      cancelled = true
       clearTimeout(transitionTimer.current)
       window.removeEventListener('pageshow', restoreFromCache)
     }
@@ -75,6 +91,7 @@ export default function MeetOro() {
     event.preventDefault()
     if (leaving.current) return
     leaving.current = true
+    entering.current = false
     const href = event.currentTarget.href
     const duration = event.currentTarget.classList.contains('meet-oro-skip') ? 260 : 460
     setExitDuration(duration)
@@ -98,10 +115,14 @@ export default function MeetOro() {
       <video ref={videoRef} src="/demos/oro-onboarding-demo.mp4" poster="/demos/oro-onboarding-demo-poster.jpg" width="600" height="1298"
         autoPlay muted controls={!endcardReady && status !== 'error'} playsInline preload="auto" aria-label="Oro product demo" aria-describedby="meet-oro-video-summary"
         onPlay={() => {
+          if (entering.current) {
+            videoRef.current?.pause()
+            return
+          }
           setStatus('playing')
           trackEvent('video_play', { location: 'pre_checkout_demo', video_id: 'oro_onboarding_demo' })
         }}
-        onPause={() => { if (!leaving.current && !videoRef.current?.ended && !videoRef.current?.error) setStatus('paused') }}
+        onPause={() => { if (!entering.current && !leaving.current && !videoRef.current?.ended && !videoRef.current?.error) setStatus('paused') }}
         onEnded={() => {
           setStatus('ended')
           trackEvent('video_complete', { location: 'pre_checkout_demo', video_id: 'oro_onboarding_demo' })
@@ -118,8 +139,8 @@ export default function MeetOro() {
         <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
       </button>}
       {((status === 'ended' && endcardReady) || status === 'error') && <div className="meet-oro-endcard">
-        {status === 'error' ? <p role="status">the video couldn’t load. you can still meet oro.</p> : <h2>ready to find your next outfit?</h2>}
-        <a className="oro-button meet-oro-button" href={checkoutHref} onClick={continueToCheckout}>find your next outfit</a>
+        {status === 'error' ? <p role="status">the video couldn’t load. you can still meet oro.</p> : <h2>ready to see what oro can do with your closet?</h2>}
+        <a className="oro-button meet-oro-button" href={checkoutHref} onClick={continueToCheckout}>meet my stylist</a>
         {status === 'ended' && <button className="meet-oro-replay" type="button" onClick={replay}>watch again</button>}
       </div>}
     </div>
