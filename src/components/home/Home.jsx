@@ -15,7 +15,7 @@ import { hasAnalyticsConsent, trackEvent } from '../../lib/analytics'
 const FEATURES = [
   {
     title: 'show her your closet',
-    description: 'just connect your camera roll. oro builds your closet from photos you already have, then creates outfits with what you own.',
+    description: 'your camera roll is already a closet. connect it, and oro builds your closet for you.',
     image: wardrobeDemo,
     imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
     width: 1312,
