@@ -126,6 +126,47 @@ test('checkout fits a narrow phone and keeps its typography on the Oro tokens', 
 
 const entryToken = `header.${Buffer.from(JSON.stringify({ aud: 'public-checkout' })).toString('base64url')}.signature`
 
+for (const [kind, savedToken, operation] of [
+  ['public', entryToken, 'entry-status'],
+  ['personal', token, 'status'],
+]) {
+  test(`website checkout recovers a rejected saved ${kind} session without looping`, async ({ page }) => {
+    await page.addInitScript(saved => sessionStorage.setItem('oro_checkout_token', saved), savedToken)
+    const operations = []
+    await page.route('**/api/checkout?*', route => {
+      const action = new URL(route.request().url()).searchParams.get('operation')
+      operations.push(action)
+      if (operations.length === 1) {
+        expect(action).toBe(operation)
+        return route.fulfill({ status: 401, json: {} })
+      }
+      return route.fulfill({ json: { ...native, token: entryToken, collect_phone: true } })
+    })
+    await page.goto('/checkout')
+    await expect(page.getByLabel('Email')).toBeVisible()
+    await expect(page.getByLabel('Phone number for texting Oro')).toBeVisible()
+    await expect(page.getByRole('alert')).toHaveCount(0)
+    expect(operations).toEqual([operation, 'entry'])
+    expect(await page.evaluate(() => window.checkoutConfirms || 0)).toBe(0)
+  })
+}
+
+test('a temporary checkout error retains the saved session and retries it', async ({ page }) => {
+  await page.addInitScript(saved => sessionStorage.setItem('oro_checkout_token', saved), entryToken)
+  const operations = []
+  await page.route('**/api/checkout?*', route => {
+    operations.push(new URL(route.request().url()).searchParams.get('operation'))
+    return operations.length === 1 ? route.fulfill({ status: 503, json: {} })
+      : route.fulfill({ json: { ...native, collect_phone: true } })
+  })
+  await page.goto('/checkout')
+  await expect(page.getByRole('alert')).toHaveText('Checkout is unavailable right now. Please try again.')
+  expect(operations).toEqual(['entry-status'])
+  await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(page.getByLabel('Email')).toBeVisible()
+  expect(operations).toEqual(['entry-status', 'entry-status'])
+})
+
 test('checkout retains same-origin preview access when starting and resuming payment', async ({ page }, testInfo) => {
   await page.context().addCookies([{ name: 'synthetic_preview_access', value: 'granted', url: testInfo.project.use.baseURL }])
   const operations = []

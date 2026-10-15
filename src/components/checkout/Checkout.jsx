@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
-import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance, startPublicCheckout, isPublicCheckoutToken, saveCheckoutInvite } from '../../lib/checkout'
+import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance, startPublicCheckout, isPublicCheckoutToken, saveCheckoutInvite, clearCheckoutToken } from '../../lib/checkout'
 import { getOroTextLink } from '../../lib/textOro'
 import CheckoutForm, { CheckoutFormSkeleton } from './CheckoutForm'
 import './Checkout.css'
@@ -10,8 +10,12 @@ const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 const PAID_STATES = ['ready', 'already_subscribed', 'already_has_access']
 
 export default function Checkout() {
-  const [initialToken] = useState(() => { saveCheckoutInvite(); return readCheckoutToken() })
-  const token = useRef(initialToken)
+  const [entry] = useState(() => {
+    saveCheckoutInvite()
+    const personalLink = typeof window !== 'undefined' && new URLSearchParams(window.location.hash.slice(1)).has('token')
+    return { personalLink, token: readCheckoutToken() }
+  })
+  const token = useRef(entry.token)
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
@@ -27,12 +31,20 @@ export default function Checkout() {
     setError('')
     try {
       let result
+      if (token.current) {
+        try {
+          result = await checkoutRequest(token.current, 'status', signal)
+          if (result.status === 'checkout_ready') result = await checkoutRequest(token.current, 'checkout', signal)
+        } catch (failure) {
+          if (signal?.aborted || ![401, 403, 410].includes(failure.status)
+            || (entry.personalLink && !isPublicCheckoutToken(token.current))) throw failure
+          clearCheckoutToken()
+          token.current = ''
+        }
+      }
       if (!token.current) {
         result = await startPublicCheckout()
         token.current = result.token
-      } else {
-        result = await checkoutRequest(token.current, 'status', signal)
-        if (result.status === 'checkout_ready') result = await checkoutRequest(token.current, 'checkout', signal)
       }
       if (!signal?.aborted) {
         setData(result)
@@ -43,7 +55,7 @@ export default function Checkout() {
     } finally {
       if (!signal?.aborted) setLoading(false)
     }
-  }, [])
+  }, [entry.personalLink])
 
   useEffect(() => {
     const controller = new AbortController()

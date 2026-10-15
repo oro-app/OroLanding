@@ -54,6 +54,16 @@ test('proxy rejects methods and missing credentials before contacting the backen
   assert.equal(mock.mock.callCount(), 0)
 })
 
+test('checkout distinguishes rejected credentials from temporary failures', async t => {
+  const mock = t.mock.method(globalThis, 'fetch')
+  for (const status of [401, 403, 410]) {
+    mock.mock.mockImplementation(async () => Response.json({}, { status }))
+    await assert.rejects(checkoutRequest(token), error => error.status === status)
+  }
+  mock.mock.mockImplementation(async () => Response.json({}, { status: 503 }))
+  await assert.rejects(checkoutRequest(token), error => error.status === undefined && /unavailable/.test(error.message))
+})
+
 test('proxy forwards only the approved endpoint and never exposes an upstream error body', async t => {
   const mock = t.mock.method(globalThis, 'fetch', async () => Response.json({ detail: token }, { status: 401 }))
   const result = response()

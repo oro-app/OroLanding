@@ -7,6 +7,11 @@ native Stripe Session. It stores the scoped token in the browser tab and uses
 `entry-status`/`entry-checkout` to resume the same attempt, including after a
 Stripe redirect. Invitation links are retained in the post-payment text handoff.
 
+If the server rejects a saved browser checkout credential, a normal website entry
+clears it and starts a fresh anonymous session. Temporary backend failures retain
+the saved session for retry. An explicitly opened personal link keeps its existing
+fresh-link recovery instead of silently switching checkout identities.
+
 The existing payment screen requires phone alongside email and payment details.
 Stripe Sessions enable phone collection; the form supplies the normalized number
 to Stripe confirmation. Notice acceptance is recorded through `entry-accept`

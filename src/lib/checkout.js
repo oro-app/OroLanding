@@ -23,6 +23,11 @@ export function saveCheckoutToken(token) {
   try { sessionStorage.setItem(CHECKOUT_TOKEN_KEY, token) } catch {}
 }
 
+export function clearCheckoutToken() {
+  memoryToken = ''
+  try { sessionStorage.removeItem(CHECKOUT_TOKEN_KEY) } catch {}
+}
+
 let entryPromise
 
 export function isPublicCheckoutToken(token) {
@@ -71,7 +76,11 @@ export async function checkoutRequest(token, operation = 'status', signal, body)
     ...(body ? { body: JSON.stringify(body) } : {}),
     signal, cache: 'no-store', credentials: 'same-origin', referrerPolicy: 'no-referrer', redirect: 'error',
   })
-  if ([401, 403, 410].includes(response.status)) throw new Error('Text Oro for a fresh checkout link.')
+  if ([401, 403, 410].includes(response.status)) {
+    const error = new Error('Text Oro for a fresh checkout link.')
+    error.status = response.status
+    throw error
+  }
   if (!response.ok) throw new Error('Checkout is unavailable right now. Please try again.')
   const data = await response.json()
   if (!validOffer(data.offer) || typeof data.status !== 'string') throw new Error('We couldn’t verify your plan. Please try again.')
