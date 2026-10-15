@@ -51,8 +51,8 @@ export default function DesignerHeadline() {
       } else {
         timeout = setTimeout(() => {
           setActive((value) => (value + 1) % PHRASES.length)
-          interval = setInterval(() => setActive((value) => (value + 1) % PHRASES.length), 4500)
-        }, 80 + (HEADLINE.replaceAll(' ', '').length - 1) * 34 + 3500)
+          interval = setInterval(() => setActive((value) => (value + 1) % PHRASES.length), 2200)
+        }, 80 + (HEADLINE.replaceAll(' ', '').length - 1) * 34 + 900)
       }
     }
     configure()

@@ -21,4 +21,23 @@ test('the prerendered demo loads its route styles before JavaScript', async () =
   assert.equal([...html.matchAll(/type="checkbox"/g)].length, 0)
   assert.ok(!html.includes('what’s the hardest part'))
   assert.ok(html.includes('href="/checkout"'))
+  const video = html.match(/<video\b[^>]*>/)?.[0] || ''
+  for (const attribute of ['autoPlay', 'muted', 'playsInline', 'controls']) {
+    assert.match(video, new RegExp(`\\b${attribute}(?:=|\\s|>)`, 'i'))
+  }
+  assert.match(video, /preload="auto"/)
+  assert.match(html, /meet-oro--immersive/)
+  assert.match(html, /aria-label="skip video and continue to checkout"/)
+  assert.doesNotMatch(html, /<(?:header|footer)\b/)
+  assert.doesNotMatch(html, /cookie-consent-wrap/)
+})
+
+
+test('the public demo URL resolves to its prerendered document before the SPA fallback', async () => {
+  const { rewrites } = JSON.parse(await read('vercel.json'))
+  const demoIndex = rewrites.findIndex(rewrite => rewrite.source === '/meet-oro')
+  const fallbackIndex = rewrites.findIndex(rewrite => rewrite.destination === '/index.html')
+  assert.ok(demoIndex >= 0, 'The bare CTA URL must serve its own prerendered document')
+  assert.equal(rewrites[demoIndex].destination, '/meet-oro/index.html')
+  assert.ok(fallbackIndex > demoIndex, 'The demo rewrite must precede the general SPA fallback')
 })

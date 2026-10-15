@@ -107,6 +107,7 @@
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
   "rewrites": [
+    { "source": "/meet-oro", "destination": "/meet-oro/index.html" },
     { "source": "/merch", "destination": "/merch/index.html" },
     { "source": "/beta/career", "destination": "/beta/career/index.html" },
     { "source": "/beta/dating", "destination": "/beta/dating/index.html" },

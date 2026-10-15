@@ -72,6 +72,7 @@ function App({ initialRoute }) {
   const isBeta = route.type === 'beta'
   const isFeedback = route.type === 'feedback'
   const isCheckout = route.type === 'checkout' || route.type === 'merch'
+  const isDemo = route.type === 'demo'
   const isGeo = route.type === 'geo'
   const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
   const isPrivateForm = isBeta || isFeedback || isCheckout || route.type === 'get-started'
@@ -155,9 +156,9 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
+      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${isDemo ? ' oro-demo-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started', 'demo'].includes(route.type)} /> : <SiteHeader />)}
+        {!isBeta && !isFeedback && !isDemo && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started'].includes(route.type)} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {route.type === 'merch' ? (
             <Suspense fallback={<p role="status">Loading merch…</p>}><PuttyPage /></Suspense>
@@ -213,8 +214,8 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && !isBeta && !isCheckout && <HomeFooter landing={isHome} />}
-        {!isCheckout && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
+        {isHalo && !isFeedback && !isBeta && !isCheckout && !isDemo && <HomeFooter landing={isHome} />}
+        {!isCheckout && !isDemo && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>
   )

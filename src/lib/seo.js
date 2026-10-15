@@ -24,7 +24,7 @@ export const ROUTE_SEO = {
     path: '/meet-oro',
     title: 'See Oro in action | Oro',
     description: 'See how Oro puts together and revises outfits from the clothes you own, then continue to your subscription.',
-    h1: 'your closet has possibilities.',
+    h1: 'See Oro in action',
     noindex: true,
   },
   merch: {

@@ -126,7 +126,7 @@
 #home-title .oro-rot-phrase {
   grid-area: 1 / 1;
   white-space: nowrap;
-  transition: opacity 0.8s, filter 0.8s, transform 0.9s cubic-bezier(0.5, 0, 0, 1);
+  transition: opacity 0.45s, filter 0.45s, transform 0.5s cubic-bezier(0.5, 0, 0, 1);
 }
 #home-title .oro-rot-phrase[data-state="in"] { opacity: 1; filter: blur(0); transform: none; }
 #home-title .oro-rot-phrase[data-state="out"] { opacity: 0; filter: blur(0.152em); transform: translateY(-45%); }
@@ -143,12 +143,6 @@
 #home-title .oro-rot-phrase .home-type-word {
   color: var(--oro-color-display);
 }
-
-#home-title .oro-rot-phrase {
-  transition: opacity 1.2s, filter 1.2s, transform 1.35s cubic-bezier(0.5, 0, 0, 1);
-}
-#home-title .oro-rot-phrase[data-state="wait"] { transition: none; }
-
 
 :root,
 .oro-theme,
