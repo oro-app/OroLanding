@@ -66,7 +66,7 @@ function Artwork({ side, spots, leaderboard, selected, locked, mode, onSelect, h
   </div>
 }
 
-export default function HoodieViewer({ spots, leaderboard, selected, locked, loading, mode, onSelect }) {
+export default function HoodieViewer({ spots, leaderboard, selected, locked, loading, mode, onSelect, onHistoryChange }) {
   const [side, setSide] = useState('back')
   const [zoom, setZoom] = useState(0)
   const [loadedSide, setLoadedSide] = useState(null)
@@ -99,6 +99,13 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
   const historySpot = historySpots.find(spot => spot.id === historyState.id)
   const showHistory = mode === 'preview' && historySpot?.history?.length >= 2 && !historyState.dismissed
     && (historyState.pointer || historyState.focus)
+
+  useEffect(() => {
+    onHistoryChange?.(showHistory ? historySpot : null)
+  }, [historySpot, onHistoryChange, showHistory])
+
+  useEffect(() => () => onHistoryChange?.(null), [onHistoryChange])
+
   return <div className={`putty-gallery putty-gallery--${mode}`}>
     <div className="putty-thumbnails" role="group" aria-label="Hoodie view">
       {[['front', front], ['back', back]].map(([view, image]) => <button key={view} type="button" aria-label={`Show hoodie ${view}`} aria-pressed={side === view}
@@ -118,16 +125,6 @@ export default function HoodieViewer({ spots, leaderboard, selected, locked, loa
           {!ready && <div className="putty-canvas-skeleton" aria-hidden="true" />}
           <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}
             historyState={historyState} updateHistory={updateHistory} ready={ready} onReady={setLoadedSide} />
-          {mode === 'preview' && historySpots.map(spot => <div key={spot.id} id={`putty-history-${spot.id}`} className="putty-history-popover"
-              hidden={!showHistory || historySpot?.id !== spot.id}>
-            <strong>{spot.id === 'front' ? 'Front left chest' : spot.id} history</strong>
-            <ul>
-              {spot.history.map((owner, index) => <li key={`${owner.name}-${owner.total}-${index}`}>
-                <span>{owner.name}</span>
-                <span>{formatPrice(owner.total)}</span>
-              </li>)}
-            </ul>
-          </div>)}
           {mode === 'preview' && magnifying && <div className="putty-magnifier" aria-hidden="true">
             <div className="putty-magnifier-content">
               <Artwork side={side} spots={spots} leaderboard={leaderboard} selected={selected} locked={locked} mode={mode} onSelect={onSelect}

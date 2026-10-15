@@ -8,6 +8,7 @@ import './Putty.css'
 export default function Putty() {
   const [board, setBoard] = useState(null)
   const [boardError, setBoardError] = useState('')
+  const [previewHistory, setPreviewHistory] = useState(null)
   const boardRequest = useRef(0)
   const mounted = useRef(true)
   const refresh = useCallback(async (signal) => {
@@ -39,16 +40,29 @@ export default function Putty() {
     <div className="putty-intro">
       <div className="putty-intro-heading">
         <h1>Make your <em>mark.</em></h1>
-        <p className="putty-countdown"><span>Bidding closed</span></p>
+        <p className="putty-countdown">
+          <span>Bidding closed</span>
+          <small><time dateTime="2026-10-14T13:50:00-04:00">Oct 14, 2026 at 1:50 PM ET</time></small>
+        </p>
       </div>
       <p>Submissions and bidding are now closed. Thanks to everyone who made their mark.</p>
     </div>
     <div className="putty-layout">
       <section aria-label="Hoodie placement board" className="putty-preview">
-        <HoodieViewer mode="preview" spots={spots} leaderboard={board?.leaderboard} selected={{}} locked loading={!board} />
+        <HoodieViewer mode="preview" spots={spots} leaderboard={board?.leaderboard} selected={{}} locked loading={!board}
+          onHistoryChange={setPreviewHistory} />
         <p role="status" className="putty-availability">{boardError || (!board ? 'Loading the hoodie preview…' : '')}</p>
       </section>
-      <section className="putty-leaderboard" aria-labelledby="putty-leaderboard-heading">
+      <section className="putty-leaderboard" aria-labelledby={previewHistory ? 'putty-history-heading' : 'putty-leaderboard-heading'}>
+        {previewHistory ? <div id={`putty-history-${previewHistory.id}`}>
+          <h2 id="putty-history-heading">{previewHistory.id === 'front' ? 'Front left chest' : previewHistory.id} history</h2>
+          <ul className="putty-history-list">
+            {previewHistory.history.map((owner, index) => <li key={`${owner.name}-${owner.total}-${index}`}>
+              <span>{owner.name}</span>
+              <span>{formatPrice(owner.total)}</span>
+            </li>)}
+          </ul>
+        </div> : <>
         <h2 id="putty-leaderboard-heading">Leaderboard</h2>
         <p>the most auraful and powerful people.</p>
         {!board && <div className="putty-leaderboard-skeleton" aria-hidden="true">
@@ -67,11 +81,12 @@ export default function Putty() {
           </table>
         </div> : <p>No placements were claimed.</p> : null}
         <p className="putty-leaderboard-help">Questions about your placement or want your link added? <a href="/contact">Send us a message</a> or <a href="mailto:hello@buildingoro.ca">email us</a>.</p>
+        </>}
       </section>
     </div>
     <section className="checkout-card putty-card" aria-labelledby="putty-bid-heading">
-      <h2 id="putty-bid-heading">Submissions are closed.</h2>
-      <p>Bidding has ended, and we are no longer accepting hoodie placements.</p>
+      <h2 id="putty-bid-heading">late to the party?</h2>
+      <p>contact us for custom requests and keep an eye out for future bids!</p>
     </section>
   </div>
 }

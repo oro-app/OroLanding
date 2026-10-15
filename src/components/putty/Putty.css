@@ -58,13 +58,6 @@
 .putty-page .putty-square[aria-pressed="true"] { background-color: #806b8d; border: 3px double #fff; }
 .putty-page :focus-visible { outline: 3px solid var(--oro-color-ink); outline-offset: 3px; }
 .putty-page .putty-square:focus-visible { position: relative; z-index: 1; outline: 3px solid #fff; box-shadow: 0 0 0 6px #252229; }
-.putty-history-popover { position: absolute; z-index: 4; inset-block-start: 8%; inset-inline-end: 16%; inline-size: clamp(9rem, 25%, 12rem); max-inline-size: calc(100% - 2rem); padding: .75rem; border: 1px solid var(--oro-color-ink); border-radius: .75rem; background: var(--oro-color-surface); color: var(--oro-color-ink); text-align: start; text-shadow: none; }
-.putty-history-popover[hidden] { display: none; }
-.putty-history-popover > strong { display: block; margin-block-end: .5rem; font-size: .75rem; }
-.putty-history-popover ul { display: grid; gap: .375rem; margin: 0; padding: 0; list-style: none; }
-.putty-history-popover li { display: flex; justify-content: space-between; gap: 1rem; font-size: .75rem; line-height: 1.35; }
-.putty-history-popover li span:first-child { overflow-wrap: anywhere; }
-.putty-history-popover li span:last-child { flex: none; font-variant-numeric: tabular-nums; }
 .putty-order-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
 .putty-consent { display: flex; align-items: center; gap: .75rem; min-height: 44px; font-size: .875rem; line-height: 1.6; margin-top: 1.5rem; }
 .putty-consent input { width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--oro-color-accent); }
@@ -89,6 +82,11 @@
 .putty-order-actions { margin-top: 1.5rem; }
 .putty-leaderboard { min-width: 0; padding: 1.5rem; border: 1px solid var(--oro-color-muted); border-radius: 1rem; background: var(--oro-color-surface); }
 .putty-leaderboard > h2 { font-family: Fraunces, Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; margin: 0 0 .5rem; }
+.putty-leaderboard > div > h2 { font-family: Fraunces, Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; margin: 0 0 1.5rem; }
+.putty-history-list { display: grid; gap: .75rem; margin: 0; padding: 0; list-style: none; }
+.putty-history-list li { display: flex; justify-content: space-between; gap: 1rem; padding-block: .75rem; border-bottom: 1px solid var(--oro-color-muted); line-height: 1.5; }
+.putty-history-list li span:first-child { overflow-wrap: anywhere; }
+.putty-history-list li span:last-child { flex: none; font-variant-numeric: tabular-nums; }
 .putty-leaderboard > p { line-height: 1.6; }
 .putty-leaderboard-help { margin: 1.5rem 0 0; color: var(--oro-color-muted); }
 .putty-leaderboard-help a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: .18em; }
@@ -140,5 +138,5 @@
   .putty-canvas-skeleton,
   .putty-leaderboard-skeleton span { border: 1px solid CanvasText; }
   .putty-page :focus-visible { outline-color: Highlight; }
-  .putty-history-popover { border-color: CanvasText; background: Canvas; color: CanvasText; }
+  .putty-history-list li { border-color: CanvasText; }
 }
