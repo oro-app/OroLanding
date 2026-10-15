@@ -40,8 +40,29 @@ const FEATURES = [
 ]
 export default function Home() {
   const motionRef = useHomeMotion()
+  const heroRef = useRef(null)
   const viewedSectionsRef = useRef(new Set())
   const [entryCount, setEntryCount] = useState(null)
+  const [showFloatingCta, setShowFloatingCta] = useState(false)
+
+  useEffect(() => {
+    const hero = heroRef.current
+    const footer = document.querySelector('.halo-footer--landing')
+    if (!hero || !footer || !('IntersectionObserver' in window)) return
+
+    let heroPassed = false
+    let footerVisible = false
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.target === hero) heroPassed = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0
+        if (entry.target === footer) footerVisible = entry.isIntersecting
+      })
+      setShowFloatingCta(heroPassed && !footerVisible)
+    })
+    observer.observe(hero)
+    observer.observe(footer)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     let observer
@@ -87,7 +108,7 @@ export default function Home() {
       <GoldBackground />
       <div className="home-grid halo-container">
         <div className="home-copy">
-          <section className="home-panel" aria-labelledby="home-title" data-analytics-section="hero">
+          <section className="home-panel" ref={heroRef} aria-labelledby="home-title" data-analytics-section="hero">
             <div className="home-hero-copy">
               <Heading as="h1" variant="display" id="home-title" aria-label="the ai fashion assistant you can text">
                 <DesignerHeadline />
@@ -108,6 +129,9 @@ export default function Home() {
             <Text muted className="home-description home-stagger">{entryCount.toLocaleString()} people are already trying to get it.</Text>
           </section>}
         </div>
+      </div>
+      <div className={`home-floating-cta${showFloatingCta ? ' home-floating-cta--visible' : ''}`} inert={showFloatingCta ? undefined : ''}>
+        <HomeCta place="floating">find your next outfit</HomeCta>
       </div>
     </div>
   )

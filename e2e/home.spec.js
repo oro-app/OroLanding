@@ -40,7 +40,7 @@ test('all CTAs share one purple treatment', async ({ page }) => {
   expect(closerStyle).toEqual(heroStyle)
   await expect(header).toHaveCSS('background-color', 'rgb(87, 57, 105)')
   expect(heroStyle.backgroundImage).toContain('conic-gradient')
-  await expect(header).toContainText('find your next outfit')
+  await expect(header).toContainText('meet oro')
   await expect(header.locator('.halo-cta-message')).toHaveCount(0)
   await expect(hero.locator('.oro-cta-pixels')).toHaveCount(1)
   await expect(page.locator('.halo-cta-message circle')).toHaveCount(0)
@@ -63,6 +63,35 @@ test('centered hero gives way to the rest of the page on scroll', async ({ page 
   await expect(page.getByRole('region', { name: 'she gets your style. and your life.' })).toBeInViewport()
   await expect(page.locator('.home-panel[aria-hidden="true"]')).toHaveCount(0)
 })
+
+for (const width of [320, 1440]) {
+  test(`bottom CTA follows scroll position at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/')
+    const floating = page.locator('.home-floating-cta')
+    const cta = floating.getByRole('link', { name: 'find your next outfit' })
+    await expect(page.locator('.halo-cta--header')).toHaveText('meet oro')
+    await expect(floating).toHaveAttribute('inert', '')
+    await expect(floating).toBeHidden()
+    await page.locator('.oro-marquee').scrollIntoViewIfNeeded()
+    await expect(floating).toBeVisible()
+    await expect(floating).not.toHaveAttribute('inert')
+    await expect(floating).toHaveCSS('position', 'fixed')
+    await expect(cta).toHaveAttribute('href', '/meet-oro')
+    const bounds = await cta.boundingBox()
+    expect(bounds.x).toBeGreaterThanOrEqual(0)
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(width)
+    await page.locator('.halo-footer--landing').scrollIntoViewIfNeeded()
+    await expect(floating).toBeHidden()
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+    await expect(floating).toBeHidden()
+    await expect(floating).toHaveAttribute('inert', '')
+    await page.locator('.oro-marquee').scrollIntoViewIfNeeded()
+    await expect(floating).toBeVisible()
+    await cta.click()
+    await expect(page).toHaveURL(/\/meet-oro(?:\?|$)/)
+  })
+}
 
 for (const width of [320, 390, 768, 1440]) {
   test(`homepage fits a ${width}px viewport`, async ({ page }) => {

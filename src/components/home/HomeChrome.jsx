@@ -26,7 +26,7 @@ export function HomeHeader({ showCta = true, sticky = true }) {
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          {showCta && <HomeCta place="header">find your next outfit</HomeCta>}
+          {showCta && <HomeCta place="header">meet oro</HomeCta>}
         </nav>
       </div>
     </header>

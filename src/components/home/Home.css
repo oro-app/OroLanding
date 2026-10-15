@@ -46,7 +46,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   box-shadow: 0 20px 48px rgba(43, 22, 70, 0.34), 0 6px 16px rgba(43, 22, 70, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .halo-site :is(.halo-cta--hero, .halo-cta--closer, .halo-cta--floating):focus-visible { outline-color: var(--oro-gold); }
-.halo-site .halo-cta--floating { width: auto; min-height: 48px; padding: 8px 20px; font-size: 1rem; }
+.halo-site .halo-cta--floating { width: auto; min-width: 0; min-height: 48px; padding: 8px 20px; font-size: 1rem; }
 
 .home-floating-cta { position: fixed; z-index: 18; right: 0; bottom: max(20px, env(safe-area-inset-bottom)); left: 0; display: flex; justify-content: center; padding-inline: 24px; opacity: 0; visibility: hidden; transform: translateY(calc(100% + 20px)); pointer-events: none; }
 .home-floating-cta--visible { opacity: 1; visibility: visible; transform: none; }
