@@ -60,11 +60,13 @@ export default function CheckoutForm({ offer, onPaid, onExpired, collectPhone = 
       <input className="oro-input" id="checkout-phone" type="tel" autoComplete="tel" value={phone}
         onChange={event => setPhone(event.target.value)} placeholder="(416) 555-0123" required maxLength={32} disabled={busy} /></>}
     <div className="checkout-payment"><PaymentElement options={{ layout: 'tabs', ...(collectPhone ? { fields: { billingDetails: { phone: 'never', email: 'never' } } } : {}) }} /></div>
-    <p className="checkout-period">Due today: {total}</p>
+    <p className="checkout-period">Due today: {total}<br /><span id="checkout-renewal">Renews at US $25/month until canceled.</span></p>
     <label className="checkout-consent">
-      <input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} disabled={busy} />
-      <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>{collectPhone && <>, acknowledge the <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and consent to recurring automated SMS/MMS from Oro at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help</>}. Renews at $25/month until canceled.</span>
+      <input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} disabled={busy}
+        aria-describedby={collectPhone ? 'checkout-renewal checkout-messaging-notice' : 'checkout-renewal'} />
+      <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>{collectPhone && <> and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and consent to recurring automated styling texts from Oro</>}.</span>
     </label>
+    {collectPhone && <p className="checkout-messaging-notice" id="checkout-messaging-notice">Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.</p>}
     {error && <p className="checkout-error" role="alert">{error}</p>}
     <button className="oro-button oro-button--primary checkout-button" disabled={!consent || busy} type="submit">
       {busy ? 'Confirming payment…' : 'Meet my personal stylist'}
