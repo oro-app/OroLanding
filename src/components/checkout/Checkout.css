@@ -25,7 +25,8 @@
 .checkout-label { display: block; font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); margin: var(--oro-space-6) 0 var(--oro-space-2); }
 .checkout-payment { margin-top: var(--oro-space-6); }
 .checkout-consent { display: flex; gap: var(--oro-space-2); margin-top: var(--oro-space-6); color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); }
-.checkout-consent input { margin-top: var(--oro-space-1); flex-shrink: 0; accent-color: var(--oro-color-accent); }
+.checkout-consent input { margin-top: var(--oro-space-1); align-self: flex-start; flex-shrink: 0; accent-color: var(--oro-color-accent); }
+.checkout-card .checkout-messaging-notice { margin: var(--oro-space-2) 0 0; color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); }
 .checkout-button { width: 100%; margin-top: var(--oro-space-6); }
 .checkout-card .checkout-fineprint { font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); margin: var(--oro-space-4) 0 0; text-align: center; color: var(--oro-color-muted); }
 .checkout-card .checkout-error { color: var(--oro-color-error); font-size: var(--oro-type-label-size); line-height: var(--oro-type-label-line-height); }
