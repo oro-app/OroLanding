@@ -1,0 +1,19 @@
+src/components/home/Home.jsx
+  s_8252b58d803c95::t_35913b2d58db7a 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "439b0e3455c72b9932eaae2cc026a0e885c9a3f0",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
