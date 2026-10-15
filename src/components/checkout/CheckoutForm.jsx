@@ -63,11 +63,11 @@ export default function CheckoutForm({ offer, onPaid, onExpired, collectPhone = 
     <p className="checkout-period">Due today: {total}</p>
     <label className="checkout-consent">
       <input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} disabled={busy} />
-      <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>{collectPhone && <>, acknowledge the <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and consent to recurring automated SMS/MMS from Oro at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.</>}. Renews at $25/month until canceled.</span>
+      <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms</a>{collectPhone && <>, acknowledge the <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>, and consent to recurring automated SMS/MMS from Oro at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help</>}. Renews at $25/month until canceled.</span>
     </label>
     {error && <p className="checkout-error" role="alert">{error}</p>}
     <button className="oro-button oro-button--primary checkout-button" disabled={!consent || busy} type="submit">
-      {busy ? 'Confirming payment…' : 'Meet my personal stylist'}<span aria-hidden="true">↗</span>
+      {busy ? 'Confirming payment…' : 'Meet my personal stylist'}
     </button>
     <p className="checkout-fineprint">Secure payment by Stripe<br />
       <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy policy</a>
