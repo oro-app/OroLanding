@@ -1,0 +1,36 @@
+vite.config.js
+  s_8252b58d803c95::t_11f7efbefb3d48 16
+vercel.json
+  s_8252b58d803c95::t_11f7efbefb3d48 110
+src/components/meet-oro/MeetOro.jsx
+  s_8252b58d803c95::t_e63e0ab24a24c7 1,8,10,13-27,29,34,36-37,44,62-63,70-76,79-97,99-107,109
+src/designer-theme.css
+  s_8252b58d803c95::t_8be80e7f20f0bd 129
+src/App.jsx
+  s_8252b58d803c95::t_8be80e7f20f0bd 75,159,161,217-218
+src/components/meet-oro/MeetOro.css
+  s_8252b58d803c95::t_ebae8bd6d225a1 9-11,13-17
+  s_8252b58d803c95::t_114495645cb109 6-8
+  s_8252b58d803c95::t_c23b6e6ef7c28e 18
+  s_8252b58d803c95::t_397920d2beecfc 1-5,20-22,24-25
+src/components/home/DesignerHeadline.jsx
+  s_8252b58d803c95::t_8be80e7f20f0bd 54-55
+src/lib/seo.js
+  s_8252b58d803c95::t_e63e0ab24a24c7 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f4589bb7a61c41fc5c9c41d552645b25c3f6ce99",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
