@@ -23,8 +23,8 @@ export const ROUTE_SEO = {
   demo: {
     path: '/meet-oro',
     title: 'See Oro in action | Oro',
-    description: 'Share what makes getting dressed hard, see Oro put together outfits from your closet, then get started.',
-    h1: 'what’s the hardest part of getting dressed?',
+    description: 'See how Oro puts together and revises outfits from the clothes you own, then continue to your subscription.',
+    h1: 'your closet has possibilities.',
     noindex: true,
   },
   merch: {

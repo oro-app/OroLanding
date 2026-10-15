@@ -43,7 +43,7 @@
   .checkout-skeleton > span,
   .checkout-story-skeleton span { background: linear-gradient(100deg, var(--oro-color-soft) 35%, var(--oro-color-border) 50%, var(--oro-color-soft) 65%); background-size: 300% 100%; animation: checkout-skeleton-shimmer 1.6s ease-in-out infinite; }
 }
-@keyframes checkout-arrive { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes checkout-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes checkout-skeleton-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 @media (max-width: 650px) {
   .checkout-layout { grid-template-columns: 1fr; gap: var(--oro-space-8); padding-block: var(--oro-space-8); }

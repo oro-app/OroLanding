@@ -1,35 +1,8 @@
-.meet-oro { padding-block: var(--oro-space-6) var(--oro-space-12); }
-.meet-oro-progress { display: flex; align-items: center; justify-content: center; gap: var(--oro-space-8); padding: 0; margin: 0 auto var(--oro-space-8); list-style: none; color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); }
-.meet-oro-progress li { display: flex; align-items: center; gap: var(--oro-space-2); }
-.meet-oro-step-number { display: grid; place-items: center; width: 26px; height: 26px; border: 1px solid var(--oro-color-border); border-radius: var(--oro-radius-pill); font-variant-numeric: tabular-nums; transition: background 240ms, color 240ms, border-color 240ms; }
-.meet-oro-progress li[aria-current="step"] { color: var(--oro-color-accent); font-weight: 500; }
-.meet-oro-progress li[aria-current="step"] .meet-oro-step-number { background: var(--oro-color-accent); border-color: var(--oro-color-accent); color: var(--oro-color-on-accent); }
-.meet-oro-progress li.is-complete .meet-oro-step-number { background: var(--oro-color-soft); border-color: var(--oro-color-selected-border); color: var(--oro-color-accent); }
+.meet-oro { padding-block: var(--oro-space-12); }
 .meet-oro-stage { max-width: 1000px; margin-inline: auto; }
-.meet-oro-stage h1:focus { outline: none; }
-.meet-oro-question { max-width: 640px; margin-inline: auto; text-align: center; }
-.meet-oro-greeting { display: flex; align-items: center; justify-content: center; gap: var(--oro-space-2); margin-bottom: var(--oro-space-4); color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); }
-.meet-oro-greeting img { object-fit: contain; transform-origin: 50% 85%; }
-.meet-oro-twinkle { color: var(--oro-color-display); font-size: 22px; }
-.meet-oro-question .oro-heading { max-width: 22ch; margin-inline: auto; color: var(--oro-color-ink); font-size: var(--oro-type-title-size); line-height: var(--oro-type-title-line-height); letter-spacing: var(--oro-type-title-tracking); text-wrap: balance; }
-.meet-oro-question .oro-heading em { color: var(--oro-color-display); }
-.meet-oro-question > .oro-text { margin-top: var(--oro-space-4); }
-.meet-oro-checklist { display: grid; gap: var(--oro-space-2); min-width: 0; border: 0; padding: 0; margin: var(--oro-space-6) 0; text-align: left; }
-.meet-oro-choice { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: center; gap: var(--oro-space-3); min-height: 56px; padding: var(--oro-space-3) var(--oro-space-4); border: 1px solid var(--oro-color-border); border-radius: var(--oro-radius-field); background: var(--oro-color-surface); color: var(--oro-color-ink); cursor: pointer; font-size: var(--oro-type-body-size); line-height: var(--oro-type-body-line-height); transition: background 180ms, border-color 180ms, transform 240ms cubic-bezier(.2,.8,.2,1); }
-.meet-oro-choice:hover { border-color: var(--oro-color-selected-border); transform: translateX(3px); }
-.meet-oro-choice.is-selected { background: var(--oro-color-soft); border-color: var(--oro-color-selected-border); }
-.meet-oro-checkbox { display: block; position: relative; width: 24px; height: 24px; }
-.meet-oro-checkbox input { appearance: none; display: block; width: 24px; height: 24px; margin: 0; border: 1.5px solid var(--oro-color-accent); border-radius: 7px; background: var(--oro-color-surface); cursor: pointer; transition: background 180ms, border-color 180ms; }
-.meet-oro-checkbox input:checked { background: var(--oro-color-accent); border-color: var(--oro-color-accent); }
-.meet-oro-checkbox input:focus-visible { outline: 2px solid var(--oro-color-accent); outline-offset: 4px; }
-.meet-oro-checkbox svg { position: absolute; inset: 2px; width: 20px; height: 20px; fill: none; stroke: var(--oro-color-on-accent); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0; pointer-events: none; }
-.meet-oro-checkbox input:checked + svg { opacity: 1; }
-.halo-site .meet-oro-continue { position: relative; isolation: isolate; min-height: 56px; min-width: 260px; justify-content: center; gap: var(--oro-space-3); padding: var(--oro-space-3) var(--oro-space-6); font-size: var(--oro-type-body-size); cursor: pointer; }
-.meet-oro-continue > svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.meet-oro-back { display: inline-flex; align-items: center; gap: var(--oro-space-2); border: 0; background: transparent; padding: var(--oro-space-2) 0; margin-bottom: var(--oro-space-4); color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); cursor: pointer; }
-.meet-oro-back:hover { color: var(--oro-color-accent); }
-.meet-oro-back span { transition: transform 180ms; }
-.meet-oro-back:hover span { transform: translateX(-4px); }
+.halo-site .meet-oro .meet-oro-button { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; min-width: 240px; max-width: 100%; padding: var(--oro-space-3) var(--oro-space-6); border: 1px solid transparent; border-radius: var(--oro-radius-pill); background: var(--oro-color-accent); color: var(--oro-color-on-accent); box-shadow: none; font-size: var(--oro-type-body-size); line-height: var(--oro-type-body-line-height); font-weight: 500; text-decoration: none; cursor: pointer; transform: none; transition: background-color 180ms ease; }
+.halo-site .meet-oro .meet-oro-button:hover { background: var(--oro-color-accent-hover); box-shadow: none; transform: none; }
+.halo-site .meet-oro .meet-oro-button:focus-visible { box-shadow: none; outline: 2px solid var(--oro-color-accent); outline-offset: 5px; }
 .meet-oro-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
@@ -60,7 +33,7 @@
   border: 1px solid var(--oro-color-on-accent);
   background: var(--oro-color-accent);
   color: var(--oro-color-on-accent);
-  box-shadow: var(--oro-shadow-action-hover);
+  box-shadow: none;
   cursor: pointer;
 }
 .meet-oro-play svg { width: 30px; height: 30px; fill: currentColor; }
@@ -69,37 +42,17 @@
 .meet-oro-transcript summary { width: fit-content; margin-inline: auto; cursor: pointer; text-underline-offset: 3px; }
 .meet-oro-transcript p { margin-top: var(--oro-space-3); }
 .meet-oro-action { grid-area: 3 / 1; align-self: start; padding-bottom: var(--oro-space-8); }
-.halo-site .meet-oro-action .halo-cta { width: auto; max-width: 100%; min-height: 56px; padding: 14px 24px; font-size: var(--oro-type-body-size); text-align: center; }
 @media (prefers-reduced-motion: no-preference) {
-  .meet-oro-stage[data-phase="enter"] { animation: meet-oro-step-in 460ms cubic-bezier(.2,.8,.2,1) both; }
+  .meet-oro-stage[data-phase="enter"] { animation: meet-oro-step-in 560ms cubic-bezier(.22,.61,.36,1) both; }
   .meet-oro-stage[data-phase="exit"] { animation: meet-oro-step-out 180ms ease-in both; pointer-events: none; }
-  .meet-oro-choice { animation: meet-oro-choice-in 380ms cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--choice-index) * 30ms + 60ms); }
-  .meet-oro-checkbox input:checked + svg { animation: meet-oro-check-pop 320ms cubic-bezier(.2,.9,.3,1.4); }
-  .meet-oro-greeting img { animation: meet-oro-hello 620ms cubic-bezier(.2,.9,.3,1.2) both; }
-  .meet-oro-twinkle { animation: meet-oro-twinkle 620ms 120ms both; }
-  .meet-oro-progress li[aria-current="step"] .meet-oro-step-number { animation: meet-oro-check-pop 360ms cubic-bezier(.2,.9,.3,1.4); }
-  .meet-oro-demo .meet-oro-video-wrap { animation: meet-oro-video-in 600ms 70ms cubic-bezier(.2,.8,.2,1) backwards; }
 }
-@keyframes meet-oro-step-in { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes meet-oro-step-out { to { opacity: 0; transform: translateY(-12px) scale(.985); } }
-@keyframes meet-oro-choice-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes meet-oro-check-pop { 0% { transform: scale(.65); } 65% { transform: scale(1.12); } 100% { transform: scale(1); } }
-@keyframes meet-oro-hello { 0% { opacity: 0; transform: translateY(12px) rotate(-12deg) scale(.8); } 65% { transform: translateY(-3px) rotate(5deg) scale(1.05); } 100% { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
-@keyframes meet-oro-twinkle { from { opacity: 0; transform: rotate(-40deg) scale(.4); } to { opacity: 1; transform: rotate(0) scale(1); } }
-@keyframes meet-oro-video-in { from { opacity: 0; transform: translateY(16px) rotate(1.5deg) scale(.97); } to { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
+@keyframes meet-oro-step-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes meet-oro-step-out { to { opacity: 0; transform: translateY(-4px); } }
 @media (prefers-reduced-motion: reduce) {
   .meet-oro *, .meet-oro *::before, .meet-oro *::after { animation: none !important; transition: none !important; }
-  .meet-oro-choice:hover, .meet-oro-back:hover span { transform: none; }
 }
 @media (max-width: 700px) {
   .meet-oro { padding-block: var(--oro-space-6) var(--oro-space-12); }
-  .meet-oro-progress { gap: var(--oro-space-4); margin-bottom: var(--oro-space-6); }
-  .meet-oro-progress li { gap: var(--oro-space-1); }
-  .meet-oro-step-number { width: 22px; height: 22px; }
-  .meet-oro-question .oro-heading { font-size: var(--oro-type-section-size); line-height: var(--oro-type-section-line-height); letter-spacing: var(--oro-type-section-tracking); }
-  .meet-oro-question > .oro-text { margin-top: var(--oro-space-3); }
-  .meet-oro-choice { padding: var(--oro-space-3); }
-  .halo-site .meet-oro-continue { width: 100%; min-width: 0; }
   .meet-oro-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; row-gap: var(--oro-space-6); text-align: center; }
   .meet-oro-copy { grid-area: 1 / 1; padding-top: 0; }
   .meet-oro-eyebrow { margin-bottom: var(--oro-space-4); }
@@ -107,6 +60,6 @@
   .meet-oro-description { margin-inline: auto; margin-top: var(--oro-space-4); }
   .meet-oro-demo { grid-area: 2 / 1; width: min(100%, 290px); }
   .meet-oro-action { grid-area: 3 / 1; padding-bottom: var(--oro-space-8); }
-  .halo-site .meet-oro-action .halo-cta { width: 100%; padding-inline: var(--oro-space-4); }
+  .halo-site .meet-oro-action .meet-oro-button { width: 100%; min-width: 0; padding-inline: var(--oro-space-4); }
   .meet-oro-transcript { text-align: left; }
 }
