@@ -40,7 +40,10 @@ export default function Putty() {
     <div className="putty-intro">
       <div className="putty-intro-heading">
         <h1>Make your <em>mark.</em></h1>
-        <p className="putty-countdown"><span>Bidding closed</span></p>
+        <p className="putty-countdown">
+          <span>Bidding closed</span>
+          <small><time dateTime="2026-10-14T13:50:00-04:00">Oct 14, 2026 at 1:50 PM ET</time></small>
+        </p>
       </div>
       <p>Submissions and bidding are now closed. Thanks to everyone who made their mark.</p>
     </div>
@@ -82,8 +85,8 @@ export default function Putty() {
       </section>
     </div>
     <section className="checkout-card putty-card" aria-labelledby="putty-bid-heading">
-      <h2 id="putty-bid-heading">Submissions are closed.</h2>
-      <p>Bidding has ended, and we are no longer accepting hoodie placements.</p>
+      <h2 id="putty-bid-heading">late to the party?</h2>
+      <p>contact us for custom requests and keep an eye out for future bids!</p>
     </section>
   </div>
 }
