@@ -15,6 +15,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-footer-links a:hover { color: var(--oro-color-accent); }
 .halo-site .halo-cta {
   position: relative;
+  white-space: nowrap;
   justify-content: center;
   gap: var(--oro-space-3);
   background: var(--halo-cta-background);
@@ -24,7 +25,8 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
 .halo-site .halo-cta--header { min-height: 48px; padding-inline: 20px; font-size: 1rem; }
 .halo-cta-message { flex: 0 0 auto; width: 34px; height: 34px; color: currentColor; }
 .halo-site :is(.halo-cta--hero, .halo-cta--closer, .halo-cta--floating) {
-  width: 286px;
+  width: max-content;
+  min-width: min(286px, 100%);
   max-width: 100%;
   min-height: 68px;
   justify-content: center;
@@ -166,6 +168,12 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-footer-goal-options a { width: 100%; }
   .halo-footer-main { margin-top: 80px; padding-bottom: 40px; }
   .halo-footer-legal { min-width: 110px; }
+}
+@media (max-width: 360px) {
+  .halo-header-inner { gap: 8px; }
+  .halo-logo { width: 96px; }
+  .halo-site .halo-cta--header { padding-inline: 8px; }
+  .halo-site :is(.halo-cta--hero, .halo-cta--closer) { padding-inline: 12px; gap: 8px; }
 }
 @media (forced-colors: active) {
   .halo-footer-goal-options a { border-color: ButtonText; }
