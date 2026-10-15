@@ -132,7 +132,7 @@ export default function Checkout() {
           {data.client_secret && stripe ? <CheckoutElementsProvider key={data.session_id} stripe={stripe} options={options}>
             <CheckoutForm offer={offer} collectPhone={data.collect_phone === true} onAccept={acceptNotice} onPaid={() => { setChecking(true); setPolls(0); refresh() }} onExpired={() => refresh()} />
           </CheckoutElementsProvider> : <><p>Continue to secure checkout to complete your subscription.</p>
-            {data.checkout_url && !data.client_secret ? <a className="oro-button" href={data.checkout_url}>Meet my personal stylist ↗</a> : <p role="alert">Secure payment is unavailable. Please text Oro for help.</p>}
+            {data.checkout_url && !data.client_secret ? <a className="oro-button" href={data.checkout_url}>Meet my personal stylist</a> : <p role="alert">Secure payment is unavailable. Please text Oro for help.</p>}
           </>}
         </> : <><h2>Let’s get you set up.</h2><p>Text Oro to continue your signup or get help with your subscription.</p><a className="oro-button" href={textLink}>Text Oro ↗</a></>}
       </section>
