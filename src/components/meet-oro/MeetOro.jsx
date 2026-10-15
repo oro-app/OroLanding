@@ -102,7 +102,7 @@ export default function MeetOro() {
       </button>}
       {(status === 'ended' || status === 'error') && <div className="meet-oro-endcard">
         {status === 'error' && <p role="status">the video couldn’t load. you can still meet oro.</p>}
-        <a className="oro-button meet-oro-button" href={checkoutHref} onClick={continueToCheckout}>let oro help you get dressed</a>
+        <a className="oro-button meet-oro-button" href={checkoutHref} onClick={continueToCheckout}>find your next outfit</a>
         {status === 'ended' && <button className="meet-oro-replay" type="button" onClick={replay}>watch again</button>}
       </div>}
     </div>

@@ -167,6 +167,10 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .halo-footer-main { margin-top: 80px; padding-bottom: 40px; }
   .halo-footer-legal { min-width: 110px; }
 }
+@media (max-width: 360px) {
+  .halo-header-inner { gap: var(--oro-space-3); }
+  .halo-site .halo-cta--header { padding-inline: var(--oro-space-2); font-size: var(--oro-type-label-size); }
+}
 @media (forced-colors: active) {
   .halo-footer-goal-options a { border-color: ButtonText; }
 }

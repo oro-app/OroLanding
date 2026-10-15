@@ -96,7 +96,7 @@ export default function Home() {
                 personalized outfit advice for your closet, your style, and your plans.
               </Text>
               <div className="home-action">
-                <HomeCta place="hero" className="home-enter">get her number</HomeCta>
+                <HomeCta place="hero" className="home-enter" showIcon={false}>find your next outfit</HomeCta>
               </div>
             </div>
           </section>

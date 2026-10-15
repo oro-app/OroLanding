@@ -30,7 +30,7 @@ export default function BetaWelcome({ campaign, inviteUrl = '' }) {
         {!opening.image && <div className="beta-welcome-portrait"><img className="beta-welcome-mascot" src={mascot} alt="oro waving hello" width="280" height="280" /></div>}
         {opening.copy && <Text className="beta-welcome-copy">{opening.copy}</Text>}
         <Text className={opening.image ? 'beta-welcome-intro' : 'beta-welcome-copy'}>your personal ai stylist,<br />right in your texts.</Text>
-        <HomeCta place={`beta_${campaign}`} className="beta-welcome-cta" inviteUrl={inviteUrl}>want her number?</HomeCta>
+        <HomeCta place={`beta_${campaign}`} className="beta-welcome-cta" inviteUrl={inviteUrl}>find your next outfit</HomeCta>
       </div>
       {opening.image && <div className="beta-welcome-demo" aria-label="a preview of styling with oro">
         <p className="beta-welcome-demo-label">a little preview</p>

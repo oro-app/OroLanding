@@ -183,7 +183,7 @@ export default function NewsletterPage({ slug }) {
           <div className="newsletter-article-cta">
             <Text variant="label" muted>Meet oro</Text>
             <Heading variant="section">Your AI stylist, <em>in your corner.</em></Heading>
-            <HomeCta place="newsletter_article">Start the conversation</HomeCta>
+            <HomeCta place="newsletter_article">find your next outfit</HomeCta>
           </div>
         </article>
       </div>

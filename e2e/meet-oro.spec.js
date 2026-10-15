@@ -1,6 +1,6 @@
 import { test, expect } from './fixtures.js'
 
-const continueName = 'let oro help you get dressed'
+const continueName = 'find your next outfit'
 const skipName = 'skip video and continue to checkout'
 const demoPath = '/demos/oro-onboarding-demo.mp4'
 const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 2500, first_month_discount_percent: 0 }
@@ -32,7 +32,7 @@ test.beforeEach(async ({ page }) => {
   }))
 })
 
-test('get her number opens only the recording and starts playback before payment', async ({ page }) => {
+test('the main CTA opens only the recording and starts playback before payment', async ({ page }) => {
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
   const paymentRequests = []

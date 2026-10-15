@@ -26,7 +26,7 @@ export function HomeHeader({ showCta = true, sticky = true }) {
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          {showCta && <HomeCta place="header">want her number?</HomeCta>}
+          {showCta && <HomeCta place="header">find your next outfit</HomeCta>}
         </nav>
       </div>
     </header>
@@ -52,7 +52,7 @@ export function HomeFooter({ landing = false, closerTitle = 'want her number?', 
         <section className="halo-footer-closer" aria-labelledby="closer-title" data-analytics-section="final_cta">
           <Heading as="h2" variant="title" id="closer-title">{closerTitle}</Heading>
           {closerText && <Text muted>{closerText}</Text>}
-          {closerAction || <HomeCta place="closer">get her number</HomeCta>}
+          {closerAction || <HomeCta place="closer" showIcon={false}>find your next outfit</HomeCta>}
         </section>
         <div className="halo-footer-main">
           <div className="halo-footer-brand">
