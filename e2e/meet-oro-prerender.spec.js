@@ -56,7 +56,7 @@ test('a cold player load and hard refresh reveal the recording once without a la
     window.oroPaintSamples = []
     window.oroRevealAnimations = 0
     document.addEventListener('animationstart', event => {
-      if (event.target.matches('.meet-oro-stage')) window.oroRevealAnimations += 1
+      if (event.target.matches('video') && event.animationName === 'meet-oro-picture-enter') window.oroRevealAnimations += 1
     })
     const sample = () => {
       const stage = document.querySelector('.meet-oro-stage')
@@ -64,7 +64,7 @@ test('a cold player load and hard refresh reveal the recording once without a la
         const bounds = stage.getBoundingClientRect()
         window.oroPaintSamples.push({
           questionCount: document.querySelectorAll('.meet-oro-question').length,
-          opacity: Number(getComputedStyle(stage).opacity),
+          opacity: Number(getComputedStyle(stage.querySelector('video')).opacity),
           width: bounds.width,
           height: bounds.height,
           viewportWidth: innerWidth,

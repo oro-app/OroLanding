@@ -112,7 +112,7 @@ export default function MeetOro() {
 
   return <section className="meet-oro meet-oro--immersive" aria-label="Oro product demo" style={{ '--meet-oro-exit-duration': `${exitDuration}ms` }}>
     <div className="meet-oro-stage" data-phase={phase} data-state={status} data-settled={endcardReady || status === 'error' || undefined} aria-busy={phase === 'exit'} inert={phase === 'exit' ? '' : undefined}>
-      <video ref={videoRef} src="/demos/oro-onboarding-demo.mp4" poster="/demos/oro-onboarding-demo-poster.jpg" width="600" height="1298"
+      <video ref={videoRef} src="/demos/oro-onboarding-demo.mp4" poster="/demos/oro-onboarding-demo-opening.jpg" width="600" height="1298"
         autoPlay muted controls={!endcardReady && status !== 'error'} playsInline preload="auto" aria-label="Oro product demo" aria-describedby="meet-oro-video-summary"
         onPlay={() => {
           if (entering.current) {
