@@ -82,6 +82,8 @@ The homepage uses the published `oro-kit` package for colors, DM Sans and Outfit
 
 `postcss.config.js` scopes kit recipes to `.halo-site` and excludes legacy `@oro/web` recipes from that surface because both packages define `.oro-chip`. Preserve this isolation and the existing theme behavior on other routes.
 
+`DemoTransition` handles ordinary same-origin links into `/meet-oro`: the source CTA compresses and a plum overlay covers the page before navigation. Modified clicks, new tabs, custom destinations, and reduced motion retain native link behavior. Browser-cache restoration clears the overlay and pending navigation. The player uses the same plum backdrop with a quiet radial glow. Completion holds the final frame for half a second before dimming it and revealing the invitation; replay restores playback and native controls. Exit fades to the checkout canvas, with a shorter fade for skip. `/checkout` must serve its own prerendered HTML and link its route stylesheet in the head so the handoff remains styled before hydration. Vite can emit Checkout as a shared chunk, so the prerender manifest lookup also resolves its chunk name.
+
 ### SEO pipeline (`src/lib/seo.js` + `scripts/generate-seo.mjs`)
 
 `src/lib/seo.js` is the single source of truth for per-route titles/descriptions/JSON-LD. `getSeoForRoute()` builds the `<head>` tags and a JSON-LD `@graph` (Organization + WebSite + WebPage + Breadcrumb, plus `SoftwareApplication` on the product pages and `FAQPage` where a route declares `faqs`). `scripts/generate-seo.mjs` consumes it at build time to write per-route HTML, `sitemap.xml`, and `llms.txt` (an LLM-facing site summary built from `src/lib/faqs.js` + recent newsletters). It is also imported by `src/entry-server.jsx`.

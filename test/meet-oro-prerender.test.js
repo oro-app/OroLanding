@@ -41,3 +41,18 @@ test('the public demo URL resolves to its prerendered document before the SPA fa
   assert.equal(rewrites[demoIndex].destination, '/meet-oro/index.html')
   assert.ok(fallbackIndex > demoIndex, 'The demo rewrite must precede the general SPA fallback')
 })
+
+test('checkout arrives with its styles and prerendered document already available', async () => {
+  const html = await read('dist/checkout/index.html')
+  const manifest = JSON.parse(await read('dist/.vite/manifest.json'))
+  const styles = Object.values(manifest).find(entry => entry.src === 'src/components/checkout/Checkout.jsx' || entry.name === 'Checkout')?.css || []
+  assert.ok(styles.length)
+  const head = html.slice(0, html.indexOf('</head>'))
+  for (const asset of styles) assert.ok(head.includes(`href="/${asset}"`))
+  assert.match(html, /oro-checkout-route/)
+  const { rewrites } = JSON.parse(await read('vercel.json'))
+  const checkoutIndex = rewrites.findIndex(rewrite => rewrite.source === '/checkout')
+  assert.ok(checkoutIndex >= 0)
+  assert.equal(rewrites[checkoutIndex].destination, '/checkout/index.html')
+  assert.ok(checkoutIndex < rewrites.findIndex(rewrite => rewrite.destination === '/index.html'))
+})

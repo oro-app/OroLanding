@@ -8,6 +8,8 @@ export default function MeetOro() {
   const leaving = useRef(false)
   const [phase, setPhase] = useState('enter')
   const [status, setStatus] = useState('starting')
+  const [endcardReady, setEndcardReady] = useState(false)
+  const [exitDuration, setExitDuration] = useState(460)
   const [checkoutHref, setCheckoutHref] = useState('/checkout')
 
   const play = useCallback(async () => {
@@ -33,7 +35,10 @@ export default function MeetOro() {
       transitionTimer.current = null
       leaving.current = false
       setPhase('enter')
-      if (videoRef.current?.ended) setStatus('ended')
+      if (videoRef.current?.ended) {
+        setStatus('ended')
+        setEndcardReady(true)
+      }
       else play()
     }
     window.addEventListener('pageshow', restoreFromCache)
@@ -42,6 +47,15 @@ export default function MeetOro() {
       window.removeEventListener('pageshow', restoreFromCache)
     }
   }, [play])
+
+  useEffect(() => {
+    if (status !== 'ended') {
+      setEndcardReady(false)
+      return
+    }
+    const timer = setTimeout(() => setEndcardReady(true), window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 500)
+    return () => clearTimeout(timer)
+  }, [status])
 
   useEffect(() => {
     const invite = new URLSearchParams(window.location.search).get('invite')
@@ -62,24 +76,27 @@ export default function MeetOro() {
     if (leaving.current) return
     leaving.current = true
     const href = event.currentTarget.href
+    const duration = event.currentTarget.classList.contains('meet-oro-skip') ? 260 : 460
+    setExitDuration(duration)
     videoRef.current?.pause()
     setPhase('exit')
     transitionTimer.current = setTimeout(() => {
       transitionTimer.current = null
       window.location.assign(href)
-    }, 160)
+    }, duration)
   }
 
   const replay = () => {
     videoRef.current.currentTime = 0
+    setEndcardReady(false)
     setStatus('starting')
     play()
   }
 
-  return <section className="meet-oro meet-oro--immersive" aria-label="Oro product demo">
-    <div className="meet-oro-stage" data-phase={phase} data-state={status} aria-busy={phase === 'exit'} inert={phase === 'exit' ? '' : undefined}>
+  return <section className="meet-oro meet-oro--immersive" aria-label="Oro product demo" style={{ '--meet-oro-exit-duration': `${exitDuration}ms` }}>
+    <div className="meet-oro-stage" data-phase={phase} data-state={status} data-settled={endcardReady || status === 'error' || undefined} aria-busy={phase === 'exit'} inert={phase === 'exit' ? '' : undefined}>
       <video ref={videoRef} src="/demos/oro-onboarding-demo.mp4" poster="/demos/oro-onboarding-demo-poster.jpg" width="600" height="1298"
-        autoPlay muted controls playsInline preload="auto" aria-label="Oro product demo" aria-describedby="meet-oro-video-summary"
+        autoPlay muted controls={!endcardReady && status !== 'error'} playsInline preload="auto" aria-label="Oro product demo" aria-describedby="meet-oro-video-summary"
         onPlay={() => {
           setStatus('playing')
           trackEvent('video_play', { location: 'pre_checkout_demo', video_id: 'oro_onboarding_demo' })
@@ -100,11 +117,12 @@ export default function MeetOro() {
       {status === 'paused' && <button className="meet-oro-play" type="button" aria-label="play oro demo" onClick={play}>
         <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
       </button>}
-      {(status === 'ended' || status === 'error') && <div className="meet-oro-endcard">
-        {status === 'error' && <p role="status">the video couldn’t load. you can still meet oro.</p>}
+      {((status === 'ended' && endcardReady) || status === 'error') && <div className="meet-oro-endcard">
+        {status === 'error' ? <p role="status">the video couldn’t load. you can still meet oro.</p> : <h2>ready to find your next outfit?</h2>}
         <a className="oro-button meet-oro-button" href={checkoutHref} onClick={continueToCheckout}>find your next outfit</a>
         {status === 'ended' && <button className="meet-oro-replay" type="button" onClick={replay}>watch again</button>}
       </div>}
     </div>
+    <div className="meet-oro-departure" data-active={phase === 'exit' || undefined} aria-hidden="true" />
   </section>
 }

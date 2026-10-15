@@ -23,4 +23,5 @@
 @import './brand-background.css';
 
 @import './designer-theme.css';
+@import './components/meet-oro/DemoTransition.css';
 @import './components/home/DesignerHome.css';

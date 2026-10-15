@@ -83,6 +83,7 @@ test('visitors can skip the playing recording and begin checkout', async ({ page
   expect(checkoutRequests).toBe(0)
   await page.getByRole('link', { name: skipName, exact: true }).click()
   await expect(page).toHaveURL(/\/checkout$/)
+  await expect(page.locator('.oro-checkout-route')).toHaveCSS('background-color', 'rgb(252, 251, 255)')
   await expect(page.locator('.checkout-price')).toHaveText('$25')
   expect(checkoutRequests).toBe(1)
 })
@@ -96,18 +97,65 @@ test('finishing offers checkout or a replay without starting a payment session',
   await page.goto('/meet-oro')
   await expectPlaying(page)
   await finishRecording(page)
+  await expect(page.getByRole('heading', { name: 'ready to find your next outfit?' })).toBeVisible()
+  await expect(page.locator('video')).not.toHaveAttribute('controls')
   await expect(page.getByRole('link', { name: continueName, exact: true })).toHaveAttribute('href', '/checkout')
   expect(checkoutRequests).toBe(0)
   await page.getByRole('button', { name: 'watch again', exact: true }).click()
   const video = await expectPlaying(page)
   expect(await video.evaluate(element => element.currentTime)).toBeLessThan(2)
   await expect(page.getByRole('link', { name: continueName, exact: true })).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: 'ready to find your next outfit?' })).toHaveCount(0)
   await finishRecording(page)
   expect(checkoutRequests).toBe(0)
   await page.getByRole('link', { name: continueName, exact: true }).click()
   await expect(page).toHaveURL(/\/checkout$/)
   await expect(page.locator('.checkout-price')).toHaveText('$25')
   expect(checkoutRequests).toBe(1)
+})
+
+test('the final frame rests before the invitation appears', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/meet-oro')
+  const video = await expectPlaying(page)
+  await page.evaluate(() => {
+    document.querySelector('video').addEventListener('ended', () => {
+      window.oroEndedAt = performance.now()
+      const observer = new MutationObserver(() => {
+        if (!document.querySelector('.meet-oro-endcard')) return
+        window.oroEndcardDelay = performance.now() - window.oroEndedAt
+        observer.disconnect()
+      })
+      observer.observe(document.querySelector('.meet-oro-stage'), { childList: true })
+    }, { once: true })
+  })
+  await video.evaluate(element => { element.currentTime = element.duration - .08 })
+  await expect(page.getByRole('heading', { name: 'ready to find your next outfit?' })).toBeVisible()
+  expect(await page.evaluate(() => window.oroEndcardDelay)).toBeGreaterThanOrEqual(450)
+})
+
+test('the CTA departure resets when the source page returns from the browser cache', async ({ page }) => {
+  await page.goto('/')
+  const departure = await page.locator('.halo-cta--hero').evaluate(element => new Promise(resolve => {
+    const overlay = document.querySelector('.oro-demo-transition')
+    const observer = new MutationObserver(() => {
+      if (!overlay.hasAttribute('data-departing')) return
+      observer.disconnect()
+      const marked = element.hasAttribute('data-demo-departing')
+      window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }))
+      resolve(marked)
+    })
+    observer.observe(overlay, { attributes: true })
+    element.click()
+  }))
+  expect(departure).toBe(true)
+  await expect(page.locator('.oro-demo-transition')).not.toHaveAttribute('data-departing')
+  await expect(page.locator('.halo-cta--hero')).not.toHaveAttribute('data-demo-departing')
+  await page.waitForTimeout(400)
+  await expect(page).toHaveURL(/\/$/)
+  await page.locator('.halo-cta--hero').click()
+  await expect(page).toHaveURL(/\/meet-oro$/)
+  await expectPlaying(page)
 })
 
 test('a blocked autoplay attempt provides a working play button', async ({ page }) => {

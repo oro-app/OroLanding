@@ -3,6 +3,7 @@ import { isFeedbackPath } from './lib/feedbackSession.js'
 import { getBetaCampaign } from './lib/betaCampaign.js'
 import { GEO_PATHS } from './lib/geoRoutes.js'
 import Home from './components/home/Home'
+import DemoTransition from './components/meet-oro/DemoTransition'
 import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
 import SiteHeader from './components/layout/SiteHeader'
 import BlogSkeleton from './components/blog/BlogSkeleton'
@@ -156,7 +157,8 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${isDemo ? ' oro-demo-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
+      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${isDemo ? ' oro-demo-route' : ''}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
+        {!isDemo && <DemoTransition />}
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
         {!isBeta && !isFeedback && !isDemo && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started'].includes(route.type)} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>

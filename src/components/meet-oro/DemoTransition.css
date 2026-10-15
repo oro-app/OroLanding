@@ -1,0 +1,9 @@
+:root { --oro-demo-backdrop: color-mix(in srgb, var(--oro-plum-deep) 65%, var(--oro-ink)); }
+.oro-demo-transition { position: fixed; inset: 0; z-index: 150; background: var(--oro-demo-backdrop); opacity: 0; pointer-events: none; }
+.oro-demo-transition[data-departing] { opacity: 1; pointer-events: auto; }
+.oro-checkout-route { min-height: 100dvh; background: var(--oro-color-canvas, #fcfbff); }
+body:has(.oro-checkout-route) { background: var(--oro-color-canvas, #fcfbff) !important; }
+@media (prefers-reduced-motion: no-preference) {
+  .oro-demo-transition { transition: opacity 300ms cubic-bezier(.4, 0, .2, 1); }
+  .halo-site a[data-demo-departing] { transform: scale(.97) !important; transition: transform 160ms ease !important; }
+}
