@@ -31,7 +31,7 @@ const FEATURES = [
   },
   {
     title: 'the more you text her, the better she gets',
-    description: 'she knows you don’t like jewelry, get cold easily, love those jeans, and have pilates on sunday mornings.',
+    description: 'she knows you don’t like jewelry, get cold easily, and have pilates on sunday mornings.',
     image: jotting,
     imageAlt: 'oro jotting notes in a notepad.',
     width: 1500,
