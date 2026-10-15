@@ -1,0 +1,22 @@
+src/components/checkout/Checkout.css
+  s_8252b58d803c95::t_1746e568175048 28
+  s_8252b58d803c95::t_746c510a66eed3 29
+src/components/checkout/CheckoutForm.jsx
+  s_8252b58d803c95::t_746c510a66eed3 63,65-67,69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "54adb4cdf7aa2569ad821a8320d00ad72414ad22",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
