@@ -1,10 +1,10 @@
 :root:has(.halo-site) { --color-bg: var(--oro-color-canvas); --halo-header-height: 64px; --halo-cta-background: #573969; --halo-cta-background-hover: #634475; }
 body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
-.halo-site { min-height: 100dvh; }
+.halo-site { --halo-page-gutter: 48px; --halo-page-max: 1120px; min-height: 100dvh; }
 .halo-site ::selection { background: var(--oro-color-soft); color: var(--oro-color-ink); }
 .halo-site a { text-decoration: none; transition: color var(--oro-motion-duration) var(--oro-motion-easing), background-color var(--oro-motion-duration) var(--oro-motion-easing); }
 .halo-site :is(a, button, [tabindex]):focus-visible { outline: var(--oro-focus-width) solid var(--oro-color-accent); outline-offset: var(--oro-focus-offset); }
-.halo-container { width: min(100% - 96px, 1120px); margin-inline: auto; }
+.halo-container { width: min(calc(100% - 2 * var(--halo-page-gutter)), var(--halo-page-max)); margin-inline: auto; }
 .halo-header { position: sticky; top: 0; z-index: 20; isolation: isolate; }
 .halo-header--static { position: relative; }
 .halo-header::before { content: ''; position: absolute; inset: 0 0 -24px; z-index: -1; backdrop-filter: blur(18px); -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%); pointer-events: none; }
@@ -151,7 +151,7 @@ body:has(.halo-site) { background: var(--oro-color-canvas) !important; }
   .home-feature:nth-child(2) .home-feature-copy { justify-self: end; width: min(100%, 440px); }
 }
 @media (max-width: 900px) {
-  .halo-container { width: calc(100% - 48px); }
+  .halo-site { --halo-page-gutter: 24px; }
   .halo-header-inner { min-height: 64px; }
   .halo-nav { gap: var(--oro-space-5); }
   .home-panel { max-width: 600px; }

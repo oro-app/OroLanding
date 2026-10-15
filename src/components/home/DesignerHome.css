@@ -4,8 +4,7 @@
   --g-side: 25%;
   --g-inset: 24px;
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  width: 100%;
   overflow: clip;
 
   background: linear-gradient(to bottom,
@@ -24,7 +23,7 @@
 .oro-grid-row { position: relative; }
 .oro-grid-cell {
   position: relative;
-  padding: 64px 16px;
+  padding: 64px 0;
   text-align: center;
 }
 .oro-grid-copy {
@@ -174,6 +173,8 @@
 
 
 .oro-grid-copy.oro-closet {
+  width: min(calc(100% - 2 * var(--halo-page-gutter)), var(--halo-page-max));
+  margin-inline: auto;
   display: grid;
   grid-template-columns: 1fr;
   justify-items: start;
@@ -191,8 +192,8 @@
 .oro-closet .oro-grid-sub {
   text-align: left;
 }
-.oro-closet .oro-grid-title { text-wrap: balance; }
-.oro-closet .oro-grid-sub { text-wrap: pretty; }
+.oro-closet .oro-grid-title { max-width: none; text-wrap: balance; }
+.oro-closet .oro-grid-sub { max-width: none; text-wrap: pretty; }
 .oro-closet .oro-grid-sub { margin: -8px 0 0; }
 .oro-closet-media {
   margin: 0;
@@ -207,15 +208,15 @@
 
 @media (min-width: 1024px) {
   .oro-grid-copy.oro-closet {
-    grid-template-columns: minmax(0, 420px) minmax(0, 600px);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     justify-content: center;
     align-items: center;
-    column-gap: clamp(48px, 6vw, 112px);
-    padding: 0 32px;
+    column-gap: clamp(32px, 3vw, 48px);
+    padding: 0;
   }
   .oro-closet-text { gap: 28px; }
   .oro-closet-media img {
-    max-height: min(560px, 52vh);
+    max-height: min(560px, 60vh);
     width: auto;
     max-width: 100%;
     margin-left: auto;
@@ -230,7 +231,7 @@
 
 @media (min-width: 1024px) {
   .oro-grid-copy.oro-closet.oro-tellher {
-    grid-template-columns: minmax(0, 600px) minmax(0, 420px);
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
   }
   .oro-tellher .oro-closet-media { grid-column: 1; grid-row: 1; }
   .oro-tellher .oro-closet-text  { grid-column: 2; grid-row: 1; }
@@ -238,14 +239,6 @@
     margin-left: 0;
     margin-right: auto;
   }
-}
-
-
-@media (min-width: 1024px) {
-  .oro-grid-copy.oro-closet.oro-texther {
-    grid-template-columns: minmax(0, 540px) minmax(0, 600px);
-  }
-  .oro-texther .oro-grid-title { max-width: none; white-space: nowrap; }
 }
 
 

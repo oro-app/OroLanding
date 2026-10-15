@@ -15,7 +15,7 @@ import { hasAnalyticsConsent, trackEvent } from '../../lib/analytics'
 const FEATURES = [
   {
     title: 'show her your closet',
-    description: 'send oro photos of your clothes once. she’ll remember what you own and build outfits from your actual wardrobe.',
+    description: 'just connect your camera roll. oro builds your closet from photos you already have, then creates outfits with what you own.',
     image: wardrobeDemo,
     imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
     width: 1312,
@@ -106,8 +106,8 @@ export default function Home() {
   return (
     <div className="halo-home" ref={motionRef}>
       <GoldBackground />
-      <div className="home-grid halo-container">
-        <div className="home-copy">
+      <div className="home-copy">
+        <div className="home-grid halo-container">
           <section className="home-panel" ref={heroRef} aria-labelledby="home-title" data-analytics-section="hero">
             <div className="home-hero-copy">
               <Heading as="h1" variant="display" id="home-title" aria-label="the ai fashion assistant you can text">
@@ -123,12 +123,12 @@ export default function Home() {
           </section>
           <DesignerChat />
           <DesignerRibbon />
-          <DesignerFeatures features={FEATURES} />
-          {entryCount !== null && <section className="home-social-proof home-moments-panel" aria-labelledby="home-social-title" data-home-reveal data-analytics-section="social_proof">
-            <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
-            <Text muted className="home-description home-stagger">{entryCount.toLocaleString()} people are already trying to get it.</Text>
-          </section>}
         </div>
+        <DesignerFeatures features={FEATURES} />
+        {entryCount !== null && <section className="home-social-proof home-moments-panel halo-container" aria-labelledby="home-social-title" data-home-reveal data-analytics-section="social_proof">
+          <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
+          <Text muted className="home-description home-stagger">{entryCount.toLocaleString()} people are already trying to get it.</Text>
+        </section>}
       </div>
       <div className={`home-floating-cta${showFloatingCta ? ' home-floating-cta--visible' : ''}`} inert={showFloatingCta ? undefined : ''}>
         <HomeCta place="floating">find your next outfit</HomeCta>
