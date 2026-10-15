@@ -1,5 +1,9 @@
 import { test, expect } from './fixtures'
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/checkout?*', route => route.fulfill({ status: 503, json: {} }))
+})
+
 // Past-dated issue (2026-05-26) — stable, never release-gated again.
 const RELEASED_SLUG = 'the-rule-of-three'
 
@@ -33,7 +37,7 @@ for (const width of [320, 390, 1440]) {
     await expect(page.locator('.newsletter-mdx > p').first()).toHaveCSS('font-family', '"DM Sans", sans-serif')
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1)
     await page.locator('.halo-cta--newsletter_article').click()
-    await expect(page).toHaveURL(/\/meet-oro(?:\?|$)/)
+    await expect(page).toHaveURL(/\/checkout(?:\?|$)/)
   })
 }
 

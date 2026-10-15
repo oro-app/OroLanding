@@ -13,7 +13,7 @@ const legalPagePlugin = {
   configurePreviewServer(server) {
     server.middlewares.use((req, _res, next) => {
       const pathname = req.url.split('?')[0]
-      if (['/beta', '/feedback', '/meet-oro', '/checkout'].includes(pathname)) req.url = req.url.replace(pathname, `${pathname}/`)
+      if (['/beta', '/feedback', '/checkout'].includes(pathname)) req.url = req.url.replace(pathname, `${pathname}/`)
       next()
     })
   },

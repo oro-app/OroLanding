@@ -3,7 +3,6 @@ import { isFeedbackPath } from './lib/feedbackSession.js'
 import { getBetaCampaign } from './lib/betaCampaign.js'
 import { GEO_PATHS } from './lib/geoRoutes.js'
 import Home from './components/home/Home'
-import DemoTransition from './components/meet-oro/DemoTransition'
 import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
 import SiteHeader from './components/layout/SiteHeader'
 import BlogSkeleton from './components/blog/BlogSkeleton'
@@ -27,13 +26,11 @@ const BetaPage = lazy(() => import('./components/beta/Beta'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
 const GeoPage = lazy(() => import('./components/geo/GeoPage'))
 const CheckoutPage = lazy(() => import('./components/checkout/Checkout'))
-const MeetOroPage = lazy(() => import('./components/meet-oro/MeetOro'))
 const PuttyPage = lazy(() => import('./components/putty/Putty'))
 
 export function getRouteFromPath(pathname = '/', search = '') {
   const path = pathname.replace(/\/+$/, '') || '/'
-  if (path === '/checkout') return { type: 'checkout' }
-  if (path === '/meet-oro') return { type: 'demo' }
+  if (path === '/checkout' || path === '/meet-oro') return { type: 'checkout' }
   if (path === '/merch' || path === '/putty') return { type: 'merch' }
   if (GEO_PATHS.includes(path)) return { type: 'geo', path }
   if (isFeedbackPath(path)) return { type: 'feedback' }
@@ -73,11 +70,10 @@ function App({ initialRoute }) {
   const isBeta = route.type === 'beta'
   const isFeedback = route.type === 'feedback'
   const isCheckout = route.type === 'checkout' || route.type === 'merch'
-  const isDemo = route.type === 'demo'
   const isGeo = route.type === 'geo'
   const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
   const isPrivateForm = isBeta || isFeedback || isCheckout || route.type === 'get-started'
-  const isHalo = isHome || isPrivateForm || route.type === 'demo' || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
+  const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
   const pageViewParams = {
     route_type: route.type,
     ...(route.slug ? { newsletter_slug: route.slug } : {}),
@@ -157,17 +153,14 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${isDemo ? ' oro-demo-route' : ''}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
-        {!isDemo && <DemoTransition />}
+      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && !isDemo && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started'].includes(route.type)} /> : <SiteHeader />)}
+        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started'].includes(route.type)} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {route.type === 'merch' ? (
             <Suspense fallback={<p role="status">Loading merch…</p>}><PuttyPage /></Suspense>
           ) : isCheckout ? (
             <Suspense fallback={null}><CheckoutPage /></Suspense>
-          ) : route.type === 'demo' ? (
-            <Suspense fallback={null}><MeetOroPage /></Suspense>
           ) : isGeo ? (
             <Suspense fallback={null}><GeoPage path={route.path} /></Suspense>
           ) : isFeedback ? (
@@ -216,8 +209,8 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && !isBeta && !isCheckout && !isDemo && <HomeFooter landing={isHome} />}
-        {!isCheckout && !isDemo && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
+        {isHalo && !isFeedback && !isBeta && !isCheckout && <HomeFooter landing={isHome} />}
+        {!isCheckout && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>
   )

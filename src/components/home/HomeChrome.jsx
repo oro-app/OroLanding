@@ -9,10 +9,10 @@ function HomeLogo() {
 }
 
 export function HomeCta({ place, children, className = '', inviteUrl = '', href: customHref, showIcon = true, onClick }) {
-  const href = customHref || (inviteUrl ? `/meet-oro?invite=${encodeURIComponent(inviteUrl)}` : '/meet-oro')
+  const href = customHref || (inviteUrl ? `/checkout?invite=${encodeURIComponent(inviteUrl)}` : '/checkout')
   return (
     <a href={href} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-      onClick={onClick || (customHref ? undefined : () => trackCtaClick('get_number_click', { location: place, destination: 'product_demo' }))}>
+      onClick={onClick || (customHref ? undefined : () => trackCtaClick('get_number_click', { location: place, destination: 'web_checkout' }))}>
       {showIcon && !['header', 'floating'].includes(place) && <MessagesIcon className="halo-cta-message" />}
       <span>{children}</span>
       {['hero', 'closer'].includes(place) && <CtaSparkles />}

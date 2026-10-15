@@ -109,6 +109,7 @@
     }
   ],
   "redirects": [
+    { "source": "/meet-oro", "destination": "/checkout", "permanent": false },
     { "source": "/putty", "destination": "/merch", "permanent": true },
     { "source": "/get-started", "destination": "/getstarted", "permanent": true },
     { "source": "/:entry(beta|invite)", "has": [{ "type": "query", "key": "src", "value": "^poster-career(?:-[a-z0-9]+)*$" }], "destination": "/beta/career", "permanent": false },
@@ -117,7 +118,6 @@
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
   "rewrites": [
-    { "source": "/meet-oro", "destination": "/meet-oro/index.html" },
     { "source": "/checkout", "destination": "/checkout/index.html" },
     { "source": "/closet", "destination": "/closet/index.html" },
     { "source": "/merch", "destination": "/merch/index.html" },

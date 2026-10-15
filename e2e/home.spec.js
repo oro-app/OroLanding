@@ -1,5 +1,9 @@
 import { test, expect } from './fixtures'
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/checkout?*', route => route.fulfill({ status: 503, json: {} }))
+})
+
 test('home page loads cleanly @smoke', async ({ page }) => {
   const errors = []
   page.on('pageerror', (error) => errors.push(error.message))
@@ -14,12 +18,14 @@ test('home page loads cleanly @smoke', async ({ page }) => {
 })
 
 for (const place of ['header', 'hero', 'closer']) {
-  test(`${place} CTA opens the product demo before checkout`, async ({ page }) => {
+  test(`${place} CTA opens checkout directly`, async ({ page }) => {
     await page.goto('/')
     const cta = page.locator(`.halo-cta--${place}`)
-    await expect(cta).toHaveAttribute('href', '/meet-oro')
+    await expect(cta).toHaveAttribute('href', '/checkout')
     await cta.click()
-    await expect(page).toHaveURL(/\/meet-oro(?:\?|$)/)
+    await expect(page).toHaveURL(/\/checkout(?:\?|$)/)
+    await expect(page.getByRole('region', { name: 'Oro subscription checkout' })).toBeVisible()
+    await expect(page.locator('video')).toHaveCount(0)
   })
 }
 
@@ -77,7 +83,7 @@ for (const width of [320, 1440]) {
     await expect(floating).toBeVisible()
     await expect(floating).not.toHaveAttribute('inert')
     await expect(floating).toHaveCSS('position', 'fixed')
-    await expect(cta).toHaveAttribute('href', '/meet-oro')
+    await expect(cta).toHaveAttribute('href', '/checkout')
     const bounds = await cta.boundingBox()
     expect(bounds.x).toBeGreaterThanOrEqual(0)
     expect(bounds.x + bounds.width).toBeLessThanOrEqual(width)
@@ -89,7 +95,7 @@ for (const width of [320, 1440]) {
     await page.locator('.oro-marquee').scrollIntoViewIfNeeded()
     await expect(floating).toBeVisible()
     await cta.click()
-    await expect(page).toHaveURL(/\/meet-oro(?:\?|$)/)
+    await expect(page).toHaveURL(/\/checkout(?:\?|$)/)
   })
 }
 

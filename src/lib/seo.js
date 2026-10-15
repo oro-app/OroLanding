@@ -20,13 +20,6 @@ const ORGANIZATION_ID = `${SITE_URL}/#organization`
 const WEBSITE_ID = `${SITE_URL}/#website`
 
 export const ROUTE_SEO = {
-  demo: {
-    path: '/meet-oro',
-    title: 'See Oro in action | Oro',
-    description: 'See how Oro puts together and revises outfits from the clothes you own, then continue to your subscription.',
-    h1: 'See Oro in action',
-    noindex: true,
-  },
   merch: {
     path: '/merch', title: 'Merch — bidding closed | Oro',
     description: 'Bidding and submissions for the Oro hoodie are closed. View the final hoodie placements and leaderboard.',
@@ -206,7 +199,6 @@ export const ROUTE_SEO = {
 
 export const PUBLIC_ROUTE_TYPES = [
   'home',
-  'demo',
   'try-oro',
   'how-it-works',
   'why-oro',

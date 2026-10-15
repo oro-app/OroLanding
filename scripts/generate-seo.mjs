@@ -260,7 +260,6 @@ async function main() {
     return [...(entry?.css || []), ...(entry?.imports || []).flatMap((dependency) => importedStylesheets(dependency, seen))]
   }
   const betaStylesheets = [...new Set(importedStylesheets('src/components/beta/Beta.jsx'))]
-  const demoStylesheets = [...new Set(importedStylesheets('src/components/meet-oro/MeetOro.jsx'))]
   const checkoutManifestKey = Object.keys(manifest).find(key => key === 'src/components/checkout/Checkout.jsx' || manifest[key].name === 'Checkout')
   const checkoutStylesheets = [...new Set(importedStylesheets(checkoutManifestKey))]
   const geoStylesheets = [...new Set(importedStylesheets('src/components/geo/GeoPage.jsx'))]
@@ -268,8 +267,6 @@ async function main() {
   const geoTemplate = template.replace('</head>', `${geoStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!betaStylesheets?.length) throw new Error('Missing signup stylesheets in the client build manifest')
   const betaTemplate = template.replace('</head>', `${betaStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
-  if (!demoStylesheets.length) throw new Error('Missing product demo stylesheets in the client build manifest')
-  const demoTemplate = template.replace('</head>', `${demoStylesheets.filter((file) => !template.includes(`href="/${file}"`)).map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!checkoutStylesheets.length) throw new Error('Missing checkout stylesheets in the client build manifest')
   const checkoutTemplate = template.replace('</head>', `${checkoutStylesheets.filter((file) => !template.includes(`href="/${file}"`)).map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!headingsStylesheet) throw new Error('Missing preview heading stylesheet in the client build manifest')
@@ -284,7 +281,7 @@ async function main() {
     const seo = getSeoForRoute({ type })
     const appHtml = await render(seo.path)
     rnwStyleTag = getRnwStyleTag ? getRnwStyleTag() : ''
-    const routeTemplate = type === 'demo' ? demoTemplate : type === 'checkout' ? checkoutTemplate : type.startsWith('beta') ? betaTemplate : template
+    const routeTemplate = type === 'checkout' ? checkoutTemplate : type.startsWith('beta') ? betaTemplate : template
     await writeRoute(routeTemplate, seo, appHtml)
   }
 
