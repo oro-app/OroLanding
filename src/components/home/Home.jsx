@@ -7,7 +7,7 @@ import DesignerChat from './DesignerChat'
 import DesignerFeatures, { DesignerRibbon } from './DesignerFeatures'
 import DesignerHeadline from './DesignerHeadline'
 import GoldBackground from '../GoldBackground'
-import wardrobeDemo from '../../assets/demos/wardrobe.png'
+import wardrobeDemo from '../../assets/demos/camera-roll-closet.webp'
 import cargosLook from '../../assets/fit-gen-demo/mens-cargos.webp'
 import jotting from '../../assets/mascot/jotting.webp'
 import { hasAnalyticsConsent, trackEvent } from '../../lib/analytics'
@@ -17,9 +17,9 @@ const FEATURES = [
     title: 'show her your closet',
     description: 'your camera roll is already a closet. connect it, and oro builds your closet for you.',
     image: wardrobeDemo,
-    imageAlt: 'Three outfit photos with the clothing pieces shown below them.',
-    width: 1312,
-    height: 1199,
+    imageAlt: 'Casual camera-roll photos of clothes in a closet, clothes spread on a bed, a mirror selfie, and a top-down outfit selfie.',
+    width: 1254,
+    height: 1254,
   },
   {
     title: 'don’t like it? tell her.',
