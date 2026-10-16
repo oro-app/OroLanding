@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react'
-import placeholderOutfit from '../../assets/fit-gen-demo/mens-cargos.webp'
+import galleryDate from '../../assets/outfit-gallery/gallery-date.webp'
+import sportyWeekend from '../../assets/outfit-gallery/sporty-weekend.webp'
+import tailoredWorkday from '../../assets/outfit-gallery/tailored-workday.webp'
+import softDate from '../../assets/outfit-gallery/soft-date.webp'
+import smartCasual from '../../assets/outfit-gallery/smart-casual.webp'
 import './OutfitGallery.css'
 
 const OUTFITS = [
-  { caption: 'coffee, then whatever', tilt: '-5deg', lift: '12px' },
-  { caption: 'a little overdressed', tilt: '4deg', lift: '-18px' },
-  { caption: 'your usual, remixed', tilt: '-3deg', lift: '22px' },
-  { caption: 'out past midnight', tilt: '5deg', lift: '-12px' },
-  { caption: 'nothing on the calendar', tilt: '-4deg', lift: '16px' },
-  { caption: 'something very you', tilt: '3deg', lift: '-16px' },
+  { image: galleryDate, alt: 'White fitted tee, black hoodie, relaxed charcoal jeans, brown sneakers, and gold accessories.', caption: 'coffee, then whatever', tilt: '-5deg', lift: '12px' },
+  { image: tailoredWorkday, alt: 'Navy blazer, pale blue shirt, charcoal tailored trousers, brown loafers, and a leather work bag.', caption: 'big meeting energy', tilt: '4deg', lift: '-18px' },
+  { image: softDate, alt: 'Pink cardigan, ivory lace camisole and skirt, burgundy Mary Janes, and delicate pearl and gold accessories.', caption: 'bookstore date', tilt: '-3deg', lift: '22px' },
+  { image: sportyWeekend, alt: 'Cream and navy football jersey, washed black denim shorts, sneakers, headphones, and a sling bag.', caption: 'nothing on the calendar', tilt: '5deg', lift: '-12px' },
+  { image: smartCasual, alt: 'Charcoal cropped jacket, white tee, loose black tailored trousers, loafers, and silver accessories.', caption: 'work, then dinner', tilt: '-4deg', lift: '16px' },
 ]
 
 export default function OutfitGallery() {
@@ -89,7 +92,7 @@ export default function OutfitGallery() {
             {OUTFITS.map((outfit, index) => (
               <li className="outfit-gallery-item" key={outfit.caption} style={{ '--card-tilt': outfit.tilt, '--card-lift': outfit.lift, '--card-delay': `${index * -1.4}s` }}>
                 <figure className="outfit-gallery-polaroid">
-                  <img src={placeholderOutfit} alt="Streetwear outfit with a leather jacket, graphic tee, olive cargos, and sneakers." width="1086" height="1448" loading="lazy" decoding="async" />
+                  <img src={outfit.image} alt={outfit.alt} width="1086" height="1448" loading="lazy" decoding="async" />
                   <figcaption>{outfit.caption}</figcaption>
                 </figure>
               </li>
