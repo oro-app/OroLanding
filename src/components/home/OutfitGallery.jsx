@@ -40,9 +40,9 @@ export default function OutfitGallery() {
     }
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update) }
     const measure = () => {
+      section.classList.toggle('outfit-gallery--pinned', pin.matches)
       distance = Math.max(0, scroller.scrollWidth - scroller.clientWidth)
       travel = Math.max(1, distance)
-      section.classList.toggle('outfit-gallery--pinned', pin.matches)
       section.style.setProperty('--gallery-travel', `${travel}px`)
       sectionTop = section.getBoundingClientRect().top + scrollY
       schedule()

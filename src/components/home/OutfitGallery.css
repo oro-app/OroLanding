@@ -97,6 +97,10 @@
   padding-block: clamp(80px, 12svh, 112px) clamp(72px, 10svh, 90px);
 }
 .outfit-gallery--pinned .outfit-gallery-scroller { flex: 0 0 auto; overflow-x: hidden; scroll-snap-type: none; touch-action: pan-y; }
+.outfit-gallery--pinned .outfit-gallery-track::before {
+  content: '';
+  flex: 0 0 calc(100vw - max(var(--halo-page-gutter), calc((100vw - var(--halo-page-max)) / 2)));
+}
 .outfit-gallery--pinned .outfit-gallery-item { width: min(clamp(240px, 25vw, 330px), max(140px, calc((100svh - 280px) * .65))); }
 .outfit-gallery--pinned .outfit-gallery-finale-copy {
   opacity: var(--finale-reveal, 0);
