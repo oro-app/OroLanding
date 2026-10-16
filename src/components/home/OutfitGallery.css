@@ -1,0 +1,109 @@
+.outfit-gallery {
+  position: relative;
+  color: var(--oro-color-ink);
+  background: radial-gradient(ellipse at 50% 55%, rgb(205 187 233 / 16%), transparent 70%);
+}
+.outfit-gallery-stage { padding-block: 80px 64px; }
+.outfit-gallery-heading { text-align: center; }
+.outfit-gallery-eyebrow {
+  margin: 0 0 16px;
+  color: var(--oro-color-muted);
+  font-size: .875rem;
+  letter-spacing: .04em;
+}
+.outfit-gallery-heading h2 {
+  margin: 0;
+  font-family: var(--oro-font-family-wordmark);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -.035em;
+}
+.outfit-gallery-heading em { color: var(--oro-color-display); font-weight: inherit; }
+.outfit-gallery-scroller {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+.outfit-gallery-scroller::-webkit-scrollbar { display: none; }
+.halo-site .outfit-gallery-scroller:focus-visible { outline-offset: -4px; }
+.outfit-gallery-track {
+  display: flex;
+  align-items: center;
+  gap: clamp(32px, 4vw, 64px);
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+  padding: 68px max(var(--halo-page-gutter), calc((100vw - var(--halo-page-max)) / 2)) 72px;
+  list-style: none;
+}
+.outfit-gallery-item {
+  flex: 0 0 auto;
+  width: clamp(240px, 23vw, 310px);
+  scroll-snap-align: center;
+  transform: translateY(var(--card-lift)) rotate(var(--card-tilt));
+}
+.outfit-gallery-polaroid {
+  margin: 0;
+  padding: 12px 12px 22px;
+  border: 1px solid rgb(67 47 79 / 8%);
+  background: #fffefa;
+  box-shadow: 0 10px 18px rgb(48 31 61 / 10%), 0 2px 4px rgb(48 31 61 / 9%);
+}
+.outfit-gallery-polaroid img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+.outfit-gallery-polaroid figcaption {
+  padding-top: 20px;
+  text-align: center;
+  font-family: var(--oro-font-family-wordmark);
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+.outfit-gallery-bottom { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.outfit-gallery-bottom p { margin: 0; font-size: .875rem; color: var(--oro-color-muted); }
+.outfit-gallery-hint-scroll { display: none; }
+.outfit-gallery-controls { display: flex; gap: 8px; }
+.outfit-gallery-controls button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--oro-color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--oro-color-ink);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.outfit-gallery-controls button:hover { background: var(--oro-color-surface); }
+@media (prefers-reduced-motion: no-preference) {
+  .outfit-gallery-polaroid { animation: outfitGalleryFloat 7s ease-in-out var(--card-delay) infinite alternate; }
+}
+@keyframes outfitGalleryFloat { from { transform: translateY(-5px); } to { transform: translateY(5px); } }
+.outfit-gallery--pinned { height: calc(100svh + var(--gallery-travel)); }
+.outfit-gallery--pinned .outfit-gallery-stage {
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100svh;
+  padding-block: 112px 88px;
+}
+.outfit-gallery--pinned .outfit-gallery-heading h2 { font-size: clamp(2.5rem, 4vw, 3.7rem); }
+.outfit-gallery--pinned .outfit-gallery-scroller { align-self: center; scroll-snap-type: none; }
+.outfit-gallery--pinned .outfit-gallery-track { padding-block: 40px; }
+.outfit-gallery--pinned .outfit-gallery-item { width: min(23vw, 30svh, 310px); }
+.outfit-gallery--pinned .outfit-gallery-hint-scroll { display: inline; }
+.outfit-gallery--pinned .outfit-gallery-hint-swipe { display: none; }
+@media (max-width: 650px) {
+  .outfit-gallery-stage { padding-block: 48px 56px; }
+  .outfit-gallery-eyebrow { font-size: .8rem; }
+  .outfit-gallery-track { gap: 32px; padding-block: 56px 64px; }
+  .outfit-gallery-item { width: 68vw; max-width: 280px; }
+  .outfit-gallery-polaroid { padding: 10px 10px 20px; }
+  .outfit-gallery-polaroid figcaption { font-size: 1.05rem; padding-top: 16px; }
+}

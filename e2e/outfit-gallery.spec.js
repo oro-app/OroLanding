@@ -1,0 +1,63 @@
+import { test, expect } from './fixtures'
+
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/beta-count', (route) => route.fulfill({ json: { count: 0 } }))
+})
+
+test('desktop scrolling carries the outfit gallery sideways and releases at its end', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  const section = page.locator('.outfit-gallery')
+  const scroller = page.getByRole('region', { name: 'Outfit Polaroids' })
+  await expect(section).toHaveClass(/outfit-gallery--pinned/)
+  const { top, travel } = await section.evaluate((el) => ({ top: el.getBoundingClientRect().top + scrollY, travel: parseFloat(el.style.getPropertyValue('--gallery-travel')) }))
+  await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top + travel / 2)
+  await expect.poll(() => scroller.evaluate((el) => el.scrollLeft / (el.scrollWidth - el.clientWidth))).toBeCloseTo(.5, 1)
+  await expect(page.locator('.outfit-gallery-stage')).toBeInViewport()
+  await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top + travel)
+  await expect.poll(() => scroller.evaluate((el) => el.scrollWidth - el.clientWidth - el.scrollLeft)).toBeLessThan(2)
+  await expect(page.locator('.outfit-gallery-item').last()).toBeInViewport()
+  await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top)
+  await expect.poll(() => scroller.evaluate((el) => el.scrollLeft)).toBeLessThan(2)
+  await page.locator('.halo-footer-closer').scrollIntoViewIfNeeded()
+  await expect(page.locator('.halo-footer-closer')).toBeInViewport()
+})
+
+for (const width of [390, 1440]) {
+  test(`outfits can be browsed by buttons and keyboard with reduced motion at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto('/')
+    const section = page.locator('.outfit-gallery')
+    const scroller = page.getByRole('region', { name: 'Outfit Polaroids' })
+    await section.scrollIntoViewIfNeeded()
+    await expect(section).not.toHaveClass(/outfit-gallery--pinned/)
+    await expect(page.locator('.outfit-gallery-polaroid').first()).toHaveCSS('animation-name', 'none')
+    await page.getByRole('button', { name: 'Next outfits' }).click()
+    await expect.poll(() => scroller.evaluate((el) => el.scrollLeft)).toBeGreaterThan(200)
+    await scroller.focus()
+    await page.keyboard.press('ArrowRight')
+    await expect.poll(() => scroller.evaluate((el) => el.scrollLeft)).toBeGreaterThan(450)
+    await page.keyboard.press('ArrowLeft')
+    await page.getByRole('button', { name: 'Previous outfits' }).click()
+    await expect.poll(() => scroller.evaluate((el) => el.scrollLeft)).toBeLessThan(2)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1)
+  })
+}
+
+test('resizing and changing motion preferences preserve access to the gallery', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  const section = page.locator('.outfit-gallery')
+  await expect(section).toHaveClass(/outfit-gallery--pinned/)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(section).not.toHaveClass(/outfit-gallery--pinned/)
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await expect(section).toHaveClass(/outfit-gallery--pinned/)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(section).not.toHaveClass(/outfit-gallery--pinned/)
+  await section.scrollIntoViewIfNeeded()
+  const scroller = page.getByRole('region', { name: 'Outfit Polaroids' })
+  await scroller.evaluate((el) => { el.scrollLeft = el.scrollWidth })
+  await expect(page.locator('.outfit-gallery-item').last()).toBeInViewport()
+})

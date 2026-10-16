@@ -6,6 +6,7 @@ import { useHomeMotion } from './useHomeMotion'
 import DesignerChat from './DesignerChat'
 import DesignerFeatures, { DesignerRibbon } from './DesignerFeatures'
 import DesignerHeadline from './DesignerHeadline'
+import OutfitGallery from './OutfitGallery'
 import GoldBackground from '../GoldBackground'
 import wardrobeDemo from '../../assets/demos/camera-roll-closet-polaroid-v3.webp'
 import outfitIteration from '../../assets/demos/outfit-iteration-mens.webp'
@@ -125,6 +126,7 @@ export default function Home() {
           <DesignerRibbon />
         </div>
         <DesignerFeatures features={FEATURES} />
+        <OutfitGallery />
         {entryCount !== null && <section className="home-social-proof home-moments-panel halo-container" aria-labelledby="home-social-title" data-home-reveal data-analytics-section="social_proof">
           <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
           <Text muted className="home-description home-stagger">{entryCount.toLocaleString()} people are already trying to get it.</Text>
