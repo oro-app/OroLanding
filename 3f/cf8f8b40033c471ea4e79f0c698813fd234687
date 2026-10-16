@@ -1,0 +1,29 @@
+src/components/home/OutfitGallery.jsx
+  s_8252b58d803c95::t_ee6582871976a5 33,51
+  s_8252b58d803c95::t_8c09624c0590d8 47-48
+  s_8252b58d803c95::t_77d657b4608da1 1-23,25-32,34-46,49-50,52-99,101-109
+  s_8252b58d803c95::t_6d33efac4cf4fa 24,100
+src/components/home/OutfitGallery.css
+  s_8252b58d803c95::t_77d657b4608da1 1-97,100-109
+  s_8252b58d803c95::t_6d33efac4cf4fa 98-99
+e2e/outfit-gallery.spec.js
+  s_8252b58d803c95::t_d6e57d41005b4e 1-63
+src/components/home/Home.jsx
+  s_8252b58d803c95::t_77d657b4608da1 9,129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3fcf8f8b40033c471ea4e79f0c698813fd234687",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
