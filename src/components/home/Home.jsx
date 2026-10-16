@@ -8,7 +8,7 @@ import DesignerFeatures, { DesignerRibbon } from './DesignerFeatures'
 import DesignerHeadline from './DesignerHeadline'
 import GoldBackground from '../GoldBackground'
 import wardrobeDemo from '../../assets/demos/camera-roll-closet-polaroid-v3.webp'
-import cargosLook from '../../assets/fit-gen-demo/mens-cargos.webp'
+import outfitIteration from '../../assets/demos/outfit-iteration-mens.webp'
 import jotting from '../../assets/mascot/jotting.webp'
 import { hasAnalyticsConsent, trackEvent } from '../../lib/analytics'
 
@@ -24,10 +24,10 @@ const FEATURES = [
   {
     title: 'don’t like it? tell her.',
     description: 'make it warmer. less basic. swap the jeans. start over. keep going until it actually feels like you.',
-    image: cargosLook,
-    imageAlt: 'Streetwear outfit with olive cargo pants, a brown leather jacket, a graphic tee, and silver sneakers.',
-    width: 1086,
-    height: 1448,
+    image: outfitIteration,
+    imageAlt: 'Two men’s streetwear outfit collages show black shorts replaced with olive cargo pants after an outgoing text says, “swap the shorts for cargos.”',
+    width: 1254,
+    height: 1254,
   },
   {
     title: 'the more you text her, the better she gets',
