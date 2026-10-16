@@ -1,25 +1,8 @@
 .outfit-gallery {
   position: relative;
   color: var(--oro-color-ink);
-  background: radial-gradient(ellipse at 50% 55%, rgb(205 187 233 / 16%), transparent 70%);
 }
 .outfit-gallery-stage { padding-block: 80px 64px; }
-.outfit-gallery-heading { text-align: center; }
-.outfit-gallery-eyebrow {
-  margin: 0 0 16px;
-  color: var(--oro-color-muted);
-  font-size: .875rem;
-  letter-spacing: .04em;
-}
-.outfit-gallery-heading h2 {
-  margin: 0;
-  font-family: var(--oro-font-family-wordmark);
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  font-weight: 400;
-  line-height: 1.04;
-  letter-spacing: -.035em;
-}
-.outfit-gallery-heading em { color: var(--oro-color-display); font-weight: inherit; }
 .outfit-gallery-scroller {
   width: 100%;
   overflow-x: auto;
@@ -31,18 +14,19 @@
 .outfit-gallery-scroller::-webkit-scrollbar { display: none; }
 .halo-site .outfit-gallery-scroller:focus-visible { outline-offset: -4px; }
 .outfit-gallery-track {
+  position: relative;
   display: flex;
   align-items: center;
   gap: clamp(32px, 4vw, 64px);
   width: max-content;
   min-width: 100%;
   margin: 0;
-  padding: 68px max(var(--halo-page-gutter), calc((100vw - var(--halo-page-max)) / 2)) 72px;
+  padding: 48px max(var(--halo-page-gutter), calc((100vw - var(--halo-page-max)) / 2));
   list-style: none;
 }
 .outfit-gallery-item {
   flex: 0 0 auto;
-  width: clamp(240px, 23vw, 310px);
+  width: clamp(240px, 25vw, 330px);
   scroll-snap-align: center;
   transform: translateY(var(--card-lift)) rotate(var(--card-tilt));
 }
@@ -62,6 +46,24 @@
   font-style: italic;
   line-height: 1.2;
 }
+.outfit-gallery-finale {
+  display: grid;
+  place-items: center;
+  flex: 0 0 min(calc(100vw - 2 * var(--halo-page-gutter)), var(--halo-page-max));
+  align-self: stretch;
+  text-align: center;
+  scroll-snap-align: center;
+}
+.outfit-gallery-finale h2 {
+  margin: 0;
+  font-family: var(--oro-font-family-wordmark);
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+.outfit-gallery-finale em { color: var(--oro-color-display); font-weight: inherit; }
 .outfit-gallery-bottom { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .outfit-gallery-bottom p { margin: 0; font-size: .875rem; color: var(--oro-color-muted); }
 .outfit-gallery-hint-scroll { display: none; }
@@ -88,22 +90,26 @@
 .outfit-gallery--pinned .outfit-gallery-stage {
   position: sticky;
   top: 0;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   height: 100svh;
-  padding-block: 112px 88px;
+  padding-block: clamp(80px, 12svh, 112px) clamp(72px, 10svh, 90px);
 }
-.outfit-gallery--pinned .outfit-gallery-heading h2 { font-size: clamp(2.5rem, 4vw, 3.7rem); }
-.outfit-gallery--pinned .outfit-gallery-scroller { align-self: center; scroll-snap-type: none; }
-.outfit-gallery--pinned .outfit-gallery-track { padding-block: 40px; }
-.outfit-gallery--pinned .outfit-gallery-item { width: min(23vw, 30svh, 310px); }
+.outfit-gallery--pinned .outfit-gallery-scroller { flex: 0 0 auto; overflow-x: hidden; scroll-snap-type: none; touch-action: pan-y; }
+.outfit-gallery--pinned .outfit-gallery-item { width: min(clamp(240px, 25vw, 330px), max(140px, calc((100svh - 280px) * .65))); }
+.outfit-gallery--pinned .outfit-gallery-finale-copy {
+  opacity: var(--finale-reveal, 0);
+  transform: translateY(calc((1 - var(--finale-reveal, 0)) * 36px));
+}
+.outfit-gallery--pinned .outfit-gallery-bottom { display: none; }
 .outfit-gallery--pinned .outfit-gallery-hint-scroll { display: inline; }
 .outfit-gallery--pinned .outfit-gallery-hint-swipe { display: none; }
 @media (max-width: 650px) {
   .outfit-gallery-stage { padding-block: 48px 56px; }
-  .outfit-gallery-eyebrow { font-size: .8rem; }
-  .outfit-gallery-track { gap: 32px; padding-block: 56px 64px; }
-  .outfit-gallery-item { width: 68vw; max-width: 280px; }
+  .outfit-gallery-track { gap: 32px; padding-block: 40px; }
+  .outfit-gallery-item { width: 76vw; max-width: 320px; }
+  .outfit-gallery--pinned .outfit-gallery-item { width: min(76vw, max(140px, calc((100svh - 280px) * .65))); }
   .outfit-gallery-polaroid { padding: 10px 10px 20px; }
   .outfit-gallery-polaroid figcaption { font-size: 1.05rem; padding-top: 16px; }
 }

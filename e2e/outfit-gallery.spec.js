@@ -4,24 +4,31 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/api/beta-count', (route) => route.fulfill({ json: { count: 0 } }))
 })
 
-test('desktop scrolling carries the outfit gallery sideways and releases at its end', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 })
+for (const viewport of [{ width: 1440, height: 900 }, { width: 1440, height: 768 }, { width: 390, height: 844 }]) {
+test(`vertical scrolling carries outfits sideways and reveals the finale at ${viewport.width}×${viewport.height}`, async ({ page }) => {
+  await page.setViewportSize(viewport)
   await page.goto('/')
   const section = page.locator('.outfit-gallery')
   const scroller = page.getByRole('region', { name: 'Outfit Polaroids' })
+  const finale = page.locator('.outfit-gallery-finale-copy')
   await expect(section).toHaveClass(/outfit-gallery--pinned/)
   const { top, travel } = await section.evaluate((el) => ({ top: el.getBoundingClientRect().top + scrollY, travel: parseFloat(el.style.getPropertyValue('--gallery-travel')) }))
+  await expect(finale).toHaveCSS('opacity', '0')
   await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top + travel / 2)
   await expect.poll(() => scroller.evaluate((el) => el.scrollLeft / (el.scrollWidth - el.clientWidth))).toBeCloseTo(.5, 1)
   await expect(page.locator('.outfit-gallery-stage')).toBeInViewport()
   await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top + travel)
   await expect.poll(() => scroller.evaluate((el) => el.scrollWidth - el.clientWidth - el.scrollLeft)).toBeLessThan(2)
-  await expect(page.locator('.outfit-gallery-item').last()).toBeInViewport()
+  await expect(page.getByRole('heading', { name: 'your clothes. so many possibilities.' })).toBeInViewport()
+  await expect(finale).toHaveCSS('opacity', '1')
+  expect(await page.locator('.outfit-gallery-item').last().evaluate((el) => el.getBoundingClientRect().right)).toBeLessThan(viewport.width * .2)
   await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), top)
   await expect.poll(() => scroller.evaluate((el) => el.scrollLeft)).toBeLessThan(2)
+  await expect(finale).toHaveCSS('opacity', '0')
   await page.locator('.halo-footer-closer').scrollIntoViewIfNeeded()
   await expect(page.locator('.halo-footer-closer')).toBeInViewport()
 })
+}
 
 for (const width of [390, 1440]) {
   test(`outfits can be browsed by buttons and keyboard with reduced motion at ${width}px`, async ({ page }) => {
@@ -55,9 +62,11 @@ test('resizing and changing motion preferences preserve access to the gallery', 
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await expect(section).toHaveClass(/outfit-gallery--pinned/)
   await page.setViewportSize({ width: 390, height: 844 })
+  await expect(section).toHaveClass(/outfit-gallery--pinned/)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
   await expect(section).not.toHaveClass(/outfit-gallery--pinned/)
   await section.scrollIntoViewIfNeeded()
   const scroller = page.getByRole('region', { name: 'Outfit Polaroids' })
   await scroller.evaluate((el) => { el.scrollLeft = el.scrollWidth })
-  await expect(page.locator('.outfit-gallery-item').last()).toBeInViewport()
+  await expect(page.getByRole('heading', { name: 'your clothes. so many possibilities.' })).toBeInViewport()
 })

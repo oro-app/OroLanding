@@ -21,7 +21,7 @@ export default function OutfitGallery() {
     const section = sectionRef.current
     const scroller = scrollerRef.current
     const track = trackRef.current
-    const pin = matchMedia('(min-width: 1024px) and (min-height: 850px) and (hover: hover) and (prefers-reduced-motion: no-preference)')
+    const pin = matchMedia('(prefers-reduced-motion: no-preference)')
     let frame = 0
     let distance = 0
     let travel = 0
@@ -33,11 +33,15 @@ export default function OutfitGallery() {
       sectionTop = section.getBoundingClientRect().top + scrollY
       const progress = Math.min(1, Math.max(0, (scrollY - sectionTop) / travel))
       scroller.scrollLeft = progress * distance
+      const finaleStart = track.lastElementChild.offsetLeft - scroller.clientWidth * .8
+      const finaleEnd = distance - scroller.clientWidth * .08
+      const reveal = Math.min(1, Math.max(0, (scroller.scrollLeft - finaleStart) / Math.max(1, finaleEnd - finaleStart)))
+      section.style.setProperty('--finale-reveal', reveal)
     }
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update) }
     const measure = () => {
       distance = Math.max(0, scroller.scrollWidth - scroller.clientWidth)
-      travel = Math.max(1, distance * 1.25)
+      travel = Math.max(1, distance)
       section.classList.toggle('outfit-gallery--pinned', pin.matches)
       section.style.setProperty('--gallery-travel', `${travel}px`)
       sectionTop = section.getBoundingClientRect().top + scrollY
@@ -80,10 +84,6 @@ export default function OutfitGallery() {
   return (
     <section className="outfit-gallery" ref={sectionRef} aria-labelledby="outfit-gallery-title" data-analytics-section="outfit_gallery">
       <div className="outfit-gallery-stage">
-        <div className="outfit-gallery-heading halo-container">
-          <p className="outfit-gallery-eyebrow">a different you, every day</p>
-          <h2 id="outfit-gallery-title">your clothes.<br /><em>so many possibilities.</em></h2>
-        </div>
         <div className="outfit-gallery-scroller" ref={scrollerRef} tabIndex={0} role="region" aria-label="Outfit Polaroids" aria-describedby="outfit-gallery-hint" onKeyDown={onKeyDown}>
           <ul className="outfit-gallery-track" ref={trackRef}>
             {OUTFITS.map((outfit, index) => (
@@ -94,6 +94,11 @@ export default function OutfitGallery() {
                 </figure>
               </li>
             ))}
+            <li className="outfit-gallery-finale">
+              <div className="outfit-gallery-finale-copy">
+                <h2 id="outfit-gallery-title">your clothes.<br /><em>so many possibilities.</em></h2>
+              </div>
+            </li>
           </ul>
         </div>
         <div className="outfit-gallery-bottom halo-container">
