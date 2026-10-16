@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import galleryDate from '../../assets/outfit-gallery/gallery-date.webp'
+import businessCasual from '../../assets/outfit-gallery/business-casual.webp'
 import sportyWeekend from '../../assets/outfit-gallery/sporty-weekend.webp'
 import tailoredWorkday from '../../assets/outfit-gallery/tailored-workday.webp'
 import softDate from '../../assets/outfit-gallery/soft-date.webp'
@@ -7,7 +7,7 @@ import smartCasual from '../../assets/outfit-gallery/smart-casual.webp'
 import './OutfitGallery.css'
 
 const OUTFITS = [
-  { image: galleryDate, alt: 'White fitted tee, black hoodie, relaxed charcoal jeans, brown sneakers, and gold accessories.', caption: 'coffee, then whatever', tilt: '-5deg', lift: '12px' },
+  { image: businessCasual, alt: 'Open-collar pale blue Oxford, white tee, relaxed navy chinos, black suede loafers, and a canvas work tote.', caption: 'casual friday', tilt: '-5deg', lift: '12px' },
   { image: tailoredWorkday, alt: 'Navy blazer, pale blue shirt, charcoal tailored trousers, brown loafers, and a leather work bag.', caption: 'big meeting energy', tilt: '4deg', lift: '-18px' },
   { image: softDate, alt: 'Pink cardigan, ivory lace camisole and skirt, burgundy Mary Janes, and delicate pearl and gold accessories.', caption: 'bookstore date', tilt: '-3deg', lift: '22px' },
   { image: sportyWeekend, alt: 'Cream and navy football jersey, washed black denim shorts, sneakers, headphones, and a sling bag.', caption: 'nothing on the calendar', tilt: '5deg', lift: '-12px' },
