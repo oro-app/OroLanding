@@ -8,10 +8,10 @@ import './OutfitGallery.css'
 
 const OUTFITS = [
   { image: creativeSmartCasual, alt: 'Navy suede cropped jacket, ivory knit tee, wide stone trousers, brown loafers, and silver accessories.', caption: 'office, your way', tilt: '-5deg', lift: '12px' },
+  { image: classyDinner, alt: 'Black off-shoulder knit top, champagne satin midi skirt, black slingbacks and shoulder bag, small gold hoops, and a delicate necklace.', caption: 'reservations at eight', tilt: '-4deg', lift: '16px' },
+  { image: sportyWeekend, alt: 'Cream and navy football jersey, washed black denim shorts, sneakers, headphones, and a sling bag.', caption: 'nothing on the calendar', tilt: '5deg', lift: '-12px' },
   { image: tailoredWorkday, alt: 'Navy blazer, pale blue shirt, charcoal tailored trousers, brown loafers, and a leather work bag.', caption: 'big meeting energy', tilt: '4deg', lift: '-18px' },
   { image: softDate, alt: 'Pink cardigan, ivory lace camisole and skirt, burgundy Mary Janes, and delicate pearl and gold accessories.', caption: 'bookstore date', tilt: '-3deg', lift: '22px' },
-  { image: sportyWeekend, alt: 'Cream and navy football jersey, washed black denim shorts, sneakers, headphones, and a sling bag.', caption: 'nothing on the calendar', tilt: '5deg', lift: '-12px' },
-  { image: classyDinner, alt: 'Black off-shoulder knit top, champagne satin midi skirt, black slingbacks and shoulder bag, small gold hoops, and a delicate necklace.', caption: 'reservations at eight', tilt: '-4deg', lift: '16px' },
 ]
 
 export default function OutfitGallery() {
