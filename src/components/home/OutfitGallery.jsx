@@ -3,7 +3,7 @@ import creativeSmartCasual from '../../assets/outfit-gallery/creative-smart-casu
 import sportyWeekend from '../../assets/outfit-gallery/sporty-weekend.webp'
 import tailoredWorkday from '../../assets/outfit-gallery/tailored-workday.webp'
 import softDate from '../../assets/outfit-gallery/soft-date.webp'
-import classyDinner from '../../assets/outfit-gallery/classy-dinner.webp'
+import classyDinner from '../../assets/outfit-gallery/classy-dinner-v2.webp'
 import './OutfitGallery.css'
 
 const OUTFITS = [
@@ -11,7 +11,7 @@ const OUTFITS = [
   { image: tailoredWorkday, alt: 'Navy blazer, pale blue shirt, charcoal tailored trousers, brown loafers, and a leather work bag.', caption: 'big meeting energy', tilt: '4deg', lift: '-18px' },
   { image: softDate, alt: 'Pink cardigan, ivory lace camisole and skirt, burgundy Mary Janes, and delicate pearl and gold accessories.', caption: 'bookstore date', tilt: '-3deg', lift: '22px' },
   { image: sportyWeekend, alt: 'Cream and navy football jersey, washed black denim shorts, sneakers, headphones, and a sling bag.', caption: 'nothing on the calendar', tilt: '5deg', lift: '-12px' },
-  { image: classyDinner, alt: 'Black off-shoulder knit top, champagne satin skirt, low black slingbacks, a small shoulder bag, and gold jewelry.', caption: 'reservations at eight', tilt: '-4deg', lift: '16px' },
+  { image: classyDinner, alt: 'Black off-shoulder knit top, champagne satin midi skirt, black slingbacks and shoulder bag, small gold hoops, and a delicate necklace.', caption: 'reservations at eight', tilt: '-4deg', lift: '16px' },
 ]
 
 export default function OutfitGallery() {
