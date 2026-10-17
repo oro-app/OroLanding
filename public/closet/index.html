@@ -11,9 +11,8 @@
 </head>
 <body>
   <main>
-    <header class="tabs">
+    <header class="page-header">
       <h1 tabindex="-1">Closet</h1>
-      <button type="button" disabled aria-label="Wishlist (unavailable in shared closets)">Wishlist</button>
     </header>
     <div class="toolbar">
       <div class="summary">
@@ -26,7 +25,6 @@
       <button class="icon-button" id="filters" type="button" aria-label="Filter clothes" aria-expanded="false" aria-controls="controls">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 5h10m4 0h4M3 12h3m4 0h11M3 19h13m4 0h1M16 2v6M7 9v6m10 1v6"/></svg>
       </button>
-      <button id="refresh" type="button">Refresh</button>
     </div>
     <div class="controls" id="controls" hidden>
       <label class="search-field">Search your clothes<input id="search" type="search" placeholder="Try linen, blue, or sneakers" maxlength="200"></label>
@@ -35,16 +33,24 @@
     </div>
     <div class="categories" id="categories" role="group" aria-label="Clothing categories"></div>
     <div id="grid" class="grid"></div>
-    <p class="privacy">Add clothes by texting a photo to oro. Anyone with this link can view this closet until it expires.</p>
-    <p id="expiry" class="privacy"></p>
   </main>
-  <div class="bottom-bar">
-    <nav class="dock" aria-label="Closet navigation">
-      <a href="/" aria-label="Oro home"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m2 10 10-8 10 8v12h-7v-8H9v8H2Z"/></svg></a>
-      <button type="button" id="show-closet" aria-current="page" aria-label="Closet"><svg class="shirt" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m8 3-6 3v6h4v10h12V12h4V6l-6-3c0 4-8 4-8 0Z"/></svg></button>
-      <button type="button" data-search aria-label="Search clothes" aria-expanded="false" aria-controls="controls"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="8"/><path d="m16.5 16.5 5 5M10.5 6a4.5 4.5 0 0 1 4.5 4.5"/></svg></button>
-    </nav>
-    <a class="add" href="sms:+18556762419" aria-label="Add clothes by texting oro"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v18M3 12h18"/></svg></a>
-  </div>
+  <dialog id="item-dialog" aria-labelledby="item-heading">
+    <button id="close-item" type="button" autofocus>Close</button>
+    <div id="item-photo"></div>
+    <h2 id="item-heading"></h2>
+    <dl id="item-details"></dl>
+    <form id="edit-item">
+      <label for="item-title">Title (required)</label>
+      <input id="item-title" name="title" required maxlength="200" aria-describedby="item-status">
+      <button type="submit">Save title</button>
+    </form>
+    <button id="delete-item" type="button">Delete item</button>
+    <div id="delete-confirmation" hidden>
+      <p>Delete this item from your closet? This cannot be undone here.</p>
+      <button id="cancel-delete" type="button">Keep item</button>
+      <button id="confirm-delete" type="button">Delete permanently</button>
+    </div>
+    <p id="item-status" role="status"></p>
+  </dialog>
 </body>
 </html>
