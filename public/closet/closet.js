@@ -19,17 +19,23 @@ function expire() {
   document.querySelector('#expiry').textContent = ''
   refresh.disabled = true
   search.disabled = category.disabled = color.disabled = true
+  document.querySelector('#categories').replaceChildren()
 }
 
 function render() {
+  if (expired) return
   const query = search.value.trim().toLowerCase()
   const visible = items.filter(item => (!category.value || item.category === category.value)
     && (!color.value || item.color === color.value)
     && [item.description, item.subtype, item.category, item.color, item.material, ...(item.aesthetic_tags || [])]
       .join(' ').toLowerCase().includes(query))
   grid.replaceChildren()
-  status.textContent = items.length ? `${visible.length} of ${items.length} pieces${visible.length ? '' : ' — try another search or filter'}`
+  const message = items.length ? `${visible.length === items.length ? items.length : `${visible.length} of ${items.length}`} items${visible.length ? '' : ' — try another search or filter'}`
     : 'Your closet is built over text. Send oro a photo to add your first piece.'
+  if (status.textContent !== message) status.textContent = message
+  for (const button of document.querySelectorAll('#categories button')) {
+    button.setAttribute('aria-pressed', String(button.value === category.value))
+  }
   for (const item of visible) {
     const card = document.createElement('article')
     card.className = 'card'
@@ -63,6 +69,45 @@ function options(select, field, label) {
   select.value = [...select.options].some(option => option.value === value) ? value : ''
 }
 
+function categories() {
+  const container = document.querySelector('#categories')
+  const names = [...category.options].map(option => option.value).filter(Boolean)
+  if (JSON.stringify(names) === container.dataset.names) return
+  container.dataset.names = JSON.stringify(names)
+  container.replaceChildren()
+  for (const name of names) {
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.value = name
+    button.textContent = name
+    button.addEventListener('click', () => {
+      category.value = category.value === name ? '' : name
+      render()
+    })
+    container.append(button)
+  }
+}
+
+function showControls(open, target) {
+  document.querySelector('#controls').hidden = !open
+  for (const button of document.querySelectorAll('[aria-controls="controls"]')) {
+    button.setAttribute('aria-expanded', String(open))
+  }
+  if (open) target.focus()
+}
+
+for (const button of document.querySelectorAll('[data-search]')) {
+  button.addEventListener('click', () => showControls(true, search))
+}
+document.querySelector('#filters').addEventListener('click', () => {
+  showControls(document.querySelector('#controls').hidden, category)
+})
+document.querySelector('#show-closet').addEventListener('click', () => {
+  showControls(false)
+  window.scrollTo({ top: 0, behavior: 'instant' })
+  document.querySelector('h1').focus()
+})
+
 async function load() {
   if (expired || loading) return
   if (expiresAt && Date.now() >= expiresAt) return expire()
@@ -84,6 +129,7 @@ async function load() {
     expiryTimer = setTimeout(expire, Math.max(0, expiresAt - Date.now()))
     options(category, 'category', 'All categories')
     options(color, 'color', 'All colors')
+    categories()
     render()
     document.querySelector('#expiry').textContent = `Updates every 15 seconds · Link expires at ${new Date(expiresAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`
   } catch {
