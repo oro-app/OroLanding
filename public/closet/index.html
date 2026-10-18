@@ -17,7 +17,7 @@
       <p id="status" role="status">Opening your closet…</p>
     </header>
     <div class="toolbar">
-      <label class="search-field">Search your clothes<input id="search" type="search" placeholder="Try linen, blue, or sneakers" maxlength="200"></label>
+      <div class="search-field"><input id="search" type="search" aria-label="Search your clothes" placeholder="Search your clothes" maxlength="200"></div>
       <details id="filters">
         <summary aria-label="Filter clothes">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 5h10m4 0h4M3 12h3m4 0h11M3 19h13m4 0h1M16 2v6M7 9v6m10 1v6"/></svg>
@@ -25,7 +25,7 @@
         <div class="filter-dropdown">
           <fieldset id="color">
             <legend>Color</legend>
-            <div id="color-options"><label><input type="radio" name="color" value="" checked>All colors</label></div>
+            <div id="color-options"><label><input type="checkbox" name="color" value="" checked>All colors</label></div>
           </fieldset>
         </div>
       </details>

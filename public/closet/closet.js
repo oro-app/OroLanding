@@ -4,7 +4,7 @@ const status = document.querySelector('#status')
 const search = document.querySelector('#search')
 let category = ''
 const color = document.querySelector('#color')
-let selectedColor = ''
+let selectedColors = []
 const dialog = document.querySelector('#item-dialog')
 let selectedItem
 let mutating = false
@@ -36,7 +36,7 @@ function render() {
   if (expired) return
   const query = search.value.trim().toLowerCase()
   const visible = items.filter(item => (!category || item.category === category)
-    && (!selectedColor || item.color === selectedColor)
+    && (!selectedColors.length || selectedColors.includes(item.color))
     && [item.title, item.description, item.subtype, item.category, item.color, item.material, ...(item.aesthetic_tags || [])]
       .join(' ').toLowerCase().includes(query))
   grid.replaceChildren()
@@ -64,7 +64,7 @@ function render() {
 
 function colors() {
   const names = ['', ...new Set(items.map(item => item.color).filter(Boolean).sort())]
-  if (!names.includes(selectedColor)) selectedColor = ''
+  selectedColors = selectedColors.filter(name => names.includes(name))
   const container = document.querySelector('#color-options')
   if (container.dataset.names === JSON.stringify(names)) return
   container.dataset.names = JSON.stringify(names)
@@ -72,10 +72,10 @@ function colors() {
   for (const name of names) {
     const label = document.createElement('label')
     const input = document.createElement('input')
-    input.type = 'radio'
+    input.type = 'checkbox'
     input.name = 'color'
     input.value = name
-    input.checked = name === selectedColor
+    input.checked = name ? selectedColors.includes(name) : !selectedColors.length
     label.append(input, name || 'All colors')
     container.append(label)
   }
@@ -317,7 +317,11 @@ async function mutate(method, body) {
 
 search.addEventListener('input', render)
 color.addEventListener('change', event => {
-  selectedColor = event.target.value
+  const { value, checked } = event.target
+  selectedColors = !value ? [] : checked ? [...selectedColors, value] : selectedColors.filter(name => name !== value)
+  for (const input of color.querySelectorAll('input')) {
+    input.checked = input.value ? selectedColors.includes(input.value) : !selectedColors.length
+  }
   render()
 })
 document.addEventListener('visibilitychange', () => {

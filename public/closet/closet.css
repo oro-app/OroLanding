@@ -10,7 +10,7 @@ button:disabled { color: #51465A; cursor: default; }
 #status { color: #51465A; font-size: 14px; line-height: 1.4; margin: 6px 0 0; }
 [hidden] { display: none !important; }
 label { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; font-size: 14px; }
-.search-field { flex-basis: 100%; font-weight: 600; }
+.search-field { flex: 1; min-width: 0; }
 #filters { position: relative; flex: 0 0 auto; }
 #filters summary { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid #3A2646; border-radius: 8px; background: #FFFFFF; color: #3A2646; cursor: pointer; list-style: none; }
 #filters summary::-webkit-details-marker { display: none; }
@@ -27,7 +27,7 @@ input::placeholder { color: #51465A; opacity: 1; }
 #search { min-height: 48px; padding-inline: 14px; background: #FFFFFF; }
 .categories { display: flex; gap: 10px; overflow-x: auto; padding: 8px 16px 14px; }
 .categories button { flex: 0 0 auto; border: 1px solid #796785; border-radius: 24px; padding: 8px 16px; background: #FFFFFF; color: #3A2646; font-size: 14px; font-weight: 500; text-transform: capitalize; }
-.categories button[aria-pressed="true"] { background: #3A2646; color: #FFFFFF; border-color: #3A2646; box-shadow: inset 0 -3px 0 #FFFFFF; }
+.categories button[aria-pressed="true"] { background: #3A2646; color: #FFFFFF; border-color: #3A2646; }
 .categories button:hover:not([aria-pressed="true"]), dialog button:hover:not(:disabled) { background: #F4EFF9; }
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 12px; padding: 0 16px; }
 .card { min-width: 0; }
