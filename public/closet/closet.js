@@ -2,7 +2,7 @@ const token = new URLSearchParams(location.hash.slice(1)).get('t') || ''
 const grid = document.querySelector('#grid')
 const status = document.querySelector('#status')
 const search = document.querySelector('#search')
-const category = document.querySelector('#category')
+let category = ''
 const color = document.querySelector('#color')
 const dialog = document.querySelector('#item-dialog')
 let selectedItem
@@ -26,14 +26,15 @@ function expire() {
   document.querySelector('#item-details').replaceChildren()
   document.querySelector('#item-heading').textContent = ''
   document.querySelector('#item-title').value = ''
-  search.disabled = category.disabled = color.disabled = true
+  search.disabled = color.disabled = true
+  document.querySelector('#filters').open = false
   document.querySelector('#categories').replaceChildren()
 }
 
 function render() {
   if (expired) return
   const query = search.value.trim().toLowerCase()
-  const visible = items.filter(item => (!category.value || item.category === category.value)
+  const visible = items.filter(item => (!category || item.category === category)
     && (!color.value || item.color === color.value)
     && [item.title, item.description, item.subtype, item.category, item.color, item.material, ...(item.aesthetic_tags || [])]
       .join(' ').toLowerCase().includes(query))
@@ -42,7 +43,7 @@ function render() {
     : 'Your closet is built over text. Send oro a photo to add your first piece.'
   if (status.textContent !== message) status.textContent = message
   for (const button of document.querySelectorAll('#categories button')) {
-    button.setAttribute('aria-pressed', String(button.value === category.value))
+    button.setAttribute('aria-pressed', String(button.value === category))
   }
   for (const item of visible) {
     const card = document.createElement('article')
@@ -71,7 +72,8 @@ function options(select, field, label) {
 
 function categories() {
   const container = document.querySelector('#categories')
-  const names = [...category.options].map(option => option.value).filter(Boolean)
+  const names = [...new Set(items.map(item => item.category).filter(Boolean))].sort()
+  if (!names.includes(category)) category = ''
   if (JSON.stringify(names) === container.dataset.names) return
   container.dataset.names = JSON.stringify(names)
   container.replaceChildren()
@@ -81,26 +83,22 @@ function categories() {
     button.value = name
     button.textContent = name
     button.addEventListener('click', () => {
-      category.value = category.value === name ? '' : name
+      category = category === name ? '' : name
       render()
     })
     container.append(button)
   }
 }
 
-function showControls(open, target) {
-  document.querySelector('#controls').hidden = !open
-  for (const button of document.querySelectorAll('[aria-controls="controls"]')) {
-    button.setAttribute('aria-expanded', String(open))
+document.addEventListener('click', event => {
+  if (!event.target.closest('#filters')) document.querySelector('#filters').open = false
+})
+document.querySelector('#filters').addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    document.querySelector('#filters').open = false
+    document.querySelector('#filters summary').focus()
   }
-  if (open) target.focus()
-}
-
-for (const button of document.querySelectorAll('[data-search]')) {
-  button.addEventListener('click', () => showControls(true, search))
-}
-document.querySelector('#filters').addEventListener('click', () => {
-  showControls(document.querySelector('#controls').hidden, category)
 })
 async function load() {
   if (expired || loading || mutating || dialog.open) return
@@ -121,7 +119,6 @@ async function load() {
     items = data.items
     clearTimeout(expiryTimer)
     expiryTimer = setTimeout(expire, Math.max(0, expiresAt - Date.now()))
-    options(category, 'category', 'All categories')
     options(color, 'color', 'All colors')
     categories()
     render()
@@ -235,7 +232,6 @@ async function mutate(method, body) {
     if (expired) return
     if (method === 'DELETE') {
       items = items.filter(candidate => candidate.id !== item.id)
-      options(category, 'category', 'All categories')
       options(color, 'color', 'All colors')
       categories()
       render()
@@ -262,7 +258,6 @@ async function mutate(method, body) {
 }
 
 search.addEventListener('input', render)
-category.addEventListener('change', render)
 color.addEventListener('change', render)
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) load()
