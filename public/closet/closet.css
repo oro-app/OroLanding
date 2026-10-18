@@ -46,6 +46,12 @@ dialog dd { margin: 4px 0 0; }
 dialog form { margin-top: 20px; }
 dialog button { padding: 10px 14px; border: 1px solid #59554D; border-radius: 8px; margin-top: 12px; }
 #item-status { line-height: 1.5; }
+dialog .icon-button { padding: 10px; border: 0; }
+dialog button svg { display: block; flex-shrink: 0; }
+#edit-title { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0; border: 0; text-align: left; font: inherit; }
+#item-heading { min-width: 0; }
+#item-title { font-size: 24px; font-weight: 700; }
+#delete-item:not(:disabled), #confirm-delete:not(:disabled) { color: #B42318; }
 @media (forced-colors: active) {
   .categories button { border: 1px solid ButtonText; }
   .categories button[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -4px; }

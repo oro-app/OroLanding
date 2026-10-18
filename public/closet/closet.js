@@ -158,6 +158,8 @@ function openItem(item, button) {
   }
   selectedItem = item
   opener = button
+  document.querySelector('#item-title-display').hidden = false
+  document.querySelector('#edit-item').hidden = true
   document.querySelector('#item-photo').replaceChildren(itemPhoto(item))
   document.querySelector('#item-heading').textContent = itemTitle(item)
   document.querySelector('#item-title').value = itemTitle(item)
@@ -193,6 +195,27 @@ document.querySelector('#cancel-delete').addEventListener('click', () => {
   document.querySelector('#delete-item').focus()
 })
 document.querySelector('#item-title').addEventListener('input', event => event.target.setCustomValidity(''))
+
+function editTitle(editing) {
+  document.querySelector('#item-title-display').hidden = editing
+  document.querySelector('#edit-item').hidden = !editing
+  const input = document.querySelector('#item-title')
+  input.value = itemTitle(selectedItem)
+  input.setCustomValidity('')
+  if (editing) {
+    input.focus()
+    input.select()
+  } else if (dialog.open) document.querySelector('#edit-title').focus()
+}
+
+document.querySelector('#edit-title').addEventListener('click', () => editTitle(true))
+document.querySelector('#cancel-edit').addEventListener('click', () => editTitle(false))
+document.querySelector('#edit-item').addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    if (!mutating) editTitle(false)
+  }
+})
 document.querySelector('#edit-item').addEventListener('submit', event => {
   event.preventDefault()
   const input = document.querySelector('#item-title')
@@ -247,6 +270,7 @@ async function mutate(method, body) {
         document.querySelector('#item-heading').textContent = itemTitle(item)
         document.querySelector('#item-title').value = itemTitle(item)
         document.querySelector('#item-status').textContent = 'Title saved.'
+        editTitle(false)
       }
     }
   } catch {
@@ -254,6 +278,9 @@ async function mutate(method, body) {
   } finally {
     mutating = false
     for (const control of dialog.querySelectorAll('button, input')) control.disabled = false
+    if (dialog.open && document.querySelector('#edit-item').hidden && method === 'PATCH') {
+      document.querySelector('#edit-title').focus()
+    }
   }
 }
 
