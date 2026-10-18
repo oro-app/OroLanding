@@ -179,13 +179,25 @@ function openItem(item, button) {
   document.querySelector('#delete-confirmation').hidden = true
   const details = document.querySelector('#item-details')
   details.replaceChildren()
-  for (const [label, value] of [['Color', item.color], ['Description', item.description], ['Category', item.category], ['Material', item.material], ['Fit', item.fit]]) {
+  for (const [label, value] of [['Description', item.description], ['Category', item.category], ['Color', item.color], ['Material', item.material], ['Fit', item.fit]]) {
     if (!value) continue
+    const section = document.createElement('div')
+    if (label === 'Description' || label === 'Category') section.className = 'full-width'
     const term = document.createElement('dt')
     const description = document.createElement('dd')
     term.textContent = label
     description.textContent = value
-    details.append(term, description)
+    if (label === 'Color') {
+      const swatch = document.createElement('span')
+      swatch.className = 'color-swatch'
+      swatch.setAttribute('aria-hidden', 'true')
+      const name = value.toLowerCase().replace(/[\s-]/g, '')
+      swatch.style.backgroundColor = ({ cream: 'ivory', burgundy: 'maroon', charcoal: 'darkslategray', nude: 'tan', camel: 'tan', blush: 'pink', denim: 'steelblue' })[name] || name
+      description.prepend(swatch)
+      description.className = 'item-color'
+    }
+    section.append(term, description)
+    details.append(section)
   }
   dialog.showModal()
 }
