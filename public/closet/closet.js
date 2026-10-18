@@ -220,7 +220,6 @@ function editTitle(editing) {
 }
 
 document.querySelector('#edit-title').addEventListener('click', () => editTitle(true))
-document.querySelector('#cancel-edit').addEventListener('click', () => editTitle(false))
 document.querySelector('#edit-item').addEventListener('keydown', event => {
   if (event.key === 'Escape') {
     event.preventDefault()

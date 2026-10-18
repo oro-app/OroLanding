@@ -47,12 +47,15 @@ h1 { margin: 0; font-size: 28px; font-weight: 650; letter-spacing: -0.6px; }
 .card button:focus-visible { outline-offset: -3px; }
 dialog { width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 20px; border: 1px solid #51465A; border-radius: 16px; background: #FFFFFF; color: #0B0B0B; overflow: auto; }
 dialog::backdrop { background: rgb(0 0 0 / 55%); }
-#close-item { display: block; margin-left: auto; }
-dialog .photo { max-height: 45dvh; aspect-ratio: 1; margin: auto; }
+#close-item { position: absolute; top: 8px; right: 8px; z-index: 1; margin: 0; background: #FFFFFF; }
+#item-photo { margin: -20px -20px 0; }
+dialog .photo { aspect-ratio: auto; min-height: 44px; border-radius: 15px 15px 0 0; }
+dialog .photo img { height: auto; }
 dialog h2, dialog dd { overflow-wrap: anywhere; }
 dialog dt { font-weight: 600; margin-top: 12px; }
 dialog dd { margin: 4px 0 0; }
-dialog form { margin-top: 20px; }
+dialog form { display: flex; align-items: center; gap: 8px; margin-top: 20px; }
+dialog form button { flex-shrink: 0; margin-top: 0; }
 dialog button { padding: 10px 14px; border: 1px solid #51465A; border-radius: 8px; margin-top: 12px; }
 #item-status { line-height: 1.5; }
 dialog .icon-button { padding: 10px; border: 0; }

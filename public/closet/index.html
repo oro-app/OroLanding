@@ -45,10 +45,8 @@
       <span id="edit-title-hint" hidden>Edit title</span>
     </h2>
     <form id="edit-item" hidden>
-      <label for="item-title">Title (required)</label>
-      <input id="item-title" name="title" required maxlength="200" aria-describedby="item-status">
-      <button type="submit">Save title</button>
-      <button id="cancel-edit" type="button">Cancel</button>
+      <input id="item-title" name="title" aria-label="Title" required maxlength="200" aria-describedby="item-status">
+      <button type="submit">Save</button>
     </form>
     <dl id="item-details"></dl>
     <button id="delete-item" class="icon-button" type="button" aria-label="Delete item">
