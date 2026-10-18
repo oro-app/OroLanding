@@ -3,8 +3,6 @@ const grid = document.querySelector('#grid')
 const status = document.querySelector('#status')
 const search = document.querySelector('#search')
 let category = ''
-const color = document.querySelector('#color')
-let selectedColors = []
 const dialog = document.querySelector('#item-dialog')
 let selectedItem
 let mutating = false
@@ -27,8 +25,7 @@ function expire() {
   document.querySelector('#item-details').replaceChildren()
   document.querySelector('#item-heading').textContent = ''
   document.querySelector('#item-title').value = ''
-  search.disabled = color.disabled = true
-  document.querySelector('#filters').open = false
+  search.disabled = true
   document.querySelector('#categories').replaceChildren()
 }
 
@@ -36,7 +33,6 @@ function render() {
   if (expired) return
   const query = search.value.trim().toLowerCase()
   const visible = items.filter(item => (!category || item.category === category)
-    && (!selectedColors.length || selectedColors.includes(item.color))
     && [item.title, item.description, item.subtype, item.category, item.color, item.material, ...(item.aesthetic_tags || [])]
       .join(' ').toLowerCase().includes(query))
   grid.replaceChildren()
@@ -62,25 +58,6 @@ function render() {
   }
 }
 
-function colors() {
-  const names = ['', ...new Set(items.map(item => item.color).filter(Boolean).sort())]
-  selectedColors = selectedColors.filter(name => names.includes(name))
-  const container = document.querySelector('#color-options')
-  if (container.dataset.names === JSON.stringify(names)) return
-  container.dataset.names = JSON.stringify(names)
-  container.replaceChildren()
-  for (const name of names) {
-    const label = document.createElement('label')
-    const input = document.createElement('input')
-    input.type = 'checkbox'
-    input.name = 'color'
-    input.value = name
-    input.checked = name ? selectedColors.includes(name) : !selectedColors.length
-    label.append(input, name || 'All colors')
-    container.append(label)
-  }
-}
-
 function categories() {
   const container = document.querySelector('#categories')
   const names = [...new Set(items.map(item => item.category).filter(Boolean))].sort()
@@ -101,16 +78,6 @@ function categories() {
   }
 }
 
-document.addEventListener('click', event => {
-  if (!event.target.closest('#filters')) document.querySelector('#filters').open = false
-})
-document.querySelector('#filters').addEventListener('keydown', event => {
-  if (event.key === 'Escape') {
-    event.preventDefault()
-    document.querySelector('#filters').open = false
-    document.querySelector('#filters summary').focus()
-  }
-})
 async function load() {
   if (expired || loading || mutating || dialog.open) return
   if (expiresAt && Date.now() >= expiresAt) return expire()
@@ -130,7 +97,6 @@ async function load() {
     items = data.items
     clearTimeout(expiryTimer)
     expiryTimer = setTimeout(expire, Math.max(0, expiresAt - Date.now()))
-    colors()
     categories()
     render()
   } catch {
@@ -287,7 +253,6 @@ async function mutate(method, body) {
     if (expired) return
     if (method === 'DELETE') {
       items = items.filter(candidate => candidate.id !== item.id)
-      colors()
       categories()
       render()
       dialog.close()
@@ -317,14 +282,6 @@ async function mutate(method, body) {
 }
 
 search.addEventListener('input', render)
-color.addEventListener('change', event => {
-  const { value, checked } = event.target
-  selectedColors = !value ? [] : checked ? [...selectedColors, value] : selectedColors.filter(name => name !== value)
-  for (const input of color.querySelectorAll('input')) {
-    input.checked = input.value ? selectedColors.includes(input.value) : !selectedColors.length
-  }
-  render()
-})
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) load()
 })
