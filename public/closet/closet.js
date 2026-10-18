@@ -4,6 +4,7 @@ const status = document.querySelector('#status')
 const search = document.querySelector('#search')
 let category = ''
 const color = document.querySelector('#color')
+let selectedColor = ''
 const dialog = document.querySelector('#item-dialog')
 let selectedItem
 let mutating = false
@@ -35,7 +36,7 @@ function render() {
   if (expired) return
   const query = search.value.trim().toLowerCase()
   const visible = items.filter(item => (!category || item.category === category)
-    && (!color.value || item.color === color.value)
+    && (!selectedColor || item.color === selectedColor)
     && [item.title, item.description, item.subtype, item.category, item.color, item.material, ...(item.aesthetic_tags || [])]
       .join(' ').toLowerCase().includes(query))
   grid.replaceChildren()
@@ -61,13 +62,23 @@ function render() {
   }
 }
 
-function options(select, field, label) {
-  const value = select.value
-  select.replaceChildren(new Option(label, ''))
-  for (const name of [...new Set(items.map(item => item[field]).filter(Boolean))].sort()) {
-    select.add(new Option(name, name))
+function colors() {
+  const names = ['', ...new Set(items.map(item => item.color).filter(Boolean).sort())]
+  if (!names.includes(selectedColor)) selectedColor = ''
+  const container = document.querySelector('#color-options')
+  if (container.dataset.names === JSON.stringify(names)) return
+  container.dataset.names = JSON.stringify(names)
+  container.replaceChildren()
+  for (const name of names) {
+    const label = document.createElement('label')
+    const input = document.createElement('input')
+    input.type = 'radio'
+    input.name = 'color'
+    input.value = name
+    input.checked = name === selectedColor
+    label.append(input, name || 'All colors')
+    container.append(label)
   }
-  select.value = [...select.options].some(option => option.value === value) ? value : ''
 }
 
 function categories() {
@@ -119,7 +130,7 @@ async function load() {
     items = data.items
     clearTimeout(expiryTimer)
     expiryTimer = setTimeout(expire, Math.max(0, expiresAt - Date.now()))
-    options(color, 'color', 'All colors')
+    colors()
     categories()
     render()
   } catch {
@@ -255,7 +266,7 @@ async function mutate(method, body) {
     if (expired) return
     if (method === 'DELETE') {
       items = items.filter(candidate => candidate.id !== item.id)
-      options(color, 'color', 'All colors')
+      colors()
       categories()
       render()
       dialog.close()
@@ -285,7 +296,10 @@ async function mutate(method, body) {
 }
 
 search.addEventListener('input', render)
-color.addEventListener('change', render)
+color.addEventListener('change', event => {
+  selectedColor = event.target.value
+  render()
+})
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) load()
 })
