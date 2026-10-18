@@ -191,10 +191,11 @@ function openItem(item, button) {
     if (label === 'Color') {
       const swatch = document.createElement('span')
       swatch.className = 'color-swatch'
-      swatch.setAttribute('aria-hidden', 'true')
+      swatch.setAttribute('role', 'img')
+      swatch.setAttribute('aria-label', value)
       const name = value.toLowerCase().replace(/[\s-]/g, '')
       swatch.style.backgroundColor = ({ cream: 'ivory', burgundy: 'maroon', charcoal: 'darkslategray', nude: 'tan', camel: 'tan', blush: 'pink', denim: 'steelblue' })[name] || name
-      description.prepend(swatch)
+      description.replaceChildren(swatch)
       description.className = 'item-color'
     }
     section.append(term, description)
