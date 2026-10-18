@@ -176,7 +176,8 @@ function openItem(item, button) {
   document.querySelector('#item-title').value = itemTitle(item)
   document.querySelector('#item-title').setCustomValidity('')
   document.querySelector('#item-status').textContent = ''
-  document.querySelector('#delete-confirmation').hidden = true
+  document.querySelector('#delete-item').hidden = false
+  document.querySelector('#confirm-delete').hidden = true
   const details = document.querySelector('#item-details')
   details.replaceChildren()
   for (const [label, value] of [['Description', item.description], ['Category', item.category], ['Color', item.color], ['Material', item.material], ['Fit', item.fit]]) {
@@ -203,6 +204,17 @@ function openItem(item, button) {
 }
 
 document.querySelector('#close-item').addEventListener('click', () => dialog.close())
+let pressedBackdrop = false
+function outsideDialog(event) {
+  const bounds = dialog.getBoundingClientRect()
+  return event.target === dialog && (event.clientX < bounds.left || event.clientX > bounds.right
+    || event.clientY < bounds.top || event.clientY > bounds.bottom)
+}
+dialog.addEventListener('pointerdown', event => { pressedBackdrop = outsideDialog(event) })
+dialog.addEventListener('click', event => {
+  if (pressedBackdrop && outsideDialog(event)) dialog.close()
+  pressedBackdrop = false
+})
 dialog.addEventListener('close', () => {
   if (expired) document.querySelector('h1').focus()
   else if (opener?.isConnected) opener.focus()
@@ -210,12 +222,9 @@ dialog.addEventListener('close', () => {
     || document.querySelector('h1')).focus()
 })
 document.querySelector('#delete-item').addEventListener('click', () => {
-  document.querySelector('#delete-confirmation').hidden = false
-  document.querySelector('#cancel-delete').focus()
-})
-document.querySelector('#cancel-delete').addEventListener('click', () => {
-  document.querySelector('#delete-confirmation').hidden = true
-  document.querySelector('#delete-item').focus()
+  document.querySelector('#delete-item').hidden = true
+  document.querySelector('#confirm-delete').hidden = false
+  document.querySelector('#confirm-delete').focus()
 })
 document.querySelector('#item-title').addEventListener('input', event => event.target.setCustomValidity(''))
 

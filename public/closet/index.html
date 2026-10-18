@@ -50,15 +50,13 @@
       <button type="submit">Save</button>
     </form>
     <dl id="item-details"></dl>
-    <button id="delete-item" class="icon-button" type="button" aria-label="Delete item">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
-    </button>
-    <div id="delete-confirmation" hidden>
-      <p>Delete this item from your closet? This cannot be undone here.</p>
-      <button id="cancel-delete" type="button">Keep item</button>
-      <button id="confirm-delete" type="button">Delete permanently</button>
-    </div>
     <p id="item-status" role="status"></p>
+    <div class="delete-action">
+      <button id="delete-item" class="icon-button" type="button" aria-label="Delete item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
+      </button>
+      <button id="confirm-delete" type="button" hidden>Confirm delete</button>
+    </div>
   </dialog>
 </body>
 </html>

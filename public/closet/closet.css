@@ -47,7 +47,8 @@ h1 { margin: 0; font-size: 28px; font-weight: 650; letter-spacing: -0.6px; }
 .card button:focus-visible { outline-offset: -3px; }
 dialog { width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 20px; border: 1px solid #51465A; border-radius: 16px; background: #FFFFFF; color: #0B0B0B; overflow: auto; }
 dialog::backdrop { background: rgb(0 0 0 / 55%); }
-#close-item { position: absolute; top: 8px; right: 8px; z-index: 1; margin: 0; background: #FFFFFF; }
+#close-item { position: absolute; top: 8px; right: 8px; z-index: 1; margin: 0; background: none; }
+#close-item:hover:not(:disabled) { background: none; }
 #item-photo { margin: -20px -20px 0; }
 dialog .photo { aspect-ratio: auto; min-height: 44px; border-radius: 15px 15px 0 0; }
 dialog .photo img { height: auto; }
@@ -57,7 +58,8 @@ dialog h2, dialog dd { overflow-wrap: anywhere; }
 #item-details .full-width { grid-column: 1 / -1; }
 dialog dt { font-weight: 600; }
 .item-color { display: flex; align-items: center; gap: 6px; }
-.color-swatch { flex: 0 0 14px; height: 14px; border: 1px solid var(--oro-plum-deep); border-radius: 50%; }
+.color-swatch { flex: 0 0 14px; height: 14px; border: 1px solid var(--oro-plum-deep, #3A2646); border-radius: 50%; }
+.delete-action { display: flex; justify-content: center; }
 dialog dd { margin: 4px 0 0; }
 dialog form { display: flex; align-items: center; gap: 8px; margin-top: 20px; }
 dialog form button { flex-shrink: 0; margin-top: 0; }
