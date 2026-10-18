@@ -40,7 +40,7 @@ function render() {
     && [item.title, item.description, item.subtype, item.category, item.color, item.material, ...(item.aesthetic_tags || [])]
       .join(' ').toLowerCase().includes(query))
   grid.replaceChildren()
-  const message = items.length ? `${visible.length === items.length ? items.length : `${visible.length} of ${items.length}`} items${visible.length ? '' : ' — try another search or filter'}`
+  const message = items.length ? `${visible.length === items.length ? items.length : `${visible.length} of ${items.length}`} items`
     : 'Your closet is built over text. Send oro a photo to add your first piece.'
   if (status.textContent !== message) status.textContent = message
   for (const button of document.querySelectorAll('#categories button')) {
