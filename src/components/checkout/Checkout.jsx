@@ -3,6 +3,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
 import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance, startPublicCheckout, isPublicCheckoutToken, saveCheckoutInvite, clearCheckoutToken } from '../../lib/checkout'
 import { getOroTextLink } from '../../lib/textOro'
+import Confetti from '../Confetti'
 import CheckoutForm, { CheckoutFormSkeleton } from './CheckoutForm'
 import './Checkout.css'
 
@@ -123,6 +124,7 @@ export default function Checkout() {
       </section>
       <section className="checkout-card" aria-label="Oro subscription checkout" aria-busy={loading}>
         {error ? <><p role="alert">{error}</p><button className="oro-button" onClick={() => refresh()}>Try again</button><p><a href={textLink}>Text Oro</a></p></> : paid ? <>
+          {data.status === 'ready' && <Confetti />}
           <h2>You’re <em>in.</em></h2><p>Your stylist is ready. Head back to your conversation.</p><a className="oro-button" href={textLink}>Back to Oro ↗</a>
         </> : checking || data?.status === 'payment_pending' ? <>
           <h2>Getting you ready.</h2><p role="status">We’re confirming your payment and setting up your stylist.</p><button className="oro-button" onClick={() => { setPolls(0); refresh() }}>Check status</button>

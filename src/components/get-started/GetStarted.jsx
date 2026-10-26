@@ -2,6 +2,7 @@ import { Button, Chip, Heading, TextField as KitTextField } from 'oro-kit'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { getCountries, getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js/max'
 import ButtonArrow from '../ButtonArrow'
+import Confetti from '../Confetti'
 import { postOnboarding } from './onboardingApi'
 import '../GoldBackground.css'
 import { getOroTextLink, ORO_TEXT_NUMBER_DISPLAY } from '../../lib/textOro'
@@ -589,6 +590,7 @@ export default function GetStarted() {
 
           {view === 'done' && (
             <div className="gs-terminal">
+              <Confetti />
               <p className="gs-eyebrow">Welcome, oronaut.</p>
               <Heading as="h1" variant="title" tabIndex={-1} className="gs-terminal-title">You’re all set.</Heading>
               <p className="gs-terminal-sub">Your beta setup is complete. Send oro your first text to get started.</p>
