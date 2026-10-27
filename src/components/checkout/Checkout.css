@@ -24,6 +24,9 @@
 .checkout-card .checkout-period { font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); color: var(--oro-color-muted); }
 .checkout-label { display: block; font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); margin: var(--oro-space-6) 0 var(--oro-space-2); }
 .checkout-payment { margin-top: var(--oro-space-6); }
+.checkout-discount-field { display: flex; flex-wrap: wrap; gap: var(--oro-space-2); }
+.checkout-discount-field .oro-input { flex: 1 1 140px; min-width: 0; min-height: 44px; }
+.checkout-discount-field .oro-button { min-width: 44px; min-height: 44px; }
 .checkout-consent { display: flex; gap: var(--oro-space-2); margin-top: var(--oro-space-6); color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); }
 .checkout-consent input { margin-top: var(--oro-space-1); align-self: flex-start; flex-shrink: 0; accent-color: var(--oro-color-accent); }
 .checkout-card .checkout-messaging-notice { margin: var(--oro-space-2) 0 0; color: var(--oro-color-muted); font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); }

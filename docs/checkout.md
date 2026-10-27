@@ -1,5 +1,10 @@
 ## Direct checkout entry
 
+The embedded checkout accepts discount codes through Stripe's `applyPromotionCode`
+API and displays the updated amount due. The upstream service creating Checkout
+Sessions must set `allow_promotion_codes: true`, and codes must be active in Stripe.
+Session creation lives outside this repository.
+
 All signup CTAs now open `/checkout` directly, without a prior phone form.
 `/get-started` and `/getstarted` also render checkout for older links. Without a
 personal link, the page calls `/api/checkout?operation=entry` to start an anonymous
