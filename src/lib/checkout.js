@@ -82,7 +82,10 @@ export async function checkoutRequest(token, operation = 'status', signal, body)
     throw error
   }
   if (!response.ok) throw new Error('Checkout is unavailable right now. Please try again.')
-  const data = await response.json()
+  let data
+  try { data = await response.json() } catch {
+    throw new Error('Checkout is unavailable right now. Please try again.')
+  }
   if (!validOffer(data.offer) || typeof data.status !== 'string') throw new Error('We couldn’t verify your plan. Please try again.')
   if (data.status === 'checkout' && data.client_secret && !/^cs_(?:test|live)_/.test(data.client_secret)) {
     throw new Error('We couldn’t verify your checkout. Please try again.')

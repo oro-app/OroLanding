@@ -3,6 +3,7 @@ import fs from 'node:fs/promises'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import mdx from '@mdx-js/rollup'
+import checkoutDev from './scripts/checkout-dev.js'
 
 // Backend URL
 const backendUrl = process.env.VITE_BACKEND_URL || 'https://oro-kmuj.onrender.com';
@@ -57,6 +58,7 @@ const newsletterMetaPlugin = {
 
 export default defineConfig({
   plugins: [
+    checkoutDev(),
     newsletterMetaPlugin,
     mdx(),
     react(),

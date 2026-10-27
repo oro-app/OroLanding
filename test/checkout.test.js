@@ -4,6 +4,11 @@ import handler from '../api/checkout.js'
 import { checkoutRequest, countdown, validOffer, startPublicCheckout } from '../src/lib/checkout.js'
 
 const token = 'synthetic.personal.token'
+
+test('checkout handles an HTML response without exposing a JSON parsing error', async t => {
+  t.mock.method(globalThis, 'fetch', async () => new Response('<!DOCTYPE html><html></html>'))
+  await assert.rejects(checkoutRequest(token), { message: 'Checkout is unavailable right now. Please try again.' })
+})
 const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 1250,
   first_month_discount_percent: 50, launch_offer_ends_at: '2026-10-14T04:00:00Z' }
 function response() {
