@@ -43,7 +43,7 @@ Deploy a **Web app**, execute as the deploying account, with access **Anyone**. 
 
 On later code changes, rebuild both script files and update the existing deployment to a new version. Keep the same project, Sheet, and response keys. Updating editor code alone does not update the deployed `/exec` version.
 
-The home page reads the number of distinct signup phone numbers through `GET /api/beta-count`. This server endpoint asks the same Apps Script deployment for a count with the server-side secret; it never exposes the Sheet or secret to the browser. Redeploy the Apps Script version containing the count action before deploying the updated website. The page only shows the count when the read succeeds and there are more than 100 people.
+The open-launch homepage no longer requests or displays the legacy beta signup count. `GET /api/beta-count` remains a legacy endpoint and is not required for the homepage to load.
 
 Valid campaign and referral tags are retained in session storage across landing-page navigation, then cleared after a confirmed signup or lookup. The first valid source stays with an unfinished session; a newly opened valid referral link replaces an older invitation. Direct tagged signup links also work when storage is blocked.
 

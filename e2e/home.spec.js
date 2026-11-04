@@ -6,6 +6,13 @@ test.beforeEach(async ({ page }) => {
 
 test('home page loads cleanly @smoke', async ({ page }) => {
   const errors = []
+  const betaCountRequests = []
+  page.on('request', (request) => {
+    if (new URL(request.url()).pathname === '/api/beta-count') betaCountRequests.push(request.url())
+  })
+  page.on('response', (response) => {
+    if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`)
+  })
   page.on('pageerror', (error) => errors.push(error.message))
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()) })
   await page.goto('/')
@@ -14,6 +21,7 @@ test('home page loads cleanly @smoke', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', 'Fraunces, Georgia, serif')
   await expect(page.getByText(/600\+/)).toHaveCount(0)
   await expect(page.getByRole('heading', { name: 'text her when you don’t know what to wear' })).toBeVisible()
+  expect(betaCountRequests, 'The homepage must not request the retired beta signup count').toEqual([])
   expect(errors).toEqual([])
 })
 

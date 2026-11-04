@@ -43,7 +43,6 @@ export default function Home() {
   const motionRef = useHomeMotion()
   const heroRef = useRef(null)
   const viewedSectionsRef = useRef(new Set())
-  const [entryCount, setEntryCount] = useState(null)
   const [showFloatingCta, setShowFloatingCta] = useState(false)
 
   useEffect(() => {
@@ -91,17 +90,6 @@ export default function Home() {
       observer?.disconnect()
       window.removeEventListener('oro:analytics-consent-change', observeSections)
     }
-  }, [entryCount])
-
-  useEffect(() => {
-    const controller = new AbortController()
-    fetch('/api/beta-count', { signal: controller.signal })
-      .then((response) => response.ok ? response.json() : null)
-      .then((result) => {
-        if (Number.isSafeInteger(result?.count) && result.count > 100) setEntryCount(result.count)
-      })
-      .catch(() => {})
-    return () => controller.abort()
   }, [])
 
   return (
@@ -127,10 +115,6 @@ export default function Home() {
         </div>
         <DesignerFeatures features={FEATURES} />
         <OutfitGallery />
-        {entryCount !== null && <section className="home-social-proof home-moments-panel halo-container" aria-labelledby="home-social-title" data-home-reveal data-analytics-section="social_proof">
-          <Heading as="h2" variant="title" id="home-social-title" className="home-stagger">everyone wants her number.</Heading>
-          <Text muted className="home-description home-stagger">{entryCount.toLocaleString()} people are already trying to get it.</Text>
-        </section>}
       </div>
       <div className={`home-floating-cta${showFloatingCta ? ' home-floating-cta--visible' : ''}`} inert={showFloatingCta ? undefined : ''}>
         <HomeCta place="floating">find your next outfit</HomeCta>
