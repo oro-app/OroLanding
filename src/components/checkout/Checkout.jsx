@@ -127,11 +127,12 @@ export default function Checkout() {
         </> : checking || data?.status === 'payment_pending' ? <>
           <h2>Getting you ready.</h2><p role="status">We’re confirming your payment and setting up your stylist.</p><button className="oro-button" onClick={() => { setPolls(0); refresh() }}>Check status</button>
         </> : loading && !data ? <CheckoutFormSkeleton /> : data?.status === 'checkout' ? <>
-          <div className="checkout-price"><span>{formatPrice(offer.first_month_amount)}</span>{discounted && <del aria-label="Regular price $25">{formatPrice(offer.amount)}</del>}</div>
-          {discounted ? <div className="checkout-discount">50% off your first month</div> : <p className="checkout-period">per month</p>}
           {data.client_secret && stripe ? <CheckoutElementsProvider key={data.session_id} stripe={stripe} options={options}>
             <CheckoutForm offer={offer} collectPhone={data.collect_phone === true} onAccept={acceptNotice} onPaid={() => { setChecking(true); setPolls(0); refresh() }} onExpired={() => refresh()} />
-          </CheckoutElementsProvider> : <><p>Continue to secure checkout to complete your subscription.</p>
+          </CheckoutElementsProvider> : <>
+            <div className="checkout-price"><span>{formatPrice(offer.first_month_amount)}</span>{discounted && <del aria-label={`Regular price ${formatPrice(offer.amount)}`}>{formatPrice(offer.amount)}</del>}</div>
+            {discounted ? <div className="checkout-discount">50% off your first month</div> : <p className="checkout-period">per month</p>}
+            <p>Continue to secure checkout to complete your subscription.</p>
             {data.checkout_url && !data.client_secret ? <a className="oro-button" href={data.checkout_url}>Meet my personal stylist</a> : <p role="alert">Secure payment is unavailable. Please text Oro for help.</p>}
           </>}
         </> : <><h2>Let’s get you set up.</h2><p>Text Oro to continue your signup or get help with your subscription.</p><a className="oro-button" href={textLink}>Text Oro ↗</a></>}

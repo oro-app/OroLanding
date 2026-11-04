@@ -5,6 +5,15 @@ API and displays the updated amount due. The upstream service creating Checkout
 Sessions must set `allow_promotion_codes: true`, and codes must be active in Stripe.
 Session creation lives outside this repository.
 
+The native checkout's price heading and amount due use Stripe's current Session
+total. Renewal copy uses `recurring.dueNext.total` and the billing interval, with
+`discountAmounts[].recurring` distinguishing ongoing discounts from discounts
+that last a fixed number of months. Applying a code updates these displays through
+Stripe's checkout provider. A 100% ongoing discount therefore shows a zero total
+and a zero renewal price; a one-time free invoice still shows the next renewal
+amount returned by Stripe. The backend offer is only used for the hosted-checkout
+handoff, before the customer reaches Stripe.
+
 All signup CTAs now open `/checkout` directly, without a prior phone form.
 `/get-started` and `/getstarted` also render checkout for older links. Without a
 personal link, the page calls `/api/checkout?operation=entry` to start an anonymous

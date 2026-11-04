@@ -1,6 +1,7 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js/max'
 import { useState } from 'react'
 import { PaymentElement, useCheckoutElements } from '@stripe/react-stripe-js/checkout'
+import { checkoutRenewalText } from '../../lib/checkout'
 
 export function CheckoutFormSkeleton({ includePrice = true }) {
   return <>
@@ -27,7 +28,7 @@ export default function CheckoutForm({ offer, onPaid, onExpired, collectPhone = 
   const [applyingDiscount, setApplyingDiscount] = useState(false)
   const [discountError, setDiscountError] = useState('')
   const [discountStatus, setDiscountStatus] = useState('')
-  if (state.type === 'loading') return <CheckoutFormSkeleton includePrice={false} />
+  if (state.type === 'loading') return <CheckoutFormSkeleton />
   if (state.type === 'error') return <p role="alert">We couldn’t load secure payment. Please refresh to try again.</p>
 
   async function submit(event) {
@@ -73,6 +74,8 @@ export default function CheckoutForm({ offer, onPaid, onExpired, collectPhone = 
   }
 
   return <form onSubmit={submit}>
+    <div className="checkout-price"><span>{total}</span></div>
+    <p className="checkout-period">due today</p>
     <label className="checkout-label" htmlFor="checkout-email">Email</label>
     <input className="oro-input" id="checkout-email" type="email" autoComplete="email"
       value={email} onChange={event => setEmail(event.target.value)} required disabled={busy} />
@@ -93,7 +96,7 @@ export default function CheckoutForm({ offer, onPaid, onExpired, collectPhone = 
     <div id="checkout-discount-status" role="status" aria-atomic="true">
       {discountError ? <p className="checkout-error">{discountError}</p> : discountStatus && <p>{discountStatus}</p>}
     </div>
-    <p className="checkout-period">Due today: {total}<br /><span id="checkout-renewal">Renews at US $25/month until canceled.</span></p>
+    <p className="checkout-period">Due today: {total}<br /><span id="checkout-renewal">{checkoutRenewalText(state.checkout)}</span></p>
     <label className="checkout-consent">
       <input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} disabled={busy}
         aria-describedby={collectPhone ? 'checkout-renewal checkout-messaging-notice' : 'checkout-renewal'} />

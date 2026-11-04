@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import handler from '../api/checkout.js'
-import { checkoutRequest, countdown, validOffer, startPublicCheckout } from '../src/lib/checkout.js'
+import { checkoutRequest, countdown, validOffer, startPublicCheckout, checkoutRenewalText } from '../src/lib/checkout.js'
 
 const token = 'synthetic.personal.token'
 
@@ -121,4 +121,37 @@ test('entry proxy accepts no account data and requires a capability for contact 
   result = response()
   await handler({ method: 'POST', query: { operation: 'entry-accept' }, headers: {}, body: { phone: '+14165550123', terms_accepted: true, texting_consent: true } }, result)
   assert.equal(result.code, 401)
+})
+
+test('renewal copy uses Stripe next-invoice amounts rather than today’s free total', () => {
+  const session = {
+    total: { total: { amount: '$0' } },
+    recurring: { interval: 'month', intervalCount: 1, dueNext: { total: { amount: '$25.00' } } },
+    discountAmounts: [{ percentOff: 100, recurring: null }],
+  }
+  assert.equal(checkoutRenewalText(session), 'Renews at $25.00/month until canceled.')
+  session.recurring.dueNext.total.amount = '$0.00'
+  session.discountAmounts[0].recurring = { type: 'forever' }
+  assert.equal(checkoutRenewalText(session), 'Renews at $0.00/month with your ongoing discount until canceled.')
+})
+
+test('renewal copy preserves Stripe pricing for partial ongoing discounts and billing cadence', () => {
+  const session = {
+    recurring: { interval: 'month', intervalCount: 2, dueNext: { total: { amount: 'US$18.75' } } },
+    discountAmounts: [{ percentOff: 25, recurring: { type: 'forever' } }],
+  }
+  assert.equal(checkoutRenewalText(session), 'Renews at US$18.75 every 2 months with your ongoing discount until canceled.')
+})
+
+test('a one-month repeating coupon does not imply the next renewal will be free', () => {
+  const session = {
+    recurring: { interval: 'month', intervalCount: 1, dueNext: { total: { amount: '$25' } } },
+    discountAmounts: [{ percentOff: 100, recurring: { type: 'repeating', durationInMonths: 1 } }],
+  }
+  assert.equal(checkoutRenewalText(session), 'Next renewal: $25/month. Your discount applies for 1 month in total; regular pricing resumes afterward.')
+})
+
+test('missing recurring details do not invent a renewal price', () => {
+  assert.equal(checkoutRenewalText({ recurring: null }), '')
+  assert.equal(checkoutRenewalText({ recurring: { interval: 'month', intervalCount: 1 } }), '')
 })

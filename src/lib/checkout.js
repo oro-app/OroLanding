@@ -97,6 +97,22 @@ export const formatPrice = cents => new Intl.NumberFormat('en-US', {
   style: 'currency', currency: 'USD', minimumFractionDigits: cents % 100 ? 2 : 0,
 }).format(cents / 100)
 
+export function checkoutRenewalText(checkout) {
+  const recurring = checkout.recurring
+  if (!recurring?.dueNext?.total) return ''
+  const cadence = recurring.intervalCount === 1 ? `/${recurring.interval}`
+    : ` every ${recurring.intervalCount} ${recurring.interval}s`
+  const price = `${recurring.dueNext.total.amount}${cadence}`
+  const discounts = checkout.discountAmounts || []
+  const temporary = discounts.find(discount => discount.recurring?.type === 'repeating')
+  if (temporary) {
+    const months = temporary.recurring.durationInMonths
+    return `Next renewal: ${price}. Your discount applies for ${months} ${months === 1 ? 'month' : 'months'} in total; regular pricing resumes afterward.`
+  }
+  const ongoing = discounts.some(discount => discount.recurring?.type === 'forever')
+  return `Renews at ${price}${ongoing ? ' with your ongoing discount' : ''} until canceled.`
+}
+
 export function stripeAppearance() {
   if (typeof document === 'undefined') return undefined
   const css = getComputedStyle(document.querySelector('.checkout-page') || document.documentElement)
