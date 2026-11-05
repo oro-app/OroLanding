@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures.js'
 
 const token = 'synthetic.personal.token'
-const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 1250,
+const offer = { amount: 2000, currency: 'usd', interval: 'month', first_month_amount: 1000,
   first_month_discount_percent: 50, launch_offer_ends_at: '2026-10-14T04:00:00Z' }
 const native = { status: 'checkout', offer, client_secret: 'cs_test_native_secret', session_id: 'cs_test_native', publishable_key: 'pk_test_synthetic' }
 
@@ -12,8 +12,8 @@ async function mockStripe(page) {
       initCheckoutElementsSdk() {
         const listeners = []
         let session = JSON.parse(sessionStorage.getItem('synthetic_checkout_session') || 'null') || window.checkoutInitialSession || {
-          total: { total: { amount: window.checkoutTotalAmount || '$12.50', minorUnitsAmount: 1250 } },
-          recurring: { interval: 'month', intervalCount: 1, dueNext: { total: { amount: '$25', minorUnitsAmount: 2500 } } },
+          total: { total: { amount: window.checkoutTotalAmount || '$10.00', minorUnitsAmount: 1000 } },
+          recurring: { interval: 'month', intervalCount: 1, dueNext: { total: { amount: '$20', minorUnitsAmount: 2000 } } },
           discountAmounts: null,
         }
         const actions = {
@@ -60,8 +60,8 @@ test('personal checkout keeps credentials private and requires billing consent',
     return route.fulfill({ json: native })
   })
   await page.goto(`/checkout#token=${token}`)
-  await expect(page.locator('.checkout-price')).toHaveText('$12.50')
-  await expect(page.locator('#checkout-renewal')).toHaveText('Renews at $25/month until canceled.')
+  await expect(page.locator('.checkout-price')).toHaveText('$10.00')
+  await expect(page.locator('#checkout-renewal')).toHaveText('Renews at $20/month until canceled.')
   await expect(page.getByRole('button', { name: 'Meet my personal stylist' })).toBeDisabled()
   await expect(page).toHaveURL(/\/checkout$/)
   expect(requests.some(url => url.includes(token))).toBe(false)
@@ -104,15 +104,15 @@ test('midnight reloads the server quote and removes the launch promotion', async
   let expired = false
   await page.route('**/api/checkout?*', route => route.fulfill({ json: expired ? { ...native,
     session_id: 'cs_test_regular', client_secret: 'cs_test_regular_secret',
-    offer: { ...offer, first_month_amount: 2500, first_month_discount_percent: 0, launch_offer_ends_at: null },
+    offer: { ...offer, first_month_amount: 2000, first_month_discount_percent: 0, launch_offer_ends_at: null },
   } : native }))
   await page.goto(`/checkout#token=${token}`)
   await expect(page.getByRole('timer')).toContainText('02')
   expired = true
-  await page.evaluate(() => { window.checkoutTotalAmount = '$25' })
+  await page.evaluate(() => { window.checkoutTotalAmount = '$20' })
   await page.clock.setFixedTime(new Date('2026-10-14T04:00:01Z'))
   await page.clock.runFor(1000)
-  await expect(page.locator('.checkout-price')).toHaveText('$25')
+  await expect(page.locator('.checkout-price')).toHaveText('$20')
   await expect(page.getByRole('timer')).toHaveCount(0)
   await expect(page.getByText('50% off your first month')).toHaveCount(0)
 })
@@ -221,7 +221,7 @@ test('public checkout requires a number on the payment screen and submits it to 
     return route.fulfill({ json: { ...native, collect_phone: true, status: phase, paid: phase !== 'checkout' } })
   })
   await page.goto('/checkout')
-  await expect(page.getByText('Due today: $12.50')).toBeVisible()
+  await expect(page.getByText('Due today: $10')).toBeVisible()
   await page.getByLabel('Email').fill('synthetic@example.com')
   await expect(page.getByLabel('Phone number for texting Oro')).toHaveAttribute('required', '')
   await page.getByRole('checkbox').check()
@@ -256,30 +256,30 @@ test('an existing subscriber returns to text before Stripe confirmation', async 
   expect(await page.evaluate(() => window.checkoutConfirms || 0)).toBe(0)
 })
 
-const regularOffer = { ...offer, first_month_amount: 2500, first_month_discount_percent: 0, launch_offer_ends_at: null }
+const regularOffer = { ...offer, first_month_amount: 2000, first_month_discount_percent: 0, launch_offer_ends_at: null }
 const stripeAmount = minorUnitsAmount => ({ minorUnitsAmount, amount: `$${(minorUnitsAmount / 100).toFixed(minorUnitsAmount % 100 ? 2 : 0)}` })
 function stripeSession(today, next, discount = null) {
   return {
     total: { total: stripeAmount(today) },
     recurring: { interval: 'month', intervalCount: 1, dueNext: { total: stripeAmount(next) } },
-    discountAmounts: discount ? [{ ...stripeAmount(2500 - today), displayName: 'Synthetic coupon', promotionCode: 'SYNTHETIC', ...discount }] : null,
+    discountAmounts: discount ? [{ ...stripeAmount(2000 - today), displayName: 'Synthetic coupon', promotionCode: 'SYNTHETIC', ...discount }] : null,
   }
 }
 
 for (const scenario of [
   { name: 'forever', today: 0, next: 0, discount: { percentOff: 100, recurring: { type: 'forever' } },
     renewal: 'Renews at $0/month with your ongoing discount until canceled.' },
-  { name: 'one-time', today: 0, next: 2500, discount: { percentOff: 100, recurring: null },
-    renewal: 'Renews at $25/month until canceled.' },
-  { name: 'temporary', today: 1250, next: 1250, discount: { percentOff: 50, recurring: { type: 'repeating', durationInMonths: 3 } },
-    renewal: 'Next renewal: $12.50/month. Your discount applies for 3 months in total; regular pricing resumes afterward.' },
+  { name: 'one-time', today: 0, next: 2000, discount: { percentOff: 100, recurring: null },
+    renewal: 'Renews at $20/month until canceled.' },
+  { name: 'temporary', today: 1000, next: 1000, discount: { percentOff: 50, recurring: { type: 'repeating', durationInMonths: 3 } },
+    renewal: 'Next renewal: $10/month. Your discount applies for 3 months in total; regular pricing resumes afterward.' },
 ]) {
   test(`applying a ${scenario.name} coupon updates both pricing displays and survives reload`, async ({ page }) => {
-    await page.addInitScript(session => { window.checkoutInitialSession = session }, stripeSession(2500, 2500))
+    await page.addInitScript(session => { window.checkoutInitialSession = session }, stripeSession(2000, 2000))
     await page.route('**/api/checkout?*', route => route.fulfill({ json: { ...native, offer: regularOffer } }))
     await page.goto(`/checkout#token=${token}`)
-    await expect(page.locator('.checkout-price')).toHaveText('$25')
-    await expect(page.locator('#checkout-renewal')).toHaveText('Renews at $25/month until canceled.')
+    await expect(page.locator('.checkout-price')).toHaveText('$20')
+    await expect(page.locator('#checkout-renewal')).toHaveText('Renews at $20/month until canceled.')
     await page.evaluate(session => { window.checkoutPromotionSession = session }, stripeSession(scenario.today, scenario.next, scenario.discount))
     await page.getByLabel('Discount code (optional)').fill(' SYNTHETIC ')
     await page.getByRole('button', { name: 'Apply', exact: true }).click()

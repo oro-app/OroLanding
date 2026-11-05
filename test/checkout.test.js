@@ -9,7 +9,7 @@ test('checkout handles an HTML response without exposing a JSON parsing error', 
   t.mock.method(globalThis, 'fetch', async () => new Response('<!DOCTYPE html><html></html>'))
   await assert.rejects(checkoutRequest(token), { message: 'Checkout is unavailable right now. Please try again.' })
 })
-const offer = { amount: 2500, currency: 'usd', interval: 'month', first_month_amount: 1250,
+const offer = { amount: 2000, currency: 'usd', interval: 'month', first_month_amount: 1000,
   first_month_discount_percent: 50, launch_offer_ends_at: '2026-10-14T04:00:00Z' }
 function response() {
   return { headers: {}, setHeader(key, value) { this.headers[key] = value },
@@ -18,11 +18,11 @@ function response() {
 
 test('quote validation rejects an incorrect price, currency, or recurring discount', () => {
   assert.equal(validOffer(offer), true)
-  for (const changes of [{ amount: 1250 }, { currency: 'cad' }, { interval: 'year' },
+  for (const changes of [{ amount: 1000 }, { amount: 2500 }, { first_month_amount: 1250 }, { currency: 'cad' }, { interval: 'year' },
     { first_month_discount_percent: 100 }, { launch_offer_ends_at: 'invalid' }]) {
     assert.equal(validOffer({ ...offer, ...changes }), false)
   }
-  assert.equal(validOffer({ ...offer, first_month_amount: 2500, first_month_discount_percent: 0 }), true)
+  assert.equal(validOffer({ ...offer, first_month_amount: 2000, first_month_discount_percent: 0 }), true)
 })
 
 test('countdown reaches zero exactly at midnight Eastern, without resetting on reload', () => {
@@ -126,10 +126,10 @@ test('entry proxy accepts no account data and requires a capability for contact 
 test('renewal copy uses Stripe next-invoice amounts rather than today’s free total', () => {
   const session = {
     total: { total: { amount: '$0' } },
-    recurring: { interval: 'month', intervalCount: 1, dueNext: { total: { amount: '$25.00' } } },
+    recurring: { interval: 'month', intervalCount: 1, dueNext: { total: { amount: '$20.00' } } },
     discountAmounts: [{ percentOff: 100, recurring: null }],
   }
-  assert.equal(checkoutRenewalText(session), 'Renews at $25.00/month until canceled.')
+  assert.equal(checkoutRenewalText(session), 'Renews at $20.00/month until canceled.')
   session.recurring.dueNext.total.amount = '$0.00'
   session.discountAmounts[0].recurring = { type: 'forever' }
   assert.equal(checkoutRenewalText(session), 'Renews at $0.00/month with your ongoing discount until canceled.')
@@ -145,10 +145,10 @@ test('renewal copy preserves Stripe pricing for partial ongoing discounts and bi
 
 test('a one-month repeating coupon does not imply the next renewal will be free', () => {
   const session = {
-    recurring: { interval: 'month', intervalCount: 1, dueNext: { total: { amount: '$25' } } },
+    recurring: { interval: 'month', intervalCount: 1, dueNext: { total: { amount: '$20' } } },
     discountAmounts: [{ percentOff: 100, recurring: { type: 'repeating', durationInMonths: 1 } }],
   }
-  assert.equal(checkoutRenewalText(session), 'Next renewal: $25/month. Your discount applies for 1 month in total; regular pricing resumes afterward.')
+  assert.equal(checkoutRenewalText(session), 'Next renewal: $20/month. Your discount applies for 1 month in total; regular pricing resumes afterward.')
 })
 
 test('missing recurring details do not invent a renewal price', () => {
