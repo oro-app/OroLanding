@@ -1,7 +1,10 @@
 import { Heading, Text } from 'oro-kit'
-import { trackCtaClick } from '../../lib/analytics'
+import { useCallback, useEffect, useState } from 'react'
+import { trackCtaClick, trackEvent } from '../../lib/analytics'
 import { FOOTER_LINKS } from '../../lib/siteLinks'
+import { getOroTextLink, isMobileMessagingDevice } from '../../lib/textOro'
 import MessagesIcon from '../MessagesIcon'
+import TextOroModal from '../overlays/TextOroModal'
 import CtaSparkles from './CtaSparkles'
 
 function HomeLogo() {
@@ -9,14 +12,47 @@ function HomeLogo() {
 }
 
 export function HomeCta({ place, children, className = '', inviteUrl = '', href: customHref, showIcon = true, onClick }) {
-  const href = customHref || (inviteUrl ? `/checkout?invite=${encodeURIComponent(inviteUrl)}` : '/checkout')
-  return (
-    <a href={href} className={`oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`}
-      onClick={onClick || (customHref ? undefined : () => trackCtaClick('get_number_click', { location: place, destination: 'web_checkout' }))}>
+  const [modalOpen, setModalOpen] = useState(false)
+  const [smsLink, setSmsLink] = useState(() => getOroTextLink('', inviteUrl))
+  const closeModal = useCallback(() => setModalOpen(false), [])
+
+  // The prerendered HTML has no user agent, so the Apple/Android body separator is fixed after hydration.
+  useEffect(() => setSmsLink(getOroTextLink(undefined, inviteUrl)), [inviteUrl])
+
+  const handleClick = (event) => {
+    const mobile = isMobileMessagingDevice()
+    trackCtaClick('get_number_click', {
+      location: place,
+      destination: mobile ? 'sms' : 'qr_handoff',
+      device_class: mobile ? 'mobile' : 'desktop',
+    })
+    if (mobile) {
+      trackEvent('message_app_open', { location: place, method: 'cta' })
+      return
+    }
+    // Desktops can't open the SMS link, so they get a QR that opens it on the person's phone.
+    event.preventDefault()
+    setModalOpen(true)
+  }
+
+  const content = (
+    <>
       {showIcon && !['header', 'floating'].includes(place) && <MessagesIcon className="halo-cta-message" />}
       <span>{children}</span>
       {['hero', 'closer'].includes(place) && <CtaSparkles />}
-    </a>
+    </>
+  )
+  const classes = `oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`
+
+  if (customHref) {
+    return <a href={customHref} className={classes} onClick={onClick}>{content}</a>
+  }
+
+  return (
+    <>
+      <a href={smsLink} className={classes} onClick={onClick || handleClick}>{content}</a>
+      <TextOroModal open={modalOpen} onClose={closeModal} source={place} inviteUrl={inviteUrl} />
+    </>
   )
 }
 
