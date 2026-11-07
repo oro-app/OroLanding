@@ -72,7 +72,7 @@
   align-items: center;
   gap: 16px;
   width: fit-content;
-  margin-top: 46px;
+  margin-top: 32px;
   color: var(--oro-color-ink);
   font-size: 1.28rem;
   font-weight: 650;
@@ -91,6 +91,46 @@
 .text-oro-copy .text-oro-terms { margin-top: 42px; color: var(--oro-color-muted); font-size: 0.78rem; line-height: 1.55; text-transform: none; }
 .text-oro-terms a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: 3px; }
 .text-oro-terms a:hover { color: var(--oro-color-accent); }
+
+.request-access { display: grid; gap: 12px; margin-top: 36px; }
+.request-access-label { color: var(--oro-color-ink); font-size: 1rem; font-weight: 600; }
+.request-access-row { display: flex; gap: 8px; }
+/* The dialog is portaled outside .halo-site, where oro-kit's control styles are scoped. */
+.request-access-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 48px;
+  padding: 11px 14px;
+  border: 1px solid var(--oro-color-border);
+  border-radius: 14px;
+  background: var(--oro-color-surface);
+  color: var(--oro-color-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+.request-access-row input::placeholder { color: var(--oro-color-placeholder); opacity: 1; }
+.request-access-row input:focus-visible { outline: 2px solid var(--oro-color-accent); outline-offset: 2px; }
+.request-access-row button {
+  flex: 0 0 auto;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--halo-cta-background, #573969);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.request-access-row button:hover:not(:disabled) { background: var(--halo-cta-background-hover, #634475); }
+.request-access-row button:focus-visible { outline: 2px solid var(--oro-color-accent); outline-offset: 2px; }
+.request-access-row button:disabled { background: var(--oro-color-disabled-surface); color: var(--oro-color-disabled-text); cursor: default; }
+.request-access-consent { display: flex; align-items: flex-start; gap: 10px; color: var(--oro-color-muted); font-size: 0.78rem; line-height: 1.55; }
+.request-access-consent input { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; accent-color: var(--halo-cta-background); }
+.request-access-consent a { color: var(--oro-color-ink); text-decoration: underline; text-underline-offset: 3px; }
+.request-access-consent a:hover { color: var(--oro-color-accent); }
+.request-access-error { margin: 0; color: var(--oro-color-error); font-size: 0.85rem; }
+.request-access-done { max-width: 360px; margin: 36px 0 0; padding: 16px 18px; border-radius: 16px; background: var(--oro-color-soft); color: var(--oro-color-ink); font-size: 1rem; font-weight: 600; }
 
 .text-oro-visual {
   position: relative;
@@ -157,6 +197,7 @@
   .text-oro-visual { min-height: auto; padding: 42px 28px 36px; border-radius: 0 0 24px 24px; }
   .text-oro-mascot { top: 42px; right: 14px; width: 164px; height: 164px; }
   .text-oro-qr-frame { width: min(100%, 280px); }
+  .request-access-row { flex-direction: column; }
 }
 
 @media (forced-colors: active) {

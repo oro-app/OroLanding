@@ -11,8 +11,18 @@ test('invite landing carries the invitation into the prefilled text', async ({ p
   const inviteUrl = `${new URL(page.url()).origin}/invite?ref=${referralCode}`
   const body = encodeURIComponent(`hey oro, let's get started!\n${inviteUrl}`)
   await expect(cta).toHaveAttribute('href', new RegExp(`^sms:\\+18556762419[?&]body=${body.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`))
+  const requests = []
+  await page.route('**/api/request-access', async (route) => {
+    requests.push(route.request().postDataJSON())
+    await route.fulfill({ status: 202, json: { status: 'requested' } })
+  })
   await cta.click()
-  await expect(page.getByRole('dialog', { name: "get oro's number" })).toBeVisible()
+  const dialog = page.getByRole('dialog', { name: "get oro's number" })
+  await dialog.getByLabel("leave your number and we'll reach out").fill('4165550123')
+  await dialog.getByRole('checkbox').check()
+  await dialog.getByRole('button', { name: 'request access' }).click()
+  await expect(dialog.getByRole('status')).toBeVisible()
+  expect(requests[0].referral_code).toBe(referralCode)
 })
 
 for (const [path, title, place] of [

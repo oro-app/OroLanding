@@ -5,8 +5,9 @@ import oroTexting from '../../assets/mascot/oro_texting.webp'
 import { trackEvent } from '../../lib/analytics'
 import { getOroTextLink, ORO_TEXT_NUMBER_DISPLAY } from '../../lib/textOro'
 import MessagesIcon from '../MessagesIcon'
+import RequestAccessForm from './RequestAccessForm'
 
-const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 export default function TextOroModal({ open, onClose, source, inviteUrl = '' }) {
   const titleId = useId()
@@ -85,12 +86,12 @@ export default function TextOroModal({ open, onClose, source, inviteUrl = '' }) 
         </button>
         <div className="text-oro-copy">
           <h2 id={titleId}>get oro's number</h2>
+          <RequestAccessForm source={source} inviteUrl={inviteUrl} />
           <a className="text-oro-number" href={smsLink}
             onClick={() => trackEvent('message_app_open', { location: source, method: 'phone_number' })}>
             <MessagesIcon />
             <span><small>or text</small><span className="text-oro-number-value">{ORO_TEXT_NUMBER_DISPLAY}</span></span>
           </a>
-          <p className="text-oro-terms">By continuing, you agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
         </div>
         <div className="text-oro-visual">
           <div className="text-oro-bubble">hey, i'm oro ✨</div>

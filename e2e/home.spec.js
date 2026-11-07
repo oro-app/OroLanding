@@ -47,6 +47,40 @@ for (const place of ['header', 'hero', 'closer']) {
   })
 }
 
+test('QR handoff takes a number for the waitlist', async ({ page }) => {
+  const requests = []
+  await page.route('**/api/request-access', async (route) => {
+    requests.push(route.request().postDataJSON())
+    await route.fulfill({ status: 202, json: { status: 'requested' } })
+  })
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  await page.locator('.halo-cta--hero').click()
+  const dialog = page.getByRole('dialog', { name: "get oro's number" })
+  const submit = dialog.getByRole('button', { name: 'request access' })
+  await dialog.getByLabel("leave your number and we'll reach out").fill('(416) 555-0123')
+  await expect(submit).toBeDisabled()
+  await dialog.getByRole('checkbox').check()
+  await submit.click()
+  await expect(dialog.getByRole('status')).toContainText("you're on the list")
+  expect(requests).toEqual([{ phone: '(416) 555-0123', terms_accepted: true, texting_consent: true }])
+  await expect(dialog.getByAltText('QR code to start a text with oro')).toBeVisible()
+})
+
+test('waitlist form explains a rejected number and keeps it for editing', async ({ page }) => {
+  await page.route('**/api/request-access', route => route.fulfill({ status: 400, json: { code: 'invalid_phone' } }))
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  await page.locator('.halo-cta--hero').click()
+  const dialog = page.getByRole('dialog', { name: "get oro's number" })
+  const input = dialog.getByLabel("leave your number and we'll reach out")
+  await input.fill('+44 7911 123456')
+  await dialog.getByRole('checkbox').check()
+  await dialog.getByRole('button', { name: 'request access' }).click()
+  await expect(dialog.getByRole('alert')).toHaveText('enter a US or Canadian number.')
+  await expect(input).toHaveValue('+44 7911 123456')
+})
+
 test('mobile CTA is a prefilled SMS deep link without the QR modal', async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(navigator, 'userAgent', {
