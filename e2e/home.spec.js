@@ -25,17 +25,63 @@ test('home page loads cleanly @smoke', async ({ page }) => {
   expect(errors).toEqual([])
 })
 
+const SMS_LINK = /^sms:\+18556762419[?&]body=/
+
 for (const place of ['header', 'hero', 'closer']) {
-  test(`${place} CTA opens checkout directly`, async ({ page }) => {
+  test(`${place} CTA opens the desktop QR handoff`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
     await page.goto('/')
     const cta = page.locator(`.halo-cta--${place}`)
-    await expect(cta).toHaveAttribute('href', '/checkout')
+    await expect(cta).toHaveAttribute('href', SMS_LINK)
     await cta.click()
-    await expect(page).toHaveURL(/\/checkout(?:\?|$)/)
-    await expect(page.getByRole('region', { name: 'Oro subscription checkout' })).toBeVisible()
-    await expect(page.locator('video')).toHaveCount(0)
+    const dialog = page.getByRole('dialog', { name: "get oro's number" })
+    await expect(dialog).toBeVisible()
+    await expect(dialog.getByText('+1 (855) 676-2419')).toBeVisible()
+    await expect(dialog.getByAltText('QR code to start a text with oro')).toBeVisible()
+    await expect(dialog.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', '/terms')
+    await expect(dialog.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy')
+    await page.keyboard.press('Escape')
+    await expect(dialog).toBeHidden()
+    await expect(cta).toBeFocused()
+    await expect(page).toHaveURL(/\/$/)
   })
 }
+
+test('mobile CTA is a prefilled SMS deep link without the QR modal', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'userAgent', {
+      configurable: true,
+      value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148',
+    })
+  })
+  await page.goto('/')
+  const cta = page.locator('.halo-cta--hero')
+  await expect(cta).toHaveAttribute('href', `sms:+18556762419&body=${encodeURIComponent("hey oro, let's get started!")}`)
+})
+
+test('CTA handoff records click and modal analytics', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('oro_cookie_consent', 'accepted')
+    window.dataLayer = []
+    window.gtag = (...args) => window.dataLayer.push(args)
+  })
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  await page.locator('.halo-cta--hero').click()
+  await expect.poll(() => page.evaluate(() => window.dataLayer.some((entry) => (
+    Array.isArray(entry)
+      && entry[0] === 'event'
+      && entry[1] === 'get_number_click'
+      && entry[2]?.location === 'hero'
+      && entry[2]?.destination === 'qr_handoff'
+  )))).toBe(true)
+  await expect.poll(() => page.evaluate(() => window.dataLayer.some((entry) => (
+    Array.isArray(entry)
+      && entry[0] === 'event'
+      && entry[1] === 'text_handoff_open'
+      && entry[2]?.location === 'hero'
+  )))).toBe(true)
+})
 
 test('all CTAs share one purple treatment', async ({ page }) => {
   await page.goto('/')
@@ -91,7 +137,7 @@ for (const width of [320, 1440]) {
     await expect(floating).toBeVisible()
     await expect(floating).not.toHaveAttribute('inert')
     await expect(floating).toHaveCSS('position', 'fixed')
-    await expect(cta).toHaveAttribute('href', '/checkout')
+    await expect(cta).toHaveAttribute('href', SMS_LINK)
     const bounds = await cta.boundingBox()
     expect(bounds.x).toBeGreaterThanOrEqual(0)
     expect(bounds.x + bounds.width).toBeLessThanOrEqual(width)
@@ -103,7 +149,7 @@ for (const width of [320, 1440]) {
     await page.locator('.oro-marquee').scrollIntoViewIfNeeded()
     await expect(floating).toBeVisible()
     await cta.click()
-    await expect(page).toHaveURL(/\/checkout(?:\?|$)/)
+    await expect(page.getByRole('dialog', { name: "get oro's number" })).toBeVisible()
   })
 }
 
@@ -125,7 +171,7 @@ test('Halo stays light without changing a saved dark preference', async ({ page 
   await expect(page.locator('.halo-site')).toHaveCSS('background-color', 'rgb(252, 251, 255)')
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   await expect(page.locator('.home-panel[aria-hidden="true"]')).toHaveCount(0)
-  await page.locator('.halo-cta--header').click()
+  await page.goto('/checkout')
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
 })
 
