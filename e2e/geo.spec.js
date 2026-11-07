@@ -214,6 +214,7 @@ for (const width of [1440, 390]) {
     await expect(page).toHaveURL(/\/beta\/?$/)
     await expect(page.getByRole('heading', { name: 'heard you were looking for my number.', exact: true })).toBeVisible()
     await expect(page.getByRole('form')).toHaveCount(0)
+    await page.waitForLoadState('networkidle')
     await page.locator('.beta-welcome').getByRole('link', { name: 'find your next outfit', exact: true }).click()
     await expect(page).toHaveURL(/\/beta\/?$/)
     await expect(page.getByRole('dialog', { name: "get oro's number" })).toBeVisible()
