@@ -8,12 +8,12 @@ import MessagesIcon from '../MessagesIcon'
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
-export default function TextOroModal({ open, onClose, source, inviteUrl = '' }) {
+export default function TextOroModal({ open, onClose, source }) {
   const titleId = useId()
   const dialogRef = useRef(null)
   const closeRef = useRef(null)
   const [qrCode, setQrCode] = useState('')
-  const smsLink = getOroTextLink(undefined, inviteUrl)
+  const smsLink = getOroTextLink()
 
   useEffect(() => {
     if (!open) return undefined
@@ -85,6 +85,7 @@ export default function TextOroModal({ open, onClose, source, inviteUrl = '' }) 
         </button>
         <div className="text-oro-copy">
           <h2 id={titleId}>get oro's number</h2>
+          <p>text oro to join the waitlist. already subscribed? keep texting as usual.</p>
           <a className="text-oro-number" href={smsLink}
             onClick={() => trackEvent('message_app_open', { location: source, method: 'phone_number' })}>
             <MessagesIcon />

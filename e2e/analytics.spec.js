@@ -3,9 +3,8 @@ import { test, expect } from './fixtures'
 test.use({ seedStorage: false })
 
 for (const [path, routeType] of [
-  ['/beta', 'beta'],
+  ['/', 'home'],
   ['/feedback', 'feedback'],
-  ['/get-started/setup', 'get-started'],
 ]) {
   test(`${path} loads consent-gated analytics with the current route tag`, async ({ page }) => {
     await page.addInitScript(() => {
@@ -30,14 +29,14 @@ for (const [path, routeType] of [
 }
 
 test('accepting on a private route tags the consent page view', async ({ page }) => {
-  await page.goto('/beta')
+  await page.goto('/feedback')
   await page.locator('.cookie-consent-accept').click()
 
   await expect.poll(() => page.evaluate(() => (
     window.dataLayer.some((args) => (
       args[0] === 'event'
       && args[1] === 'page_view'
-      && args[2]?.route_type === 'beta'
+      && args[2]?.route_type === 'feedback'
       && args[2]?.consent_source === 'cookie_banner'
     ))
   ))).toBe(true)

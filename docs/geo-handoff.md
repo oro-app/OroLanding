@@ -19,7 +19,7 @@ modules and a shared article renderer, without a CMS, database or new dependency
 The frozen homepage is controlled by `src/components/home/Home.jsx`, `HomeChrome.jsx`,
 `Home.css`, its demo components, `useHomeMotion.js`, `GoldBackground`, global styles,
 Oro Kit, and existing logo/image assets. `src/App.jsx` mounts that same tree.
-Signup lives in the existing beta and get-started components and API handlers.
+Signup starts through the shared homepage texting handoff. See `text-activation.md`.
 The Style guides footer link was added and then removed at the user's request.
 The homepage has no new visible links; header, hero, copy and signup code remain unchanged.
 
@@ -32,7 +32,7 @@ and text, links, layout and signup-review captures.
 ## What was added
 
 Ten distinct answer-first guides, each with useful context, concrete examples,
-common mistakes where relevant, personalization limits, an Oro beta CTA and
+common mistakes where relevant, personalization limits, an Oro texting CTA and
 two to four relevant guide links. A `/guides` directory groups all ten by topic;
 the directory and individual pages remain available at their URLs, without a footer link.
 The article shell uses existing Oro typography, colors and controls; its new CSS
@@ -242,7 +242,7 @@ events. Conversational wording needs validated coding and appropriate permission
 
 `npm run build` passes: 46 React routes prerendered and six static legal pages
 enriched. No lint or typecheck scripts exist in this plain-JSX repository.
-`npm run test:feedback` passes all 41 tests; `npm run test:beta` passes all 75.
+`npm run test:feedback` passes all 41 tests; The obsolete beta tests have been removed.
 The updated content, publication-gate, emitted-artifact, and browser checks cover
 the Research & Engineering index and all three new notes, in addition to the guides
 and unpublished empirical template. All 22 Node GEO tests and all 35 browser cases
@@ -255,7 +255,7 @@ byte-identical to the saved original baseline. Logs and screenshots are saved as
 The original GEO browser suite passed all 28 tests and checked all thirteen routes on desktop and seven representative
 routes on mobile, raw answer-first HTML, unique metadata and canonicals, related
 links, no-JavaScript reading/styles, console/page errors, assets, overflow and
-beta welcome/phone/back navigation with no submission. The footer follow-up checks
+the shared texting handoff with no submission. The footer follow-up checks
 desktop/mobile footer link absence and direct directory access, confirms no header
 link, and checked both then-unpublished research paths outside public links,
 the sitemap and `llms.txt`. The new engineering notes deliberately publish the

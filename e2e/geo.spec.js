@@ -40,7 +40,6 @@ const REPRESENTATIVE_PATHS = new Set([
 
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.route('**/api/beta-count', (route) => route.fulfill({ json: { count: 0 } }))
   await page.route('**/api/waitlist', (route) => route.fulfill({ status: 405, json: { error: 'No signup submission is part of GEO verification' } }))
 })
 
@@ -79,7 +78,7 @@ async function checkRoute(page, request, route, viewport) {
   expect(layout.width).toBeLessThanOrEqual(721)
   expect(layout.lineHeight).toBeGreaterThan(28)
   const cta = article.getByRole('link', { name: 'Meet Oro', exact: true })
-  await expect(cta).toHaveAttribute('href', '/beta')
+  await expect(cta).toHaveAttribute('href', /^sms:\+18556762419[?&]body=/)
   const related = article.locator('.geo-related a')
   if (route.path === '/guides') {
     const guideLinks = article.locator('nav.geo-guide-group a')
@@ -161,7 +160,7 @@ for (const route of ROUTES) {
   }
 }
 
-test('all GEO responses contain distinct metadata and useful content before the beta CTA without running JavaScript', async ({ request }) => {
+test('all GEO responses contain distinct metadata and useful content before the texting CTA without running JavaScript', async ({ request }) => {
   const titles = []
   const descriptions = []
   for (const route of ROUTES) {
@@ -194,13 +193,13 @@ test.describe('GEO articles with JavaScript disabled', () => {
       await expect(page.locator('article.geo-page')).toContainText(route.answer)
       await expect(page.locator('.geo-body')).toHaveCSS('max-width', '720px')
       await expect(page.locator('.geo-body')).toHaveCSS('line-height', '32.4px')
-      await expect(page.locator('.geo-cta').getByRole('link', { name: 'Meet Oro' })).toHaveAttribute('href', '/beta')
+      await expect(page.locator('.geo-cta').getByRole('link', { name: 'Meet Oro' })).toHaveAttribute('href', /^sms:\+18556762419[?&]body=/)
     })
   }
 })
 
 for (const width of [1440, 390]) {
-  test(`GEO related navigation and beta welcome work at ${width}px without submitting`, async ({ page }) => {
+  test(`GEO related navigation and text handoff work at ${width}px without submitting`, async ({ page }) => {
     await page.setViewportSize({ width, height: width === 1440 ? 1000 : 844 })
     const writes = []
     page.on('request', (request) => {
@@ -211,12 +210,7 @@ for (const width of [1440, 390]) {
     await expect(page).toHaveURL(/\/dress-codes\/business-casual\/?$/)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('What does business casual mean?')
     await page.locator('.geo-cta').getByRole('link', { name: 'Meet Oro', exact: true }).click()
-    await expect(page).toHaveURL(/\/beta\/?$/)
-    await expect(page.getByRole('heading', { name: 'heard you were looking for my number.', exact: true })).toBeVisible()
-    await expect(page.getByRole('form')).toHaveCount(0)
-    await page.waitForLoadState('networkidle')
-    await page.locator('.beta-welcome').getByRole('link', { name: 'find your next outfit', exact: true }).click()
-    await expect(page).toHaveURL(/\/beta\/?$/)
+    await expect(page).toHaveURL(/\/dress-codes\/business-casual\/?$/)
     await expect(page.getByRole('dialog', { name: "get oro's number" })).toBeVisible()
     await expect(page.getByRole('form')).toHaveCount(0)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
@@ -234,7 +228,7 @@ for (const width of [1440, 390]) {
     })
     await page.goto('/')
     await expect(page.locator('header a[href="/guides"]')).toHaveCount(0)
-    await expect(page.locator('header').getByRole('link', { name: 'meet oro', exact: true })).toHaveAttribute('href', /^sms:\+18556762419[?&]body=/)
+    await expect(page.locator('header').getByRole('link', { name: 'join the waitlist', exact: true })).toHaveAttribute('href', /^sms:\+18556762419[?&]body=/)
     await expect(page.locator('a[href="/research"], a[href^="/research/"]')).toHaveCount(0)
     await expect(page.locator('footer a[href="/guides"]')).toHaveCount(0)
     await expect(page.locator('footer').getByRole('link', { name: /^style guides$/i })).toHaveCount(0)

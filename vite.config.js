@@ -14,7 +14,7 @@ const legalPagePlugin = {
   configurePreviewServer(server) {
     server.middlewares.use((req, _res, next) => {
       const pathname = req.url.split('?')[0]
-      if (['/beta', '/feedback', '/checkout'].includes(pathname)) req.url = req.url.replace(pathname, `${pathname}/`)
+      if (['/feedback', '/checkout'].includes(pathname)) req.url = req.url.replace(pathname, `${pathname}/`)
       next()
     })
   },
@@ -67,9 +67,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@newsletter-images': fileURLToPath(new URL('./src/assets/newsletters', import.meta.url)),
-      // @oro/ui (used only on /get-started: Dropdown + BackButton) is React
-      // Native; react-native-web provides the DOM renderer. The route is
-      // code-split, so RNW lands only in that chunk.
       'react-native': 'react-native-web',
     },
     dedupe: ['react', 'react-dom', 'react-native-web'],
@@ -111,9 +108,6 @@ export default defineConfig({
     proxy: {
       '/api': backendUrl,
       '^/static/(?!oro-logo\\.png(?:\\?|$))': backendUrl,
-      // oro-central public onboarding endpoints (BUI-415) — the /get-started
-      // signup form posts here; oro-central has no CORS, so dev goes via proxy.
-      '/onboarding': backendUrl,
     }
   }
 })

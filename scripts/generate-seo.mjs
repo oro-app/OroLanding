@@ -20,7 +20,7 @@ const distDir = path.join(root, 'dist')
 const serverDir = path.join(root, '.seo-server')
 const newsletterDir = path.join(root, 'src', 'content', 'newsletters')
 const STATIC_PAGE_TYPES = ['terms', 'privacy', 'app-terms', 'app-privacy', 'cookies', 'google-play']
-const APP_ROUTE_TYPES = [...PUBLIC_ROUTE_TYPES.filter((type) => !STATIC_PAGE_TYPES.includes(type)), 'beta', 'beta-career', 'beta-dating', 'feedback', 'checkout', 'merch']
+const APP_ROUTE_TYPES = [...PUBLIC_ROUTE_TYPES.filter((type) => !STATIC_PAGE_TYPES.includes(type)), 'feedback', 'checkout', 'merch']
 
 function escapeHtml(value = '') {
   return String(value)
@@ -217,12 +217,12 @@ async function writeLlms(newsletters) {
     '',
     `> ${ORO_DESCRIPTION}`,
     '',
-    'The styling guides below offer general advice. Oro personalizes advice around style and the clothes a person already owns. Access starts through the existing beta signup.',
+    'The styling guides below offer general advice. Oro personalizes advice around style and the clothes a person already owns. Text Oro to join the waitlist. Oro assigns a queue position after collecting your name and email.',
     '',
     '## Official URLs',
     '',
     `- Website: ${SITE_URL}`,
-    `- Meet Oro / beta signup: ${absoluteUrl('/beta')}`,
+    `- Text Oro / join the waitlist: ${absoluteUrl('/')}`,
     `- Try oro: ${absoluteUrl('/try-oro')}`,
     `- How it works: ${absoluteUrl('/how-it-works')}`,
     `- Why oro: ${absoluteUrl('/why-oro')}`,
@@ -259,14 +259,11 @@ async function main() {
     const entry = manifest[key]
     return [...(entry?.css || []), ...(entry?.imports || []).flatMap((dependency) => importedStylesheets(dependency, seen))]
   }
-  const betaStylesheets = [...new Set(importedStylesheets('src/components/beta/Beta.jsx'))]
   const checkoutManifestKey = Object.keys(manifest).find(key => key === 'src/components/checkout/Checkout.jsx' || manifest[key].name === 'Checkout')
   const checkoutStylesheets = [...new Set(importedStylesheets(checkoutManifestKey))]
   const geoStylesheets = [...new Set(importedStylesheets('src/components/geo/GeoPage.jsx'))]
   if (!geoStylesheets.length) throw new Error('Missing GEO stylesheets in the client build manifest')
   const geoTemplate = template.replace('</head>', `${geoStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
-  if (!betaStylesheets?.length) throw new Error('Missing signup stylesheets in the client build manifest')
-  const betaTemplate = template.replace('</head>', `${betaStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!checkoutStylesheets.length) throw new Error('Missing checkout stylesheets in the client build manifest')
   const checkoutTemplate = template.replace('</head>', `${checkoutStylesheets.filter((file) => !template.includes(`href="/${file}"`)).map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!headingsStylesheet) throw new Error('Missing preview heading stylesheet in the client build manifest')
@@ -281,7 +278,7 @@ async function main() {
     const seo = getSeoForRoute({ type })
     const appHtml = await render(seo.path)
     rnwStyleTag = getRnwStyleTag ? getRnwStyleTag() : ''
-    const routeTemplate = type === 'checkout' ? checkoutTemplate : type.startsWith('beta') ? betaTemplate : template
+    const routeTemplate = type === 'checkout' ? checkoutTemplate : template
     await writeRoute(routeTemplate, seo, appHtml)
   }
 

@@ -4,10 +4,8 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import '@oro/web/styles.css'
 import { injectOroFonts } from './lib/oroFonts.js'
-import { browserBetaAttribution } from './lib/betaAttribution.js'
 
 injectOroFonts()
-browserBetaAttribution()
 
 const root = document.getElementById('root')
 const app = (

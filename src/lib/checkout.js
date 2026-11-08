@@ -44,16 +44,6 @@ export function startPublicCheckout() {
   return entryPromise
 }
 
-export function saveCheckoutInvite() {
-  if (typeof window === 'undefined') return
-  const invite = new URLSearchParams(window.location.search).get('invite')
-  if (!invite) return
-  try {
-    const url = new URL(invite)
-    if (url.origin === window.location.origin && url.pathname === '/invite' && /^[0-9a-f]{64}$/.test(url.searchParams.get('ref') || '')) sessionStorage.setItem('oro_checkout_invite', url.href)
-  } catch {}
-}
-
 export function validOffer(offer) {
   return offer?.amount === MONTHLY_AMOUNT && offer.currency === 'usd' && offer.interval === 'month'
     && ((offer.first_month_amount === MONTHLY_AMOUNT / 2 && offer.first_month_discount_percent === 50

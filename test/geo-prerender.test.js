@@ -43,7 +43,7 @@ function structuredData(html) {
   return graph
 }
 
-test('every GEO page includes crawlable headings, direct answers, sections, and beta CTA in its HTML', () => {
+test('every GEO page includes crawlable headings, direct answers, sections, and texting CTA in its HTML', () => {
   for (const { page, html } of pages) {
     const body = html.slice(html.indexOf('<body'))
     const visible = decodeEntities(body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '').replace(/<[^>]+>/g, ''))
@@ -54,7 +54,7 @@ test('every GEO page includes crawlable headings, direct answers, sections, and 
       ? [page.summary, page.methodology, ...page.limitations, ...page.definitions.map(({ term, definition }) => `${term}${definition}`)]
       : [...page.answer, ...page.sections.flatMap(({ heading, paragraphs = [], bullets = [] }) => [heading, ...paragraphs, ...bullets])]
     for (const text of expected) assert.ok(visible.includes(text), `${page.path} must prerender ${text}`)
-    assert.match(body, /href="\/beta"[^>]*>[\s\S]*?Meet Oro/)
+    assert.match(body, /href="sms:\+18556762419[^"]*"[^>]*>[\s\S]*?Meet Oro/)
     for (const related of page.related || []) assert.ok(body.includes(`href="${related}"`), `${page.path} must link ${related}`)
     for (const source of page.sources || []) {
       assert.ok(body.includes(`href="${source.url}"`), `${page.path} must link ${source.url}`)
@@ -168,7 +168,7 @@ test('published notes, research index, guides, and hub are discoverable while th
   for (const { page } of notes) {
     const position = index.indexOf(`href="${page.path}"`)
     assert.ok(position > -1, `${page.path} must be linked from the research index`)
-    assert.ok(position < index.indexOf('class="geo-cta"'), `${page.path} must appear before the beta CTA`)
+    assert.ok(position < index.indexOf('class="geo-cta"'), `${page.path} must appear before the texting CTA`)
   }
   for (const { page } of pages.filter(({ page }) => page.kind === 'research-article')) {
     assert.ok(!index.includes(`href="${page.path}"`), `${page.path} must not be linked from the research index`)

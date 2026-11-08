@@ -1,7 +1,6 @@
 import { test, expect } from './fixtures'
 
 test.beforeEach(async ({ page }) => {
-  await page.route('**/api/beta-count', (route) => route.fulfill({ json: { count: 0 } }))
 })
 
 for (const viewport of [{ width: 1440, height: 900 }, { width: 1440, height: 768 }, { width: 390, height: 844 }]) {

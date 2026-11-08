@@ -29,14 +29,6 @@
       ]
     },
     {
-      "source": "/tester/referrals",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store" },
-        { "key": "Referrer-Policy", "value": "no-referrer" },
-        { "key": "X-Robots-Tag", "value": "noindex" }
-      ]
-    },
-    {
       "source": "/feedback(/.*)?",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" },
@@ -109,11 +101,13 @@
     }
   ],
   "redirects": [
-    { "source": "/meet-oro", "destination": "/checkout", "permanent": false },
+    { "source": "/beta/:path*", "destination": "/", "permanent": true },
+    { "source": "/invite", "destination": "/", "permanent": true },
+    { "source": "/tester/referrals", "destination": "/", "permanent": true },
+    { "source": "/getstarted", "destination": "/", "permanent": true },
+    { "source": "/get-started/:path*", "destination": "/", "permanent": true },
+    { "source": "/meet-oro", "destination": "/", "permanent": true },
     { "source": "/putty", "destination": "/merch", "permanent": true },
-    { "source": "/get-started", "destination": "/getstarted", "permanent": true },
-    { "source": "/:entry(beta|invite)", "has": [{ "type": "query", "key": "src", "value": "^poster-career(?:-[a-z0-9]+)*$" }], "destination": "/beta/career", "permanent": false },
-    { "source": "/:entry(beta|invite)", "has": [{ "type": "query", "key": "src", "value": "^poster-dating(?:-[a-z0-9]+)*$" }], "destination": "/beta/dating", "permanent": false },
     { "source": "/journal",   "destination": "/from-the-closet", "permanent": true },
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
@@ -121,10 +115,6 @@
     { "source": "/checkout", "destination": "/checkout/index.html" },
     { "source": "/closet", "destination": "/closet/index.html" },
     { "source": "/merch", "destination": "/merch/index.html" },
-    { "source": "/beta/career", "destination": "/beta/career/index.html" },
-    { "source": "/beta/dating", "destination": "/beta/dating/index.html" },
-    { "source": "/beta", "destination": "/beta/index.html" },
-    { "source": "/invite", "destination": "/beta/index.html" },
     { "source": "/feedback", "destination": "/feedback/index.html" },
     { "source": "/app/terms", "destination": "/app/terms.html" },
     { "source": "/app/privacy", "destination": "/app/privacy.html" },

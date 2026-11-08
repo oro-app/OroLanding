@@ -1,7 +1,6 @@
 import { test, expect } from './fixtures'
 
 test.beforeEach(async ({ page }) => {
-  await page.route('**/api/beta-count', (route) => route.fulfill({ json: { count: 0 } }))
 })
 
 test('scrolling sends and reverses the demo conversation in both channels', async ({ page }) => {

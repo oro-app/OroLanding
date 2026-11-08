@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { CheckoutElementsProvider } from '@stripe/react-stripe-js/checkout'
-import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance, startPublicCheckout, isPublicCheckoutToken, saveCheckoutInvite, clearCheckoutToken } from '../../lib/checkout'
+import { checkoutRequest, countdown, formatPrice, readCheckoutToken, stripeAppearance, startPublicCheckout, isPublicCheckoutToken, clearCheckoutToken } from '../../lib/checkout'
 import { getOroTextLink } from '../../lib/textOro'
 import CheckoutForm, { CheckoutFormSkeleton } from './CheckoutForm'
 import './Checkout.css'
@@ -11,7 +11,6 @@ const PAID_STATES = ['ready', 'already_subscribed', 'already_has_access']
 
 export default function Checkout() {
   const [entry] = useState(() => {
-    saveCheckoutInvite()
     const personalLink = typeof window !== 'undefined' && new URLSearchParams(window.location.hash.slice(1)).has('token')
     return { personalLink, token: readCheckoutToken() }
   })
@@ -102,12 +101,7 @@ export default function Checkout() {
   const paid = data && PAID_STATES.includes(data.status)
   const discounted = offer?.first_month_discount_percent === 50 && !expired
   const remaining = discounted ? countdown(offer.launch_offer_ends_at, now) : null
-  let inviteUrl = ''
-  try {
-    const url = new URL(sessionStorage.getItem('oro_checkout_invite') || '')
-    if (url.origin === window.location.origin && url.pathname === '/invite' && /^[0-9a-f]{64}$/.test(url.searchParams.get('ref') || '')) inviteUrl = url.href
-  } catch {}
-  const textLink = getOroTextLink(undefined, inviteUrl)
+  const textLink = getOroTextLink()
 
   return <div className="checkout-page halo-container">
     <div className="checkout-layout">

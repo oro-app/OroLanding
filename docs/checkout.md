@@ -14,12 +14,12 @@ and a zero renewal price; a one-time free invoice still shows the next renewal
 amount returned by Stripe. The backend offer is only used for the hosted-checkout
 handoff, before the customer reaches Stripe.
 
-All signup CTAs now open `/checkout` directly, without a prior phone form.
-`/get-started` and `/getstarted` also render checkout for older links. Without a
+All public signup CTAs now use the homepage texting handoff. Old get-started
+links redirect to `/`. `/checkout` remains the payment page. Without a
 personal link, the page calls `/api/checkout?operation=entry` to start an anonymous
 native Stripe Session. It stores the scoped token in the browser tab and uses
 `entry-status`/`entry-checkout` to resume the same attempt, including after a
-Stripe redirect. Invitation links are retained in the post-payment text handoff.
+Stripe redirect. The post-payment handoff opens the same conversation without referral metadata.
 
 If the server rejects a saved browser checkout credential, a normal website entry
 clears it and starts a fresh anonymous session. Temporary backend failures retain
@@ -38,26 +38,6 @@ invoice/subscription webhook configuration is sufficient: initial paid invoices
 retry while Checkout completion is pending, so account linking and welcome do
 not rely on the browser staying open. Legacy personal text checkout
 links keep their existing token, payment and onboarding behavior.
-
-## Legacy website phone entry
-
-Older website builds use `/get-started` (also available at `/getstarted`). The page
-collects only a phone number and displays the combined terms/privacy, eligibility
-and texting notice beside Continue to payment. It calls
-`/api/checkout?operation=phone`, which forwards only the number and acceptance
-flags to `/public-onboarding/phone`. Deploy backend migration `n1013public006`
-and that endpoint before deploying the website.
-
-New enrollment returns a checkout-only token; the page saves it for this browser
-tab and opens the existing `/checkout` with the token in the URL fragment. The
-checkout removes it from the visible URL and uses the existing payment UI,
-pricing, payment verification and paid activation. Returning to the entry in the
-same tab reuses the saved checkout for the same number. No OTP is requested.
-Existing billing/checkouts return a generic text handoff rather than disclosing
-another customer's payment session. Invitation links survive the website entry
-and are included in the existing text handoff after checkout or on recovery.
-Direct texters retain their current pre-payment onboarding. Billing starts at
-payment, even if the customer has not texted yet.
 
 # Native checkout
 

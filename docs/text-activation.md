@@ -1,17 +1,9 @@
-# Text Oro handoff
+# Text Oro entry
 
-`/getstarted` opens a conversation instead of repeating the signup questionnaire. There is no form, OTP request, or account write on this page. The phone button opens Messages with a greeting; the person still taps Send. Oro confirms missing eligibility and service-texting consent in the conversation before creating their account.
+The homepage is the public entry point. All signup buttons use the same phone link on mobile and QR dialog on desktop. The QR and phone link contain only `hey oro, let's get started!`; visitors send the draft themselves.
 
-On desktop, the QR contains a direct SMS draft to Oro with the greeting `hey oro, your newest oronaut just landed 🚀`. The phone button chooses the SMS draft format for the visitor's device. The visible phone number also works as a fallback. When a visitor arrives through `/invite?ref=…`, the same draft appends that exact invite URL on its own line. The text intake must retain that URL when it creates the conversation so the existing referral code can be credited; it must not be discarded as an untrusted display value.
+Old `/beta`, `/beta/career`, `/beta/dating`, `/invite`, `/tester/referrals`, `/getstarted`, `/get-started`, `/get-started/setup`, and `/meet-oro` links redirect to `/`. The website no longer contains a beta application, phone verification, invitation lookup, referral tracking, rewards page, or Google Sheets signup writer.
 
-The screenshots below are real local Chromium renders of the production build, with the bundled fonts loaded, with the cookie banner declined and focus moved off the heading. The phone screenshot is a responsive web viewport, not a native Messages screenshot. Browser tests check iPhone/Android user agents, draft links, CTA visibility, and horizontal overflow.
+With backend `ONBOARDING_MODE=open` and `PUBLIC_ONBOARDING_ENABLED=0`, ordinary new texters give their name and email and receive a queue number and graphic, then wait for the team to arrange a sales call. There is no referral link or referral reward. Existing subscribers keep using their conversation. Internal tester exceptions remain controlled by the backend.
 
-## Desktop · 1440 × 1000
-
-![Desktop texting handoff](screenshots/text-activation-desktop.png)
-
-## Phone · 390 × 844
-
-![Phone texting handoff](screenshots/text-activation-mobile.png)
-
-Deploy alongside the backend text-activation change after the open-access PR. Share `https://askoro.now/getstarted`. Existing `/get-started` email links permanently redirect to `/getstarted`. The previous verified questionnaire remains at `/get-started/setup` for explicitly configured beta/legacy modes; it is no longer the public activation flow. Waitlist contact details must be imported on the backend before launch emails to avoid asking those people for their names again.
+`/checkout` remains the subscription payment page. Public checkout availability is enforced by the backend. Newsletter subscriptions remain separate from the texting waitlist.

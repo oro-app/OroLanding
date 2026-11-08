@@ -39,23 +39,6 @@ export const ROUTE_SEO = {
     h1: 'beta feedback',
     noindex: true,
   },
-  beta: {
-    path: '/beta',
-    title: 'help us make oro yours. - oro beta',
-    description: 'help shape the earliest oro experience. meet the beta and our first oronauts.',
-    h1: 'help us make oro yours.',
-    noindex: true,
-  },
-  'beta-career': {
-    path: '/beta/career', title: 'meet oro - your personal ai stylist',
-    description: 'get dressed for your next opportunity with oro, right in your texts.',
-    h1: 'meet oro.', noindex: true,
-  },
-  'beta-dating': {
-    path: '/beta/dating', title: 'meet oro - your personal ai stylist',
-    description: 'find a date-night outfit that feels like you with oro, right in your texts.',
-    h1: 'meet oro.', noindex: true,
-  },
   home: {
     path: '/',
     title: SITE_TITLE,
@@ -136,16 +119,6 @@ export const ROUTE_SEO = {
     summary: 'Meet the small team building oro to help more people feel confident in what they wear.',
     priority: '0.5',
   },
-  'get-started': {
-    path: '/getstarted',
-    title: 'text your personal stylist - oro',
-    description:
-      'start a conversation with oro, your personal stylist in your texts. open Messages or scan the QR code from your computer.',
-    h1: 'one text away from your next fit.',
-    summary:
-      'send oro your first text and complete any missing setup in the conversation. no repeat signup form.',
-    priority: '0.8',
-  },
   'app-terms': {
     path: '/app/terms',
     title: 'oro - Mobile App Terms of Service',
@@ -206,7 +179,6 @@ export const PUBLIC_ROUTE_TYPES = [
   'manifesto',
   'contact',
   'about',
-  'get-started',
   'app-terms',
   'app-privacy',
   'terms',

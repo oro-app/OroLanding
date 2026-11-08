@@ -11,13 +11,13 @@ function HomeLogo() {
   return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
 }
 
-export function HomeCta({ place, children, className = '', inviteUrl = '', href: customHref, showIcon = true, onClick }) {
+export function HomeCta({ place, children, className = '', href: customHref, showIcon = true, onClick }) {
   const [modalOpen, setModalOpen] = useState(false)
-  const [smsLink, setSmsLink] = useState(() => getOroTextLink('', inviteUrl))
+  const [smsLink, setSmsLink] = useState(() => getOroTextLink(''))
   const closeModal = useCallback(() => setModalOpen(false), [])
 
   // The prerendered HTML has no user agent, so the Apple/Android body separator is fixed after hydration.
-  useEffect(() => setSmsLink(getOroTextLink(undefined, inviteUrl)), [inviteUrl])
+  useEffect(() => setSmsLink(getOroTextLink()), [])
 
   const handleClick = (event) => {
     const mobile = isMobileMessagingDevice()
@@ -51,7 +51,7 @@ export function HomeCta({ place, children, className = '', inviteUrl = '', href:
   return (
     <>
       <a href={smsLink} className={classes} onClick={onClick || handleClick}>{content}</a>
-      <TextOroModal open={modalOpen} onClose={closeModal} source={place} inviteUrl={inviteUrl} />
+      <TextOroModal open={modalOpen} onClose={closeModal} source={place} />
     </>
   )
 }
@@ -62,14 +62,14 @@ export function HomeHeader({ showCta = true, sticky = true }) {
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
         <nav className="halo-nav" aria-label="oro">
-          {showCta && <HomeCta place="header">meet oro</HomeCta>}
+          {showCta && <HomeCta place="header">join the waitlist</HomeCta>}
         </nav>
       </div>
     </header>
   )
 }
 
-export function HomeFooter({ landing = false, closerTitle = 'want her number?', closerText = "one text. no download. she's all yours.", closerAction }) {
+export function HomeFooter({ landing = false, closerTitle = 'save your spot.', closerText = "text oro to join the waitlist. we'll let you know when access opens.", closerAction }) {
   if (!landing) {
     return (
       <footer className="halo-footer halo-container">
@@ -88,7 +88,7 @@ export function HomeFooter({ landing = false, closerTitle = 'want her number?', 
         <section className="halo-footer-closer" aria-labelledby="closer-title" data-analytics-section="final_cta">
           <Heading as="h2" variant="title" id="closer-title">{closerTitle}</Heading>
           {closerText && <Text muted>{closerText}</Text>}
-          {closerAction || <HomeCta place="closer">find your next outfit</HomeCta>}
+          {closerAction || <HomeCta place="closer">join the waitlist</HomeCta>}
         </section>
         <div className="halo-footer-main">
           <div className="halo-footer-brand">

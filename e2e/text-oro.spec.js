@@ -3,7 +3,7 @@ import { test, expect } from './fixtures.js'
 const offer = { amount: 2000, currency: 'usd', interval: 'month', first_month_amount: 2000, first_month_discount_percent: 0 }
 const token = `header.${Buffer.from(JSON.stringify({ aud: 'public-checkout' })).toString('base64url')}.signature`
 
-for (const path of ['/getstarted', '/get-started', '/checkout']) {
+for (const path of ['/checkout']) {
   test(`${path} opens checkout without a number step`, async ({ page }) => {
     await page.route('**/api/checkout?operation=entry', route => {
       expect(route.request().postData()).toBeNull()

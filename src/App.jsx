@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { isFeedbackPath } from './lib/feedbackSession.js'
-import { getBetaCampaign } from './lib/betaCampaign.js'
 import { GEO_PATHS } from './lib/geoRoutes.js'
 import Home from './components/home/Home'
 import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
@@ -19,18 +18,14 @@ const WhyOroPage = lazy(() => import('./components/why-oro/WhyOro'))
 const ManifestoPage = lazy(() => import('./components/manifesto/Manifesto'))
 const ContactPage = lazy(() => import('./components/contact/Contact'))
 const AboutPage = lazy(() => import('./components/about/AboutPage'))
-const GetStartedPage = lazy(() => import('./components/get-started/TextOro'))
-const LegacySetupPage = lazy(() => import('./components/get-started/GetStarted'))
-const TesterReferrals = lazy(() => import('./components/beta/TesterReferrals'))
-const BetaPage = lazy(() => import('./components/beta/Beta'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
 const GeoPage = lazy(() => import('./components/geo/GeoPage'))
 const CheckoutPage = lazy(() => import('./components/checkout/Checkout'))
 const PuttyPage = lazy(() => import('./components/putty/Putty'))
 
-export function getRouteFromPath(pathname = '/', search = '') {
+export function getRouteFromPath(pathname = '/') {
   const path = pathname.replace(/\/+$/, '') || '/'
-  if (path === '/checkout' || path === '/meet-oro') return { type: 'checkout' }
+  if (path === '/checkout') return { type: 'checkout' }
   if (path === '/merch' || path === '/putty') return { type: 'merch' }
   if (GEO_PATHS.includes(path)) return { type: 'geo', path }
   if (isFeedbackPath(path)) return { type: 'feedback' }
@@ -51,28 +46,23 @@ export function getRouteFromPath(pathname = '/', search = '') {
   if (path === '/honestly')        return { type: 'manifesto' }
   if (path === '/contact')         return { type: 'contact' }
   if (path === '/about')           return { type: 'about' }
-  if (path === '/getstarted' || path === '/get-started') return { type: 'checkout' }
-  if (path === '/get-started/setup') return { type: 'get-started', legacy: true }
-  if (path === '/tester/referrals') return { type: 'beta', tester: true }
-  if (['/beta', '/invite', '/beta/career', '/beta/dating'].includes(path)) return { type: 'beta', campaign: getBetaCampaign(path, search) }
 
   return { type: 'home' }
 }
 
 function getBrowserRoute() {
   if (typeof window === 'undefined') return { type: 'home' }
-  return getRouteFromPath(window.location.pathname, window.location.search)
+  return getRouteFromPath(window.location.pathname)
 }
 
 function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
   const isHome = route.type === 'home'
-  const isBeta = route.type === 'beta'
   const isFeedback = route.type === 'feedback'
   const isCheckout = route.type === 'checkout' || route.type === 'merch'
   const isGeo = route.type === 'geo'
   const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
-  const isPrivateForm = isBeta || isFeedback || isCheckout || route.type === 'get-started'
+  const isPrivateForm = isFeedback || isCheckout
   const isHalo = isHome || isPrivateForm || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
   const pageViewParams = {
     route_type: route.type,
@@ -155,7 +145,7 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isBeta && !isFeedback && (isHalo ? <HomeHeader showCta={!['checkout', 'get-started'].includes(route.type)} /> : <SiteHeader />)}
+        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {route.type === 'merch' ? (
             <Suspense fallback={<p role="status">Loading merch…</p>}><PuttyPage /></Suspense>
@@ -165,10 +155,6 @@ function App({ initialRoute }) {
             <Suspense fallback={null}><GeoPage path={route.path} /></Suspense>
           ) : isFeedback ? (
             <Suspense fallback={null}><FeedbackPage /></Suspense>
-          ) : isBeta ? (
-            <Suspense fallback={null}>
-              {route.tester ? <TesterReferrals /> : <BetaPage campaign={route.campaign || 'general'} />}
-            </Suspense>
           ) : route.type === 'newsletter' ? (
             <Suspense fallback={<BlogSkeleton variant="article" />}>
               <NewsletterPage slug={route.slug} />
@@ -201,15 +187,11 @@ function App({ initialRoute }) {
             <Suspense fallback={<BlogSkeleton variant="article" />}>
               <AboutPage />
             </Suspense>
-          ) : route.type === 'get-started' ? (
-            <Suspense fallback={null}>
-              {route.legacy ? <LegacySetupPage /> : <GetStartedPage />}
-            </Suspense>
           ) : (
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && !isBeta && !isCheckout && <HomeFooter landing={isHome} />}
+        {isHalo && !isFeedback && !isCheckout && <HomeFooter landing={isHome} />}
         {!isCheckout && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>

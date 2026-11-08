@@ -1,7 +1,7 @@
 import { Heading, Text } from 'oro-kit'
 import { GEO_PAGES, getGeoPage, isPublishedResearch, isIndexableGeoPage } from '../../lib/geoContent.js'
 import { ORO_DESCRIPTION } from '../../lib/geoRoutes.js'
-import { trackCtaClick } from '../../lib/analytics.js'
+import { HomeCta } from '../home/HomeChrome'
 import './GeoPage.css'
 
 function ContentSection({ heading, paragraphs = [], bullets = [] }) {
@@ -33,11 +33,8 @@ function OroCta() {
     <aside className="geo-cta" aria-labelledby="geo-cta-title">
       <Heading as="h2" variant="section" id="geo-cta-title">Make it work for your closet.</Heading>
       <p>{ORO_DESCRIPTION}</p>
-      <p>Want advice based on what you actually own? Join the Oro beta to start the conversation.</p>
-      <a href="/beta" className="oro-button oro-button--primary"
-        onClick={() => trackCtaClick('get_started_click', { location: 'geo-article', destination: 'beta' })}>
-        Meet Oro
-      </a>
+      <p>Text Oro to join the waitlist for advice based on the clothes you actually own.</p>
+      <HomeCta place="geo-article">Meet Oro</HomeCta>
     </aside>
   )
 }

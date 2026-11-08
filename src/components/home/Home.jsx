@@ -106,7 +106,7 @@ export default function Home() {
                 personalized outfit advice for your closet, your style, and your plans.
               </Text>
               <div className="home-action">
-                <HomeCta place="hero" className="home-enter">find your next outfit</HomeCta>
+                <HomeCta place="hero" className="home-enter">join the waitlist</HomeCta>
               </div>
             </div>
           </section>
@@ -117,7 +117,7 @@ export default function Home() {
         <OutfitGallery />
       </div>
       <div className={`home-floating-cta${showFloatingCta ? ' home-floating-cta--visible' : ''}`} inert={showFloatingCta ? undefined : ''}>
-        <HomeCta place="floating">find your next outfit</HomeCta>
+        <HomeCta place="floating">join the waitlist</HomeCta>
       </div>
     </div>
   )
