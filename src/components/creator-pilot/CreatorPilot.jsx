@@ -62,7 +62,9 @@ function ApplicationCountdown() {
     return () => window.clearInterval(interval)
   }, [])
 
-  if (secondsLeft === null) return null
+  if (secondsLeft === null) {
+    return <Text className="pilot-countdown" aria-hidden="true">{'\u00a0'}</Text>
+  }
   if (secondsLeft === 0) return <Text className="pilot-countdown">The application deadline has passed.</Text>
 
   const days = Math.floor(secondsLeft / 86400)

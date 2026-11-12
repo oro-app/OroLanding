@@ -266,6 +266,14 @@ async function main() {
   const geoTemplate = template.replace('</head>', `${geoStylesheets.map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
   if (!checkoutStylesheets.length) throw new Error('Missing checkout stylesheets in the client build manifest')
   const checkoutTemplate = template.replace('</head>', `${checkoutStylesheets.filter((file) => !template.includes(`href="/${file}"`)).map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`).join('\n')}\n</head>`)
+  const creatorsStylesheets = [...new Set(importedStylesheets('src/components/creator-pilot/CreatorPilot.jsx'))]
+  if (!creatorsStylesheets.length) throw new Error('Missing creators stylesheets in the client build manifest')
+  const creatorsStyleLinks = creatorsStylesheets
+    .filter((file) => !template.includes(`href="/${file}"`))
+    .map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`)
+    .join('\n')
+  const creatorsTemplate = template.replace('</head>', `${creatorsStyleLinks}\n</head>`)
+  const appTemplates = { checkout: checkoutTemplate, creators: creatorsTemplate }
   if (!headingsStylesheet) throw new Error('Missing preview heading stylesheet in the client build manifest')
   if (!legalStylesheet) throw new Error('Missing legal page stylesheet in the client build manifest')
   const newsletterEntries = await getNewsletterEntries()
@@ -278,7 +286,7 @@ async function main() {
     const seo = getSeoForRoute({ type })
     const appHtml = await render(seo.path)
     rnwStyleTag = getRnwStyleTag ? getRnwStyleTag() : ''
-    const routeTemplate = type === 'checkout' ? checkoutTemplate : template
+    const routeTemplate = appTemplates[type] ?? template
     await writeRoute(routeTemplate, seo, appHtml)
   }
 

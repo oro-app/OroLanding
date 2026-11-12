@@ -241,8 +241,6 @@
 .pilot-apply .pilot-form-status { color: var(--oro-color-accent); }
 
 @media (prefers-reduced-motion: no-preference) {
-  .pilot-hero { animation: pilot-enter 780ms var(--pilot-ease) both; }
-
   .creator-pilot [data-pilot-reveal] {
     transition: opacity 620ms var(--pilot-ease), transform 720ms var(--pilot-ease);
   }
@@ -255,11 +253,6 @@
   .pilot-arrow { transition: transform 240ms var(--pilot-ease); }
   .creator-pilot a:is(:hover, :focus-visible) .pilot-arrow { transform: translate(2px, -2px); }
   .creator-pilot .pilot-about-link:is(:hover, :focus-visible) .pilot-arrow { transform: translateX(2px); }
-}
-
-@keyframes pilot-enter {
-  from { opacity: 0; transform: translateY(0.75rem); }
-  to { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
