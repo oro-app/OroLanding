@@ -4,6 +4,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import mdx from '@mdx-js/rollup'
 import checkoutDev from './scripts/checkout-dev.js'
+import { ROUTE_SEO } from './src/lib/seo.js'
+
+const creatorsSeo = ROUTE_SEO.creators
 
 // Backend URL
 const backendUrl = process.env.VITE_BACKEND_URL || 'https://oro-kmuj.onrender.com';
@@ -14,7 +17,7 @@ const legalPagePlugin = {
   configurePreviewServer(server) {
     server.middlewares.use((req, _res, next) => {
       const pathname = req.url.split('?')[0]
-      if (['/feedback', '/checkout'].includes(pathname)) req.url = req.url.replace(pathname, `${pathname}/`)
+      if (['/feedback', '/checkout', creatorsSeo.path].includes(pathname)) req.url = req.url.replace(pathname, `${pathname}/`)
       next()
     })
   },
@@ -56,6 +59,21 @@ const newsletterMetaPlugin = {
   },
 }
 
+const creatorsMetadata = {
+  name: 'creators-metadata',
+  apply: 'serve',
+  transformIndexHtml(html, { originalUrl }) {
+    const pathname = originalUrl?.split('?')[0].replace(/\/+$/, '')
+    const { path, title } = creatorsSeo
+    if (pathname !== path && pathname !== `${path}/index.html`) return
+
+    return {
+      html: html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`),
+      tags: [{ tag: 'meta', attrs: { name: 'robots', content: 'noindex' }, injectTo: 'head' }],
+    }
+  },
+}
+
 export default defineConfig({
   plugins: [
     checkoutDev(),
@@ -63,6 +81,7 @@ export default defineConfig({
     mdx(),
     react(),
     legalPagePlugin,
+    creatorsMetadata,
   ],
   resolve: {
     alias: {

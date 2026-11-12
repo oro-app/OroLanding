@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "headers": [
     {
+      "source": "/creators(/.*)?",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    },
+    {
       "source": "/design-system(/.*)?",
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
     },
@@ -116,6 +120,8 @@
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
   "rewrites": [
+    { "source": "/creators", "destination": "/creators/index.html" },
+    { "source": "/creators/", "destination": "/creators/index.html" },
     { "source": "/design-system", "destination": "/design-system/index.html" },
     { "source": "/design-system/", "destination": "/design-system/index.html" },
     { "source": "/checkout", "destination": "/checkout/index.html" },
