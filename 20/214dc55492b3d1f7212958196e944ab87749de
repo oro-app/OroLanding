@@ -1,0 +1,33 @@
+vercel.json
+  s_8252b58d803c95::t_ba4e434754d2bb 112
+vite.config.js
+  s_8252b58d803c95::t_ba4e434754d2bb 16
+e2e/beta-signup-routing.spec.js
+  s_8252b58d803c95::t_b3d6a9b17122b6 3-7,12,14-15,23,26
+e2e/home.spec.js
+  s_8252b58d803c95::t_b3d6a9b17122b6 3-6,21,24,26-28,86,98
+src/App.jsx
+  s_8252b58d803c95::t_ba4e434754d2bb 33,76,156,158,212-213
+e2e/newsletter.spec.js
+  s_8252b58d803c95::t_b3d6a9b17122b6 3-6,40
+src/components/home/HomeChrome.jsx
+  s_8252b58d803c95::t_ba4e434754d2bb 12,15
+scripts/generate-seo.mjs
+  s_8252b58d803c95::t_ba4e434754d2bb 284
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "20214dc55492b3d1f7212958196e944ab87749de",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

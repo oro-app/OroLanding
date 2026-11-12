@@ -1,0 +1,28 @@
+docs/text-activation.md
+  h_92d6f6e2d85b09 3,5,17
+e2e/analytics.spec.js
+  h_92d6f6e2d85b09 8
+e2e/gold-background.spec.js
+  h_92d6f6e2d85b09 8
+e2e/routing.spec.js
+  h_92d6f6e2d85b09 10
+e2e/text-oro.spec.js
+  h_92d6f6e2d85b09 7,24,38
+src/App.jsx
+  h_92d6f6e2d85b09 50
+src/lib/seo.js
+  h_92d6f6e2d85b09 135
+vercel.json
+  h_92d6f6e2d85b09 86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "662ef7b1befc7e78c6a2b7afc49f26ace9ee711e",
+  "prompts": {},
+  "humans": {
+    "h_92d6f6e2d85b09": {
+      "author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

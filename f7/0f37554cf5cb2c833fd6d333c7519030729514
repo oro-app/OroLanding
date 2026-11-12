@@ -1,0 +1,18 @@
+e2e/analytics.spec.js
+  h_92d6f6e2d85b09 8
+e2e/newsletter.spec.js
+  h_92d6f6e2d85b09 36
+e2e/routing.spec.js
+  h_92d6f6e2d85b09 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f70f37554cf5cb2c833fd6d333c7519030729514",
+  "prompts": {},
+  "humans": {
+    "h_92d6f6e2d85b09": {
+      "author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

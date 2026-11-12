@@ -1,0 +1,36 @@
+vercel.json
+  s_8252b58d803c95::t_01d941d17129b4 6-14,122
+  s_8252b58d803c95::t_396cfcaa78439c 5
+api/closet.js
+  s_8252b58d803c95::t_eb176e28b1ac0b 1-25
+public/closet/closet.css
+  s_8252b58d803c95::t_06b6dc3a121e60 1
+public/closet/closet.js
+  s_8252b58d803c95::t_c99fe852c3e5fd 1-107
+public/closet/index.html
+  s_8252b58d803c95::t_8dd7d853e266d5 1-29
+src/components/putty/HoodieViewer.jsx
+  s_8252b58d803c95::t_49ea4e77bad5cf 69,102-108
+src/components/putty/Putty.css
+  s_8252b58d803c95::t_0001b69c68d0c0 85-89,141
+src/components/putty/Putty.jsx
+  s_8252b58d803c95::t_5d58f1a746b311 11,43-46,52-53,56-65,84,88-89
+test/closet.test.js
+  s_8252b58d803c95::t_a35e1756eeb93e 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "54512a2dfe9f6b3f1f13535708149aa4429243d6",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

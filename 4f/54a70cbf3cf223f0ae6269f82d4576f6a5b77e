@@ -1,0 +1,53 @@
+docs/checkout.md
+  s_61719c0abe2d5f::t_9f25a5242be246 1-37
+e2e/checkout.spec.js
+  s_61719c0abe2d5f::t_f574f465ea382f 1-122
+src/lib/seo.js
+  s_61719c0abe2d5f::t_6a2807db6c80c8 23-29
+scripts/generate-seo.mjs
+  s_61719c0abe2d5f::t_6a2807db6c80c8 23
+src/components/checkout/Checkout.css
+  s_61719c0abe2d5f::t_6a2807db6c80c8 1-37
+vercel.json
+  s_61719c0abe2d5f::t_6a2807db6c80c8 6-12
+  s_61719c0abe2d5f::t_5486b5b31cc9ae 5
+src/components/checkout/Checkout.jsx
+  s_61719c0abe2d5f::t_eeff6f90e6f064 4,67
+  s_61719c0abe2d5f::t_f5295e9d67afa3 48-51
+  s_61719c0abe2d5f::t_17611e8b6a1ceb 1-3,5-47,52-66,68-105
+public/terms.html
+  s_61719c0abe2d5f::t_9f25a5242be246 23
+  s_61719c0abe2d5f::t_6a2807db6c80c8 118-120,123,215
+.env.example
+  s_61719c0abe2d5f::t_9f25a5242be246 26-27
+src/components/checkout/CheckoutForm.jsx
+  s_61719c0abe2d5f::t_17611e8b6a1ceb 1-47
+src/App.jsx
+  s_61719c0abe2d5f::t_6a2807db6c80c8 28,32,70,73,81,89,156,158-160,208-209
+test/checkout.test.js
+  s_61719c0abe2d5f::t_9f25a5242be246 1-65
+src/lib/checkout.js
+  s_61719c0abe2d5f::t_eeff6f90e6f064 52-74
+  s_61719c0abe2d5f::t_17611e8b6a1ceb 1-2,4-7,9-14,16-51
+  s_61719c0abe2d5f::t_8a6ab2b7ec3750 3,8,15
+api/checkout.js
+  s_61719c0abe2d5f::t_17611e8b6a1ceb 1-28
+package-lock.json
+  s_61719c0abe2d5f::t_b9770ea8565154 11-12,2046-2068
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4f54a70cbf3cf223f0ae6269f82d4576f6a5b77e",
+  "prompts": {},
+  "sessions": {
+    "s_61719c0abe2d5f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1356a-b002-7652-9189-c85b94969ca3",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

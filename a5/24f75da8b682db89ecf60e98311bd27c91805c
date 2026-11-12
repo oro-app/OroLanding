@@ -1,0 +1,46 @@
+src/components/home/DesignerHome.css
+  s_8252b58d803c95::t_84ce46d4999f46 1-871
+  s_8252b58d803c95::t_5078b710477d73 872-874
+src/components/home/Home.jsx
+  s_8252b58d803c95::t_50b197265c5d88 1,6-9,87,90,92-93,96,99,103-105
+src/components/GoldBackground.css
+  s_8252b58d803c95::t_ce5ee62273c86f 2-5
+src/components/GoldBackground.jsx
+  s_8252b58d803c95::t_aca12553415382 1-105
+src/components/goldEffect.js
+  s_8252b58d803c95::t_5bae421957141b 1-60
+src/components/home/CtaSparkles.jsx
+  s_8252b58d803c95::t_10b638610fb2ab 1-114
+src/components/home/DesignerChat.jsx
+  s_8252b58d803c95::t_e323657bb675a6 1-80
+src/components/home/DesignerFeatures.jsx
+  s_8252b58d803c95::t_2f5ce781bcccc3 1-45
+src/components/home/DesignerHeadline.jsx
+  s_8252b58d803c95::t_a45aa0479657ff 1-87
+src/components/home/HomeChrome.jsx
+  s_8252b58d803c95::t_8412b08090ba66 5,18
+src/components/home/WhatsAppIcons.jsx
+  s_8252b58d803c95::t_e08923b47dfc81 1-12
+src/components/home/useDesignerChat.js
+  s_8252b58d803c95::t_dda24a9bb4c85a 1-134
+src/designer-theme.css
+  s_8252b58d803c95::t_fd03e7625b8eaf 1-189
+src/site.css
+  s_8252b58d803c95::t_bc998550108aca 24-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a524f75da8b682db89ecf60e98311bd27c91805c",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

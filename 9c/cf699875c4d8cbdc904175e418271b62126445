@@ -1,0 +1,56 @@
+src/content/geo/guideIndex.js
+  s_6ea11abadaf19c::t_45b1a072fc1298 1-29
+src/content/geo/research.js
+  s_6ea11abadaf19c::t_45b1a072fc1298 3
+scripts/generate-seo.mjs
+  s_6ea11abadaf19c::t_45b1a072fc1298 235,238
+src/components/home/HomeChrome.jsx
+  s_6ea11abadaf19c::t_45b1a072fc1298 74
+src/components/geo/GeoPage.jsx
+  s_6ea11abadaf19c::t_45b1a072fc1298 17,21,23-26,92
+e2e/geo.spec.js
+  s_6ea11abadaf19c::t_352dd521aa5d1f 18,27,76-87,106,197-200,206-222,227-229,233-242
+  s_6ea11abadaf19c::t_a7981f0721312c 88,94,100-105
+  s_6ea11abadaf19c::t_c81d89c00b890e 180,183,187,190,201-205,223-226,230
+  s_6ea11abadaf19c::t_7369e0ae5e4c0c 231-232
+src/components/home/Home.css
+  s_6ea11abadaf19c::t_45b1a072fc1298 62-63
+src/components/geo/GeoPage.css
+  s_6ea11abadaf19c::t_45b1a072fc1298 24-26
+docs/geo-handoff.md
+  s_6ea11abadaf19c::t_ee6dd5c128fd70 246-251,267-271
+  s_6ea11abadaf19c::t_664626615f32bb 273-274
+  s_6ea11abadaf19c::t_0790d9e77d74d8 229
+  s_6ea11abadaf19c::t_dacdd757f929de 23-24,36-37,41-44,46-48,54,65,68-69,78-80,82-85,88,119-123,162,223,237,242-244
+  s_6ea11abadaf19c::t_80cc7746cda948 226,232-235
+  s_6ea11abadaf19c::t_35a3184f5d258e 245
+test/geo-content.test.js
+  s_6ea11abadaf19c::t_158e6a651c7137 103,105-106,123-125,141-161
+  s_6ea11abadaf19c::t_e852114f76da78 162
+src/lib/geoContent.js
+  s_6ea11abadaf19c::t_45b1a072fc1298 2,28,39
+src/lib/siteLinks.js
+  s_6ea11abadaf19c::t_45b1a072fc1298 43
+test/geo-prerender.test.js
+  s_6ea11abadaf19c::t_158e6a651c7137 126,143-145,150-174
+src/lib/geoRoutes.js
+  s_6ea11abadaf19c::t_45b1a072fc1298 15
+src/content/geo/README.md
+  s_6ea11abadaf19c::t_dacdd757f929de 8-12,24,98-99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9ccf699875c4d8cbdc904175e418271b62126445",
+  "prompts": {},
+  "sessions": {
+    "s_6ea11abadaf19c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a10426-7bac-7653-a78b-35f0e104f7ae",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

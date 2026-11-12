@@ -1,0 +1,18 @@
+e2e/text-oro.spec.js
+  h_92d6f6e2d85b09 3-38,42-44,48-55,58-64
+src/components/get-started/TextOro.css
+  h_92d6f6e2d85b09 49-55
+src/components/get-started/TextOro.jsx
+  h_92d6f6e2d85b09 1,3-5,10-19,21-45,47-61,63-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "577b7957aace689943cd6524c8f8e1df6f82a2bc",
+  "prompts": {},
+  "humans": {
+    "h_92d6f6e2d85b09": {
+      "author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

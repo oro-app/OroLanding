@@ -1,0 +1,22 @@
+api/checkout.js
+  h_92d6f6e2d85b09 5-6,12,15-22,27-30
+docs/checkout.md
+  h_92d6f6e2d85b09 1-20
+src/components/checkout/Checkout.jsx
+  h_92d6f6e2d85b09 5,77-82
+src/lib/checkout.js
+  h_92d6f6e2d85b09 19-41
+test/checkout.test.js
+  h_92d6f6e2d85b09 4,66-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "62592320b6adb2a52048ddd1eb3acf250539aa66",
+  "prompts": {},
+  "humans": {
+    "h_92d6f6e2d85b09": {
+      "author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

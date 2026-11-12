@@ -1,0 +1,25 @@
+src/content/newsletters/youre-always-dressing-for-someone.mdx
+  s_6ea11abadaf19c::t_a8004ebb2d9143 55
+docs/seo-follow-up.md
+  s_6ea11abadaf19c::t_7dbac15b6fb9b3 5-9,19-22,25-26,48-55
+src/content/newsletters/the-cost-of-deciding.mdx
+  s_6ea11abadaf19c::t_a8004ebb2d9143 41
+public/googleed6f95a7b6af77aa.html
+  s_6ea11abadaf19c::t_15410a78efb597 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9723866c07761985bbaa5dda42b80dbd94d67b99",
+  "prompts": {},
+  "sessions": {
+    "s_6ea11abadaf19c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a10426-7bac-7653-a78b-35f0e104f7ae",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

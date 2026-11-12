@@ -1,0 +1,26 @@
+e2e/get-started.spec.js
+  h_92d6f6e2d85b09 84,323
+e2e/home.spec.js
+  h_92d6f6e2d85b09 40
+e2e/text-oro.spec.js
+  h_92d6f6e2d85b09 9,11-15,27,34,38
+public/text-oro-qr.svg
+  h_92d6f6e2d85b09 1
+src/components/get-started/TextOro.css
+  h_92d6f6e2d85b09 7,9,41-48
+src/components/get-started/TextOro.jsx
+  h_92d6f6e2d85b09 1,4,9,12,20,28,34-35
+src/lib/textOro.js
+  h_92d6f6e2d85b09 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "068c588848130293ed5c508b9a5016afae37d81b",
+  "prompts": {},
+  "humans": {
+    "h_92d6f6e2d85b09": {
+      "author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

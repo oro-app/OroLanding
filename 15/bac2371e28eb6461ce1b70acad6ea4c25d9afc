@@ -1,0 +1,23 @@
+src/components/meet-oro/MeetOro.css
+  s_8252b58d803c95::t_029e77b59f9381 7,27-28,33,36-41,46
+src/components/meet-oro/MeetOro.jsx
+  s_8252b58d803c95::t_029e77b59f9381 115
+e2e/meet-oro-prerender.spec.js
+  s_8252b58d803c95::t_029e77b59f9381 59,67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "15bac2371e28eb6461ce1b70acad6ea4c25d9afc",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

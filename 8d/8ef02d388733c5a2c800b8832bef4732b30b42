@@ -1,0 +1,19 @@
+docs/seo-follow-up.md
+  s_6ea11abadaf19c::t_d76c6b08108271 39-44,52-76,79-81,87,99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8d8ef02d388733c5a2c800b8832bef4732b30b42",
+  "prompts": {},
+  "sessions": {
+    "s_6ea11abadaf19c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a10426-7bac-7653-a78b-35f0e104f7ae",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

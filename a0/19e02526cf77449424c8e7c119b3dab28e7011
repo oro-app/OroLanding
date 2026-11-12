@@ -1,0 +1,14 @@
+docs/text-activation.md
+  h_92d6f6e2d85b09 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a019e02526cf77449424c8e7c119b3dab28e7011",
+  "prompts": {},
+  "humans": {
+    "h_92d6f6e2d85b09": {
+      "author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

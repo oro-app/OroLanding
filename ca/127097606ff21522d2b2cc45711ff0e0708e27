@@ -1,0 +1,21 @@
+src/components/home/Home.jsx
+  s_8252b58d803c95::t_bdc4412941939e 99
+src/components/home/HomeChrome.jsx
+  s_8252b58d803c95::t_bdc4412941939e 55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ca127097606ff21522d2b2cc45711ff0e0708e27",
+  "prompts": {},
+  "sessions": {
+    "s_8252b58d803c95": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a13c3c-7032-7453-b619-c1b5aa4ac8af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}

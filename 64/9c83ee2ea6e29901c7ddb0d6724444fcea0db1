@@ -1,0 +1,20 @@
+src/content/geo/guides.js
+  s_6ea11abadaf19c::t_6333b62d8fe620 39,84
+  s_6ea11abadaf19c::t_820c073167f618 1-38,40-83,85-451
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "649c83ee2ea6e29901c7ddb0d6724444fcea0db1",
+  "prompts": {},
+  "sessions": {
+    "s_6ea11abadaf19c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a10426-7bac-7653-a78b-35f0e104f7ae",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <team@buildingoro.ca>"
+    }
+  }
+}
