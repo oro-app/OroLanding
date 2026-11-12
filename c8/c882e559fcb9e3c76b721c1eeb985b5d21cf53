@@ -1,0 +1,27 @@
+vercel.json
+  s_5a04bdeff8c2e3::t_917de6142a41ae 6-8,119-120,132
+  s_5a04bdeff8c2e3::t_5efd99710585ac 5
+scripts/mount-design-system.mjs
+  s_5a04bdeff8c2e3::t_917de6142a41ae 1-10
+package.json
+  s_5a04bdeff8c2e3::t_917de6142a41ae 8
+docs/design-system-route.md
+  s_5a04bdeff8c2e3::t_917de6142a41ae 1-6,9
+  s_5a04bdeff8c2e3::t_6eb0467f4be1cd 7-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c8c882e559fcb9e3c76b721c1eeb985b5d21cf53",
+  "prompts": {},
+  "sessions": {
+    "s_5a04bdeff8c2e3": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1d054-1aef-7350-9e29-1032cdfac7e7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Sunny Wu <w.sunny0618@gmail.com>"
+    }
+  }
+}
