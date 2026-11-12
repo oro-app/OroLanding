@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "headers": [
     {
+      "source": "/design-system(/.*)?",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    },
+    {
       "source": "/closet(/.*)?",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" },
@@ -112,6 +116,8 @@
     { "source": "/manifesto", "destination": "/honestly",        "permanent": true }
   ],
   "rewrites": [
+    { "source": "/design-system", "destination": "/design-system/index.html" },
+    { "source": "/design-system/", "destination": "/design-system/index.html" },
     { "source": "/checkout", "destination": "/checkout/index.html" },
     { "source": "/closet", "destination": "/closet/index.html" },
     { "source": "/merch", "destination": "/merch/index.html" },
@@ -123,6 +129,6 @@
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/cookies", "destination": "/cookies.html" },
     { "source": "/google-play", "destination": "/google-play.html" },
-    { "source": "/((?!api/)(?!signup/?$)(?!.*\\.).*)", "destination": "/index.html" }
+    { "source": "/((?!api/)(?!signup/?$)(?!design-system(?:/|$))(?!.*\\.).*)", "destination": "/index.html" }
   ]
 }
