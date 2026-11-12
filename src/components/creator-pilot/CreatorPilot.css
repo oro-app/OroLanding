@@ -85,6 +85,7 @@
 .pilot-deadline .pilot-countdown {
   margin-block-start: var(--oro-space-1);
   color: var(--oro-color-accent);
+  font-size: var(--oro-type-subheading-size);
   font-variant-numeric: tabular-nums;
 }
 
