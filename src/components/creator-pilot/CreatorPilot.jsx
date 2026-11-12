@@ -25,6 +25,14 @@ const topics = [
   ['Tech and organization', 'Consumer tech, AI tools, app discovery, digital organization, productivity, smart shopping tools'],
 ]
 
+const creatorTraits = [
+  ['A feel for storytelling', 'You enjoy finding a clear way to tell a story on camera or through voiceover.'],
+  ['An eye for editing', 'You think about when to tighten a cut and when to let a moment breathe.'],
+  ['A voice of your own', 'You can take a script and make it sound like you.'],
+  ['Openness to feedback', 'You’re willing to try a different take or revise an edit after getting notes.'],
+  ['Follow-through', 'You can plan your work and deliver it on time.'],
+]
+
 const formats = ['Talking-head videos', 'Vlogs', 'Get ready with me', 'Skits', 'Challenges']
 
 const benefits = [
@@ -217,6 +225,10 @@ export default function CreatorPilot() {
             <details>
               <summary>What you might post about <span className="pilot-disclosure-icon" aria-hidden="true" /></summary>
               <PilotList items={topics} />
+            </details>
+            <details>
+              <summary>Traits we look for <span className="pilot-disclosure-icon" aria-hidden="true" /></summary>
+              <PilotList items={creatorTraits} />
             </details>
           </div>
         </div>
