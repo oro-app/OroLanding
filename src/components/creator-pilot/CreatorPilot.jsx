@@ -210,7 +210,7 @@ export default function CreatorPilot() {
                 <dd>$100</dd>
               </div>
             </dl>
-            <Text>$25 per video plus $1 per 1,000 eligible views.</Text>
+            <Text>$25 per video plus $1 CPM on eligible views.</Text>
           </div>
         </div>
       </section>
