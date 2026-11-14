@@ -32,7 +32,7 @@
   margin-top: var(--oro-space-8);
 }
 
-.pilot-action .halo-cta, .pilot-apply .halo-cta { text-transform: none; }
+.pilot-action .halo-cta { text-transform: none; }
 
 .pilot-arrow { width: 0.875rem; height: 0.875rem; flex: 0 0 auto; }
 
@@ -204,8 +204,25 @@
 }
 
 .pilot-apply > div > .oro-text { margin-top: var(--oro-space-4); }
-.pilot-apply .halo-cta { margin-top: var(--oro-space-6); }
-.pilot-apply .pilot-form-status { color: var(--oro-color-accent); }
+
+.pilot-application {
+  margin-top: var(--oro-space-8);
+}
+
+.pilot-application-fields {
+  display: grid;
+  min-width: 0;
+  gap: var(--oro-space-5);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.pilot-application textarea { resize: vertical; }
+.pilot-application select, .pilot-application option { text-transform: none; }
+.pilot-application .pilot-application-submit { margin-top: var(--oro-space-6); text-transform: none; }
+.pilot-application .pilot-application-error { margin-top: var(--oro-space-3); color: var(--oro-color-error); }
+.pilot-application-success { margin-top: var(--oro-space-6); color: var(--oro-color-success); }
 
 @media (prefers-reduced-motion: no-preference) {
   .pilot-hero > :is(.pilot-title, .pilot-lede, .pilot-action),

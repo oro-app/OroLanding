@@ -3,9 +3,8 @@ import { Heading, Text } from 'oro-kit'
 import ButtonArrow from '../ButtonArrow'
 import GoldBackground from '../GoldBackground'
 import { HomeCta } from '../home/HomeChrome'
+import CreatorApplication from './CreatorApplication'
 import './CreatorPilot.css'
-
-const formUrl = import.meta.env.VITE_CREATOR_PILOT_FORM_URL?.trim()
 
 const applicationDate = '2026-11-20'
 const applicationDeadline = Date.parse('2026-11-21T00:00:00-05:00')
@@ -224,11 +223,7 @@ export default function CreatorPilot() {
         <div className="pilot-container" data-pilot-reveal>
           <Heading as="h2" variant="title" id="pilot-apply-title">Interested?</Heading>
           <Text muted>Apply by <time dateTime={applicationDate}>November 20th</time>.</Text>
-          {formUrl ? (
-            <HomeCta place="closer" href={formUrl} showIcon={false}>Open application form</HomeCta>
-          ) : (
-            <Text muted variant="label" className="pilot-form-status">Application link coming soon.</Text>
-          )}
+          <CreatorApplication />
         </div>
       </section>
     </div>
