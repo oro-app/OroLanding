@@ -7,8 +7,8 @@ import MessagesIcon from '../MessagesIcon'
 import TextOroModal from '../overlays/TextOroModal'
 import CtaSparkles from './CtaSparkles'
 
-function HomeLogo() {
-  return <img className="halo-logo" src="/oro-logo.webp" alt="oro" width="1672" height="941" decoding="async" />
+function HomeLogo({ src = '/oro-logo.webp' }) {
+  return <img className="halo-logo" src={src} alt="oro" width="1672" height="941" decoding="async" />
 }
 
 export function HomeCta({ place, children, className = '', href: customHref, showIcon = true, onClick }) {
@@ -60,7 +60,7 @@ export function HomeHeader({ showCta = true, sticky = true }) {
   return (
     <header className={`halo-header${sticky ? '' : ' halo-header--static'}`}>
       <div className="halo-container halo-header-inner">
-        <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
+        <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo src="/oro-logo/oro-logo-ink.webp" /></a>
         <nav className="halo-nav" aria-label="oro">
           {showCta && <HomeCta place="header">join the waitlist</HomeCta>}
         </nav>

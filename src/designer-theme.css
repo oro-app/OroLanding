@@ -161,7 +161,6 @@ body {
 }
 
 
-.halo-header .halo-logo,
 .legal-page > header img[src="/oro-logo.webp"] {
   content: url("/oro-logo/oro-logo-ink.webp");
 }

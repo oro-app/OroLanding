@@ -272,7 +272,17 @@ async function main() {
     .filter((file) => !template.includes(`href="/${file}"`))
     .map((file) => `<link rel="stylesheet" crossorigin href="/${file}">`)
     .join('\n')
-  const creatorsTemplate = template.replace('</head>', `${creatorsStyleLinks}\n</head>`)
+  const creatorsFontPreloads = [
+    'node_modules/@fontsource/fraunces/files/fraunces-latin-400-normal.woff2',
+    'node_modules/oro-kit/dist/fonts/dm-sans-latin.woff2',
+  ].map((key) => {
+    const file = manifest[key]?.file
+    if (!file) throw new Error(`Missing creators font in the client build manifest: ${key}`)
+    return `<link rel="preload" href="/${file}" as="font" type="font/woff2" crossorigin>`
+  }).join('\n')
+  const creatorsTemplate = template
+    .replace('<head>', `<head>\n${creatorsFontPreloads}`)
+    .replace('</head>', `${creatorsStyleLinks}\n</head>`)
   const appTemplates = { checkout: checkoutTemplate, creators: creatorsTemplate }
   if (!headingsStylesheet) throw new Error('Missing preview heading stylesheet in the client build manifest')
   if (!legalStylesheet) throw new Error('Missing legal page stylesheet in the client build manifest')

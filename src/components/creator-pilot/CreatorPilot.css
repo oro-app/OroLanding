@@ -37,9 +37,17 @@
 .pilot-arrow { width: 0.875rem; height: 0.875rem; flex: 0 0 auto; }
 
 .pilot-deadline {
+  position: relative;
   margin-block-start: var(--oro-space-8);
-  padding-block-start: var(--oro-space-5);
+  padding-block-start: calc(var(--oro-space-5) + var(--oro-border-width));
+}
+
+.pilot-deadline::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
   border-block-start: var(--pilot-rule);
+  transform-origin: left;
 }
 
 .pilot-deadline-date {
@@ -201,16 +209,7 @@
 .pilot-apply .pilot-form-status { color: var(--oro-color-accent); }
 
 @media (prefers-reduced-motion: no-preference) {
-  .pilot-hero > :is(.pilot-title, .pilot-lede, .pilot-action),
-  .pilot-deadline {
-    animation: pilot-arrive 650ms var(--pilot-ease) var(--pilot-entry-delay, 0ms) backwards;
-  }
-
-  .pilot-hero > .pilot-title { --pilot-entry-offset: 12px; }
-  .pilot-hero > .pilot-lede { --pilot-entry-delay: 85ms; }
-  .pilot-hero > .pilot-action { --pilot-entry-delay: 170ms; }
-  .pilot-action:focus-within { animation: none; }
-  .pilot-deadline { --pilot-entry-delay: 255ms; }
+  .pilot-deadline::before { animation: pilot-deadline-draw 650ms var(--pilot-ease) both; }
 
   .creator-pilot [data-pilot-reveal] {
     transition: opacity 620ms var(--pilot-ease), transform 720ms var(--pilot-ease);
@@ -225,9 +224,9 @@
   .pilot-about-link:is(:hover, :focus-visible) .pilot-arrow { transform: translate(2px, -2px); }
 }
 
-@keyframes pilot-arrive {
-  from { opacity: 0.9; transform: translateY(var(--pilot-entry-offset, 8px)); }
-  to { opacity: 1; transform: none; }
+@keyframes pilot-deadline-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
