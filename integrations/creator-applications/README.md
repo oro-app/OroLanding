@@ -9,9 +9,9 @@
 The receiver starts each row with the UTC timestamp, submission ID, name, and email. The original five response columns remain in place. The revised form writes to four columns appended on the right.
 
 - Instagram handle
-- How did you hear about this opportunity?
-- Portfolio and other links
-- Anything else
+- How did you find this opportunity?
+- Portfolio or other links
+- Anything else you’d like to share?
 
 Portfolio links share one cell, with one URL per line. Each URL can contain up to 2,048 characters, and the combined cell can contain up to 40,000 characters including line breaks.
 

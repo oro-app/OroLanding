@@ -12,10 +12,15 @@ const LEGACY_HEADERS = [
 ];
 const NEW_HEADERS = [
   'Instagram handle',
-  'How did you hear about this opportunity?',
-  'Portfolio and other links',
-  'Anything else',
+  'How did you find this opportunity?',
+  'Portfolio or other links',
+  'Anything else you’d like to share?',
 ];
+const PREVIOUS_HEADERS = {
+  'How did you find this opportunity?': 'How did you hear about this opportunity?',
+  'Portfolio or other links': 'Portfolio and other links',
+  'Anything else you’d like to share?': 'Anything else',
+};
 const HEADERS = [...LEGACY_HEADERS, ...NEW_HEADERS];
 const SUBMISSION_ID_COLUMN = 2;
 const MAX_REQUEST_LENGTH = 300000;
@@ -171,7 +176,8 @@ function ensureHeaders(sheet) {
 
   const missing = [];
   for (let index = LEGACY_HEADERS.length; index < HEADERS.length; index += 1) {
-    if (current[index] === HEADERS[index]) continue;
+    const header = HEADERS[index];
+    if (current[index] === header || (current[index] && current[index] === PREVIOUS_HEADERS[header])) continue;
     const column = index + 1;
     if (column <= width && !sheet.getRange(1, column, sheet.getLastRow(), 1).isBlank()) {
       return false;
