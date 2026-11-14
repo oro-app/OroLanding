@@ -41,7 +41,7 @@ const benefits = [
   ['Scripts and formats ready to use', 'You’ll have plenty of hooks, scripts, and video structures to choose from, with room to make the delivery your own.'],
   [
     '1:1 mentorship with the oro team',
-    'Our team has built software at Tesla and Shopify, worked on growth and events with Notion, appeared on reality TV, and been invited to Fashion Week. We can help with your content, your career, the people you’d like to meet, or a company you want to start.',
+    "Our team has built software at Tesla and Shopify, worked on growth with Notion, appeared on TV, and attended Fashion Week. We're friendly and happy to help work on content or give career advice :))",
   ],
   ['A creator community you can stay part of after the pilot', 'Meet people you can share ideas with, ask for feedback, and keep creating alongside after the six weeks.'],
   ['Paid brand work for your portfolio', 'Build a set of videos you can show future brands and employers, with real performance data to talk about what worked.'],
