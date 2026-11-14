@@ -6,7 +6,16 @@
 4. Set `CREATOR_APPLICATION_SCRIPT_URL` to that URL and `CREATOR_APPLICATION_SECRET` to the same secret in the website's server environment. Use the intended Vercel environment and redeploy after changes. Keep both variables server-side.
 5. Submit a synthetic application through the site and confirm an acknowledgement and one new row. If retesting directly against the receiver, replay the same submission ID and confirm the response remains successful and the row count stays the same. Remove the synthetic row afterwards.
 
-The receiver puts the UTC timestamp and submission ID first, followed by the seven application fields. It writes headers with the first row only when the tab is empty. Keep the header row and the submission ID column in place. Use a separate tab for any rearranged views or summaries.
+The receiver starts each row with the UTC timestamp, submission ID, name, and email. The original five response columns remain in place. The revised form writes to four columns appended on the right.
+
+- Instagram handle
+- How did you hear about this opportunity?
+- Portfolio and other links
+- Anything else
+
+Portfolio links share one cell, with one URL per line. Each URL can contain up to 2,048 characters, and the combined cell can contain up to 40,000 characters including line breaks.
+
+For an existing receiver, publish the updated Apps Script version before deploying the revised site. The first valid request adds the four headers to their empty columns under the write lock. It preserves existing rows and accepts requests from the previous form version during the transition. Keep the headers and submission ID column in place. Use a separate tab for a rearranged review view.
 
 The response body is JSON. The site treats `{"ok":true}` as an acknowledgement of a durable write or a replay of an existing submission ID. An `ok:false` response carries a generic error code. If troubleshooting, check the deployment's permissions and server variables, or inspect the private Sheet directly for a matching ID. [Google Apps Script Content Service](https://developers.google.com/apps-script/guides/content)
 

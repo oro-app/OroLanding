@@ -1,10 +1,13 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Text, TextField } from 'oro-kit'
+
+const INSTAGRAM_HANDLE = /^@?[A-Za-z0-9._]{1,30}$/
+const MAX_TOTAL_LINK_LENGTH = 40000
 
 function isWebUrl(value) {
   try {
     const url = new URL(value)
-    return /^https?:\/\//i.test(value) && !url.username && !url.password
+    return /^https?:\/\//i.test(value) && !/[\s\x00-\x1f\x7f]/.test(value) && !url.username && !url.password
   } catch {
     return false
   }
@@ -13,31 +16,68 @@ function isWebUrl(value) {
 export default function CreatorApplication() {
   const submissionId = useRef(null)
   const sending = useRef(false)
+  const nextLinkId = useRef(1)
+  const linkToFocus = useRef(null)
+  const addLinkButton = useRef(null)
   const [status, setStatus] = useState('idle')
+  const [linkIds, setLinkIds] = useState([0])
+
+  useEffect(() => {
+    if (linkToFocus.current === null) return
+    document.getElementById(`pilot-application-link-${linkToFocus.current}`)?.focus()
+    linkToFocus.current = null
+  }, [linkIds])
+
+  function addLink() {
+    const id = nextLinkId.current++
+    linkToFocus.current = id
+    setLinkIds((ids) => [...ids, id])
+  }
+
+  function removeLink(id) {
+    setLinkIds((ids) => ids.filter((linkId) => linkId !== id))
+    setStatus('idle')
+    addLinkButton.current?.focus()
+  }
 
   async function submitApplication(event) {
     event.preventDefault()
     if (sending.current) return
 
     const form = event.currentTarget
-    const payload = Object.fromEntries(
-      Array.from(new FormData(form), ([name, value]) => [name, value.trim()]),
-    )
+    const fields = new FormData(form)
+    fields.delete('links')
+    const payload = Object.fromEntries(Array.from(fields, ([name, value]) => [name, value.trim()]))
 
-    if (!payload.name || !payload.interest) {
-      const field = form.elements.namedItem(payload.name ? 'interest' : 'name')
+    const missingAnswer = ['name', 'referralSource'].find((name) => !payload[name])
+    if (missingAnswer) {
+      const field = form.elements.namedItem(missingAnswer)
       field.setCustomValidity('Please enter an answer.')
       field.reportValidity()
       return
     }
 
-    for (const name of ['videoUrl', 'profileUrl']) {
-      if (payload[name] && !isWebUrl(payload[name])) {
-        const field = form.elements.namedItem(name)
+    if (!INSTAGRAM_HANDLE.test(payload.instagramHandle)) {
+      const field = form.elements.namedItem('instagramHandle')
+      field.setCustomValidity('Enter your Instagram handle, with or without the @.')
+      field.reportValidity()
+      return
+    }
+
+    const links = []
+    for (const field of form.querySelectorAll('input[name="links"]')) {
+      const link = field.value.trim()
+      if (!link) continue
+      if (!isWebUrl(link)) {
         field.setCustomValidity('Please enter a public link that starts with https:// or http://.')
         field.reportValidity()
         return
       }
+      links.push(link)
+    }
+    if (links.join('\n').length > MAX_TOTAL_LINK_LENGTH) {
+      setStatus('linksTooLong')
+      return
     }
 
     sending.current = true
@@ -47,7 +87,7 @@ export default function CreatorApplication() {
       const response = await fetch('/api/creator-application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, submissionId: submissionId.current }),
+        body: JSON.stringify({ ...payload, links, submissionId: submissionId.current }),
       })
 
       if (response.ok && (await response.json())?.ok === true) {
@@ -64,7 +104,7 @@ export default function CreatorApplication() {
 
   function clearValidation(event) {
     event.target.setCustomValidity?.('')
-    if (status === 'invalid' || status === 'error') setStatus('idle')
+    if (status === 'invalid' || status === 'error' || status === 'linksTooLong') setStatus('idle')
   }
 
   return (
@@ -75,37 +115,36 @@ export default function CreatorApplication() {
             <TextField label="What’s your name?" name="name" autoComplete="name" maxLength={120} required />
             <TextField label="What’s your email?" name="email" type="email" autoComplete="email" maxLength={254} required />
             <TextField
-              label="Share a video you made that you’re proud of."
-              hint="Use a link anyone can open."
-              name="videoUrl"
-              type="url"
+              label="What’s your Instagram handle?"
+              name="instagramHandle"
+              placeholder="@yourhandle"
               autoCapitalize="none"
-              maxLength={2048}
+              spellCheck={false}
+              maxLength={31}
               required
             />
+            <TextField label="How did you hear about this opportunity?" name="referralSource" maxLength={500} required />
+            <fieldset className="pilot-application-links">
+              <legend className="oro-field__label">Portfolio or other links (optional)</legend>
+              {linkIds.map((id, index) => (
+                <div className="pilot-application-link" key={id}>
+                  <TextField
+                    id={`pilot-application-link-${id}`}
+                    label={`Link ${index + 1}`}
+                    name="links"
+                    type="url"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    maxLength={2048}
+                  />
+                  <Button type="button" variant="secondary" aria-label={`Remove link ${index + 1}`} onClick={() => removeLink(id)}>Remove</Button>
+                </div>
+              ))}
+              <Button ref={addLinkButton} type="button" variant="secondary" onClick={addLink}>Add another link</Button>
+            </fieldset>
             <div className="oro-field">
-              <label className="oro-field__label" htmlFor="pilot-application-role">What did you do on the video? (optional)</label>
-              <textarea className="oro-input" id="pilot-application-role" name="role" rows={3} maxLength={1000} />
-            </div>
-            <TextField
-              label="Creator profile or portfolio (optional)"
-              name="profileUrl"
-              type="url"
-              autoCapitalize="none"
-              maxLength={2048}
-            />
-            <div className="oro-field">
-              <label className="oro-field__label" htmlFor="pilot-application-interest">Why would you like to make videos with oro?</label>
-              <textarea className="oro-input" id="pilot-application-interest" name="interest" rows={4} maxLength={1500} required />
-            </div>
-            <div className="oro-field">
-              <label className="oro-field__label" htmlFor="pilot-application-availability">Can you make two short-form videos a week during the six-week pilot?</label>
-              <select className="oro-input" id="pilot-application-availability" name="availability" defaultValue="" required>
-                <option value="" disabled>Select an answer</option>
-                <option value="yes">Yes</option>
-                <option value="discuss">I’d like to discuss</option>
-                <option value="no">No</option>
-              </select>
+              <label className="oro-field__label" htmlFor="pilot-application-notes">Anything else you’d like to share? (optional)</label>
+              <textarea className="oro-input" id="pilot-application-notes" name="notes" rows={4} maxLength={1500} />
             </div>
             <div hidden>
               <label htmlFor="pilot-application-website">Website</label>
@@ -116,6 +155,7 @@ export default function CreatorApplication() {
             {status === 'submitting' ? 'Sending…' : 'Send application'}
           </Button>
           {status === 'invalid' && <Text className="pilot-application-error" role="alert">Please check your answers and try again.</Text>}
+          {status === 'linksTooLong' && <Text className="pilot-application-error" role="alert">Your links are too long to send together. Please shorten or remove some and try again.</Text>}
           {status === 'error' && <Text className="pilot-application-error" role="alert">We couldn’t send your application. Your answers are still here. Please try again.</Text>}
         </form>
       )}

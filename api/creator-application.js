@@ -1,15 +1,17 @@
 const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const INSTAGRAM_HANDLE = /^@?[A-Za-z0-9._]{1,30}$/
 const AVAILABILITY = new Set(['yes', 'discuss', 'no'])
-const FIELDS = {
-  name: 120,
-  email: 254,
+const CONTACT_FIELDS = { name: 120, email: 254 }
+const CREATOR_FIELDS = { instagramHandle: 31, referralSource: 500, notes: 1500 }
+const LEGACY_FIELDS = {
   videoUrl: 2048,
   profileUrl: 2048,
   role: 1000,
   interest: 1500,
 }
-const REQUIRED_FIELDS = ['name', 'email', 'videoUrl', 'interest']
+const MAX_LINK_LENGTH = 2048
+const MAX_LINKS_LENGTH = 40000
 const UNAVAILABLE = 'Applications are temporarily unavailable. Please try again.'
 
 function isWebLink(value) {
@@ -21,22 +23,52 @@ function isWebLink(value) {
   }
 }
 
-function normalizeApplication(body) {
-  const { submissionId, availability } = body
-  if (typeof submissionId !== 'string' || !UUID_V4.test(submissionId) || !AVAILABILITY.has(availability)) return null
-
-  const application = { submissionId: submissionId.toLowerCase(), availability }
-  for (const [field, maxLength] of Object.entries(FIELDS)) {
+function readFields(body, limits, required) {
+  const fields = {}
+  for (const [field, maxLength] of Object.entries(limits)) {
     const rawValue = body[field] ?? ''
     if (typeof rawValue !== 'string') return null
     const value = rawValue.trim()
     if (value.length > maxLength) return null
-    application[field] = value
+    fields[field] = value
+  }
+  return required.every((field) => fields[field]) ? fields : null
+}
+
+function normalizeLinks(value = []) {
+  if (!Array.isArray(value)) return null
+  const links = []
+  let joinedLength = 0
+  for (const rawLink of value) {
+    if (typeof rawLink !== 'string') return null
+    const link = rawLink.trim()
+    if (!link || link.length > MAX_LINK_LENGTH || /[\s\x00-\x1f\x7f]/.test(link) || !isWebLink(link)) return null
+    joinedLength += link.length + (links.length ? 1 : 0)
+    if (joinedLength > MAX_LINKS_LENGTH) return null
+    links.push(link)
+  }
+  return links
+}
+
+function normalizeApplication(body) {
+  const { submissionId, availability } = body
+  if (typeof submissionId !== 'string' || !UUID_V4.test(submissionId)) return null
+
+  const contact = readFields(body, CONTACT_FIELDS, ['name', 'email'])
+  if (!contact || !EMAIL.test(contact.email)) return null
+  const application = { submissionId: submissionId.toLowerCase(), ...contact }
+
+  if (Object.hasOwn(body, 'links') || Object.keys(CREATOR_FIELDS).some((field) => Object.hasOwn(body, field))) {
+    const fields = readFields(body, CREATOR_FIELDS, ['instagramHandle', 'referralSource'])
+    const links = normalizeLinks(body.links)
+    if (!fields || !INSTAGRAM_HANDLE.test(fields.instagramHandle) || !links) return null
+    const instagramHandle = `@${fields.instagramHandle.replace(/^@/, '')}`
+    return { ...application, ...fields, instagramHandle, links }
   }
 
-  if (REQUIRED_FIELDS.some((field) => !application[field]) || !EMAIL.test(application.email)) return null
-  if (!isWebLink(application.videoUrl) || (application.profileUrl && !isWebLink(application.profileUrl))) return null
-  return application
+  const fields = readFields(body, LEGACY_FIELDS, ['videoUrl', 'interest'])
+  if (!fields || !AVAILABILITY.has(availability) || !isWebLink(fields.videoUrl) || (fields.profileUrl && !isWebLink(fields.profileUrl))) return null
+  return { ...application, ...fields, availability }
 }
 
 function getScriptUrl(value) {
