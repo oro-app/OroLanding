@@ -37,6 +37,7 @@ const creatorTraits = [
 const formats = ['Talking-head videos', 'Vlogs', 'Get ready with me', 'Skits', 'Challenges']
 
 const benefits = [
+  ['Two months of free access to oro', 'Use oro to build your digital closet, put together outfits, and get a second opinion over text.'],
   ['Scripts and formats ready to use', 'You’ll have plenty of hooks, scripts, and video structures to choose from, with room to make the delivery your own.'],
   ['1:1 mentorship with the oro team', 'Bring whatever you’re working through, whether that’s content creation, tech, product, your career, entrepreneurship, or something you want to build.'],
   ['A creator community you can stay part of after the pilot', 'Meet people you can share ideas with, ask for feedback, and keep creating alongside after the six weeks.'],
