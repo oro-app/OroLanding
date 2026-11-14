@@ -208,6 +208,16 @@
 .pilot-apply .pilot-form-status { color: var(--oro-color-accent); }
 
 @media (prefers-reduced-motion: no-preference) {
+  .pilot-hero > :is(.pilot-title, .pilot-lede, .pilot-action),
+  .pilot-deadline {
+    animation: homeEnter 620ms var(--pilot-ease) var(--pilot-entry-delay, 80ms) backwards;
+  }
+
+  .pilot-lede { --pilot-entry-delay: 180ms; }
+  .pilot-action { --pilot-entry-delay: 280ms; }
+  .pilot-action:focus-within { animation: none; }
+  .pilot-deadline { --pilot-entry-delay: 380ms; }
+
   @supports (mask-composite: exclude) {
     .pilot-action .halo-cta--hero::after {
       content: '';
@@ -220,7 +230,7 @@
         transparent, var(--oro-cta-edge) 12%, var(--oro-cta-edge-hi) 28%, transparent 40%);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask-composite: exclude;
-      animation: pilot-apply-highlight 1050ms linear 90ms both;
+      animation: pilot-apply-highlight 1050ms linear 460ms both;
     }
   }
 
@@ -232,7 +242,7 @@
     pointer-events: none;
     background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--oro-color-accent) 70%, white), transparent) no-repeat;
     background-size: 32% 100%;
-    animation: pilot-deadline-highlight 780ms var(--pilot-ease) 280ms both;
+    animation: pilot-deadline-highlight 780ms var(--pilot-ease) 580ms both;
   }
 
   .creator-pilot [data-pilot-reveal] {
