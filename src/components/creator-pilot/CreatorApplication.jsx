@@ -3,6 +3,15 @@ import { Button, Text, TextField } from 'oro-kit'
 
 const INSTAGRAM_HANDLE = /^@?[A-Za-z0-9._]{1,30}$/
 const MAX_TOTAL_LINK_LENGTH = 40000
+const REFERRAL_SOURCES = [
+  'Instagram',
+  'TikTok',
+  'LinkedIn',
+  'Friend or word of mouth',
+  'Campus or student group',
+  'oro website or newsletter',
+  'Other',
+]
 
 function isWebUrl(value) {
   try {
@@ -49,9 +58,8 @@ export default function CreatorApplication() {
     fields.delete('links')
     const payload = Object.fromEntries(Array.from(fields, ([name, value]) => [name, value.trim()]))
 
-    const missingAnswer = ['name', 'referralSource'].find((name) => !payload[name])
-    if (missingAnswer) {
-      const field = form.elements.namedItem(missingAnswer)
+    if (!payload.name) {
+      const field = form.elements.namedItem('name')
       field.setCustomValidity('Please enter an answer.')
       field.reportValidity()
       return
@@ -123,7 +131,13 @@ export default function CreatorApplication() {
               maxLength={31}
               required
             />
-            <TextField label="How did you hear about this opportunity?" name="referralSource" maxLength={500} required />
+            <div className="oro-field">
+              <label className="oro-field__label" htmlFor="pilot-application-referral">How did you hear about this opportunity?</label>
+              <select className="oro-input" id="pilot-application-referral" name="referralSource" defaultValue="" required>
+                <option value="" disabled>Select an option</option>
+                {REFERRAL_SOURCES.map((source) => <option key={source} value={source}>{source}</option>)}
+              </select>
+            </div>
             <fieldset className="pilot-application-links">
               <legend className="oro-field__label">Portfolio or other links (optional)</legend>
               {linkIds.map((id, index) => (
