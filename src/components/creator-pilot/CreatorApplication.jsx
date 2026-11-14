@@ -75,7 +75,7 @@ export default function CreatorApplication() {
     if (payload.referralSource === OTHER_REFERRAL) {
       if (!referralOther) {
         const field = form.elements.namedItem('referralOther')
-        field.setCustomValidity('Please specify how you heard about this opportunity.')
+        field.setCustomValidity('Please specify how you found this opportunity.')
         field.reportValidity()
         return
       }
@@ -142,7 +142,7 @@ export default function CreatorApplication() {
               required
             />
             <div className="oro-field">
-              <label className="oro-field__label" htmlFor="pilot-application-referral">How did you hear about this opportunity?</label>
+              <label className="oro-field__label" htmlFor="pilot-application-referral">How did you find this opportunity?</label>
               <select
                 className="oro-input"
                 id="pilot-application-referral"
