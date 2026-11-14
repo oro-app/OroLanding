@@ -183,7 +183,6 @@ export default function CreatorPilot() {
       <section className="pilot-benefits" aria-labelledby="pilot-benefits">
         <div className="pilot-section pilot-container" data-pilot-reveal>
           <Heading as="h2" variant="title" id="pilot-benefits">What you get</Heading>
-          <PilotList items={benefits} />
           <div className="pilot-pay">
             <Heading as="h3" variant="subheading">Pilot compensation</Heading>
             <dl>
@@ -195,9 +194,14 @@ export default function CreatorPilot() {
                 <dt>In view bonuses, up to</dt>
                 <dd>$100</dd>
               </div>
+              <div>
+                <dt>Maximum total</dt>
+                <dd>$400</dd>
+              </div>
             </dl>
             <Text>$25 per video plus $1 CPM on eligible views.</Text>
           </div>
+          <PilotList items={benefits} />
         </div>
       </section>
 
