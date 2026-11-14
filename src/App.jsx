@@ -146,9 +146,9 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className={`oro-editorial ${isBlog || isCreatorPilot ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
+      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isFeedback && !isCreatorPilot && (isHalo ? <HomeHeader showCta={!isCheckout} /> : <SiteHeader />)}
+        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {isCreatorPilot ? (
             <Suspense fallback={null}><CreatorPilotPage /></Suspense>
@@ -196,7 +196,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && !isCheckout && !isCreatorPilot && <HomeFooter landing={isHome} />}
+        {isHalo && !isFeedback && !isCheckout && <HomeFooter landing={isHome || isCreatorPilot} />}
         {!isCheckout && !isCreatorPilot && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>

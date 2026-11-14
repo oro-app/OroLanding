@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Heading, Text } from 'oro-kit'
 import ButtonArrow from '../ButtonArrow'
+import GoldBackground from '../GoldBackground'
+import { HomeCta } from '../home/HomeChrome'
 import './CreatorPilot.css'
 
 const formUrl = import.meta.env.VITE_CREATOR_PILOT_FORM_URL?.trim()
@@ -41,15 +43,6 @@ const benefits = [
   ['A creator community you can stay part of after the pilot', 'Meet people you can share ideas with, ask for feedback, and keep creating alongside after the six weeks.'],
   ['Paid brand work for your portfolio', 'Build a set of videos you can show future brands and employers, with real performance data to talk about what worked.'],
 ]
-
-function ApplyLink({ href = '#apply', children }) {
-  return (
-    <a className="oro-button oro-button--primary pilot-button" href={href}>
-      {children}
-      <ButtonArrow direction="up-right" className="pilot-arrow" />
-    </a>
-  )
-}
 
 function ApplicationCountdown() {
   const [secondsLeft, setSecondsLeft] = useState(null)
@@ -137,16 +130,7 @@ export default function CreatorPilot() {
 
   return (
     <div className="creator-pilot" ref={pageRef}>
-      <div className="pilot-topbar">
-        <div className="pilot-container pilot-topbar-inner">
-          <a className="pilot-logo" href="/" aria-label="oro home">
-            <img src="/oro-logo.webp" alt="oro" width="1672" height="941" />
-          </a>
-          <a className="pilot-topbar-apply" href="#apply">
-            Apply <ButtonArrow direction="up-right" className="pilot-arrow" />
-          </a>
-        </div>
-      </div>
+      <GoldBackground />
 
       <section className="pilot-intro" aria-labelledby="pilot-title">
         <div className="pilot-container">
@@ -157,7 +141,9 @@ export default function CreatorPilot() {
             <Text muted className="pilot-lede">
               Like making videos? Come get paid to make them with oro.
             </Text>
-            <ApplyLink>Apply</ApplyLink>
+            <div className="pilot-action">
+              <HomeCta place="hero" href="#apply" showIcon={false}>Apply</HomeCta>
+            </div>
           </div>
           <div className="pilot-deadline">
             <Text className="pilot-deadline-date">Apply by <time dateTime={applicationDate}>November 20th</time></Text>
@@ -170,8 +156,8 @@ export default function CreatorPilot() {
         <div className="pilot-section-heading">
           <Heading as="h2" variant="title" id="pilot-about">What’s oro?</Heading>
           <Text muted>oro is an AI fashion advisor you can text.</Text>
-          <a className="pilot-about-link" href="/">
-            Explore oro <ButtonArrow className="pilot-arrow" />
+          <a className="pilot-about-link" href="/" target="_blank" rel="noopener">
+            Explore oro <ButtonArrow direction="up-right" className="pilot-arrow" />
           </a>
         </div>
         <PilotList items={features} />
@@ -239,7 +225,7 @@ export default function CreatorPilot() {
           <Heading as="h2" variant="title" id="pilot-apply-title">Interested?</Heading>
           <Text muted>Apply by <time dateTime={applicationDate}>November 20th</time>.</Text>
           {formUrl ? (
-            <ApplyLink href={formUrl}>Open application form</ApplyLink>
+            <HomeCta place="closer" href={formUrl} showIcon={false}>Open application form</HomeCta>
           ) : (
             <Text muted variant="label" className="pilot-form-status">Application link coming soon.</Text>
           )}

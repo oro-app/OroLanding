@@ -1,74 +1,38 @@
 .creator-pilot {
-  --pilot-edge: clamp(1.5rem, 5.5vw, 4rem);
   --pilot-section-space: clamp(3rem, 7vw, 5rem);
   --pilot-rule: var(--oro-border-width) solid var(--oro-color-border);
   --pilot-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-  background: var(--oro-color-canvas);
+  position: relative;
+  isolation: isolate;
   color: var(--oro-color-ink);
   text-align: start;
 }
 
 .pilot-container {
-  width: min(calc(100% - 2 * var(--pilot-edge)), 46rem);
+  width: min(calc(100% - 2 * var(--halo-page-gutter)), 46rem);
   margin-inline: auto;
 }
 
-.pilot-topbar { border-bottom: var(--pilot-rule); }
-
-.pilot-topbar-inner {
-  min-height: 4.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--oro-space-4);
-}
-
-.pilot-logo, .pilot-topbar-apply {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--oro-control-min-height);
-}
-
-.pilot-logo img { display: block; width: 5.5rem; height: auto; }
-
-.pilot-topbar-apply {
-  gap: var(--oro-space-2);
-  padding-inline: var(--oro-space-4);
-  border: var(--pilot-rule);
-  border-radius: var(--oro-radius-pill);
-  color: var(--oro-color-accent);
-  font-size: var(--oro-type-label-size);
-  font-weight: var(--oro-font-weight-control);
-}
-
-.pilot-topbar-apply:hover { background: var(--oro-color-soft); }
-
 .pilot-intro {
   border-block-end: var(--pilot-rule);
-  background: radial-gradient(ellipse at 30% 35%, var(--oro-color-glow), transparent 72%);
   padding-block: clamp(3.5rem, 7.5vw, 7rem) var(--pilot-section-space);
 }
 
-.creator-pilot .pilot-title {
-  font-size: clamp(3.5rem, 6.3vw, 5.75rem);
-  line-height: 0.97;
-  letter-spacing: -0.073em;
-  text-wrap: balance;
-}
+.pilot-title { text-wrap: balance; }
 
 .creator-pilot .pilot-lede {
   max-width: 36rem;
-  margin-block: var(--oro-space-6) var(--oro-space-8);
-  font-size: clamp(1rem, 1.35vw, 1.125rem);
+  margin-top: var(--oro-space-6);
   text-wrap: pretty;
 }
 
-.creator-pilot .pilot-button {
-  gap: var(--oro-space-3);
-  min-height: var(--oro-control-field-height);
-  padding-inline: var(--oro-space-5);
-  color: var(--oro-color-on-accent);
+.pilot-action {
+  width: fit-content;
+  max-width: 100%;
+  margin-top: var(--oro-space-8);
 }
+
+.pilot-action .halo-cta, .pilot-apply .halo-cta { text-transform: none; }
 
 .pilot-arrow { width: 0.875rem; height: 0.875rem; flex: 0 0 auto; }
 
@@ -123,10 +87,7 @@
 
 .pilot-list .oro-heading + .oro-text { margin-top: var(--oro-space-1); }
 
-.pilot-fit {
-  border-block-end: var(--pilot-rule);
-  background: color-mix(in srgb, var(--oro-color-canvas) 45%, var(--oro-color-soft));
-}
+.pilot-fit { border-block-end: var(--pilot-rule); }
 
 .pilot-disclosures { border-top: var(--pilot-rule); }
 .pilot-disclosures details { border-bottom: var(--pilot-rule); }
@@ -207,22 +168,20 @@
   font-size: var(--oro-type-label-size);
 }
 
-.pilot-benefits { border-block: var(--pilot-rule); background: var(--oro-color-surface); }
+.pilot-benefits { border-block: var(--pilot-rule); }
 
 .pilot-pay {
-  --pilot-pay-rule: 1px solid color-mix(in srgb, var(--oro-color-soft) 28%, transparent);
   padding: clamp(1.5rem, 4vw, 2.75rem);
+  border: var(--pilot-rule);
   border-radius: var(--oro-radius-card);
-  color: var(--oro-color-on-accent);
-  background: linear-gradient(145deg, var(--oro-color-ink), color-mix(in srgb, var(--oro-color-accent) 50%, var(--oro-color-ink)));
+  background: var(--oro-color-surface);
 }
 
-.pilot-pay .oro-heading, .pilot-pay .oro-text { color: inherit; }
-.pilot-pay dl { margin-block: var(--oro-space-5); border-block: var(--pilot-pay-rule); }
+.pilot-pay dl { margin-block: var(--oro-space-5); border-block: var(--pilot-rule); }
 
 .pilot-pay dl > div { padding-block: var(--oro-space-3); }
-.pilot-pay dl > div + div { border-top: var(--pilot-pay-rule); }
-.pilot-pay dt { color: var(--oro-color-soft); font-size: var(--oro-type-label-size); }
+.pilot-pay dl > div + div { border-top: var(--pilot-rule); }
+.pilot-pay dt { color: var(--oro-color-muted); font-size: var(--oro-type-label-size); }
 
 .pilot-pay dd {
   margin: var(--oro-space-1) 0 0;
@@ -234,23 +193,23 @@
 
 .pilot-apply {
   padding-block: var(--pilot-section-space);
-  background: radial-gradient(ellipse at 30% bottom, var(--oro-color-glow), transparent 75%);
+  scroll-margin-top: var(--halo-header-height);
 }
 
 .pilot-apply > div > .oro-text { margin-top: var(--oro-space-4); }
-.pilot-apply .pilot-button { margin-top: var(--oro-space-6); }
+.pilot-apply .halo-cta { margin-top: var(--oro-space-6); }
 .pilot-apply .pilot-form-status { color: var(--oro-color-accent); }
 
 @media (prefers-reduced-motion: no-preference) {
-  .pilot-hero > :is(.pilot-title, .pilot-lede, .pilot-button),
+  .pilot-hero > :is(.pilot-title, .pilot-lede, .pilot-action),
   .pilot-deadline {
     animation: pilot-arrive 650ms var(--pilot-ease) var(--pilot-entry-delay, 0ms) backwards;
   }
 
   .pilot-hero > .pilot-title { --pilot-entry-offset: 12px; }
   .pilot-hero > .pilot-lede { --pilot-entry-delay: 85ms; }
-  .pilot-hero > .pilot-button { --pilot-entry-delay: 170ms; }
-  .pilot-hero > .pilot-button:focus-visible { animation: none; }
+  .pilot-hero > .pilot-action { --pilot-entry-delay: 170ms; }
+  .pilot-action:focus-within { animation: none; }
   .pilot-deadline { --pilot-entry-delay: 255ms; }
 
   .creator-pilot [data-pilot-reveal] {
@@ -263,8 +222,7 @@
   }
 
   .pilot-arrow { transition: transform 240ms var(--pilot-ease); }
-  .creator-pilot a:is(:hover, :focus-visible) .pilot-arrow { transform: translate(2px, -2px); }
-  .creator-pilot .pilot-about-link:is(:hover, :focus-visible) .pilot-arrow { transform: translateX(2px); }
+  .pilot-about-link:is(:hover, :focus-visible) .pilot-arrow { transform: translate(2px, -2px); }
 }
 
 @keyframes pilot-arrive {
@@ -275,10 +233,4 @@
 @media (prefers-reduced-motion: reduce) {
   html:has(.creator-pilot) { scroll-behavior: auto; }
   .creator-pilot *, .creator-pilot *::after { transition: none; }
-}
-
-@media (max-width: 550px) {
-  .pilot-topbar-inner { min-height: 4rem; }
-  .pilot-logo img { width: 4.75rem; }
-  .creator-pilot .pilot-title { font-size: clamp(3rem, 11vw, 3.75rem); }
 }
