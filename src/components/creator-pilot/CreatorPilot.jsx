@@ -194,10 +194,6 @@ export default function CreatorPilot() {
                 <dt>In view bonuses, up to</dt>
                 <dd>$100</dd>
               </div>
-              <div>
-                <dt>Maximum total</dt>
-                <dd>$400</dd>
-              </div>
             </dl>
             <Text>$25 per video plus $1 CPM on eligible views.</Text>
           </div>
