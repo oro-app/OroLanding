@@ -3,14 +3,13 @@ import { Button, Text, TextField } from 'oro-kit'
 
 const INSTAGRAM_HANDLE = /^@?[A-Za-z0-9._]{1,30}$/
 const MAX_TOTAL_LINK_LENGTH = 40000
+const OTHER_REFERRAL = 'Other'
+const OTHER_REFERRAL_PREFIX = `${OTHER_REFERRAL}: `
 const REFERRAL_SOURCES = [
   'Instagram',
-  'TikTok',
-  'LinkedIn',
   'Friend or word of mouth',
   'Campus or student group',
-  'oro website or newsletter',
-  'Other',
+  OTHER_REFERRAL,
 ]
 
 function isWebUrl(value) {
@@ -30,6 +29,7 @@ export default function CreatorApplication() {
   const addLinkButton = useRef(null)
   const [status, setStatus] = useState('idle')
   const [linkIds, setLinkIds] = useState([0])
+  const [referralSource, setReferralSource] = useState('')
 
   useEffect(() => {
     if (linkToFocus.current === null) return
@@ -56,7 +56,7 @@ export default function CreatorApplication() {
     const form = event.currentTarget
     const fields = new FormData(form)
     fields.delete('links')
-    const payload = Object.fromEntries(Array.from(fields, ([name, value]) => [name, value.trim()]))
+    const { referralOther, ...payload } = Object.fromEntries(Array.from(fields, ([name, value]) => [name, value.trim()]))
 
     if (!payload.name) {
       const field = form.elements.namedItem('name')
@@ -70,6 +70,16 @@ export default function CreatorApplication() {
       field.setCustomValidity('Enter your Instagram handle, with or without the @.')
       field.reportValidity()
       return
+    }
+
+    if (payload.referralSource === OTHER_REFERRAL) {
+      if (!referralOther) {
+        const field = form.elements.namedItem('referralOther')
+        field.setCustomValidity('Please specify how you heard about this opportunity.')
+        field.reportValidity()
+        return
+      }
+      payload.referralSource = `${OTHER_REFERRAL_PREFIX}${referralOther}`
     }
 
     const links = []
@@ -133,11 +143,21 @@ export default function CreatorApplication() {
             />
             <div className="oro-field">
               <label className="oro-field__label" htmlFor="pilot-application-referral">How did you hear about this opportunity?</label>
-              <select className="oro-input" id="pilot-application-referral" name="referralSource" defaultValue="" required>
+              <select
+                className="oro-input"
+                id="pilot-application-referral"
+                name="referralSource"
+                value={referralSource}
+                onChange={(event) => setReferralSource(event.target.value)}
+                required
+              >
                 <option value="" disabled>Select an option</option>
                 {REFERRAL_SOURCES.map((source) => <option key={source} value={source}>{source}</option>)}
               </select>
             </div>
+            {referralSource === OTHER_REFERRAL && (
+              <TextField label="Please specify" name="referralOther" maxLength={500 - OTHER_REFERRAL_PREFIX.length} required />
+            )}
             <fieldset className="pilot-application-links">
               <legend className="oro-field__label">Portfolio or other links (optional)</legend>
               {linkIds.map((id, index) => (
