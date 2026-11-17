@@ -84,9 +84,11 @@ export default function Order() {
         </div>}
         <p className="order-description">{product.description}</p>
         <fieldset disabled={busy} className="order-options"><legend>Style</legend>
-          <div className="order-option-list">{products.map(item => <label className="order-option" key={item.id}>
+          <div className="order-option-list">{products.map(item => <label className="order-option order-option--image" key={item.id}>
             <input type="radio" name="product" value={item.id} checked={productId === item.id} onChange={() => selectProduct(item)} />
-            <span>{item.title}{!item.variants.some(option => option.availableForSale) && ' (sold out)'}</span>
+            <span>
+              {item.images?.nodes?.[0] || item.featuredImage ? <img src={(item.images?.nodes?.[0] || item.featuredImage).url} alt={`${item.title}${!item.variants.some(option => option.availableForSale) ? ' (sold out)' : ''}`} /> : item.title}
+            </span>
           </label>)}</div>
         </fieldset>
         {product.variants.length > 1 && <fieldset disabled={busy} className="order-options"><legend>Option</legend>
