@@ -3,6 +3,8 @@ import order from '../api/order.js'
 import { loadEnv } from 'vite'
 
 export default function checkoutDev() {
+  let catalog
+  let pendingCatalog
   return {
     name: 'checkout-api',
     configResolved(config) {
@@ -13,6 +15,7 @@ export default function checkoutDev() {
       server.middlewares.use(async (req, res, next) => {
         const url = new URL(req.url, 'http://localhost')
         if (!['/api/checkout', '/api/order'].includes(url.pathname)) return next()
+        req.orderDevelopment = true
         req.query = Object.fromEntries(url.searchParams)
         res.status = code => { res.statusCode = code; return res }
         res.json = body => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(body)) }
@@ -25,6 +28,20 @@ export default function checkoutDev() {
           if (body) req.body = JSON.parse(body)
         } catch {
           return res.status(400).json({ error: 'Invalid request' })
+        }
+        if (url.pathname === '/api/order' && req.method === 'GET') {
+          res.setHeader('Cache-Control', 'no-store')
+          if (!catalog || catalog.expires <= Date.now()) {
+            pendingCatalog ||= (async () => {
+              const result = { setHeader() {}, status(code) { this.code = code; return this }, json(data) { this.data = data } }
+              await order(req, result)
+              return { ...result, expires: Date.now() + 30000 }
+            })().finally(() => { pendingCatalog = undefined })
+            const result = await pendingCatalog
+            if (result.code === 200) catalog = result
+            return res.status(result.code).json(result.data)
+          }
+          return res.status(catalog.code).json(catalog.data)
         }
         await (url.pathname === '/api/order' ? order : checkout)(req, res)
       })

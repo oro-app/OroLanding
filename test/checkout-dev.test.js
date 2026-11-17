@@ -15,6 +15,34 @@ test('local order reaches the Shopify handler instead of the legacy proxy', asyn
   assert.deepEqual(res.body, { error: 'Method not allowed.' })
 })
 
+test('local product reloads share requests and cache success, while checkout stays fresh', async t => {
+  const saved = { ...process.env }
+  Object.assign(process.env, { SHOPIFY_STORE_DOMAIN: 'test.myshopify.com', SHOPIFY_STOREFRONT_ACCESS_TOKEN: 'test', SHOPIFY_ORDER_PRODUCT_HANDLES: 'one,two' })
+  let middleware
+  checkoutDev().configureServer({ middlewares: { use(fn) { middleware = fn } } })
+  const upstream = t.mock.method(globalThis, 'fetch', async () => Response.json({ data: { product: {
+    id: 'product', variants: { nodes: [{ id: 'variant', availableForSale: true }], pageInfo: { hasNextPage: false } },
+  } } }))
+  const request = async () => {
+    const req = Object.assign(Readable.from([]), { url: '/api/order', method: 'GET' })
+    const res = { setHeader() {}, end(value) { this.body = JSON.parse(value) } }
+    await middleware(req, res, () => assert.fail('Unexpected proxy'))
+    return res
+  }
+  try {
+    const results = await Promise.all([request(), request()])
+    assert.equal(results[0].statusCode, 200)
+    assert.equal(upstream.mock.calls.length, 2)
+    assert.equal((await request()).statusCode, 200)
+    assert.equal(upstream.mock.calls.length, 2)
+  } finally {
+    for (const key of ['SHOPIFY_STORE_DOMAIN', 'SHOPIFY_STOREFRONT_ACCESS_TOKEN', 'SHOPIFY_ORDER_PRODUCT_HANDLES']) {
+      if (saved[key] === undefined) delete process.env[key]
+      else process.env[key] = saved[key]
+    }
+  }
+})
+
 test('local checkout uses the production handler and preserves acceptance data', async t => {
   let middleware
   checkoutDev().configureServer({ middlewares: { use(fn) { middleware = fn } } })

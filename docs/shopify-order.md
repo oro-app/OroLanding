@@ -23,6 +23,8 @@
 
 The project's Vite development middleware serves `/api/order` using the production handler and loads `SHOPIFY_` variables from local env files on the server. Add the variables above to `.env`, then restart `npm run dev` after changing them. Do not commit local credentials.
 
+Local product reads share in-flight requests and cache successful responses for 30 seconds. Publishing or editing a product can take up to that cache window to appear locally; restarting the dev server clears the cache. Failed reads are not cached. Checkout always rechecks Shopify directly. Local API errors include setup guidance; production responses stay generic. Local Shopify requests time out after five seconds.
+
 The API pins Shopify Storefront version `2026-10`. It permits only the two configured products, validates the selected variant against Shopify, and creates a fresh one-item cart on explicit checkout submission. Shopify performs final inventory and pricing validation at checkout. Products with more than 100 variants are rejected rather than silently omitting options. This flow supports one-time purchases; subscriptions requiring selling plans need additional implementation.
 
 No live store, payment, or deployment verification is implied by the repository checks.
