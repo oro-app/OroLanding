@@ -68,3 +68,18 @@ dialog button svg { display: block; flex-shrink: 0; }
   .categories button { border: 1px solid ButtonText; }
   .categories button[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -4px; }
 }
+
+#duplicate-reviews { margin: 20px 16px 0; padding: 16px; border: 1px solid #796785; border-radius: 16px; background: #F4EFF9; }
+#duplicate-reviews h2 { margin: 0; font-size: 20px; }
+#duplicate-reviews > p { color: #51465A; line-height: 1.5; }
+.duplicate-review + .duplicate-review { margin-top: 20px; padding-top: 12px; border-top: 1px solid #796785; }
+.duplicate-review header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.duplicate-review h3 { font-size: 16px; }
+.duplicate-review button { padding: 8px 14px; border: 1px solid #796785; border-radius: 8px; background: #FFFFFF; }
+.duplicate-review header button { color: #FFFFFF; background: #3A2646; }
+.review-pairs { display: grid; gap: 16px; }
+.review-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px; border-radius: 12px; background: #FFFFFF; }
+.review-pair article { min-width: 0; }
+.review-pair p { overflow-wrap: anywhere; }
+.review-pair button { color: #B42318; }
+@media (min-width: 700px) { .review-pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
