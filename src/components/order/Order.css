@@ -6,7 +6,7 @@
 .order-gallery { display: flex; align-items: flex-start; gap: var(--oro-space-4); min-width: 0; }
 .order-thumbnails { display: flex; flex-direction: column; gap: var(--oro-space-3); flex: 0 0 64px; max-height: 600px; overflow-y: auto; padding: 6px; }
 .order-thumbnail { flex-shrink: 0; width: 100%; aspect-ratio: 1; padding: 3px; border: 1px solid var(--oro-color-ink); border-radius: var(--oro-radius-field); background: var(--oro-color-surface); cursor: pointer; }
-.order-thumbnail[aria-pressed="true"] { border-width: 3px; padding: 1px; }
+.order-thumbnail[aria-pressed="true"] { border-width: 2px; padding: 2px; }
 .order-thumbnail img { width: 100%; height: 100%; object-fit: contain; }
 .order-preview { display: grid; place-items: center; flex: 1; min-width: 0; aspect-ratio: 4 / 5; background: var(--oro-color-surface); border-radius: var(--oro-radius-card); overflow: hidden; }
 .order-preview > img { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -26,8 +26,8 @@
 .order-option span { display: flex; align-items: center; min-height: 44px; padding: var(--oro-space-3) var(--oro-space-4); border: 1px solid var(--oro-color-ink); border-radius: var(--oro-radius-field); overflow-wrap: anywhere; }
 .order-option--image span { width: 72px; height: 90px; padding: var(--oro-space-1); background: var(--oro-color-surface); }
 .order-option--image img { width: 100%; height: 100%; object-fit: contain; }
-.order-option:has(:checked) span { border-width: 3px; padding: calc(var(--oro-space-3) - 2px) calc(var(--oro-space-4) - 2px); background: var(--oro-color-soft); }
-.order-option--image:has(:checked) span { padding: calc(var(--oro-space-1) - 2px); }
+.order-option:has(:checked) span { border-width: 2px; padding: calc(var(--oro-space-3) - 1px) calc(var(--oro-space-4) - 1px); background: var(--oro-color-soft); }
+.order-option--image:has(:checked) span { padding: calc(var(--oro-space-1) - 1px); }
 .order-option:has(:disabled) { cursor: not-allowed; }
 .order-checkout { width: 100%; }
 .order-fineprint { font-size: var(--oro-type-support-size); margin: var(--oro-space-3) 0; }
