@@ -27,7 +27,7 @@
 .order-option--image span { width: 72px; height: 90px; padding: var(--oro-space-1); background: var(--oro-color-surface); }
 .order-option--image img { width: 100%; height: 100%; object-fit: contain; }
 .order-option:has(:checked) span { border-width: 2px; padding: calc(var(--oro-space-3) - 1px) calc(var(--oro-space-4) - 1px); background: var(--oro-color-soft); }
-.order-option--image:has(:checked) span { padding: calc(var(--oro-space-1) - 1px); }
+.order-option--image:has(:checked) span { padding: calc(var(--oro-space-1) - 1px); background: var(--oro-color-surface); }
 .order-option:has(:disabled) { cursor: not-allowed; }
 .order-checkout { width: 100%; }
 .order-fineprint { font-size: var(--oro-type-support-size); margin: var(--oro-space-3) 0; }
