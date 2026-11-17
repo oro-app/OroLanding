@@ -1,8 +1,8 @@
-.order-page { padding-block: var(--oro-space-12) var(--oro-space-4); color: var(--oro-color-ink); }
+.order-page { display: flex; flex-direction: column; min-height: calc(100dvh - var(--halo-header-height)); padding-block: var(--oro-space-12) var(--oro-space-4); color: var(--oro-color-ink); }
 .order-page p { line-height: var(--oro-type-body-line-height); }
 .order-status { margin: 0; }
 .order-status:not(:empty) { margin-bottom: var(--oro-space-6); }
-.order-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--oro-space-12); align-items: start; }
+.order-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--oro-space-12); align-items: start; flex-shrink: 0; margin-block: auto; }
 .order-gallery { display: flex; align-items: flex-start; gap: var(--oro-space-4); min-width: 0; }
 .order-thumbnails { display: flex; flex-direction: column; gap: var(--oro-space-3); flex: 0 0 64px; max-height: 600px; overflow-y: auto; padding: 6px; }
 .order-thumbnail { flex-shrink: 0; width: 100%; aspect-ratio: 1; padding: 3px; border: 1px solid var(--oro-color-ink); border-radius: var(--oro-radius-field); background: var(--oro-color-surface); cursor: pointer; }
