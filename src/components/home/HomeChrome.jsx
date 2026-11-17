@@ -1,13 +1,11 @@
-import { Heading, Text } from 'oro-kit'
 import { useCallback, useEffect, useState } from 'react'
 import { trackCtaClick, trackEvent } from '../../lib/analytics'
-import { FOOTER_LINKS } from '../../lib/siteLinks'
 import { getOroTextLink, isMobileMessagingDevice } from '../../lib/textOro'
 import MessagesIcon from '../MessagesIcon'
 import TextOroModal from '../overlays/TextOroModal'
 import CtaSparkles from './CtaSparkles'
 
-function HomeLogo({ src = '/oro-logo.webp' }) {
+export function HomeLogo({ src = '/oro-logo.webp' }) {
   return <img className="halo-logo" src={src} alt="oro" width="1672" height="941" decoding="async" />
 }
 
@@ -61,67 +59,10 @@ export function HomeHeader({ showCta = true, sticky = true, ctaVariant = 'primar
     <header className={`halo-header${sticky ? '' : ' halo-header--static'}`}>
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo src="/oro-logo/oro-logo-ink.webp" /></a>
-        <nav className="halo-nav" aria-label="oro">
-          {showCta && <HomeCta place="header" variant={ctaVariant}>join the waitlist</HomeCta>}
-        </nav>
+        {showCta && <nav className="halo-nav" aria-label="oro">
+          <HomeCta place="header" variant={ctaVariant}>join the waitlist</HomeCta>
+        </nav>}
       </div>
     </header>
-  )
-}
-
-export function HomeFooter({ landing = false, showCloser = true, closerTitle = 'save your spot.', closerText = "text oro to join the waitlist. we'll let you know when access opens.", closerAction }) {
-  if (!landing) {
-    return (
-      <footer className="halo-footer halo-container">
-        <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo /></a>
-        <nav className="halo-footer-links" aria-label="Site footer">
-          {FOOTER_LINKS.map((link) => <a key={link.href} href={link.href}>{link.label[0].toUpperCase() + link.label.slice(1)}</a>)}
-        </nav>
-        <Text variant="support" muted>© 2026 Oro Digital Inc.</Text>
-      </footer>
-    )
-  }
-
-  return (
-    <footer className="halo-footer halo-footer--landing">
-      <div className="halo-container">
-        {showCloser && <section className="halo-footer-closer" aria-labelledby="closer-title" data-analytics-section="final_cta">
-          <Heading as="h2" variant="title" id="closer-title">{closerTitle}</Heading>
-          {closerText && <Text muted>{closerText}</Text>}
-          {closerAction || <HomeCta place="closer">join the waitlist</HomeCta>}
-        </section>}
-        <div className="halo-footer-main">
-          <div className="halo-footer-brand">
-            <a className="halo-logo-link" href="/" aria-label="oro home">
-              <img className="halo-footer-wordmark" src="/oro_logo_wordmark_cream.webp" alt="" width="1445" height="675" decoding="async" />
-            </a>
-            <nav className="halo-footer-social" aria-label="Social and editorial">
-              <a href="https://www.instagram.com/askoro.now" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>
-              </a>
-              <a href="https://www.linkedin.com/company/askoro" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.2 3a2.2 2.2 0 1 0 0 4.4 2.2 2.2 0 0 0 0-4.4ZM3.4 9h3.6v12H3.4V9Zm5.7 0h3.5v1.6h.1a3.9 3.9 0 0 1 3.5-1.9c3.8 0 4.5 2.5 4.5 5.7V21h-3.6v-5.8c0-1.4 0-3.1-1.9-3.1s-2.2 1.5-2.2 3V21H9.1V9Z" /></svg>
-              </a>
-              <a href="https://x.com/askoro_now" aria-label="X" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.1l-4.8-7.5L5.5 22H2.4l7.3-8.4L2 2h6.2l4.3 6.8L18.9 2Zm-1.1 18h1.7L7.2 3.9H5.4L17.8 20Z" /></svg>
-              </a>
-              <a href="/from-the-closet" aria-label="From the closet">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M10 6a2 2 0 1 1 2.7 1.9c-.5.2-.7.5-.7 1.1v1l9 6a1.6 1.6 0 0 1-.9 2.9H3.9A1.6 1.6 0 0 1 3 16l9-6" /></svg>
-              </a>
-            </nav>
-          </div>
-          <nav className="halo-footer-legal" aria-label="Company and legal">
-            {showCloser ? <h3>Explore</h3> : <h2>Explore</h2>}
-            <a href="/about">About the team</a>
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-            <a href="/cookies">Cookies</a>
-          </nav>
-        </div>
-        <div className="halo-footer-bottom">
-          <span>© 2026 Oro Digital Inc. · Made w luv &lt;3</span>
-        </div>
-      </div>
-    </footer>
   )
 }

@@ -2,7 +2,8 @@ import { lazy, Suspense, useEffect } from 'react'
 import { isFeedbackPath } from './lib/feedbackSession.js'
 import { GEO_PATHS } from './lib/geoRoutes.js'
 import Home from './components/home/Home'
-import { HomeHeader, HomeFooter } from './components/home/HomeChrome'
+import { HomeHeader } from './components/home/HomeChrome'
+import LandingFooter from './components/layout/LandingFooter'
 import SiteHeader from './components/layout/SiteHeader'
 import BlogSkeleton from './components/blog/BlogSkeleton'
 import CookieConsent from './components/overlays/CookieConsent'
@@ -151,7 +152,7 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout || route.type === 'order'} ctaVariant={route.type === 'order' ? 'secondary' : 'primary'} /> : <SiteHeader />)}
+        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {isCreatorPilot ? (
             <Suspense fallback={null}><CreatorPilotPage /></Suspense>
@@ -201,7 +202,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && (!isCheckout || route.type === 'order') && <HomeFooter landing={isHome || isCreatorPilot || route.type === 'order'} showCloser={route.type !== 'order'} />}
+        {isHalo && !isFeedback && (!isCheckout || route.type === 'order') && <LandingFooter landing={isHome || isCreatorPilot || route.type === 'order'} />}
         {(!isCheckout || route.type === 'order') && !isCreatorPilot && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>
