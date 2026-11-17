@@ -3,6 +3,18 @@ import { Readable } from 'node:stream'
 import test from 'node:test'
 import checkoutDev from '../scripts/checkout-dev.js'
 
+test('local order reaches the Shopify handler instead of the legacy proxy', async t => {
+  let middleware
+  checkoutDev().configureServer({ middlewares: { use(fn) { middleware = fn } } })
+  t.mock.method(globalThis, 'fetch', async () => assert.fail('Unsupported methods must not call upstream'))
+  const req = Readable.from([])
+  Object.assign(req, { url: '/api/order', method: 'DELETE' })
+  const res = { setHeader() {}, end(value) { this.body = JSON.parse(value) } }
+  await middleware(req, res, () => assert.fail('Order must not reach the legacy proxy'))
+  assert.equal(res.statusCode, 405)
+  assert.deepEqual(res.body, { error: 'Method not allowed.' })
+})
+
 test('local checkout uses the production handler and preserves acceptance data', async t => {
   let middleware
   checkoutDev().configureServer({ middlewares: { use(fn) { middleware = fn } } })

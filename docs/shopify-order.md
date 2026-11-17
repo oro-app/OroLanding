@@ -21,7 +21,7 @@
 
 ## Development and limits
 
-Vite alone does not serve Vercel functions. Use the project's Vercel development environment when you choose to run the app locally, with the same variables supplied locally. Do not commit local credentials.
+The project's Vite development middleware serves `/api/order` using the production handler and loads `SHOPIFY_` variables from local env files on the server. Add the variables above to `.env`, then restart `npm run dev` after changing them. Do not commit local credentials.
 
 The API pins Shopify Storefront version `2026-10`. It permits only the two configured products, validates the selected variant against Shopify, and creates a fresh one-item cart on explicit checkout submission. Shopify performs final inventory and pricing validation at checkout. Products with more than 100 variants are rejected rather than silently omitting options. This flow supports one-time purchases; subscriptions requiring selling plans need additional implementation.
 

@@ -21,7 +21,7 @@ export default function Order() {
     setLoading(true)
     setError('')
     fetch('/api/order', { signal: controller.signal }).then(async response => {
-      const data = await response.json()
+      const data = await response.json().catch(() => { throw new Error('Unable to load products. The order API did not return JSON. Please restart the development server.') })
       if (!response.ok) throw new Error(data.error)
       setProducts(data.products)
     }).catch(failure => {
@@ -37,7 +37,7 @@ export default function Order() {
     setError('')
     try {
       const response = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ variantId }) })
-      const data = await response.json()
+      const data = await response.json().catch(() => { throw new Error('Unable to open checkout. Please try again shortly.') })
       if (!response.ok) throw new Error(data.error)
       const url = new URL(data.checkoutUrl)
       if (url.protocol !== 'https:') throw new Error('Unable to open checkout. Please try again.')
