@@ -1,0 +1,59 @@
+/* Prominent CTA recipe from vendor/oro-design-system.tar.gz, brand/styles.css.
+ * Scoped here until the published oro-kit package includes CtaLink. */
+.order-page {
+  --oro-color-cta: #573969;
+  --oro-color-cta-outline: rgb(255 255 255 / 16%);
+  --oro-color-cta-edge: #c7a6f0;
+  --oro-color-cta-edge-fade: rgb(199 166 240 / 15%);
+  --oro-color-cta-highlight: #f3e9ff;
+  --oro-shadow-cta: 0 16px 38px rgb(43 22 70 / 30%), 0 4px 12px rgb(43 22 70 / 16%), inset 0 1px 0 var(--oro-color-cta-outline);
+  --oro-shadow-cta-hover: 0 20px 48px rgb(43 22 70 / 34%), 0 6px 16px rgb(43 22 70 / 18%), inset 0 1px 0 rgb(255 255 255 / 20%);
+  --oro-shadow-cta-sweep: 0 0 0 1px rgb(199 166 240 / 35%), 0 0 22px rgb(176 132 232 / 55%), 0 16px 38px rgb(43 22 70 / 30%), inset 0 0 18px rgb(214 186 255 / 45%);
+  --oro-motion-cta-start-angle: 250deg;
+}
+
+@property --oro-cta-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.order-page .order-checkout.oro-cta--prominent {
+  --oro-cta-angle: var(--oro-motion-cta-start-angle);
+  position: relative;
+  isolation: isolate;
+  width: 286px;
+  max-width: 100%;
+  min-height: 68px;
+  padding: 14px var(--oro-space-6);
+  gap: var(--oro-space-3);
+  border-color: transparent;
+  background: linear-gradient(var(--oro-color-cta), var(--oro-color-cta)) padding-box,
+    conic-gradient(from var(--oro-cta-angle), var(--oro-color-cta-edge-fade), var(--oro-color-cta-edge) 20%, var(--oro-color-cta-highlight) 40%, var(--oro-color-cta-edge) 60%, var(--oro-color-cta-edge-fade) 80%) border-box;
+  box-shadow: var(--oro-shadow-cta);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  transition: box-shadow 350ms var(--oro-motion-easing), --oro-cta-angle 600ms var(--oro-motion-easing);
+}
+
+.order-page .order-checkout.oro-cta--prominent:hover:not(:disabled) { box-shadow: var(--oro-shadow-cta-hover); }
+.order-page .order-checkout.oro-cta--prominent:disabled { background: var(--oro-color-disabled-surface); box-shadow: none; }
+
+@keyframes orderCtaSweep { to { --oro-cta-angle: calc(var(--oro-motion-cta-start-angle) + 1turn); } }
+@media (prefers-reduced-motion: no-preference) {
+  .order-page .order-checkout.oro-cta--prominent:focus-visible:not(:disabled) { animation: orderCtaSweep 3.2s linear infinite; box-shadow: var(--oro-shadow-cta-sweep); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .order-page .order-checkout.oro-cta--prominent:hover:not(:disabled) { animation: orderCtaSweep 3.2s linear infinite; box-shadow: var(--oro-shadow-cta-sweep); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .order-page .order-checkout.oro-cta--prominent { transition: none; }
+}
+@media (max-width: 360px) {
+  .order-page .order-checkout.oro-cta--prominent { padding-inline: var(--oro-space-3); gap: var(--oro-space-2); }
+}
+@media (forced-colors: active) {
+  .order-page .order-checkout.oro-cta--prominent { border-color: ButtonText; background: ButtonFace; color: ButtonText; }
+}
