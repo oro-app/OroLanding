@@ -124,6 +124,7 @@
     { "source": "/creators/", "destination": "/creators/index.html" },
     { "source": "/design-system", "destination": "/design-system/index.html" },
     { "source": "/design-system/", "destination": "/design-system/index.html" },
+    { "source": "/order", "destination": "/order/index.html" },
     { "source": "/checkout", "destination": "/checkout/index.html" },
     { "source": "/closet", "destination": "/closet/index.html" },
     { "source": "/merch", "destination": "/merch/index.html" },

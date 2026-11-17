@@ -27,6 +27,11 @@ export const ROUTE_SEO = {
     h1: 'oro creators',
     noindex: true,
   },
+  order: {
+    path: '/order', title: 'Order | Oro',
+    description: 'Choose your favourite Oro item and check out securely with Shopify.',
+    h1: 'Pick your favourite.', noindex: true,
+  },
   merch: {
     path: '/merch', title: 'Merch — bidding closed | Oro',
     description: 'Bidding and submissions for the Oro hoodie are closed. View the final hoodie placements and leaderboard.',

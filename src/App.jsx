@@ -21,11 +21,13 @@ const AboutPage = lazy(() => import('./components/about/AboutPage'))
 const FeedbackPage = lazy(() => import('./components/feedback/Feedback'))
 const GeoPage = lazy(() => import('./components/geo/GeoPage'))
 const CheckoutPage = lazy(() => import('./components/checkout/Checkout'))
+const OrderPage = lazy(() => import('./components/order/Order'))
 const PuttyPage = lazy(() => import('./components/putty/Putty'))
 const CreatorPilotPage = lazy(() => import('./components/creator-pilot/CreatorPilot'))
 
 export function getRouteFromPath(pathname = '/') {
   const path = pathname.replace(/\/+$/, '') || '/'
+  if (path === '/order') return { type: 'order' }
   if (path === '/checkout') return { type: 'checkout' }
   if (path === '/merch' || path === '/putty') return { type: 'merch' }
   if (path === '/creators' || path === '/creators/index.html') return { type: 'creators' }
@@ -61,7 +63,7 @@ function App({ initialRoute }) {
   const route = initialRoute || getBrowserRoute()
   const isHome = route.type === 'home'
   const isFeedback = route.type === 'feedback'
-  const isCheckout = route.type === 'checkout' || route.type === 'merch'
+  const isCheckout = route.type === 'checkout' || route.type === 'merch' || route.type === 'order'
   const isCreatorPilot = route.type === 'creators'
   const isGeo = route.type === 'geo'
   const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
@@ -152,6 +154,8 @@ function App({ initialRoute }) {
         <main id="main" tabIndex={-1}>
           {isCreatorPilot ? (
             <Suspense fallback={null}><CreatorPilotPage /></Suspense>
+          ) : route.type === 'order' ? (
+            <Suspense fallback={null}><OrderPage /></Suspense>
           ) : route.type === 'merch' ? (
             <Suspense fallback={<p role="status">Loading merch…</p>}><PuttyPage /></Suspense>
           ) : isCheckout ? (
