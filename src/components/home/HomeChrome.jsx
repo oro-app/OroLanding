@@ -69,7 +69,7 @@ export function HomeHeader({ showCta = true, sticky = true, ctaVariant = 'primar
   )
 }
 
-export function HomeFooter({ landing = false, closerTitle = 'save your spot.', closerText = "text oro to join the waitlist. we'll let you know when access opens.", closerAction }) {
+export function HomeFooter({ landing = false, showCloser = true, closerTitle = 'save your spot.', closerText = "text oro to join the waitlist. we'll let you know when access opens.", closerAction }) {
   if (!landing) {
     return (
       <footer className="halo-footer halo-container">
@@ -85,11 +85,11 @@ export function HomeFooter({ landing = false, closerTitle = 'save your spot.', c
   return (
     <footer className="halo-footer halo-footer--landing">
       <div className="halo-container">
-        <section className="halo-footer-closer" aria-labelledby="closer-title" data-analytics-section="final_cta">
+        {showCloser && <section className="halo-footer-closer" aria-labelledby="closer-title" data-analytics-section="final_cta">
           <Heading as="h2" variant="title" id="closer-title">{closerTitle}</Heading>
           {closerText && <Text muted>{closerText}</Text>}
           {closerAction || <HomeCta place="closer">join the waitlist</HomeCta>}
-        </section>
+        </section>}
         <div className="halo-footer-main">
           <div className="halo-footer-brand">
             <a className="halo-logo-link" href="/" aria-label="oro home">
@@ -111,7 +111,7 @@ export function HomeFooter({ landing = false, closerTitle = 'save your spot.', c
             </nav>
           </div>
           <nav className="halo-footer-legal" aria-label="Company and legal">
-            <h3>Explore</h3>
+            {showCloser ? <h3>Explore</h3> : <h2>Explore</h2>}
             <a href="/about">About the team</a>
             <a href="/privacy">Privacy</a>
             <a href="/terms">Terms</a>

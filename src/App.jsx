@@ -201,7 +201,7 @@ function App({ initialRoute }) {
             <Home />
           )}
         </main>
-        {isHalo && !isFeedback && !isCheckout && <HomeFooter landing={isHome || isCreatorPilot} />}
+        {isHalo && !isFeedback && (!isCheckout || route.type === 'order') && <HomeFooter landing={isHome || isCreatorPilot || route.type === 'order'} showCloser={route.type !== 'order'} />}
         {(!isCheckout || route.type === 'order') && !isCreatorPilot && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>
