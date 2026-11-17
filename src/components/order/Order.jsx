@@ -136,15 +136,15 @@ export default function Order() {
             </span>
           </label>)}</div>
         </fieldset>
-        {product.variants.length > 1 && <fieldset disabled={busy} className="order-options"><legend>Option</legend>
+        {product.variants.length > 1 && <fieldset disabled={busy} className="order-options"><legend>Sizes</legend>
           <div className="order-option-list">{product.variants.map(option => <label className="order-option order-option--size" key={option.id}>
             <input type="radio" name="variant" value={option.id} checked={variantId === option.id} disabled={!option.availableForSale} onChange={() => { setVariantId(option.id); setError(''); trackOrderEvent('select_variant', product, option) }} />
             <span>{option.title}{!option.availableForSale && ' (sold out)'}</span>
           </label>)}</div>
         </fieldset>}
         <Button variant="primary" className="order-checkout" type="submit" disabled={busy || !variant?.availableForSale}>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'} <ButtonArrow /></Button>
-        <a className="order-contact" href="/contact">Questions about your pre-order? Contact us</a>
       </div>
     </form>}
+    {product && <p className="order-contact">Questions about your pre-order? <a href="/contact">Contact us</a></p>}
   </div>
 }
