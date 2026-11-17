@@ -24,7 +24,8 @@ async function products(timeout, buyerIP) {
   return Promise.all(handles.map(async handle => {
     const { product } = await storefront(`query($handle: String!) {
       product(handle: $handle) { id title description featuredImage { url altText }
-        variants(first: 100) { nodes { id title availableForSale price { amount currencyCode } } pageInfo { hasNextPage } }
+        images(first: 100) { nodes { url altText } }
+        variants(first: 100) { nodes { id title availableForSale price { amount currencyCode } compareAtPrice { amount currencyCode } } pageInfo { hasNextPage } }
       }
     }`, { handle }, timeout, buyerIP)
     if (!product) throw new Error('unpublished')

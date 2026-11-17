@@ -39,7 +39,10 @@ test('order restricts checkout to available variants of the two configured produ
     calls.push(body)
     return { ok: true, json: async () => ({ data: body.query.includes('cartCreate')
       ? { cartCreate: { cart: { checkoutUrl: 'https://oro-test.myshopify.com/checkouts/test' }, userErrors: [] } }
-      : { product: { id: body.variables.handle, variants: { nodes: [{ id: `${body.variables.handle}-variant`, availableForSale: body.variables.handle === 'one' }], pageInfo: { hasNextPage: false } } } } }) }
+      : { product: { id: body.variables.handle,
+        images: { nodes: [{ url: 'https://cdn.shopify.com/front.jpg', altText: 'Front' }, { url: 'https://cdn.shopify.com/back.jpg', altText: 'Back' }] },
+        variants: { nodes: [{ id: `${body.variables.handle}-variant`, availableForSale: body.variables.handle === 'one', price: { amount: '49.99', currencyCode: 'CAD' }, compareAtPrice: { amount: '59.99', currencyCode: 'CAD' } }], pageInfo: { hasNextPage: false } },
+      } } }) }
   }
   const request = async (method, body) => {
     const res = { setHeader() {}, status(value) { this.code = value; return this }, json(value) { this.data = value; return this } }
@@ -47,7 +50,13 @@ test('order restricts checkout to available variants of the two configured produ
     return res
   }
   try {
-    assert.equal((await request('GET')).data.products.length, 2)
+    const catalog = (await request('GET')).data.products
+    assert.equal(catalog.length, 2)
+    assert.equal(catalog[0].images.nodes.length, 2)
+    assert.equal(catalog[0].variants[0].price.amount, '49.99')
+    assert.equal(catalog[0].variants[0].compareAtPrice.amount, '59.99')
+    assert.match(calls[0].query, /images\(first: 100\)/)
+    assert.match(calls[0].query, /compareAtPrice\s*\{\s*amount currencyCode\s*\}/)
     assert.equal((await request('POST', { variantId: 'unlisted-variant' })).code, 400)
     assert.equal((await request('POST', { variantId: 'two-variant' })).code, 400)
     assert.equal(calls.filter(call => call.query.includes('cartCreate')).length, 0)

@@ -1,6 +1,16 @@
 # Shopify order page
 
-`/order` is a single product-selection page using the site's header, checkout cards, button styles, and Oro tokens. It sells one unit of either configured product per order. Shopify owns product content, variants, prices, inventory, payment, shipping, taxes, and order emails. No products need to be declared in this repository. Payment takes place on Shopify's hosted checkout.
+`/order` is a product page using the landing-page header and CTA, a thumbnail gallery, and product choices styled as variants. It sells one unit of either configured product per order. Shopify owns product content, variants, prices, inventory, payment, shipping, taxes, and order emails. No products need to be declared in this repository. Payment takes place on Shopify's hosted checkout.
+
+## Pricing and pre-orders
+
+- Set **Price** to **49.99** and **Compare-at price** to **59.99** on both products and every applicable variant, in the store's currency. The page displays Shopify's actual price, strikes through a higher compare-at price in the same currency, and shows the savings. It does not override checkout pricing or invent a discount when Shopify has no compare-at price.
+- Add each product's photos to its Shopify product media in the desired order. The gallery shows up to 100 images for the selected product; switching products resets the preview to its first image. Products can remain separate in Shopify.
+- For a simple full-payment pre-order without an app, enable **Inventory tracked** and **Continue selling when out of stock** on each applicable variant. Set fulfillment to manual and fulfill when ready. This allows overselling; monitor orders and disable it when the batch is full.
+- The page labels purchases as pre-orders, states that payment is collected at checkout, and shows **Estimated shipping January–February 2027**. Add that estimate and pre-order wording to Shopify product descriptions/titles and order confirmation content as appropriate so customers retain that information after checkout. Update the page copy if the shipping window changes.
+- These remain ordinary paid Shopify orders awaiting fulfillment. Shopify's dedicated pre-order purchase options (including deposits or deferred charges) require a pre-order app and selling-plan integration; this checkout does not implement those options.
+
+References: [sale pricing](https://help.shopify.com/en/manual/products/details/product-pricing/sale-pricing), [selling out of stock](https://help.shopify.com/en/manual/inventory-and-locations/setup/selling-when-out-of-stock), [manual fulfillment](https://help.shopify.com/en/manual/checkout-settings/order-processing), [dedicated pre-orders](https://help.shopify.com/en/manual/products/purchase-options/pre-orders).
 
 ## Connect the existing store
 

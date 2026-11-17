@@ -1,19 +1,29 @@
 import { useEffect, useState } from 'react'
 import ButtonArrow from '../ButtonArrow'
-import '../checkout/Checkout.css'
 import './Order.css'
 
 export default function Order() {
   const [products, setProducts] = useState([])
   const [productId, setProductId] = useState('')
   const [variantId, setVariantId] = useState('')
+  const [imageIndex, setImageIndex] = useState(0)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [attempt, setAttempt] = useState(0)
   const product = products.find(item => item.id === productId)
   const variant = product?.variants.find(item => item.id === variantId)
+  const images = product?.images?.nodes?.length ? product.images.nodes : product?.featuredImage ? [product.featuredImage] : []
+  const image = images[imageIndex]
+  const onSale = variant?.compareAtPrice?.currencyCode === variant?.price.currencyCode && Number(variant?.compareAtPrice?.amount) > Number(variant?.price.amount)
   const price = value => new Intl.NumberFormat('en-CA', { style: 'currency', currency: value.currencyCode }).format(Number(value.amount))
+
+  function selectProduct(item) {
+    setProductId(item.id)
+    setVariantId((item.variants.find(option => option.availableForSale) || item.variants[0])?.id || '')
+    setImageIndex(0)
+    setError('')
+  }
 
   useEffect(() => {
     document.title = 'Order | Oro'
@@ -24,6 +34,7 @@ export default function Order() {
       const data = await response.json().catch(() => { throw new Error('Unable to load products. The order API did not return JSON. Please restart the development server.') })
       if (!response.ok) throw new Error(data.error)
       setProducts(data.products)
+      if (data.products.length) selectProduct(data.products.find(item => item.variants.some(option => option.availableForSale)) || data.products[0])
     }).catch(failure => {
       if (!controller.signal.aborted) setError(failure.message || 'Unable to load products. Please try again.')
     }).finally(() => { if (!controller.signal.aborted) setLoading(false) })
@@ -48,38 +59,49 @@ export default function Order() {
     }
   }
 
-  return <div className="checkout-page order-page halo-container">
-    <header className="checkout-story"><p>From Oro, to you.</p><h1>Pick your <em>favourite.</em></h1><p>Two choices. A little more Oro in your everyday.</p></header>
-    <p role="status">{loading ? 'Loading products…' : busy ? 'Opening Shopify checkout…' : error}</p>
+  return <div className="order-page halo-container">
+    {!product && <h1>Pre-order</h1>}
+    <p className="order-status" role="status">{loading ? 'Loading products…' : busy ? 'Opening Shopify checkout…' : error}</p>
     {!loading && !products.length && <button className="oro-button" onClick={() => setAttempt(value => value + 1)}>Try again</button>}
-    {!!products.length && <form onSubmit={checkout}>
-      <fieldset disabled={busy} className="order-products"><legend>Choose one item</legend>
-        {products.map(item => <label className="checkout-card order-product" key={item.id}>
-          <input type="radio" name="product" value={item.id} checked={productId === item.id} onChange={() => {
-            setProductId(item.id)
-            setVariantId(item.variants.length === 1 && item.variants[0].availableForSale ? item.variants[0].id : '')
-            setError('')
-          }} />
-          {item.featuredImage && <img src={item.featuredImage.url} alt={item.featuredImage.altText || item.title} />}
-          <h2>{item.title}</h2><p>{item.description}</p>
-          <p>{item.variants.length > 1 ? 'From ' : ''}{item.variants.length ? price(item.variants.reduce((lowest, option) => Number(option.price.amount) < Number(lowest.price.amount) ? option : lowest).price) : 'Unavailable'}</p>
-          {!item.variants.some(option => option.availableForSale) && <p>Sold out</p>}
-        </label>)}
-      </fieldset>
-      <div className="checkout-card order-summary">
-        <h2>Your selection</h2>
-        {product ? <>
-          <p>{product.title}</p>
-          {product.variants.length > 1 && <><label className="checkout-label" htmlFor="order-variant">Choose an option</label>
-            <select className="oro-input" id="order-variant" value={variantId} disabled={busy} onChange={event => setVariantId(event.target.value)}>
-              <option value="">Select an option</option>
-              {product.variants.map(option => <option key={option.id} value={option.id} disabled={!option.availableForSale}>{option.title} — {price(option.price)}{!option.availableForSale ? ' (sold out)' : ''}</option>)}
-            </select></>}
-          {variant && <p>Subtotal: {price(variant.price)} {variant.price.currencyCode}</p>}
-        </> : <p>Choose an item above to get started.</p>}
-        <p>One item per order. Shipping and taxes are calculated at checkout.</p>
-        <button className="oro-button" type="submit" disabled={busy || !variant?.availableForSale}>Continue to Shopify checkout <ButtonArrow /></button>
-        <p>Questions? <a href="/contact">Contact us</a>.</p>
+    {product && <form className="order-layout" onSubmit={checkout}>
+      <section className="order-gallery" aria-label={`${product.title} photos`}>
+        {images.length > 1 && <div className="order-thumbnails" role="group" aria-label="Product photos">
+          {images.map((photo, index) => <button type="button" key={photo.url} className="order-thumbnail" aria-label={`View ${product.title} photo ${index + 1}`} aria-pressed={imageIndex === index} onClick={() => setImageIndex(index)}>
+            <img src={photo.url} alt="" loading="lazy" />
+          </button>)}
+        </div>}
+        <div className="order-preview">
+          {image ? <img src={image.url} alt={image.altText || `${product.title} — photo ${imageIndex + 1}`} /> : <p>Product photos coming soon.</p>}
+        </div>
+      </section>
+      <div className="order-details">
+        <h1>{product.title}</h1>
+        {variant && <div className="order-price">
+          {onSale && <del><span className="order-sr-only">Regular price: </span>{price(variant.compareAtPrice)}</del>}
+          <span><span className="order-sr-only">{onSale ? 'Sale price: ' : 'Price: '}</span>{price(variant.price)}</span>
+          <small>{variant.price.currencyCode}</small>
+          {onSale && <span className="order-sale">Save {price({ ...variant.price, amount: Number(variant.compareAtPrice.amount) - Number(variant.price.amount) })}</span>}
+        </div>}
+        <p className="order-description">{product.description}</p>
+        <fieldset disabled={busy} className="order-options"><legend>Style</legend>
+          <div className="order-option-list">{products.map(item => <label className="order-option" key={item.id}>
+            <input type="radio" name="product" value={item.id} checked={productId === item.id} onChange={() => selectProduct(item)} />
+            <span>{item.title}{!item.variants.some(option => option.availableForSale) && ' (sold out)'}</span>
+          </label>)}</div>
+        </fieldset>
+        {product.variants.length > 1 && <fieldset disabled={busy} className="order-options"><legend>Option</legend>
+          <div className="order-option-list">{product.variants.map(option => <label className="order-option" key={option.id}>
+            <input type="radio" name="variant" value={option.id} checked={variantId === option.id} disabled={!option.availableForSale} onChange={() => { setVariantId(option.id); setError('') }} />
+            <span>{option.title}{!option.availableForSale && ' (sold out)'}</span>
+          </label>)}</div>
+        </fieldset>}
+        <div className="order-preorder" id="order-preorder">
+          <strong>Pre-order · Estimated shipping January–February 2027</strong>
+          <p>Payment is collected at checkout. Your item will ship when it’s ready.</p>
+        </div>
+        <button className="oro-button order-checkout" type="submit" aria-describedby="order-preorder" disabled={busy || !variant?.availableForSale}>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'} <ButtonArrow /></button>
+        <p className="order-fineprint">One item per order. Shipping and taxes calculated at checkout.</p>
+        <a className="order-contact" href="/contact">Questions about your pre-order? Contact us</a>
       </div>
     </form>}
   </div>

@@ -150,7 +150,7 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout} /> : <SiteHeader />)}
+        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout || route.type === 'order'} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {isCreatorPilot ? (
             <Suspense fallback={null}><CreatorPilotPage /></Suspense>
