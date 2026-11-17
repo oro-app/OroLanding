@@ -95,6 +95,7 @@ export default function Order() {
   }
 
   return <div className="order-page halo-container">
+    <section className="order-content" aria-label="Pre-order products">
     {!product && <h1 className={loading ? 'order-sr-only' : undefined}>Pre-order</h1>}
     <p className={`order-status${loading ? ' order-sr-only' : ''}`} role="status">{loading ? 'Loading products…' : busy ? 'Opening Shopify checkout…' : error}</p>
     {loading && <div className="order-layout order-skeleton" aria-hidden="true">
@@ -146,6 +147,7 @@ export default function Order() {
         <Button variant="primary" className="order-checkout oro-cta--compact" type="submit" disabled={busy || !variant?.availableForSale}><span>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'}</span> <ButtonArrow /></Button>
       </div>
     </form>}
-    {product && <p className="order-contact">Questions about your pre-order? <a href="/contact">Contact us</a></p>}
+    </section>
+    <p className="order-contact">Questions about your pre-order? <a href="/contact">Contact us</a></p>
   </div>
 }
