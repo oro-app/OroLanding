@@ -2,6 +2,31 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import handler from '../api/order.js'
 
+test('private Storefront auth uses the private header and validated local buyer IP', async t => {
+  const previous = { ...process.env }
+  Object.assign(process.env, { SHOPIFY_STORE_DOMAIN: 'test.myshopify.com', SHOPIFY_STOREFRONT_PRIVATE_TOKEN: 'private-test', SHOPIFY_STOREFRONT_ACCESS_TOKEN: 'public-test', SHOPIFY_ORDER_PRODUCT_HANDLES: 'one,two' })
+  const upstream = t.mock.method(globalThis, 'fetch', async () => Response.json({ data: { product: {
+    id: 'product', variants: { nodes: [], pageInfo: { hasNextPage: false } },
+  } } }))
+  try {
+    const res = { setHeader() {}, status(code) { this.code = code; return this }, json(data) { this.data = data } }
+    await handler({ method: 'GET', orderDevelopment: true, socket: { remoteAddress: '127.0.0.1' }, headers: { 'x-forwarded-for': '192.0.2.1' } }, res)
+    assert.equal(res.code, 200)
+    for (const call of upstream.mock.calls) {
+      const headers = call.arguments[1].headers
+      assert.equal(headers['Shopify-Storefront-Private-Token'], 'private-test')
+      assert.equal(headers['Shopify-Storefront-Buyer-IP'], '127.0.0.1')
+      assert.equal(headers['X-Shopify-Storefront-Access-Token'], undefined)
+    }
+    assert.equal(JSON.stringify(res.data).includes('private-test'), false)
+  } finally {
+    for (const key of ['SHOPIFY_STORE_DOMAIN', 'SHOPIFY_STOREFRONT_PRIVATE_TOKEN', 'SHOPIFY_STOREFRONT_ACCESS_TOKEN', 'SHOPIFY_ORDER_PRODUCT_HANDLES']) {
+      if (previous[key] === undefined) delete process.env[key]
+      else process.env[key] = previous[key]
+    }
+  }
+})
+
 test('order restricts checkout to available variants of the two configured products', async () => {
   const previous = { ...process.env }
   const originalFetch = globalThis.fetch

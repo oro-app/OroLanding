@@ -4,18 +4,18 @@
 
 ## Connect the existing store
 
-1. In Shopify admin, add the **Headless** sales channel and create a storefront. Give its Storefront API access permission to read products and create carts. Copy its **public Storefront access token**, not an Admin API token or private token.
+1. In Shopify admin, add the **Headless** sales channel and create a storefront. Give its Storefront API access permission to read products and create carts. Copy its **private Storefront access token**, not an Admin API token. All Shopify calls in this project run on the server.
 2. Make both products Active and publish them to that Headless storefront. Check their prices, inventory, images, variants, and shipping requirements.
 3. Get each product's handle from its search engine listing URL (the portion after `/products/`).
 4. In the existing Vercel project's Settings → Environment Variables, add these for Production and any Preview environments you intend to test:
 
    ```dotenv
    SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
-   SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-public-storefront-token
+   SHOPIFY_STOREFRONT_PRIVATE_TOKEN=your-private-storefront-token
    SHOPIFY_ORDER_PRODUCT_HANDLES=first-product-handle,second-product-handle
    ```
 
-   Use the permanent `myshopify.com` domain, without `https://` or a trailing slash. These variables are read by `/api/order` on the server; do not prefix them with `VITE_`. Tokens do not belong in committed files.
+   Use the permanent `myshopify.com` domain, without `https://` or a trailing slash. These variables are read by `/api/order` on the server; do not prefix them with `VITE_`. Tokens do not belong in committed files. The private token uses the `Shopify-Storefront-Private-Token` header; buyer requests also forward a validated IP using `Shopify-Storefront-Buyer-IP` (Vercel supplies the forwarded client address; local development uses the socket address). The existing public `SHOPIFY_STOREFRONT_ACCESS_TOKEN` is supported as a fallback when no private token is set.
 5. Verify Shopify Payments/payment provider, shipping zones/rates, taxes, policies, and customer notifications in Shopify admin. Redeploy the Vercel project after adding the variables.
 6. Open `/order` on the deployment. Check both products and available/sold-out variants. In Shopify test mode, complete a test order and verify the item, amount, shipping, taxes, confirmation, and inventory. Disable test mode before accepting real payments.
 
