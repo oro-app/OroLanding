@@ -1,6 +1,8 @@
 # Shopify order page
 
-`/order` is a product page using the landing-page header and CTA, a thumbnail gallery, and product choices styled as variants. It sells one unit of either configured product per order. Shopify owns product content, variants, prices, inventory, payment, shipping, taxes, and order emails. No products need to be declared in this repository. Payment takes place on Shopify's hosted checkout.
+`/order` is a product page using the landing-page header with a secondary CTA, a thumbnail gallery, and product choices styled as variants. The primary Pre-order button opens Shopify's hosted checkout. It sells one unit of either configured product per order. Shopify owns product content, variants, prices, inventory, payment, shipping, taxes, and order emails. No products need to be declared in this repository.
+
+Loading uses the same skeleton colours, shimmer timing, and reduced-motion behaviour as `/merch`. Descriptions retain Shopify paragraphs, line breaks, bullet/numbered lists, and basic emphasis using an allowlist of React elements; HTML attributes and scripts are not rendered. The displayed currency-code label is omitted; Shopify currency remains part of pricing and GA event data. See [analytics events](../src/lib/README.md) for consent-gated order instrumentation. Completed purchases need Shopify-side tracking.
 
 ## Pricing and pre-orders
 

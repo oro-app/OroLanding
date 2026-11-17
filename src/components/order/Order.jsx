@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Button } from 'oro-kit'
+import { hasAnalyticsConsent, trackEvent } from '../../lib/analytics'
 import ButtonArrow from '../ButtonArrow'
+import { readProductDescription } from './ProductDescription'
 import './Order.css'
 
 export default function Order() {
@@ -11,6 +14,7 @@ export default function Order() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [attempt, setAttempt] = useState(0)
+  const viewedVariant = useRef('')
   const product = products.find(item => item.id === productId)
   const variant = product?.variants.find(item => item.id === variantId)
   const images = product?.images?.nodes?.length ? product.images.nodes : product?.featuredImage ? [product.featuredImage] : []
@@ -18,12 +22,33 @@ export default function Order() {
   const onSale = variant?.compareAtPrice?.currencyCode === variant?.price.currencyCode && Number(variant?.compareAtPrice?.amount) > Number(variant?.price.amount)
   const price = value => new Intl.NumberFormat('en-CA', { style: 'currency', currency: value.currencyCode }).format(Number(value.amount))
 
-  function selectProduct(item) {
+  function trackOrderEvent(name, item = product, option = variant, params = {}) {
+    trackEvent(name, {
+      route_type: 'order',
+      ...(option && { currency: option.price.currencyCode, value: Number(option.price.amount), items: [{ item_id: item.id, item_name: item.title, item_variant: option.title, price: Number(option.price.amount), quantity: 1 }] }),
+      ...params,
+    })
+  }
+
+  function selectProduct(item, track = false) {
+    const option = item.variants.find(option => option.availableForSale) || item.variants[0]
     setProductId(item.id)
-    setVariantId((item.variants.find(option => option.availableForSale) || item.variants[0])?.id || '')
+    setVariantId(option?.id || '')
     setImageIndex(0)
     setError('')
+    if (track) trackOrderEvent('select_item', item, option, { item_list_id: 'order_styles', item_list_name: 'Order styles' })
   }
+
+  useEffect(() => {
+    function trackView() {
+      if (!variant || !hasAnalyticsConsent() || viewedVariant.current === variant.id) return
+      trackOrderEvent('view_item')
+      viewedVariant.current = variant.id
+    }
+    trackView()
+    window.addEventListener('oro:analytics-consent-change', trackView)
+    return () => window.removeEventListener('oro:analytics-consent-change', trackView)
+  }, [product, variant])
 
   useEffect(() => {
     document.title = 'Order | Oro'
@@ -35,17 +60,15 @@ export default function Order() {
       if (!response.ok) throw new Error(data.error)
       for (const item of data.products) {
         if (!item.descriptionHtml) continue
-        const description = new DOMParser().parseFromString(item.descriptionHtml.replace(/>\s+</g, '><'), 'text/html')
-        description.querySelectorAll('script, style, template').forEach(node => node.remove())
-        description.querySelectorAll('br').forEach(node => node.replaceWith('\n'))
-        description.querySelectorAll('p, h1, h2, h3, h4, h5, h6').forEach(node => node.append('\n\n'))
-        description.querySelectorAll('div, li').forEach(node => node.append('\n'))
-        item.description = description.body.textContent.trim()
+        item.descriptionContent = readProductDescription(item.descriptionHtml)
       }
       setProducts(data.products)
       if (data.products.length) selectProduct(data.products.find(item => item.variants.some(option => option.availableForSale)) || data.products[0])
     }).catch(failure => {
-      if (!controller.signal.aborted) setError(failure.message || 'Unable to load products. Please try again.')
+      if (!controller.signal.aborted) {
+        setError(failure.message || 'Unable to load products. Please try again.')
+        trackOrderEvent('order_load_error')
+      }
     }).finally(() => { if (!controller.signal.aborted) setLoading(false) })
     return () => controller.abort()
   }, [attempt])
@@ -61,21 +84,36 @@ export default function Order() {
       if (!response.ok) throw new Error(data.error)
       const url = new URL(data.checkoutUrl)
       if (url.protocol !== 'https:') throw new Error('Unable to open checkout. Please try again.')
+      trackOrderEvent('begin_checkout', product, variant, { transport_type: 'beacon' })
       window.location.assign(url.href)
     } catch (failure) {
+      trackOrderEvent('order_checkout_error')
       setError(failure.message || 'Unable to open checkout. Please try again.')
       setBusy(false)
     }
   }
 
   return <div className="order-page halo-container">
-    {!product && <h1>Pre-order</h1>}
-    <p className="order-status" role="status">{loading ? 'Loading products…' : busy ? 'Opening Shopify checkout…' : error}</p>
+    {!product && <h1 className={loading ? 'order-sr-only' : undefined}>Pre-order</h1>}
+    <p className={`order-status${loading ? ' order-sr-only' : ''}`} role="status">{loading ? 'Loading products…' : busy ? 'Opening Shopify checkout…' : error}</p>
+    {loading && <div className="order-layout order-skeleton" aria-hidden="true">
+      <div className="order-gallery">
+        <div className="order-thumbnails">{[0, 1, 2].map(index => <span className="order-thumbnail order-skeleton-block" key={index} />)}</div>
+        <div className="order-preview order-skeleton-block" />
+      </div>
+      <div className="order-details">
+        <span className="order-skeleton-title order-skeleton-block" />
+        <span className="order-skeleton-price order-skeleton-block" />
+        {[0, 1, 2].map(index => <span className="order-skeleton-line order-skeleton-block" key={index} />)}
+        <span className="order-skeleton-options order-skeleton-block" />
+        <span className="order-skeleton-button order-skeleton-block" />
+      </div>
+    </div>}
     {!loading && !products.length && <button className="oro-button" onClick={() => setAttempt(value => value + 1)}>Try again</button>}
     {product && <form className="order-layout" onSubmit={checkout}>
       <section className="order-gallery" aria-label={`${product.title} photos`}>
         {images.length > 1 && <div className="order-thumbnails" role="group" aria-label="Product photos">
-          {images.map((photo, index) => <button type="button" key={photo.url} className="order-thumbnail" aria-label={`View ${product.title} photo ${index + 1}`} aria-pressed={imageIndex === index} onClick={() => setImageIndex(index)}>
+          {images.map((photo, index) => <button type="button" key={photo.url} className="order-thumbnail" aria-label={`View ${product.title} photo ${index + 1}`} aria-pressed={imageIndex === index} onClick={() => { setImageIndex(index); trackOrderEvent('order_image_select', product, variant, { image_index: index + 1 }) }}>
             <img src={photo.url} alt="" loading="lazy" />
           </button>)}
         </div>}
@@ -88,25 +126,23 @@ export default function Order() {
         {variant && <div className="order-price">
           <span><span className="order-sr-only">{onSale ? 'Sale price: ' : 'Price: '}</span>{price(variant.price)}</span>
           {onSale && <del><span className="order-sr-only">Regular price: </span>{price(variant.compareAtPrice)}</del>}
-          <small>{variant.price.currencyCode}</small>
         </div>}
-        <p className="order-description">{product.description}</p>
+        <div className="order-description">{product.descriptionContent || <p className="order-description-plain">{product.description}</p>}</div>
         <fieldset disabled={busy} className="order-options"><legend>Style</legend>
           <div className="order-option-list">{products.map(item => <label className="order-option order-option--image" key={item.id}>
-            <input type="radio" name="product" value={item.id} checked={productId === item.id} onChange={() => selectProduct(item)} />
+            <input type="radio" name="product" value={item.id} checked={productId === item.id} onChange={() => selectProduct(item, true)} />
             <span>
               {item.images?.nodes?.[0] || item.featuredImage ? <img src={(item.images?.nodes?.[0] || item.featuredImage).url} alt={`${item.title}${!item.variants.some(option => option.availableForSale) ? ' (sold out)' : ''}`} /> : item.title}
             </span>
           </label>)}</div>
         </fieldset>
         {product.variants.length > 1 && <fieldset disabled={busy} className="order-options"><legend>Option</legend>
-          <div className="order-option-list">{product.variants.map(option => <label className="order-option" key={option.id}>
-            <input type="radio" name="variant" value={option.id} checked={variantId === option.id} disabled={!option.availableForSale} onChange={() => { setVariantId(option.id); setError('') }} />
+          <div className="order-option-list">{product.variants.map(option => <label className="order-option order-option--size" key={option.id}>
+            <input type="radio" name="variant" value={option.id} checked={variantId === option.id} disabled={!option.availableForSale} onChange={() => { setVariantId(option.id); setError(''); trackOrderEvent('select_variant', product, option) }} />
             <span>{option.title}{!option.availableForSale && ' (sold out)'}</span>
           </label>)}</div>
         </fieldset>}
-        <button className="oro-button order-checkout" type="submit" disabled={busy || !variant?.availableForSale}>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'} <ButtonArrow /></button>
-        <p className="order-fineprint">One item per order. Shipping and taxes calculated at checkout.</p>
+        <Button variant="primary" className="order-checkout" type="submit" disabled={busy || !variant?.availableForSale}>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'} <ButtonArrow /></Button>
         <a className="order-contact" href="/contact">Questions about your pre-order? Contact us</a>
       </div>
     </form>}

@@ -11,7 +11,7 @@ function HomeLogo({ src = '/oro-logo.webp' }) {
   return <img className="halo-logo" src={src} alt="oro" width="1672" height="941" decoding="async" />
 }
 
-export function HomeCta({ place, children, className = '', href: customHref, showIcon = true, onClick }) {
+export function HomeCta({ place, children, className = '', href: customHref, showIcon = true, onClick, variant = 'primary' }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [smsLink, setSmsLink] = useState(() => getOroTextLink(''))
   const closeModal = useCallback(() => setModalOpen(false), [])
@@ -42,7 +42,7 @@ export function HomeCta({ place, children, className = '', href: customHref, sho
       {['hero', 'closer'].includes(place) && <CtaSparkles />}
     </>
   )
-  const classes = `oro-button oro-button--primary halo-cta halo-cta--${place} ${className}`
+  const classes = `oro-button oro-button--${variant} ${variant === 'primary' ? 'halo-cta' : ''} halo-cta--${place} ${className}`
 
   if (customHref) {
     return <a href={customHref} className={classes} onClick={onClick}>{content}</a>
@@ -56,13 +56,13 @@ export function HomeCta({ place, children, className = '', href: customHref, sho
   )
 }
 
-export function HomeHeader({ showCta = true, sticky = true }) {
+export function HomeHeader({ showCta = true, sticky = true, ctaVariant = 'primary' }) {
   return (
     <header className={`halo-header${sticky ? '' : ' halo-header--static'}`}>
       <div className="halo-container halo-header-inner">
         <a className="halo-logo-link" href="/" aria-label="oro home"><HomeLogo src="/oro-logo/oro-logo-ink.webp" /></a>
         <nav className="halo-nav" aria-label="oro">
-          {showCta && <HomeCta place="header">join the waitlist</HomeCta>}
+          {showCta && <HomeCta place="header" variant={ctaVariant}>join the waitlist</HomeCta>}
         </nav>
       </div>
     </header>

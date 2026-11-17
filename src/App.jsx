@@ -75,7 +75,8 @@ function App({ initialRoute }) {
   }
 
   useEffect(() => {
-    if (isCheckout || isCreatorPilot) return
+    if ((isCheckout && route.type !== 'order') || isCreatorPilot) return
+    if (route.type === 'order') document.title = 'Order | Oro'
     if (hasAnalyticsConsent()) {
       initAnalytics()
       trackPageView(pageViewParams)
@@ -83,7 +84,7 @@ function App({ initialRoute }) {
   }, [route.slug, route.type])
 
   useEffect(() => {
-    if (isCheckout || isCreatorPilot) return
+    if ((isCheckout && route.type !== 'order') || isCreatorPilot) return
     const handleLinkClick = (event) => {
       const link = event.target.closest?.('a[href]')
       if (!link) return
@@ -150,7 +151,7 @@ function App({ initialRoute }) {
     <ThemeProvider defaultTheme="dark">
       <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout || route.type === 'order'} /> : <SiteHeader />)}
+        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout || route.type === 'order'} ctaVariant={route.type === 'order' ? 'secondary' : 'primary'} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
           {isCreatorPilot ? (
             <Suspense fallback={null}><CreatorPilotPage /></Suspense>
@@ -201,7 +202,7 @@ function App({ initialRoute }) {
           )}
         </main>
         {isHalo && !isFeedback && !isCheckout && <HomeFooter landing={isHome || isCreatorPilot} />}
-        {!isCheckout && !isCreatorPilot && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
+        {(!isCheckout || route.type === 'order') && !isCreatorPilot && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>
   )

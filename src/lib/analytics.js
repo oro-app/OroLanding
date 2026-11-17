@@ -136,7 +136,11 @@ export function trackPageNavigation(params = {}) {
 
 export function hasAnalyticsConsent() {
   if ((import.meta.env.DEV && import.meta.env.VITE_DISABLE_GA === 'true') || !canUseBrowser()) return false;
-  return localStorage.getItem('oro_cookie_consent') === 'accepted';
+  try {
+    return localStorage.getItem('oro_cookie_consent') === 'accepted';
+  } catch {
+    return false;
+  }
 }
 
 export function setAnalyticsConsent(accepted, pageViewParams = {}) {

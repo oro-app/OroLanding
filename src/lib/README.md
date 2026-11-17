@@ -20,3 +20,11 @@ Google Analytics is configured in `analytics.js`. Events only emit after the use
 | First CTA timing | `first_cta_click` | First tracked CTA click per browser session | `cta_event_name`, `time_from_landing_ms`, `is_first_cta_click`, plus original CTA params |
 | External social link clicks | `external_social_link_click` | External links to Instagram, TikTok, LinkedIn, or Linktree | `platform`, `destination_url`, `link_text`, `link_target`, `location` |
 | Generic subpage Try oro CTAs | `cta_click` | `/how-it-works` and `/why-oro` Try oro buttons | `location`, `destination`, `time_from_landing_ms`, `is_first_cta_click` |
+| Order product viewed | `view_item` | `/order` when a selected variant is shown, including after consent is accepted | `route_type`, `currency`, `value`, `items` |
+| Order style selected | `select_item` | `/order` product image choices | `item_list_id`, `item_list_name`, `currency`, `value`, `items` |
+| Order size selected | `select_variant` | `/order` variant choices | `currency`, `value`, `items` |
+| Order photo selected | `order_image_select` | `/order` gallery thumbnails | `image_index`, `currency`, `value`, `items` |
+| Shopify checkout opened | `begin_checkout` | `/order` after a checkout URL is successfully created, before redirect | `currency`, `value`, `items`, `transport_type` |
+| Order failures | `order_load_error`, `order_checkout_error` | `/order` product loading or checkout failure | `route_type`, selected item details when available; no raw error messages or checkout URLs |
+
+Order events use the existing analytics consent gate. `/order` shows the cookie banner and participates in page-view and navigation tracking. A checkout redirect is not a completed purchase; purchase tracking must be configured on Shopify separately. Event names follow [GA4 ecommerce guidance](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce).
