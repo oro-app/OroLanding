@@ -143,7 +143,7 @@ export default function Order() {
             <span>{option.title}{!option.availableForSale && ' (sold out)'}</span>
           </label>)}</div>
         </fieldset>}
-        <Button variant="primary" className="order-checkout oro-cta--prominent" type="submit" disabled={busy || !variant?.availableForSale}><span>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'}</span> <ButtonArrow /></Button>
+        <Button variant="primary" className="order-checkout oro-cta--compact" type="submit" disabled={busy || !variant?.availableForSale}><span>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'}</span> <ButtonArrow /></Button>
       </div>
     </form>}
     {product && <p className="order-contact">Questions about your pre-order? <a href="/contact">Contact us</a></p>}
