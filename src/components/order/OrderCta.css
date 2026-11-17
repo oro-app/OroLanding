@@ -1,6 +1,6 @@
 /* Compact CTA recipe from the bundled design system, using landing CTA colours. */
 .order-page .order-checkout.oro-cta--compact {
-  width: auto;
+  width: 100%;
   min-height: 48px;
   gap: var(--oro-space-3);
   padding-inline: var(--oro-space-5);

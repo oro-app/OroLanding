@@ -1,4 +1,4 @@
-.order-page { padding-block: var(--oro-space-12); color: var(--oro-color-ink); }
+.order-page { padding-block: var(--oro-space-12) var(--oro-space-4); color: var(--oro-color-ink); }
 .order-page p { line-height: var(--oro-type-body-line-height); }
 .order-status { margin: 0; }
 .order-status:not(:empty) { margin-bottom: var(--oro-space-6); }
@@ -37,7 +37,7 @@
 .order-option--image:has(:checked) span { padding: calc(var(--oro-space-1) - 1px); background: var(--oro-color-surface); }
 .order-option:has(:disabled) { cursor: not-allowed; }
 .order-checkout { width: 100%; }
-.order-page .order-contact { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--oro-space-1); margin: var(--oro-space-8) 0 0; font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); color: var(--oro-color-muted); text-align: center; }
+.order-page .order-contact { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--oro-space-1); margin: var(--oro-space-16) 0 0; font-size: var(--oro-type-support-size); line-height: var(--oro-type-support-line-height); color: var(--oro-color-muted); text-align: center; }
 .order-page .order-contact a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; }
 .order-contact a:hover, .order-contact a:focus-visible { color: var(--oro-color-ink); text-decoration-thickness: 2px; text-underline-offset: 5px; }
 .order-page button { min-height: 44px; min-width: 44px; max-width: 100%; }
@@ -56,7 +56,7 @@
 @keyframes order-skeleton-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 @media (max-width: 850px) {
   .order-layout { grid-template-columns: 1fr; gap: var(--oro-space-8); }
-  .order-page { padding-block: var(--oro-space-8); }
+  .order-page { padding-block: var(--oro-space-8) var(--oro-space-4); }
   .order-thumbnails { flex-basis: 56px; max-height: 360px; }
 }
 @media (forced-colors: active) {
