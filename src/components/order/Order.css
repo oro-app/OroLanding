@@ -26,8 +26,6 @@
 .order-option span { display: flex; align-items: center; min-height: 44px; padding: var(--oro-space-3) var(--oro-space-4); border: 1px solid var(--oro-color-ink); border-radius: var(--oro-radius-field); overflow-wrap: anywhere; }
 .order-option:has(:checked) span { outline: 2px solid var(--oro-color-ink); outline-offset: 2px; background: var(--oro-color-soft); }
 .order-option:has(:disabled) { cursor: not-allowed; }
-.order-preorder { border-top: 1px solid var(--oro-color-border); padding-top: var(--oro-space-6); margin-top: var(--oro-space-8); font-size: var(--oro-type-support-size); }
-.order-preorder p { margin: var(--oro-space-2) 0 var(--oro-space-6); }
 .order-checkout { width: 100%; }
 .order-fineprint { font-size: var(--oro-type-support-size); margin: var(--oro-space-3) 0; }
 .order-contact { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; }

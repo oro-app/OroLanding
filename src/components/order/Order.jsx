@@ -95,11 +95,7 @@ export default function Order() {
             <span>{option.title}{!option.availableForSale && ' (sold out)'}</span>
           </label>)}</div>
         </fieldset>}
-        <div className="order-preorder" id="order-preorder">
-          <strong>Pre-order · Estimated shipping January–February 2027</strong>
-          <p>Payment is collected at checkout. Your item will ship when it’s ready.</p>
-        </div>
-        <button className="oro-button order-checkout" type="submit" aria-describedby="order-preorder" disabled={busy || !variant?.availableForSale}>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'} <ButtonArrow /></button>
+        <button className="oro-button order-checkout" type="submit" disabled={busy || !variant?.availableForSale}>{busy ? 'Opening checkout…' : variant?.availableForSale ? 'Pre-order' : 'Sold out'} <ButtonArrow /></button>
         <p className="order-fineprint">One item per order. Shipping and taxes calculated at checkout.</p>
         <a className="order-contact" href="/contact">Questions about your pre-order? Contact us</a>
       </div>
