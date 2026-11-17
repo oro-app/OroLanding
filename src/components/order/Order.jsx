@@ -33,6 +33,15 @@ export default function Order() {
     fetch('/api/order', { signal: controller.signal }).then(async response => {
       const data = await response.json().catch(() => { throw new Error('Unable to load products. The order API did not return JSON. Please restart the development server.') })
       if (!response.ok) throw new Error(data.error)
+      for (const item of data.products) {
+        if (!item.descriptionHtml) continue
+        const description = new DOMParser().parseFromString(item.descriptionHtml.replace(/>\s+</g, '><'), 'text/html')
+        description.querySelectorAll('script, style, template').forEach(node => node.remove())
+        description.querySelectorAll('br').forEach(node => node.replaceWith('\n'))
+        description.querySelectorAll('p, h1, h2, h3, h4, h5, h6').forEach(node => node.append('\n\n'))
+        description.querySelectorAll('div, li').forEach(node => node.append('\n'))
+        item.description = description.body.textContent.trim()
+      }
       setProducts(data.products)
       if (data.products.length) selectProduct(data.products.find(item => item.variants.some(option => option.availableForSale)) || data.products[0])
     }).catch(failure => {

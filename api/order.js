@@ -23,7 +23,7 @@ async function products(timeout, buyerIP) {
   if (handles.length !== 2 || new Set(handles).size !== 2) throw new Error('configuration')
   return Promise.all(handles.map(async handle => {
     const { product } = await storefront(`query($handle: String!) {
-      product(handle: $handle) { id title description featuredImage { url altText }
+      product(handle: $handle) { id title description descriptionHtml featuredImage { url altText }
         images(first: 100) { nodes { url altText } }
         variants(first: 100) { nodes { id title availableForSale price { amount currencyCode } compareAtPrice { amount currencyCode } } pageInfo { hasNextPage } }
       }
