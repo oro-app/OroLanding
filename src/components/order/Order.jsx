@@ -86,10 +86,9 @@ export default function Order() {
       <div className="order-details">
         <h1>{product.title}</h1>
         {variant && <div className="order-price">
-          {onSale && <del><span className="order-sr-only">Regular price: </span>{price(variant.compareAtPrice)}</del>}
           <span><span className="order-sr-only">{onSale ? 'Sale price: ' : 'Price: '}</span>{price(variant.price)}</span>
+          {onSale && <del><span className="order-sr-only">Regular price: </span>{price(variant.compareAtPrice)}</del>}
           <small>{variant.price.currencyCode}</small>
-          {onSale && <span className="order-sale">Save {price({ ...variant.price, amount: Number(variant.compareAtPrice.amount) - Number(variant.price.amount) })}</span>}
         </div>}
         <p className="order-description">{product.description}</p>
         <fieldset disabled={busy} className="order-options"><legend>Style</legend>

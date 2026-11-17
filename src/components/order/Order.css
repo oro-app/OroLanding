@@ -12,11 +12,12 @@
 .order-preview > img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .order-preview > p { padding: var(--oro-space-6); }
 .order-details { min-width: 0; }
-.order-details h1 { font-family: var(--font-serif); font-size: var(--oro-type-section-size); line-height: var(--oro-type-section-line-height); font-weight: 400; letter-spacing: var(--oro-type-section-tracking); color: var(--oro-color-display); margin: 0 0 var(--oro-space-4); overflow-wrap: anywhere; }
+.order-details h1 { font-family: var(--font-serif); font-size: var(--oro-type-title-size); line-height: var(--oro-type-title-line-height); font-weight: 400; letter-spacing: var(--oro-type-title-tracking); color: var(--oro-color-display); margin: 0 0 var(--oro-space-4); overflow-wrap: anywhere; }
 .order-price { display: flex; flex-wrap: wrap; gap: var(--oro-space-3); align-items: baseline; font-size: var(--oro-type-subheading-size); }
+.order-price > span { font-family: var(--font-serif); font-size: var(--oro-type-card-size); }
+.order-price del { font-family: var(--font-sans); }
 .order-price del, .order-price small, .order-fineprint { color: var(--oro-color-muted); }
-.order-price small, .order-sale { font-size: var(--oro-type-support-size); }
-.order-sale { padding: var(--oro-space-1) var(--oro-space-3); background: var(--oro-color-soft); border-radius: var(--oro-radius-pill); }
+.order-price small { font-size: var(--oro-type-support-size); }
 .order-description { margin: var(--oro-space-6) 0; white-space: pre-line; }
 .order-options { padding: 0; border: 0; margin: var(--oro-space-6) 0; min-width: 0; }
 .order-options legend { padding: 0 0 var(--oro-space-3); font-size: var(--oro-type-support-size); }

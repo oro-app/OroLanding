@@ -4,7 +4,7 @@
 
 ## Pricing and pre-orders
 
-- Set **Price** to **49.99** and **Compare-at price** to **59.99** on both products and every applicable variant, in the store's currency. The page displays Shopify's actual price, strikes through a higher compare-at price in the same currency, and shows the savings. It does not override checkout pricing or invent a discount when Shopify has no compare-at price.
+- Set **Price** to **49.99** and **Compare-at price** to **59.99** on both products and every applicable variant, in the store's currency. The page displays Shopify's actual price first, followed by a crossed-out higher compare-at price in the same currency. It does not override checkout pricing or invent a discount when Shopify has no compare-at price.
 - Add each product's photos to its Shopify product media in the desired order. The gallery shows up to 100 images for the selected product; switching products resets the preview to its first image. Products can remain separate in Shopify.
 - For a simple full-payment pre-order without an app, enable **Inventory tracked** and **Continue selling when out of stock** on each applicable variant. Set fulfillment to manual and fulfill when ready. This allows overselling; monitor orders and disable it when the batch is full.
 - The purchase button labels purchases as pre-orders. The separate pre-order message has been removed. Add **Estimated shipping January–February 2027** and payment timing to Shopify product descriptions and order confirmation content so customers can review the delivery estimate before paying and retain it afterward.
