@@ -23,6 +23,12 @@ export default function Order() {
   const onSale = variant?.compareAtPrice?.currencyCode === variant?.price.currencyCode && Number(variant?.compareAtPrice?.amount) > Number(variant?.price.amount)
   const price = value => new Intl.NumberFormat('en-CA', { style: 'currency', currency: value.currencyCode }).format(Number(value.amount))
 
+  useEffect(() => {
+    function resetCheckout() { setBusy(false) }
+    window.addEventListener('pageshow', resetCheckout)
+    return () => window.removeEventListener('pageshow', resetCheckout)
+  }, [])
+
   function trackOrderEvent(name, item = product, option = variant, params = {}) {
     trackEvent(name, {
       route_type: 'order',
@@ -97,7 +103,7 @@ export default function Order() {
   return <div className="order-page halo-container">
     <section className="order-content" aria-label="Pre-order products">
     {!product && <h1 className={loading ? 'order-sr-only' : undefined}>Pre-order</h1>}
-    <p className={`order-status${loading ? ' order-sr-only' : ''}`} role="status">{loading ? 'Loading products…' : busy ? 'Opening Shopify checkout…' : error}</p>
+    <p className={`order-status${loading ? ' order-sr-only' : ''}`} role="status">{loading ? 'Loading products…' : error}</p>
     {loading && <div className="order-layout order-skeleton" aria-hidden="true">
       <div className="order-gallery">
         <div className="order-thumbnails">{[0, 1, 2].map(index => <span className="order-thumbnail order-skeleton-block" key={index} />)}</div>
