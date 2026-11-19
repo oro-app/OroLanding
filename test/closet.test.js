@@ -65,3 +65,23 @@ test('invalid IDs and title updates never reach upstream', async t => {
   }
   assert.equal(fetch.mock.callCount(), 0)
 })
+
+test('all new forwards an authenticated review dismissal and rejects mixed targets', async t => {
+  const id = '12345678-1234-1234-1234-123456789abc'
+  const fetch = t.mock.method(globalThis, 'fetch', async (url, options) => {
+    assert.equal(url.pathname, `/closet-link/reviews/${id}`)
+    assert.equal(options.method, 'DELETE')
+    assert.equal(options.headers.Authorization, `Bearer ${'a'.repeat(43)}`)
+    return { ok: true, status: 204, headers: new Headers() }
+  })
+  const req = { method: 'DELETE', headers: { authorization: `Bearer ${'a'.repeat(43)}` }, query: { review_id: id } }
+  const res = response()
+  await handler(req, res)
+  assert.equal(res.code, 204)
+  for (const update of [{ method: 'PATCH' }, { query: { review_id: '../other' } }, { query: { review_id: id, item_id: id } }]) {
+    const rejected = response()
+    await handler({ ...req, ...update }, rejected)
+    assert.equal(rejected.code, 400)
+  }
+  assert.equal(fetch.mock.callCount(), 1)
+})

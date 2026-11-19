@@ -12,11 +12,13 @@ export default async function handler(req, res) {
   let body
   let path = '/closet-link'
   if (req.method !== 'GET') {
-    const id = req.query?.item_id
+    const review = req.query?.review_id !== undefined
+    if (review && (req.method !== 'DELETE' || req.query?.item_id !== undefined)) return res.status(400).json({ error: 'Invalid review' })
+    const id = review ? req.query.review_id : req.query?.item_id
     if (typeof id !== 'string' || !/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/i.test(id)) {
       return res.status(400).json({ error: 'Invalid item' })
     }
-    path += `/items/${id}`
+    path += `/${review ? 'reviews' : 'items'}/${id}`
     if (req.method === 'PATCH') {
       let data = req.body
       if (typeof data === 'string') {

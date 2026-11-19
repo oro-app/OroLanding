@@ -9,6 +9,7 @@ let mutating = false
 let revision = 0
 let opener
 let items = []
+let duplicateReviews = []
 let expiresAt = 0
 let expired = false
 let loading = false
@@ -17,6 +18,9 @@ let expiryTimer
 function expire() {
   expired = true
   items = []
+  duplicateReviews = []
+  document.querySelector('#reviews').replaceChildren()
+  document.querySelector('#duplicate-reviews').hidden = true
   grid.replaceChildren()
   status.textContent = 'This link is unavailable or expired. Text oro for a new closet link.'
   dialog.close()
@@ -31,6 +35,7 @@ function expire() {
 
 function render() {
   if (expired) return
+  renderReviews()
   const query = search.value.trim().toLowerCase()
   const visible = items.filter(item => (!category || item.category === category)
     && [item.title, item.description, item.subtype, item.category, item.color, item.material, ...(item.aesthetic_tags || [])]
@@ -55,6 +60,80 @@ function render() {
     button.append(itemPhoto(item), title)
     card.append(button)
     grid.append(card)
+  }
+}
+
+function renderReviews() {
+  const container = document.querySelector('#reviews')
+  const byId = new Map(items.map(item => [item.id, item]))
+  duplicateReviews = duplicateReviews.map(review => ({ ...review,
+    pairs: review.pairs.filter(pair => pair.every(id => byId.has(id))),
+  })).filter(review => review.pairs.length)
+  container.replaceChildren()
+  document.querySelector('#duplicate-reviews').hidden = !duplicateReviews.length
+  duplicateReviews.forEach((review, index) => {
+    const group = document.createElement('section')
+    group.className = 'duplicate-review'
+    const header = document.createElement('header')
+    const title = document.createElement('h3')
+    title.textContent = `Upload ${index + 1}`
+    const keep = document.createElement('button')
+    keep.type = 'button'
+    keep.textContent = 'All new'
+    keep.addEventListener('click', () => dismissReview(review.id, keep))
+    header.append(title, keep)
+    group.append(header)
+    const pairs = document.createElement('div')
+    pairs.className = 'review-pairs'
+    for (const pair of review.pairs) {
+      const comparison = document.createElement('div')
+      comparison.className = 'review-pair'
+      for (const id of pair) {
+        const item = byId.get(id)
+        const card = document.createElement('article')
+        const name = document.createElement('p')
+        name.textContent = itemTitle(item)
+        const remove = document.createElement('button')
+        remove.type = 'button'
+        remove.textContent = 'Delete'
+        remove.setAttribute('aria-label', `Delete ${itemTitle(item)}`)
+        remove.addEventListener('click', () => {
+          openItem(item, remove)
+          if (selectedItem === item && dialog.open) document.querySelector('#delete-item').click()
+        })
+        card.append(itemPhoto(item), name, remove)
+        comparison.append(card)
+      }
+      pairs.append(comparison)
+    }
+    group.append(pairs)
+    container.append(group)
+  })
+}
+
+async function dismissReview(id, button) {
+  if (expired || mutating) return
+  if (Date.now() >= expiresAt) return expire()
+  mutating = true
+  revision++
+  button.disabled = true
+  try {
+    const response = await fetch(`/api/closet?review_id=${encodeURIComponent(id)}`, {
+      method: 'DELETE', headers: { Authorization: `Bearer ${token}` },
+      credentials: 'omit', redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(20000),
+    })
+    if (expired) return
+    if ([401, 403].includes(response.status)) return expire()
+    if (!response.ok) throw new Error()
+    duplicateReviews = duplicateReviews.filter(review => review.id !== id)
+    render()
+    status.textContent = 'All pieces kept. Review dismissed.'
+    document.querySelector('h1').focus()
+  } catch {
+    if (!expired) status.textContent = 'Could not dismiss this review. Please try again.'
+  } finally {
+    mutating = false
+    button.disabled = false
   }
 }
 
@@ -95,6 +174,7 @@ async function load() {
     expiresAt = data.expires_at * 1000
     if (!Number.isFinite(expiresAt) || Date.now() >= expiresAt) return expire()
     items = data.items
+    duplicateReviews = data.duplicate_reviews || []
     clearTimeout(expiryTimer)
     expiryTimer = setTimeout(expire, Math.max(0, expiresAt - Date.now()))
     categories()
