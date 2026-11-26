@@ -1,27 +1,24 @@
 export const journey = [
   ['Get started', 'Visit askoro.now to get started with oro.'],
-  ['Meet your stylist', 'Connect with oro over iMessage and begin getting to know your personal stylist.'],
-  ['Build your wardrobe', 'Share photos of your clothes or existing outfit pictures. oro identifies individual clothing items and builds a digital wardrobe, giving her context about what you already own.'],
-  ['Get styled', 'Text oro about where you’re going, what you’re doing, how you want to look, or what you’re struggling with. She generates personalized outfit recommendations using your wardrobe.'],
-  ['Refine and explore', 'Continue the conversation, request changes, send outfit photos for feedback, ask for shopping advice, or explore different styling options.'],
+  ['Meet your stylist', 'Say hi to oro in iMessage and tell her a little about your style.'],
+  ['Build your wardrobe', 'Send clothing or outfit photos so oro can identify each piece and build your digital wardrobe.'],
+  ['Get styled', 'Tell oro what you’re dressing for and she’ll suggest an outfit using your clothes.'],
+  ['Refine and explore', 'Text back to tweak the look, get outfit feedback, or ask for shopping advice.'],
 ]
 
 export const features = [
   {
     title: 'Digital wardrobe',
-    description: 'oro digitizes your wardrobe from photos of your clothes.',
-    exampleLabel: 'What you can showcase',
+    description: 'Turn photos of your clothes into a digital wardrobe and find new ways to wear what you own.',
     examples: [
-      'Taking pictures of clothing items',
-      'Building a digital wardrobe',
-      'Discovering new combinations from clothes you already own',
-      'Making better use of your existing wardrobe',
+      'Photograph a few favorite pieces.',
+      'Build a digital wardrobe from outfit photos.',
+      'Style two pieces you’ve never worn together.',
     ],
   },
   {
     title: 'Outfit generation',
-    description: 'Tell oro where you’re going, and she’ll put together a personalized outfit using your clothes.',
-    exampleLabel: 'Example prompts',
+    description: 'Tell oro where you’re headed and get an outfit you can recreate from your own closet.',
     examples: [
       '“I have a first date tonight. What should I wear?”',
       '“Pick my outfit for class.”',
@@ -29,12 +26,10 @@ export const features = [
       '“Make me look expensive but like I didn’t try too hard.”',
       '“Give me a Pinterest-worthy outfit.”',
     ],
-    note: 'You can showcase the conversation, the generated outfit collage, or even recreate the recommended outfit in real life.',
   },
   {
     title: 'Outfit feedback',
-    description: 'Send oro a picture of your outfit and ask for personalized feedback and suggestions.',
-    exampleLabel: 'Example prompts',
+    description: 'Send an outfit photo for a second opinion and show what you changed.',
     examples: [
       '“Be brutally honest, how does this look?”',
       '“Something feels off about this outfit.”',
@@ -42,12 +37,10 @@ export const features = [
       '“What shoes should I wear with this?”',
       '“Which of these two outfits should I wear?”',
     ],
-    note: 'This feature works particularly well for outfit transformations, GRWMs, glow-up content, and before-and-after videos.',
   },
   {
     title: 'Conversational styling',
-    description: 'Styling with oro is conversational. You can request changes, explore different options, and refine recommendations naturally over text.',
-    exampleLabel: 'Example prompts',
+    description: 'Text oro to swap a piece or get a different take on the same outfit.',
     examples: [
       '“Make it more casual.”',
       '“Swap out the shoes.”',
@@ -55,24 +48,20 @@ export const features = [
       '“Make it warmer.”',
       '“That’s not really my vibe.”',
     ],
-    note: 'You can also showcase oro’s personality through funny, relatable, or entertaining interactions.',
   },
   {
     title: 'Shopping advice',
-    description: 'Ask oro for advice before purchasing new clothes, taking your existing wardrobe and styling goals into account.',
-    exampleLabel: 'Example prompts',
+    description: 'Check whether a fitting-room find works with the clothes you already own.',
     examples: [
       '“Should I buy this?”',
       '“Would this go with the clothes I already own?”',
       '“How would I style this jacket?”',
       '“Would this be a good addition to my wardrobe?”',
     ],
-    note: 'This feature lends itself well to shopping vlogs, fitting-room content, and intentional shopping tips.',
   },
   {
     title: 'Lives in your iMessage',
-    description: 'One of oro’s biggest differentiators is that styling happens directly over text. You don’t need to download another app or navigate a complicated interface every time you want styling advice.',
-    note: 'This is an especially strong selling point for content centered around convenience, AI tools, productivity, and outsourcing everyday decisions.',
+    description: 'Get styling advice right in iMessage without downloading another app.',
   },
 ]
 
@@ -153,34 +142,32 @@ export const videoIdeasUrl = 'https://docs.google.com/document/d/1UTHlzniusfYC7X
 export const resources = [
   {
     title: 'Formats',
-    description: 'Reference videos across different niches, audiences, and content styles.',
+    description: 'Video references across niches.',
     href: 'https://drive.google.com/drive/folders/1HN_EJLdi6kaFZ6KF2PDUyw5m46x6AGEN',
-    note: 'When recreating external reference formats, use your own or appropriately licensed creative materials.',
   },
   {
     title: 'Demo recordings',
-    description: 'Downloadable product footage of website signup, wardrobe building, texting oro, outfit recommendations, and conversations.',
+    description: 'Clips of signup, texting, wardrobes, and outfits.',
     href: 'https://drive.google.com/drive/folders/1ZFq9DfoGsEBq3BgpeKs5WyiReL7-WZsP',
-    note: 'Feel free to crop, trim, and incorporate these into your edits. Present supplied footage as a product demonstration and keep any description of your own experience accurate.',
   },
   {
     title: 'Fits',
-    description: 'Outfit imagery and styling examples to help you showcase the visual results of using oro.',
+    description: 'Outfit imagery and styling examples.',
     href: 'https://drive.google.com/drive/folders/1LRTOA-NtmnP_WW-nZW9y2ruM5pUZS0Xc',
   },
   {
     title: 'Screenshots',
-    description: 'Static product assets that you can use as overlays, visual references, or inserts.',
+    description: 'Product stills for overlays or cutaways.',
     href: 'https://drive.google.com/drive/folders/1wHnPCuW8Q82PgGo47QUuf-ICFeC7Bei9',
   },
   {
     title: 'Brand assets',
-    description: 'Optional logos, mascot variations, illustrations, and other branded graphics.',
+    description: 'Logos, mascots, and illustrations.',
     href: 'https://drive.google.com/drive/folders/1S3XPbWfk9PbZtfbPYHjXy0euT5DEO8N0',
   },
   {
-    title: 'Other promo materials',
-    description: 'Additional oro content, including our launch video.',
+    title: 'Promo materials',
+    description: 'The oro launch video and more.',
     href: 'https://drive.google.com/drive/folders/1yStYZJD3wv8PkMZ4zex9eVjRnujYQHEg',
   },
 ]
@@ -190,19 +177,19 @@ export const evaluation = [
     title: 'Performance',
     weight: 65,
     criteria: [
-      { title: 'Views', weight: 40, description: 'Organic views measured 48 hours after publication.' },
-      { title: 'Audience retention', weight: 15, description: 'How effectively your video keeps viewers watching, based on available platform analytics.' },
-      { title: 'Shares', weight: 10, description: 'How frequently viewers share your content relative to its view count.' },
+      { title: 'Views', weight: 40, description: 'Organic views 48 hours after posting.' },
+      { title: 'Audience retention', weight: 15, description: 'How well your video holds attention, based on available platform analytics.' },
+      { title: 'Shares', weight: 10, description: 'How often viewers share the video relative to its view count.' },
     ],
   },
   {
     title: 'Creative execution',
     weight: 35,
     criteria: [
-      { title: 'Hook', weight: 10, description: 'How effectively your opening captures attention through visuals, text, delivery, and timing.' },
-      { title: 'Delivery', weight: 10, description: 'How naturally, convincingly, and engagingly you communicate your content.' },
-      { title: 'Pacing & editing', weight: 10, description: 'How effectively your video flows, maintains attention, and keeps each part understandable.' },
-      { title: 'Visuals', weight: 5, description: 'The clarity, framing, readability, and overall effectiveness of your footage.' },
+      { title: 'Hook', weight: 10, description: 'How your opening uses visuals, text, delivery, and timing to grab attention.' },
+      { title: 'Delivery', weight: 10, description: 'How natural, convincing, and engaging your delivery feels.' },
+      { title: 'Pacing & editing', weight: 10, description: 'How well the edit flows, holds attention, and keeps the story clear.' },
+      { title: 'Visuals', weight: 5, description: 'How clear, well-framed, and easy to read your footage is.' },
     ],
   },
 ]

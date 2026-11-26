@@ -1,4 +1,10 @@
+import { useEffect, useRef } from 'react'
 import { Heading, Text } from 'oro-kit'
+import wardrobePreview from '../../assets/demos/camera-roll-closet-polaroid-v3.webp'
+import outfitSwap from '../../assets/demos/outfit-iteration-mens.webp'
+import outfitCollage from '../../assets/fit-gen-demo/collage.webp'
+import oroWaving from '../../assets/mascot/oro_hi.webp'
+import oroTexting from '../../assets/mascot/oro_texting.webp'
 import ButtonArrow from '../ButtonArrow'
 import GoldBackground from '../GoldBackground'
 import { HomeCta } from '../home/HomeChrome'
@@ -21,16 +27,27 @@ const sections = {
   'your-trial': 'Trial instructions and timeline',
 }
 
+const contentsLabels = {
+  showcase: 'What to showcase',
+  audience: 'Audience',
+  resources: 'Resources',
+  'your-trial': 'Your trial',
+}
+
+const journeyImages = {
+  'Meet your stylist': { src: oroTexting, width: 1500, height: 1500, alt: '' },
+  'Build your wardrobe': { src: wardrobePreview, width: 1254, height: 1254, alt: 'Photos of clothes and outfits ready to add to an oro wardrobe' },
+  'Get styled': { src: outfitCollage, width: 1086, height: 1448, alt: 'An oro outfit collage with jeans, a cream cardigan, and red accessories' },
+  'Refine and explore': { src: outfitSwap, width: 1254, height: 1254, alt: 'Two outfit collages showing oro swap shorts for cargo pants over text' },
+}
+
 const requirements = [
-  'Mention oro by name at least once, verbally or visually.',
-  'Communicate the value of oro in whatever way feels natural to your video.',
-  'Showcase oro, its functionality, or the benefits of using it.',
-  'Give viewers a reason to be interested in oro.',
-  'Always write oro in lowercase.',
+  'Mention oro by name at least once, verbally or on screen. Always write oro in lowercase.',
+  'Show oro or what it helps you do, and give viewers a reason to care.',
   'Include a clear call to action in the video or caption.',
-  'If you use a comment-based call to action, respond to viewers who take you up on it.',
-  'Respond to relevant comments and questions about oro.',
-  'Clearly disclose your promotional relationship with oro and use applicable platform disclosure settings.',
+  'Reply to viewers who respond to your comment-based call to action, and answer relevant comments and questions about oro.',
+  'Clearly disclose your promotional relationship with oro and use the platform’s applicable disclosure settings.',
+  'Keep product claims accurate.',
 ]
 
 const tips = [
@@ -60,7 +77,7 @@ const postingRequirements = [
 function Section({ id, children }) {
   return (
     <section id={id} className="pilot-section pilot-container trial-anchor" aria-labelledby={`${id}-title`}>
-      <Heading as="h2" variant="title" id={`${id}-title`}>{sections[id]}</Heading>
+      <Heading as="h2" variant="title" id={`${id}-title`} data-trial-reveal="">{sections[id]}</Heading>
       {children}
     </section>
   )
@@ -79,12 +96,38 @@ function ResourceLink({ href, children }) {
 }
 
 export default function CreatorTrial() {
+  const pageRef = useRef(null)
+
+  useEffect(() => {
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const groups = [...pageRef.current.querySelectorAll('[data-trial-reveal]')]
+      .filter(group => group.getBoundingClientRect().top >= window.innerHeight)
+    const observer = new IntersectionObserver(entries => {
+      for (const { isIntersecting, target } of entries) {
+        if (!isIntersecting) continue
+        delete target.dataset.trialPending
+        observer.unobserve(target)
+      }
+    })
+
+    for (const group of groups) {
+      group.dataset.trialPending = ''
+      observer.observe(group)
+    }
+
+    return () => {
+      observer.disconnect()
+      for (const group of groups) delete group.dataset.trialPending
+    }
+  }, [])
+
   return (
-    <div className="creator-pilot creator-trial">
+    <div className="creator-pilot creator-trial" ref={pageRef}>
       <GoldBackground />
 
       <section id="welcome" className="pilot-intro trial-anchor" aria-labelledby="welcome-title">
-        <div className="pilot-container">
+        <div className="pilot-container trial-hero">
           <Heading as="h1" variant="display" id="welcome-title" className="pilot-title">
             Welcome to<br />Create with oro! <span className="trial-heart" aria-hidden="true">💜</span>
           </Heading>
@@ -99,57 +142,79 @@ export default function CreatorTrial() {
             <Heading as="h2" variant="subheading">On this page</Heading>
             <ul>
               {Object.entries(sections).map(([id, label]) => (
-                <li key={id}><a href={`#${id}`}>{label}</a></li>
+                <li key={id}><a href={`#${id}`}>{contentsLabels[id] || label}</a></li>
               ))}
             </ul>
           </nav>
         </div>
       </section>
 
-      <Section id="meet-oro">
-        <div className="trial-copy">
-          <Text muted>oro is an AI personal stylist that lives in your iMessage.</Text>
-          <Text muted>She learns your wardrobe, understands your personal style, puts together outfits using clothes you already own, and gives you personalized styling advice.</Text>
-          <Text muted>Think of her as that effortlessly stylish best friend you can text whenever you don’t know what to wear. All you need is iMessage. oro handles the outfit planning, even if you’re new to fashion.</Text>
+      <section id="meet-oro" className="pilot-section pilot-container trial-anchor" aria-labelledby="meet-oro-title">
+        <div className="trial-meet" data-trial-reveal="">
+          <div>
+            <Heading as="h2" variant="title" id="meet-oro-title">{sections['meet-oro']}</Heading>
+            <div className="trial-copy">
+              <Text muted>oro is an AI personal stylist that lives in your iMessage.</Text>
+              <Text muted>She learns your style and puts together outfits using clothes you already own. Think of her as that effortlessly stylish best friend you can text whenever you don’t know what to wear.</Text>
+            </div>
+          </div>
+          <img className="trial-mascot" src={oroWaving} alt="oro, waving in her lavender cape" width="1500" height="1500" loading="lazy" decoding="async" />
         </div>
         <div className="trial-block">
-          <Heading as="h3" variant="subheading">The user journey</Heading>
-          <ol className="pilot-list trial-numbered">
+          <Heading as="h3" variant="subheading" className="trial-subtitle" data-trial-reveal="">The user journey</Heading>
+          <ol className="trial-journey" role="list">
             {journey.map(([title, description], index) => (
-              <li key={title}>
-                <span className="trial-step-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-                <div>
-                  <Heading as="h4" variant="subheading">{title}</Heading>
-                  <Text muted>{index === 0 ? <>Visit <a href="/">askoro.now</a> to get started with oro.</> : description}</Text>
+              <li className="trial-journey-step" key={title} data-trial-reveal="">
+                <span className="trial-journey-number" aria-hidden="true">{index + 1}</span>
+                <div className="trial-journey-detail">
+                  <div>
+                    <Heading as="h4" variant="subheading">{title}</Heading>
+                    <Text muted>{index === 0 ? <>Visit <a href="/">askoro.now</a> to get started with oro.</> : description}</Text>
+                  </div>
+                  {journeyImages[title] && <img className="trial-journey-image" {...journeyImages[title]} loading="lazy" decoding="async" />}
                 </div>
               </li>
             ))}
           </ol>
         </div>
-      </Section>
+      </section>
 
       <Section id="showcase">
-        <Text muted className="trial-lede">Pick the features that best support your creative concept. One well-chosen feature can carry a whole video.</Text>
-        <div className="trial-grid">
-          {features.map(({ title, description, examples, exampleLabel, note }) => (
-            <article className="pilot-pay trial-card" key={title}>
+        <Text muted className="trial-lede" data-trial-reveal="">Pick the features that fit your idea. One well-chosen feature can carry a whole video.</Text>
+        <ul className="trial-showcase" role="list">
+          {features.map(({ title, description, examples }) => (
+            <li key={title} data-trial-reveal="">
               <Heading as="h3" variant="subheading">{title}</Heading>
-              <Text muted>{description}</Text>
-              {examples && <div className="trial-list-group"><Text as="strong">{exampleLabel || 'Example prompts'}</Text><Bullets items={examples} /></div>}
-              {note && <Text muted>{note}</Text>}
-            </article>
+              <div>
+                <Text muted>{description}</Text>
+                {examples && <Text className="trial-showcase-example">{examples[0]}</Text>}
+              </div>
+            </li>
           ))}
+        </ul>
+        <div className="pilot-disclosures trial-example-disclosure" data-trial-reveal="">
+          <details>
+            <summary>More examples<span className="pilot-disclosure-icon" aria-hidden="true" /></summary>
+            <div className="trial-more-examples">
+              {features.filter(({ examples }) => examples?.length > 1).map(({ title, examples }) => (
+                <div className="trial-list-group" key={title}>
+                  <Heading as="h3" variant="subheading">{title}</Heading>
+                  <Bullets items={examples.slice(1)} />
+                </div>
+              ))}
+            </div>
+          </details>
         </div>
       </Section>
 
       <Section id="audience">
-        <div className="trial-copy">
+        <div className="trial-copy" data-trial-reveal="">
           <Text muted>We’re creating for people who care about <strong>the outcome of dressing well</strong> and could use help getting there. They may be short on time or confidence, or simply want someone else to figure out what works.</Text>
           <Text muted>Use these audiences and angles as starting points and feel free to explore the communities you understand best.</Text>
         </div>
         <div className="pilot-disclosures">
           {audiences.map(({ title, description, painPoints, outcomes, angles }) => (
-            <details key={title}>
+            <details key={title} data-trial-reveal="">
               <summary>{title}<span className="pilot-disclosure-icon" aria-hidden="true" /></summary>
               <div className="trial-audience">
                 <Text muted>{description}</Text>
@@ -165,20 +230,19 @@ export default function CreatorTrial() {
       </Section>
 
       <Section id="direction">
-        <div className="trial-copy">
+        <div className="trial-copy" data-trial-reveal="">
           <Text muted>We trust your creative vision! Use our example scripts, adapt them to your style, recreate a reference format with your own footage, or come up with your own concept. Go with the approach you genuinely think will perform best.</Text>
         </div>
-        <div className="trial-block trial-list-group">
-          <Heading as="h3" variant="subheading">Content requirements</Heading>
+        <div className="trial-block trial-list-group" data-trial-reveal="">
+          <Heading as="h3" variant="subheading" className="trial-subtitle">Content requirements</Heading>
           <Bullets items={requirements} />
-          <Text muted>Experiment with messaging, positioning, and tone to find what resonates with your audience. Please keep product claims accurate.</Text>
         </div>
-        <div className="trial-block trial-list-group">
-          <Heading as="h3" variant="subheading">Optional creative tips</Heading>
+        <div className="trial-block trial-list-group" data-trial-reveal="">
+          <Heading as="h3" variant="subheading" className="trial-subtitle">Optional creative tips</Heading>
           <Bullets items={tips} />
         </div>
-        <div className="trial-block trial-list-group">
-          <Heading as="h3" variant="subheading" id="outcome-title">Selling the outcome</Heading>
+        <div className="trial-block trial-list-group" data-trial-reveal="">
+          <Heading as="h3" variant="subheading" id="outcome-title" className="trial-subtitle">Selling the outcome</Heading>
           <table className="trial-outcomes" aria-labelledby="outcome-title">
             <thead><tr><th scope="col">Feature</th><th scope="col">Potential outcome</th></tr></thead>
             <tbody>
@@ -192,48 +256,48 @@ export default function CreatorTrial() {
       </Section>
 
       <Section id="resources">
-        <Text muted className="trial-lede">We’ve put together assets, reference videos, and scripts to help you create your best content.</Text>
+        <Text muted className="trial-lede" data-trial-reveal="">We’ve put together assets, reference videos, and scripts to help you create your best content.</Text>
         <ResourceLink href={resourceLibraryUrl}>Open the complete resource library</ResourceLink>
         <ul className="trial-grid trial-resource-grid">
-          {resources.map(({ title, description, href, note }) => (
-            <li key={title}>
+          {resources.map(({ title, description, href }) => (
+            <li key={title} data-trial-reveal="">
               <a className="pilot-pay trial-card trial-resource" href={href} target="_blank" rel="noreferrer">
                 <div className="trial-resource-title">
                   <Heading as="h3" variant="subheading">{title}</Heading>
                   <ButtonArrow direction="up-right" className="pilot-arrow" />
                 </div>
                 <Text muted>{description}</Text>
-                {note && <Text muted>{note}</Text>}
               </a>
             </li>
           ))}
         </ul>
-        <div className="trial-copy">
-          <Text muted>Find adapted scripts, alternative hooks, and different ways to integrate oro in the video ideas document. Use the scripts as written or adapt them to your style.</Text>
+        <div className="trial-copy" data-trial-reveal="">
+          <Text muted>Use the scripts as written or make the hooks your own.</Text>
           <ResourceLink href={videoIdeasUrl}>Explore video ideas &amp; scripts</ResourceLink>
         </div>
-        <div className="pilot-pay trial-block trial-callout">
+        <Text muted className="trial-resource-note" data-trial-reveal="">When adapting a reference, use your own or appropriately licensed materials. Feel free to edit supplied demo clips and present them as product demonstrations.</Text>
+        <div className="pilot-pay trial-block trial-callout" data-trial-reveal="">
           <Heading as="h3" variant="title">Want to try oro yourself?</Heading>
-          <Text muted>We’re happy to give you complimentary access to oro throughout your trial. Use it to capture your own recordings, generate personalized outfits, or get to know the product.</Text>
+          <Text muted>We’re happy to give you complimentary access throughout your trial. Try styling an outfit or capture your own footage.</Text>
           <div className="trial-list-group">
-            <Text muted>Email <a href={contactUrl}>{email}</a> with both of the following.</Text>
+            <Text muted>Send both details to <a href={contactUrl}>{email}</a>.</Text>
             <Bullets items={['Your email address', 'Your iMessage phone number, including country code']} />
           </div>
-          <Text muted>Just say you’d like access and I’ll help you get set up.</Text>
+          <Text muted>Just say you’d like access and I’ll get you set up.</Text>
           <div className="trial-actions"><HomeCta place="closer" href={accessUrl} showIcon={false}>Request access</HomeCta></div>
         </div>
-        <div className="trial-block trial-list-group">
-          <Heading as="h3" variant="subheading">We’re here to help you succeed 💜</Heading>
+        <div className="trial-block trial-list-group" data-trial-reveal="">
+          <Heading as="h3" variant="subheading" className="trial-subtitle">We’re here to help you succeed 💜</Heading>
           <Text muted>You were shortlisted for a reason. I see potential in your content and want to help you make the best video you can.</Text>
           <Text muted>Reach out for product demos, a specific screenshot, brand assets, brainstorming, creative feedback, or help filming. If you need something you can’t find in the library, just ask!</Text>
         </div>
       </Section>
 
       <Section id="evaluation">
-        <Text muted className="trial-lede">We’re looking for engaging, high-performing content. Performance carries the most weight, and we’ll also assess how effectively you execute the video.</Text>
+        <Text muted className="trial-lede" data-trial-reveal="">We’re looking for engaging, high-performing content. Performance carries the most weight, and we’ll also assess how effectively you execute the video.</Text>
         <div className="trial-grid">
           {evaluation.map(({ title, weight, criteria }) => (
-            <div className="pilot-pay trial-card trial-evaluation" key={title}>
+            <div className="pilot-pay trial-card trial-evaluation" key={title} data-trial-reveal="">
               <Heading as="h3" variant="subheading">{title} <span>{weight}%</span></Heading>
               <dl>
                 {criteria.map(criterion => (
@@ -246,49 +310,49 @@ export default function CreatorTrial() {
             </div>
           ))}
         </div>
-        <div className="trial-copy">
+        <div className="trial-copy" data-trial-reveal="">
           <Text muted>Simple footage and editing can be just as effective as an elaborate production. Supplied formats and original concepts are evaluated by the same criteria.</Text>
           <Text muted>If you make multiple videos, choose the single video you’d like us to evaluate.</Text>
         </div>
       </Section>
 
       <Section id="your-trial">
-        <div className="trial-block trial-list-group">
-          <Heading as="h3" variant="subheading">Posting requirements</Heading>
+        <div className="trial-block trial-list-group" data-trial-reveal="">
+          <Heading as="h3" variant="subheading" className="trial-subtitle">Posting requirements</Heading>
           <Bullets items={postingRequirements} />
           <Text muted>We encourage you to use your existing account and audience. That’s optional. The video’s performance is our biggest priority.</Text>
           <Text muted>You can publish whenever you think is best within your trial window, without draft approval.</Text>
         </div>
         <div className="trial-block trial-list-group">
-          <Heading as="h3" variant="subheading">Timeline</Heading>
+          <Heading as="h3" variant="subheading" className="trial-subtitle" data-trial-reveal="">Timeline</Heading>
           <ol className="pilot-list trial-timeline">
             {timeline.map(([isoDate, displayDate, description]) => (
-              <li key={isoDate}>
+              <li key={isoDate} data-trial-reveal="">
                 <time dateTime={isoDate}>{displayDate}</time>
                 <Text muted>{description}</Text>
               </li>
             ))}
           </ol>
-          <Text muted>All deadlines are in Eastern Time. If you’ve arranged an alternative deadline with us, follow your individually confirmed timeline and Trial Agreement.</Text>
+          <Text muted data-trial-reveal="">All deadlines are in Eastern Time. If you’ve arranged an alternative deadline with us, follow your individually confirmed timeline and Trial Agreement.</Text>
         </div>
         <div className="trial-block">
-          <Heading as="h3" variant="subheading">How to submit</Heading>
+          <Heading as="h3" variant="subheading" className="trial-subtitle" data-trial-reveal="">How to submit</Heading>
           <ol className="pilot-list trial-numbered">
-            <li>
+            <li data-trial-reveal="">
               <span className="trial-step-number" aria-hidden="true">01</span>
               <div>
                 <Heading as="h4" variant="subheading">Select your video</Heading>
                 <Text muted>If you made multiple videos, choose one for evaluation with the criteria above in mind. If you cross-posted the same video, choose one platform’s post.</Text>
               </div>
             </li>
-            <li>
+            <li data-trial-reveal="">
               <span className="trial-step-number" aria-hidden="true">02</span>
               <div>
                 <Heading as="h4" variant="subheading">Submit your video link</Heading>
                 <Text muted>Reply to your original email thread or email <a href={contactUrl}>{email}</a> with the published link to your selected video.</Text>
               </div>
             </li>
-            <li>
+            <li data-trial-reveal="">
               <span className="trial-step-number" aria-hidden="true">03</span>
               <div className="trial-list-group">
                 <Heading as="h4" variant="subheading">Submit your analytics</Heading>
@@ -298,17 +362,17 @@ export default function CreatorTrial() {
               </div>
             </li>
           </ol>
-          <Text muted>We’ll evaluate one video per creator.</Text>
+          <Text muted data-trial-reveal="">We’ll evaluate one video per creator.</Text>
         </div>
-        <div className="pilot-pay trial-block trial-list-group">
-          <Heading as="h3" variant="subheading">Trial compensation</Heading>
-          <Text muted>If you’re selected and join the creator program, you’ll receive compensation for your reviewed trial video in addition to your regular program earnings.</Text>
+        <div className="pilot-pay trial-block trial-list-group" data-trial-reveal="">
+          <Heading as="h3" variant="subheading" className="trial-subtitle">Trial compensation</Heading>
+          <Text muted>If you’re selected and join the program, we’ll pay for your reviewed trial video on top of your regular earnings.</Text>
           <Bullets items={['C$25 base payment', 'C$1 per 1,000 eligible organic views, measured 48 hours after publication', 'Up to C$100 in total trial compensation']} />
           <Text muted>Refer to your Trial Agreement for the full terms.</Text>
         </div>
       </Section>
 
-      <section className="pilot-section pilot-container trial-closer" aria-labelledby="trial-closer-title">
+      <section className="pilot-section pilot-container trial-closer" aria-labelledby="trial-closer-title" data-trial-reveal="">
         <Heading as="h2" variant="title" id="trial-closer-title">Let’s create! 💜</Heading>
         <div className="trial-copy">
           <Text muted>Have a question, need a specific resource, or want complimentary access to oro? Email <a href={contactUrl}>{email}</a> anytime.</Text>
