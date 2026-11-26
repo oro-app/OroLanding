@@ -122,6 +122,8 @@
   "rewrites": [
     { "source": "/creators", "destination": "/creators/index.html" },
     { "source": "/creators/", "destination": "/creators/index.html" },
+    { "source": "/creators/trial", "destination": "/creators/trial/index.html" },
+    { "source": "/creators/trial/", "destination": "/creators/trial/index.html" },
     { "source": "/design-system", "destination": "/design-system/index.html" },
     { "source": "/design-system/", "destination": "/design-system/index.html" },
     { "source": "/order", "destination": "/order/index.html" },

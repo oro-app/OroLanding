@@ -25,6 +25,7 @@ const CheckoutPage = lazy(() => import('./components/checkout/Checkout'))
 const OrderPage = lazy(() => import('./components/order/Order'))
 const PuttyPage = lazy(() => import('./components/putty/Putty'))
 const CreatorPilotPage = lazy(() => import('./components/creator-pilot/CreatorPilot'))
+const CreatorTrialPage = lazy(() => import('./components/creator-trial/CreatorTrial'))
 
 export function getRouteFromPath(pathname = '/') {
   const path = pathname.replace(/\/+$/, '') || '/'
@@ -32,6 +33,7 @@ export function getRouteFromPath(pathname = '/') {
   if (path === '/checkout') return { type: 'checkout' }
   if (path === '/merch' || path === '/putty') return { type: 'merch' }
   if (path === '/creators' || path === '/creators/index.html') return { type: 'creators' }
+  if (path === '/creators/trial' || path === '/creators/trial/index.html') return { type: 'creator-trial' }
   if (GEO_PATHS.includes(path)) return { type: 'geo', path }
   if (isFeedbackPath(path)) return { type: 'feedback' }
   const newsletterMatch = path.match(/^\/newsletter\/([^/]+)$/)
@@ -66,17 +68,19 @@ function App({ initialRoute }) {
   const isFeedback = route.type === 'feedback'
   const isCheckout = route.type === 'checkout' || route.type === 'merch' || route.type === 'order'
   const isCreatorPilot = route.type === 'creators'
+  const isCreatorTrial = route.type === 'creator-trial'
+  const isCreatorPage = isCreatorPilot || isCreatorTrial
   const isGeo = route.type === 'geo'
   const isBlog = route.type === 'newsletter' || route.type === 'journal' || route.type === 'about' || isGeo
   const isPrivateForm = isFeedback || isCheckout
-  const isHalo = isHome || isPrivateForm || isCreatorPilot || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
+  const isHalo = isHome || isPrivateForm || isCreatorPage || route.type === 'journal' || route.type === 'contact' || route.type === 'about' || route.type === 'newsletter' || isGeo
   const pageViewParams = {
     route_type: route.type,
     ...(route.slug ? { newsletter_slug: route.slug } : {}),
   }
 
   useEffect(() => {
-    if ((isCheckout && route.type !== 'order') || isCreatorPilot) return
+    if ((isCheckout && route.type !== 'order') || isCreatorPage) return
     if (route.type === 'order') document.title = 'Order | Oro'
     if (hasAnalyticsConsent()) {
       initAnalytics()
@@ -85,7 +89,7 @@ function App({ initialRoute }) {
   }, [route.slug, route.type])
 
   useEffect(() => {
-    if ((isCheckout && route.type !== 'order') || isCreatorPilot) return
+    if ((isCheckout && route.type !== 'order') || isCreatorPage) return
     const handleLinkClick = (event) => {
       const link = event.target.closest?.('a[href]')
       if (!link) return
@@ -150,11 +154,13 @@ function App({ initialRoute }) {
 
   return (
     <ThemeProvider defaultTheme="dark">
-      <div className={`oro-editorial ${isBlog ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
+      <div className={`oro-editorial ${isBlog || isCreatorTrial ? '' : 'oro-lowercase'} ${isHalo ? 'oro-theme halo-site' : 'min-h-screen overflow-x-clip'}${route.type === 'checkout' ? ' oro-checkout-route' : ''}`} style={isHalo ? undefined : { background: 'var(--color-bg)' }}>
         {isHalo && <a className="halo-skip-link" href="#main">Skip to content</a>}
-        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout} /> : <SiteHeader />)}
+        {!isFeedback && (isHalo ? <HomeHeader showCta={!isCheckout && !isCreatorTrial} /> : <SiteHeader />)}
         <main id="main" tabIndex={-1}>
-          {isCreatorPilot ? (
+          {isCreatorTrial ? (
+            <Suspense fallback={null}><CreatorTrialPage /></Suspense>
+          ) : isCreatorPilot ? (
             <Suspense fallback={null}><CreatorPilotPage /></Suspense>
           ) : route.type === 'order' ? (
             <Suspense fallback={null}><OrderPage /></Suspense>
@@ -203,7 +209,7 @@ function App({ initialRoute }) {
           )}
         </main>
         {isHalo && !isFeedback && (!isCheckout || route.type === 'order') && <LandingFooter landing={isHome || isCreatorPilot || route.type === 'order'} />}
-        {(!isCheckout || route.type === 'order') && !isCreatorPilot && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
+        {(!isCheckout || route.type === 'order') && !isCreatorPage && <CookieConsent halo={isHalo} pageViewParams={pageViewParams} />}
       </div>
     </ThemeProvider>
   )

@@ -27,6 +27,13 @@ export const ROUTE_SEO = {
     h1: 'oro creators',
     noindex: true,
   },
+  'creator-trial': {
+    path: '/creators/trial',
+    title: 'Create with oro | Creator trial',
+    description: 'The Create with oro trial brief, creative resources, and submission instructions for shortlisted creators.',
+    h1: 'Welcome to Create with oro!',
+    noindex: true,
+  },
   order: {
     path: '/order', title: 'Order | Oro',
     description: 'Choose your favourite Oro item and check out securely with Shopify.',
