@@ -220,6 +220,7 @@
 }
 
 .trial-outcomes th { font-weight: var(--oro-font-weight-heading); }
+.trial-outcomes thead th { font-weight: 700; }
 .trial-outcomes th:first-child { width: 36%; }
 .trial-outcomes td { color: var(--oro-color-muted); }
 

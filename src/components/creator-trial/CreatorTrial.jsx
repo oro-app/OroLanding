@@ -197,10 +197,10 @@ export default function CreatorTrial() {
             <summary>More examples<span className="pilot-disclosure-icon" aria-hidden="true" /></summary>
             <div className="trial-more-examples">
               {features.filter(({ examples }) => examples?.length > 1).map(({ title, examples }) => (
-                <div className="trial-list-group" key={title}>
+                <article className="pilot-pay trial-card" key={title}>
                   <Heading as="h3" variant="subheading">{title}</Heading>
                   <Bullets items={examples.slice(1)} />
-                </div>
+                </article>
               ))}
             </div>
           </details>
@@ -244,14 +244,13 @@ export default function CreatorTrial() {
         <div className="trial-block trial-list-group" data-trial-reveal="">
           <Heading as="h3" variant="subheading" id="outcome-title" className="trial-subtitle">Selling the outcome</Heading>
           <table className="trial-outcomes" aria-labelledby="outcome-title">
-            <thead><tr><th scope="col">Feature</th><th scope="col">Potential outcome</th></tr></thead>
+            <thead><tr><th scope="col">Feature</th><th scope="col">Desired outcome</th></tr></thead>
             <tbody>
               {featureOutcomes.map(([feature, outcome]) => (
                 <tr key={feature}><th scope="row">{feature}</th><td>{outcome}</td></tr>
               ))}
             </tbody>
           </table>
-          <Text muted>“This AI digitizes your wardrobe” describes a feature. “Can AI turn me into the girl on my Pinterest board without buying new clothes?” gives your audience an outcome to care about.</Text>
         </div>
       </Section>
 
@@ -294,7 +293,6 @@ export default function CreatorTrial() {
       </Section>
 
       <Section id="evaluation">
-        <Text muted className="trial-lede" data-trial-reveal="">We’re looking for engaging, high-performing content. Performance carries the most weight, and we’ll also assess how effectively you execute the video.</Text>
         <div className="trial-grid">
           {evaluation.map(({ title, weight, criteria }) => (
             <div className="pilot-pay trial-card trial-evaluation" key={title} data-trial-reveal="">
@@ -310,17 +308,13 @@ export default function CreatorTrial() {
             </div>
           ))}
         </div>
-        <div className="trial-copy" data-trial-reveal="">
-          <Text muted>Simple footage and editing can be just as effective as an elaborate production. Supplied formats and original concepts are evaluated by the same criteria.</Text>
-          <Text muted>If you make multiple videos, choose the single video you’d like us to evaluate.</Text>
-        </div>
       </Section>
 
       <Section id="your-trial">
         <div className="trial-block trial-list-group" data-trial-reveal="">
           <Heading as="h3" variant="subheading" className="trial-subtitle">Posting requirements</Heading>
           <Bullets items={postingRequirements} />
-          <Text muted>We encourage you to use your existing account and audience. That’s optional. The video’s performance is our biggest priority.</Text>
+          <Text muted>We encourage you to use your existing account and audience, but that’s optional. The video’s performance is our biggest priority.</Text>
           <Text muted>You can publish whenever you think is best within your trial window, without draft approval.</Text>
         </div>
         <div className="trial-block trial-list-group">
@@ -333,7 +327,6 @@ export default function CreatorTrial() {
               </li>
             ))}
           </ol>
-          <Text muted data-trial-reveal="">All deadlines are in Eastern Time. If you’ve arranged an alternative deadline with us, follow your individually confirmed timeline and Trial Agreement.</Text>
         </div>
         <div className="trial-block">
           <Heading as="h3" variant="subheading" className="trial-subtitle" data-trial-reveal="">How to submit</Heading>
@@ -358,17 +351,10 @@ export default function CreatorTrial() {
                 <Heading as="h4" variant="subheading">Submit your analytics</Heading>
                 <Text muted>Capture unaltered screenshots of your video’s native platform analytics 48 hours after publication and send them to the same email address.</Text>
                 <Bullets items={['Views', 'Audience retention data', 'Shares']} />
-                <Text muted>Let us know if a metric is unavailable. If you make multiple videos, capture each video’s analytics at the 48-hour mark so you can decide which one to submit. Plan your posting schedule around the submission deadlines.</Text>
               </div>
             </li>
           </ol>
           <Text muted data-trial-reveal="">We’ll evaluate one video per creator.</Text>
-        </div>
-        <div className="pilot-pay trial-block trial-list-group" data-trial-reveal="">
-          <Heading as="h3" variant="subheading" className="trial-subtitle">Trial compensation</Heading>
-          <Text muted>If you’re selected and join the program, we’ll pay for your reviewed trial video on top of your regular earnings.</Text>
-          <Bullets items={['C$25 base payment', 'C$1 per 1,000 eligible organic views, measured 48 hours after publication', 'Up to C$100 in total trial compensation']} />
-          <Text muted>Refer to your Trial Agreement for the full terms.</Text>
         </div>
       </Section>
 
