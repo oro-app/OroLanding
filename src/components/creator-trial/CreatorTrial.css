@@ -167,12 +167,6 @@
   font-size: var(--oro-type-label-size);
 }
 
-.trial-more-examples {
-  display: grid;
-  gap: var(--oro-space-5);
-  padding-bottom: var(--oro-space-5);
-}
-
 .trial-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -301,7 +295,6 @@
   .trial-meet { gap: var(--oro-space-8); }
   .trial-journey-step { gap: var(--oro-space-4); }
   .trial-showcase > li { grid-template-columns: minmax(9rem, 0.36fr) minmax(0, 1fr); gap: var(--oro-space-5); }
-  .trial-more-examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .trial-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .creator-trial .trial-resource-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .trial-timeline > li { grid-template-columns: 8rem minmax(0, 1fr); gap: var(--oro-space-4); }

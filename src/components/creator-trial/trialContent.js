@@ -10,54 +10,27 @@ export const features = [
   {
     title: 'Digital wardrobe',
     description: 'Turn photos of your clothes into a digital wardrobe and find new ways to wear what you own.',
-    examples: [
-      'Photograph a few favorite pieces.',
-      'Build a digital wardrobe from outfit photos.',
-      'Style two pieces you’ve never worn together.',
-    ],
+    example: 'Style two pieces you’ve never worn together.',
   },
   {
     title: 'Outfit generation',
     description: 'Tell oro where you’re headed and get an outfit you can recreate from your own closet.',
-    examples: [
-      '“I have a first date tonight. What should I wear?”',
-      '“Pick my outfit for class.”',
-      '“Help me look more put together.”',
-      '“Make me look expensive but like I didn’t try too hard.”',
-      '“Give me a Pinterest-worthy outfit.”',
-    ],
+    example: '“I have a first date tonight. What should I wear?”',
   },
   {
     title: 'Outfit feedback',
     description: 'Send an outfit photo for a second opinion and show what you changed.',
-    examples: [
-      '“Be brutally honest, how does this look?”',
-      '“Something feels off about this outfit.”',
-      '“How can I make this fit better?”',
-      '“What shoes should I wear with this?”',
-      '“Which of these two outfits should I wear?”',
-    ],
+    example: '“Be brutally honest, how does this look?”',
   },
   {
     title: 'Conversational styling',
     description: 'Text oro to swap a piece or get a different take on the same outfit.',
-    examples: [
-      '“Make it more casual.”',
-      '“Swap out the shoes.”',
-      '“Give me another option.”',
-      '“Make it warmer.”',
-      '“That’s not really my vibe.”',
-    ],
+    example: '“Make it more casual.”',
   },
   {
     title: 'Shopping advice',
     description: 'Check whether a fitting-room find works with the clothes you already own.',
-    examples: [
-      '“Should I buy this?”',
-      '“Would this go with the clothes I already own?”',
-      '“How would I style this jacket?”',
-      '“Would this be a good addition to my wardrobe?”',
-    ],
+    example: '“Should I buy this?”',
   },
   {
     title: 'Lives in your iMessage',

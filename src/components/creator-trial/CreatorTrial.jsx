@@ -182,29 +182,16 @@ export default function CreatorTrial() {
       <Section id="showcase">
         <Text muted className="trial-lede" data-trial-reveal="">Pick the features that fit your idea. One well-chosen feature can carry a whole video.</Text>
         <ul className="trial-showcase" role="list">
-          {features.map(({ title, description, examples }) => (
+          {features.map(({ title, description, example }) => (
             <li key={title} data-trial-reveal="">
               <Heading as="h3" variant="subheading">{title}</Heading>
               <div>
                 <Text muted>{description}</Text>
-                {examples && <Text className="trial-showcase-example">{examples[0]}</Text>}
+                {example && <Text className="trial-showcase-example">{example}</Text>}
               </div>
             </li>
           ))}
         </ul>
-        <div className="pilot-disclosures trial-example-disclosure" data-trial-reveal="">
-          <details>
-            <summary>More examples<span className="pilot-disclosure-icon" aria-hidden="true" /></summary>
-            <div className="trial-more-examples">
-              {features.filter(({ examples }) => examples?.length > 1).map(({ title, examples }) => (
-                <article className="pilot-pay trial-card" key={title}>
-                  <Heading as="h3" variant="subheading">{title}</Heading>
-                  <Bullets items={examples.slice(1)} />
-                </article>
-              ))}
-            </div>
-          </details>
-        </div>
       </Section>
 
       <Section id="audience">
