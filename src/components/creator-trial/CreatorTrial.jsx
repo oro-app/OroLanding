@@ -94,9 +94,6 @@ export default function CreatorTrial() {
             <a className="oro-button oro-button--primary halo-cta" href={resourceLibraryUrl} target="_blank" rel="noreferrer">
               Creative Resource Library
             </a>
-            <a className="oro-button oro-button--secondary" href={videoIdeasUrl} target="_blank" rel="noreferrer">
-              Video Ideas &amp; Scripts
-            </a>
           </div>
           <nav className="trial-contents" aria-label="On this page">
             <Heading as="h2" variant="subheading">On this page</Heading>
